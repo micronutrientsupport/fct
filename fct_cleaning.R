@@ -94,6 +94,12 @@ WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
 
 WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric)) 
 
+#Calculating SOP for the WAFCT
+
+
+WAFCT <- WAFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`))
 
 
 ##################------2) Malawi FCT----#####################
@@ -129,6 +135,13 @@ FCT_tag <- c('code', 'ref', 'fooditem', 'foodgroup', 'WATER', 'ENERC1', 'ENERC2'
 
 
 MAFOODS <- MAFOODS %>% rename_all( ~ FCT_tag) %>% mutate_at(vars(5:46), funs(as.numeric)) 
+
+#Calculating SOP - Removing ALC and changing FIBTG for FIBC
+
+MAFOODS <- MAFOODS %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBC',  'ASH'), `+`))
+
 
 
 ##################------3) Ethiopia FCT----#####################
@@ -219,7 +232,7 @@ GMBFCT <- readxl::read_excel(here::here( 'data',
 
 
 FCT4_tag <- c('foodgroup','code',  'fooditem', 'ENERC1', 'ENERC2',  
-              'PROTCNT', 'FAT',  'CHOAVLM ', 'FIBTS', 'PHYTAC',
+              'PROTCNT', 'FAT',  'CHOAVLM', 'FIBTS', 'PHYTAC',
               'WATER', 'CA',  'P', 'FE',  'ZN', 'CARTBEQ', 'VITC',
               'ref', 'FCT')
 
@@ -231,6 +244,12 @@ GMBFCT <- GMBFCT %>% rename_all( ~ FCT4_tag) %>% slice(3:527) %>%
 #Converting into character (needed for binding datasets)
 
 GMBFCT$code <- as.character(GMBFCT$code)
+
+#SOP - changing CHOAVLDF to CHOAVLM, FIBTG to FIBTS, removing ALC, no ASH are included.
+
+GMBFCT <- GMBFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLM','FIBTS'), `+`))
 
 ##################------5) Kenya FCT----#####################
 
@@ -253,8 +272,106 @@ readxl::read_excel(here::here(  'data',
 
 #Customized saving FCT
 
-GMBFCT <- readxl::read_excel(here::here(  'data', 
+KENFCT1 <- readxl::read_excel(here::here(  'data', 
                                         paste(paste(FCT_QA[x,6],
                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                             sheet = 1) %>% mutate(FCT = 'GMBFCT') %>% glimpse()
+                             sheet = 4)  %>% select(1:37) %>%  mutate(FCT = 'KENFCT') %>%
+                                slice(1:1241) %>% glimpse()
+
+
+FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER', 
+            'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG', 'ASH', 
+             'CA', 'FE', 'MG', 'P', 'K', 'NA', 'ZN', 'SE',
+               'VITA_RAE', 'VITA', 'RETOL', 'CARBEQ', 
+             'THIA', 'RIBF', 'NIA', 'FOLDFE', 'FOLDF',
+             'VITB12', 'VITC', 'CHOLE', 'OXALAC', 'PHYTCPPD', 'IP3', 'IP4',
+              'IP5', 'IP6', 'FCT')
+
+KENFCT1 <- KENFCT1 %>% rename_all( ~ FCT5_tag) 
+
+KENFCT2 <- readxl::read_excel(here::here(  'data', 
+                                           paste(paste(FCT_QA[x,6],
+                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                              sheet = 4, skip = 3) %>% select(38:319) %>% glimpse()
+
+KENFCT <- bind_cols(KENFCT1, KENFCT2)
+
+
+##################------5) Lesotho FCT----#####################
+
+#Lesotho FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 6
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 6) %>%
+  head()
+
+#Customized saving FCT
+
+LSOFCT <- readxl::read_excel(here::here(  'data', 
+                                           paste(paste(FCT_QA[x,6],
+                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                              sheet = 6) %>% mutate(FCT = 'LSOFCT') %>%  select(2:41) %>% glimpse()
+
+FCT6_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'WATER', 
+               'CHOAVLDF', 'NT', 'PROTCNT', 'PROPLA', 'PROANI' , 'FIBTG', 'ASH', 'FAT',
+              'CHOLE', 'FASAT', 'FAMS', 'FAPU', 'STARCH', 'SUGAR',
+              'CA', 'FE', 'MG', 'P', 'K', 'NA', 'ZN','CU','SE', 'MN', 
+              'VITA',  'CARBEQ', 'VITD', 'VITE', 
+              'THIA', 'RIBF', 'NIA', 'VITB6'  ,'FOL', 'VITC', 'FCT')
+
+LSOFCT <- LSOFCT %>% rename_all( ~ FCT6_tag) 
+
+#creating variable 'foodgroups'
+
+#Extracting variables names only in English
+
+fglso <- LSOFCT %>% filter(is.na(code), !is.na(fooditem)) %>% pull(fooditem) %>%
+  stringr::str_split_fixed( ' ', n = 2) %>% as_tibble()
+
+nolso <- fglso %>%  pull(V1)
+
+fglso <- fglso %>%  pull(V2)
+
+
+LSOFCT <- LSOFCT %>% 
+  mutate(foodgroup = ifelse(grepl(nolso[1], code), fglso[1],
+                            ifelse(grepl(nolso[2], code), fglso[2],
+                                   ifelse(grepl(nolso[3], code), fglso[3],
+                                    ifelse(grepl(nolso[4], code), fglso[4], 
+                                  ifelse(grepl(nolso[5], code), fglso[5], 
+                                ifelse(grepl(nolso[6], code), fglso[6], 
+                                 ifelse(grepl(nolso[7], code), fglso[7],
+                                ifelse(grepl(nolso[8], code), fglso[8], 
+                                ifelse(grepl(nolso[9], code), fglso[9],
+                                  ifelse(grepl(nolso[10], code), fglso[10], 
+                                ifelse(grepl(nolso[11], code), fglso[11],
+                                ifelse(grepl(nolso[12], code), fglso[12], 
+                                ifelse(grepl(nolso[13], code), fglso[13], 
+                                ifelse(grepl(nolso[14], code), fglso[14],
+                                ifelse(grepl(nolso[15], code), fglso[15],
+                              ifelse(grepl(nolso[16], code), fglso[16],
+                                  ifelse(grepl(nolso[17], code), fglso[17],  
+                                       ifelse(grepl(nolso[18], code), fglso[18],
+                                      ifelse(grepl(nolso[19], code), fglso[19],
+                                          ifelse(grepl(nolso[20], code), fglso[20], 
+                                                           'NA')))))))))))))))))))))%>% 
+                                               filter(!is.na(code))
+
+LSOFCT <- LSOFCT %>%   mutate_at(vars(3:39), funs(as.numeric)) 
+
+
+LSOFCT <- LSOFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
