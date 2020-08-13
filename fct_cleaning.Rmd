@@ -9,8 +9,8 @@ output:
   word_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning=FALSE, message=FALSE) 
 
 library(tidyverse)
 
@@ -49,7 +49,7 @@ For those FCT that provided extra-information (WAFCT, KENFCT, uFish, uPulses), w
 
 ####Standtadization of variables using FAO/INFOODS tagname
 
-##1) West Africa FCT
+####1) West Africa FCT
 
 
 For this section, we are going to calculate the missing values per MN of interest and the Sum of Proximates (SOP) calculated as ∑of water + protein + fat + available carbohydrates + dietary fibre + alcohol + ash. 
@@ -157,6 +157,7 @@ summary(WAFCT$SOP)
 
 NOTE: The problem with converting to numeric is that number between [] are removed (as NA). It is also creating a issue with the calculation of SOP
 
+####2) Malawi FCT
 
 1) Tagnames standardization for MAFOODS
 
@@ -258,9 +259,6 @@ Note: Some of the generic tagname should be followed by '-' (dash), however sinc
 
 ```{r MAFOODS tagname}
 
-##################------2) Malawi FCT----#####################
-
-
 ##View FCT structure
 #Creating a variable for the names of the data-set 
 # it is composed by 2 columns on the FCT_QA dataset
@@ -302,7 +300,7 @@ summary(MAFOODS$SOP)
 
 ```
 
-#Ethiopia
+####3) Ethiopia FCT
 
 5) Moisture (%): WATER (Unit: g). It is reported in %. 
 
@@ -324,8 +322,7 @@ Eq.5:  VITA = mcg retinol + 1/6 mcg ß- carotene equivalent
 
 NOTE:Still need to arrange foodgroups
 
-
-###Gambia
+####4) Gambia FCT
 
 Within the GMBFCT there are tagnames assigned to each food component
 
@@ -344,8 +341,6 @@ Within the GMBFCT there are tagnames assigned to each food component
 Ash are not reported, we can see a slightly lower SOP when comparing it with MAFOODS and WAFCT.
 
 ```{r GBMFCT tagname }
-
-#-4) Gambia FCT----#####################
 
 #Gambia FCT - tagname standardization
 
@@ -395,7 +390,8 @@ GMBFCT <- GMBFCT %>%
 
 ```
 
-####Kenya
+
+####5) Kenya FCT
 
 Within this FCT there are a set of components with tagnames (majority of items not relevants for the project and with high amount of missing values) and other without. To facilitate the standardization of relevant component, we have cut the table in two
 
@@ -407,7 +403,7 @@ KENFCT1 - We have review and update tagnames and we have cut the rows until 1242
 
 KENFCT2 - We have incorporated tagnames as per in the dataset (with no modifications)
 
-####Lesotho
+####6) Lesotho FCT
 
 4) Energy is only reported in kJ. New variable need to be created, for ENERC1.
 
@@ -495,6 +491,254 @@ summary(LSOFCT$SOP)
 
 ```
 
+
+####7) Mozambique FCT
+
+ONLY PDF
+
+
+####8) Nigeria FCT
+
+All the variables are already labelled following FAO/INFOODS, hence only minor cleaning is needed.
+
+####9) South Africa FCT
+
+ONLY PDF
+
+####10) Tanzania FCT
+
+ONLY PDF
+
+####11) Uganda FCT
+
+There are some variables that we want to keep but we are not going to rename. The fastest approach is to proceed as with KENFCT and cut into two part. Then, to modify separately both and then bind them. 
+
+UGAFCT1 
+
+To include 'ref' as the reference of where the food item is coming from, there are three variables that offer information of the reference source: named fct_source_*. We chose 'fct_souce_descr' because it the one that provided more information from the other three (however, all three remind available in the fct). 
+
+UGAFCT2
+
+2) Dry Matter (g): DM
+
+5) lipid_total_g: FAT - It is stated that it was calculated by by gravimetric methods
+
+7) fibre_g: FIBTG - No information is provided on how fibre was calculated. We are assuming that is total dietary fibre. 
+TO BE REVIEWED
+
+21 vit_a_iu: VITA_IU - Vitamin A in IU. This form of expressing VITA is not recommended. In the user-guides is acknowledged and it is adviced not to used, unless no other data is available. They also provided a conversion factor to VIT_RAE for plant and animal food sources. Since, retinol, beta- and alpha- carotene and cryptoxanthin are reported, VITA could be calculated following the proposed equation from FAO/INFOODS.
+
+24) alpha_carot_mcg: CARTA (alpha-carotene, Unit: mcg). 
+
+26) beta_crypt_mcg: CRYPXB (beta-cryptoxanthin, Unti: mcg).
+
+NOTE: Ash is not been reported
+
+```{r UGAFCT tagname }
+
+#Uganda FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 11
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>%
+  head()
+
+
+#Customized saving FCT (1)
+
+UGAFCT1 <- readxl::read_excel(here::here(  'data', 
+                                          paste(paste(FCT_QA[x,6],
+                                                      FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                             sheet = 1) %>% mutate(FCT = 'UGAFCT')  %>% select(1:13) %>% glimpse()
+
+#Renaming some variables
+
+UGAFCT1 <- UGAFCT1 %>% rename(
+                      code = 'food_code', 
+                      fooditem = 'food_description',
+                      ref = 'fct_source_descr',
+                      foodgroup = 'food_group')
+
+#Customized saving FCT (2)
+
+UGAFCT2 <- readxl::read_excel(here::here(  'data', 
+                                          paste(paste(FCT_QA[x,6],
+                                                      FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                             sheet = 1)   %>% select(14:39) %>% mutate(FCT = 'UGAFCT') %>% glimpse()
+
+#Variable names acc. tagname
+
+FCT11_tag <- c( 'WATER', 'DM', 'ENERC1', 
+              'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG',  
+              'CA', 'FE',  'ZN', 'VITC', 'THIA', 'RIBF',
+              'NIA', 'VITB6', 'FOL', 'FOLAC', 'FOLDF', 'FOLDFE', 
+              'VITB12', 'VITA_IU', 'VITA_RAE', 'RETOL', 'CARTA', 'CARTB' , 'CRYPXB', 
+              'FCT')
+
+UGAFCT2 <- UGAFCT2 %>% rename_all( ~ FCT11_tag) 
+
+
+UGAFCT <- bind_cols(UGAFCT1, UGAFCT2)
+
+UGAFCT <- UGAFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG'), `+`))
+
+
+
+
+
+
+summary(UGAFCT$SOP)
+
+```
+
+####12) uFish FCT
+
+This FCT needs only minor renaming since it has all components named using tagnames form FAO/INFOODS. Scientific name are available in the user-guide.
+
+The table reported the ASFIS List of Species for Fishery Statistics Purposes, which refers to column 2 and 3. 
+
+2) ISSCAAP: International Standard Statistical Classification of Aquatic Animals and Plants. Remind unchanged.
+
+3) 3-Alpha: three_alpha - International code for fish.
+
+5) Habitat: referring to fish habitat coded as F - Farmed and W - Wild. Remind unchanged.
+
+6) State of food: food_state - referring to r - raw, c - cooked, p - processed/preserved. We used same code as UGAFCT while keeping it as close as the original uFish. 
+
+8) EDIBLE...8: EDIBLE1 - Following the same rationale as in WAFCT
+
+9) EDIBLE...9: EDIBLE2 - Following the same rationale as in WAFCT
+
+For FAO/INFOODS tagname, I will change all at once for NGAFCT, uFish and uPulses.
+
+```{r uFish tagname }
+
+#uFish FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 12
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
+  head()
+
+#Customized saving FCT
+
+uFish <- readxl::read_excel(here::here(  'data', 
+                                           paste(paste(FCT_QA[x,6],
+                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                              sheet = 4) %>% slice(2:516) %>% mutate(FCT = 'uFish')   %>% glimpse()
+
+uFish <- uFish %>% rename(
+  code = 'Food Item ID', 
+  three_alpha = '3-Alpha',
+  fooditem = 'Food name in English',
+  food_state = 'State of food',
+  ref = 'RefID',
+  EDIBLE1 = 'EDIBLE...8',
+  EDIBLE2 = 'EDIBLE...9',
+  ENERC1 = 'ENERC(kcal)',
+  ENERC2 = 'ENERC(kJ)')
+
+names(uFish) <- sub("\\(.*?\\)", "", names(uFish))
+
+
+uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
+
+
+uFish <- uFish %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+summary(uFish$SOP)
+
+```
+
+####13) uPulses FCT
+
+The structure is very similar to uFish and we will proceed in the same fashion. 
+
+2) 'Country, region': origin - reference of the origin of the food item
+
+4) Processing: food_state coded as r: raw, d: dried, p: processed.
+
+5) Species/Subspecies: scientificName - In the User-guide are refered as the scientific names. Hence, to keep consistency,we have used the same variable names as in WAFCT for the scientific name.
+
+6) Cultivar/Variety/Accession Name: variety - for simplicity we have kept the most common name of the three possible.
+
+FATCE: Fat values derived from Soxhlet method (FATCE)
+
+```{r uPulses tagname }
+
+#uPulses FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 13
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
+  head()
+
+#Customized saving FCT
+
+uPulses <- readxl::read_excel(here::here(  'data', 
+                                         paste(paste(FCT_QA[x,6],
+                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                            sheet = 4) %>%  slice(2:177) %>% mutate(FCT = 'uPulses')   %>% glimpse()
+
+uPulses <- uPulses %>% rename(
+  code = 'FoodID', 
+  origin = 'Country, region',
+  fooditem = 'Food name in English',
+  food_state = 'Processing',
+  scientificName = 'Species/Subspecies',
+  variety = 'Cultivar/Variety/Accession Name',
+  ref = 'BiblioID',
+  ENERC1 = 'ENERC(kcal)',
+  ENERC2 = 'ENERC(kJ)')
+
+
+names(uPulses) <- sub("\\(.*?\\)", "", names(uPulses))
+
+uPulses <- uPulses %>% mutate_at(vars(8:68), funs(as.numeric)) 
+
+
+uPulses <- uPulses  %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+
+summary(uPulses$SOP)
+
+```
 
 ##Conclusion
 

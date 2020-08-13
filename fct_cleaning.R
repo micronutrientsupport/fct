@@ -297,7 +297,7 @@ KENFCT2 <- readxl::read_excel(here::here(  'data',
 KENFCT <- bind_cols(KENFCT1, KENFCT2)
 
 
-##################------5) Lesotho FCT----#####################
+##################------6) Lesotho FCT----#####################
 
 #Lesotho FCT - tagname standardization
 
@@ -374,4 +374,217 @@ LSOFCT <- LSOFCT %>%   mutate_at(vars(3:39), funs(as.numeric))
 LSOFCT <- LSOFCT %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+
+##################------8) Nigeria FCT----#####################
+
+#Nigeria FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 8
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>%
+  head()
+
+
+#Customized saving FCT
+
+NGAFCT <- readxl::read_excel(here::here(  'data', 
+                                          paste(paste(FCT_QA[x,6],
+                                                      FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                             sheet = 1) %>% mutate(FCT = 'NGAFCT')  %>% glimpse()
+
+NGAFCT <- NGAFCT %>% rename(
+  ref = 'REFID',
+  code = 'Code', 
+  foodgroup = 'Category',
+  fooditemNGA = 'LocalName',
+  fooditem = 'EnglishName',
+  scientificName = 'ScientificName',
+  fooditemFR = 'FrenchNames',
+  ENERC1 = 'ENERC_kcal',
+  ENERC2 = 'ENERC_kJ')
+
+
+names(NGAFCT) <- sub("(^_*g$)", "", names(NGAFCT))
+
+names(NGAFCT) <- sub("(?=\\_)", "", names(NGAFCT))
+
+
+
+uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
+
+
+uFish <- uFish %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+
+
+##################------11) Uganda FCT----#####################
+
+#Uganda FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 11
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>%
+  head()
+
+
+#Customized saving FCT
+
+UGAFCT1 <- readxl::read_excel(here::here(  'data', 
+                                          paste(paste(FCT_QA[x,6],
+                                                      FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                                   sheet = 1)  %>% select(1:13) %>% glimpse()
+
+
+UGAFCT1 <- UGAFCT1 %>% rename(
+                      code = 'food_code', 
+                      fooditem = 'food_description',
+                      ref = 'fct_source_descr',
+                      foodgroup = 'food_group')
+
+UGAFCT2 <- readxl::read_excel(here::here(  'data', 
+                                          paste(paste(FCT_QA[x,6],
+                                                      FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                             sheet = 1)   %>% select(14:39) %>% mutate(FCT = 'UGAFCT') %>% glimpse()
+
+
+FCT11_tag <- c( 'WATER', 'DM', 'ENERC1', 
+              'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG',  
+              'CA', 'FE',  'ZN', 'VITC', 'THIA', 'RIBF',
+              'NIA', 'VITB6', 'FOL', 'FOLAC', 'FOLDF', 'FOLDFE', 
+              'VITB12', 'VITA_IU', 'VITA_RAE', 'RETOL', 'CARTA', 'CARTB' , 'CRYPXB', 
+              'FCT')
+
+UGAFCT2 <- UGAFCT2 %>% rename_all( ~ FCT11_tag) 
+
+
+UGAFCT <- bind_cols(UGAFCT1, UGAFCT2)
+
+UGAFCT <- UGAFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG'), `+`))
+
+
+
+
+##################------12) uFish FCT----#####################
+
+#uFish FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 12
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
+  head()
+
+#Customized saving FCT
+
+uFish <- readxl::read_excel(here::here(  'data', 
+                                           paste(paste(FCT_QA[x,6],
+                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                              sheet = 4) %>% slice(2:516) %>% mutate(FCT = 'uFish')   %>% glimpse()
+
+uFish <- uFish %>% rename(
+  code = 'Food Item ID', 
+  three_alpha = '3-Alpha',
+  fooditem = 'Food name in English',
+  food_state = 'State of food',
+  ref = 'RefID',
+  EDIBLE1 = 'EDIBLE...8',
+  EDIBLE2 = 'EDIBLE...9',
+  ENERC1 = 'ENERC(kcal)',
+  ENERC2 = 'ENERC(kJ)')
+
+names(uFish) <- sub("\\(.*?\\)", "", names(uFish))
+
+
+uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
+
+
+uFish <- uFish %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+
+##################------13) uPulses FCT----#####################
+
+#uPulses FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 13
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
+  head()
+
+#Customized saving FCT
+
+uPulses <- readxl::read_excel(here::here(  'data', 
+                                         paste(paste(FCT_QA[x,6],
+                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                            sheet = 4) %>%  slice(2:177) %>% mutate(FCT = 'uPulses')   %>% glimpse()
+
+uPulses <- uPulses %>% rename(
+  code = 'FoodID', 
+  origin = 'Country, region',
+  fooditem = 'Food name in English',
+  food_state = 'Processing',
+  scientificName = 'Species/Subspecies',
+  variety = 'Cultivar/Variety/Accession Name',
+  ref = 'BiblioID',
+  ENERC1 = 'ENERC(kcal)',
+  ENERC2 = 'ENERC(kJ)')
+
+
+names(uPulses) <- sub("\\(.*?\\)", "", names(uPulses))
+
+uPulses <- uPulses %>% mutate_at(vars(8:68), funs(as.numeric)) 
+
+
+uPulses <- uPulses  %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+
+
+
 
