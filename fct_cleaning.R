@@ -202,6 +202,13 @@ fgtable[22,1] <- 'ALCOHOLIC BEVERAGES (imported)'
 
 fgtable <- fgtable %>%  slice(1, 4:16, 18,20, 22,24:26)
 
+ETHFCT <- ETHFCT %>% slice(2:903) %>%
+  mutate_at(vars(4:21), funs(as.numeric)) 
+
+ETHFCT <- ETHFCT %>%
+  mutate(SOP = reduce(select(.,       #We don't include fibre cause it's included in CHOT
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOT',  'ASH'), `+`))
+
 ###Waiting for the food group standardization after finishing with tagnames
 
 ##################------4) Gambia FCT----#####################
@@ -288,6 +295,14 @@ FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER',
               'IP5', 'IP6', 'FCT')
 
 KENFCT1 <- KENFCT1 %>% rename_all( ~ FCT5_tag) 
+
+KENFCT1 <- KENFCT1 %>% slice(2:1241) %>%
+  mutate_at(vars(3:37), funs(as.numeric)) 
+
+KENFCT1 <- KENFCT1 %>%
+  mutate(SOP = reduce(select(.,       #We don't include fibre cause it's included in CHOT
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF', 'FIBTG', 'ASH'), `+`))
+
 
 KENFCT2 <- readxl::read_excel(here::here(  'data', 
                                            paste(paste(FCT_QA[x,6],
@@ -415,18 +430,21 @@ NGAFCT <- NGAFCT %>% rename(
   ENERC2 = 'ENERC_kJ')
 
 
-names(NGAFCT) <- sub("(^_*g$)", "", names(NGAFCT))
+#Removing units from variable names
 
-names(NGAFCT) <- sub("(?=\\_)", "", names(NGAFCT))
+names(NGAFCT) <- sub("_g|_mcg|_mg", "", names(NGAFCT))
+
+NGAFCT <- NGAFCT %>% rename_at(vars(16:25), funs(toupper)) %>%
+  rename(VITA_RAE = 'VIT_A_RAE',
+         VITB6 = 'VIT_B6')
 
 
+NGAFCT <- NGAFCT %>% mutate_at(vars(9:37), funs(as.numeric)) 
 
-uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
 
-
-uFish <- uFish %>%
+NGAFCT <- NGAFCT %>%
   mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF','FIB',  'ASH'), `+`))
 
 
 
@@ -486,7 +504,7 @@ UGAFCT <- UGAFCT %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG'), `+`))
 
-
+UGAFCT$code <- as.character(UGAFCT$code)
 
 
 ##################------12) uFish FCT----#####################
@@ -587,4 +605,58 @@ uPulses <- uPulses  %>%
 
 
 
+
+
+
+
+
+FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1, LSOFCT, UGAFCT, uFish, uPulses)
+
+FCT %>% filter(!is.na(fooditem)) %>% group_by (FCT) %>% summarise_all(funs(sum(is.na(.))))
+
+#Quality checks - Variability of SOP
+
+FCT %>% ggplot(aes(FCT, SOP)) + geom_boxplot() 
+
+FCT %>% filter(FCT != 'ETHFCT') %>% 
+  ggplot(aes(FCT, SOP)) + geom_boxplot() 
+
+#Variability of key MN (minerals) by FCT
+
+FCT %>% ggplot(aes(FCT, ZN)) + geom_boxplot() 
+
+FCT %>% ggplot(aes(FCT, SE)) + geom_boxplot() 
+
+FCT %>% ggplot(aes(FCT, FE)) + geom_boxplot() 
+
+FCT %>% ggplot(aes(FCT, ID)) + geom_boxplot() 
+
+FCT %>% ggplot(aes(FCT, CA)) + geom_boxplot() 
+
+#Variability of key MN (vitamins) by FCT
+
+FCT %>% ggplot(aes(FCT, VITA_RAE)) + geom_boxplot() 
+
+FCT %>% ggplot(aes(FCT, VITB12)) + geom_boxplot() 
+
+FCT %>% ggplot(aes(FCT, VITC)) + geom_boxplot() 
+
+
+# % of missing values
+
+naniar::vis_miss(FCT)
+
+#heatmap of missing values per FCT
+
+naniar::gg_miss_fct(FCT, fct = FCT)
+
+#heatmap of missing values of the key MNs by FCT
+
+FCT %>% select('FCT', 'VITA_RAE', 'VITA', 'CARTB', 'VITC', 'VITB12', 'FOL', 'FOLDFE','FIBTG' , 'FIBC',
+               'FIBTS' ,'SE',  'ZN', 'ID', 'FE' , 'CA', 'PHYT', 'PHYTCPP', 'PHYTCPPD_I', 'PHYTAC', 'SOP') %>% 
+  naniar::gg_miss_fct(fct = FCT)
+
+
+FCT %>% select('FCT', 'SE',  'ZN', 'ID', 'FE' , 'CA') %>% 
+  naniar::gg_miss_fct(fct = FCT)
 
