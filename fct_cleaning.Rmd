@@ -3,9 +3,10 @@ title: "fct_cleaning"
 author: "LuciaSegovia"
 date: "8/12/2020"
 output:
+  pdf_document: 
+    latex_engine: xelatex
   html_document:
     df_print: paged
-  pdf_document: default
   word_document: default
 ---
 
@@ -16,6 +17,9 @@ library(tidyverse)
 
 ```
 
+First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spreadsheet is where all the information about each FCT is gathered. 
+
+Then, we are going to explore all the FCT in excel. We need to identify if the file has more than one worksheets and, if it does, where FCT is located. 
 
 ...NOTE:This is something where I need to improve this bit of code
 
@@ -41,27 +45,45 @@ sheet
 
 ```
 
-Then, we can load those sheets of interest. For instance, for West Africa FCT we will use the sheet 2 ('02_Components') and sheet 5 ('05_sum_57 (per 100g EP)'). While for Kenya FCT, we might need sheet 2, 3 and 4.
+Once we know what it is in each spreadsheet, we can load those sheets of interest. For instance, for West Africa FCT we will use the worksheet 5 ('05_sum_57 (per 100g EP)'). While for Kenya FCT, we need worksheet 4.
 
-Once we know what the information is provided by each FCT dataset, we realized that we can not extract all the information that we wanted. This is particularly true for Malawi, Lesotho and Nigeria FCTs because, even though we have access to a computer-readable format FCT, they do not provide any other information beside the food composition itself (i.e no metadata in tabular format was provided). Therefore, they need to be screened manually from their respective user-guides (pdf), when available.
+Since we want to perform some analysis, we need to standardize the variables. This process is also valuable to analyze the quality of each FCT and to record potential issues or aspects that need to be kept in mind when working with different FCT. Such as, are all same variables calculated in the same way? Are they comparable/ interconverteable? Are same variables reported in the same units? Are our variables of interest reported? 
 
-For those FCT that provided extra-information (WAFCT, KENFCT, uFish, uPulses), we have extracted the information provided for the components description (labelled as '0x Components' for the four FCT). Since these four tables are using FAO tagnames we are going to use that tagnames as standardized way to name and/ refer to components throughout the project. 
+Also, to run quality check such as, recalculation of variables, SOP, etc.
+
+For this section, we are going to calculate the missing values per MN of interest and the Sum of Proximates (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. 
+
+SOP = SUM of WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH. 
+
+In order to do so, we are going to standardize variables names as descibed above for food items names and code and for food components tagnames (FAO/INFOODS). Additionally, food groups will be standardized using FoodEx2 classification system.
 
 ####Standtadization of variables using FAO/INFOODS tagname
 
 ####1) West Africa FCT
 
+Since WAFCT is very recent and it is been done according to FAO/INFOODS tagname, we do not need to standardize much of the variables. Only for code, fooditem, fooditemFR, scientificName, and ref.
 
-For this section, we are going to calculate the missing values per MN of interest and the Sum of Proximates (SOP) calculated as ∑of water + protein + fat + available carbohydrates + dietary fibre + alcohol + ash. 
-
-∑of WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH. 
-
-In order to do so, we are going to standardize variables names as descibed above for food items names and code and for food components tagnames (FAO/INFOODS). Additionally, food groups will be standardized using FoodEx2 classification system.
-
-UPDATE: Add rename to Energy variables folowing the standard that it is set below (MAFOODS) 
+UPDATE: Add rename to Energy variables following the standard that it is set below (MAFOODS) 
  +ENERC1 = ENERC...10 = Energy in kcal; 
  +ENERC2 = ENERC...10 = Energy in kJ).
+ 
+When different way of reporting same variable (i.e. dietary fibre vs crude fibre), most of the time they were reported between brackets. We have desegregated those values to be different variables (columns). Then, we can decide which values we want to use (hierarchical decision). It is also good pratice to visualize the real number of entries for a particular component. Particularly relevant for
 
+FOL: some of the values are reported as FOLSUM. This tagname is recommended to be discontinued. 
+
+PHYYCPP: some values were reported as PHYTCPPD or PHYCPPI.
+
+There is an issue with values that are between [], when converting the variable into numeric those values are coerced as NA. There are two options here:
+ 
+ 1) to eliminate the [] and to use the values: Then, we are loosing the reason of putting them between [] which is to remark the low quality of that entry.
+ 2) to allow them to be converted in NA: Hence, we are not using low quality information.
+ 
+We do not want to loose information but also we want to use the highest quality available. 
+
+A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for subsetting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
+
+UPDATE: We have updated SOP calculation to account for FAT and FATCE.
+ 
 ```{r WAFCT standard variables}
 
 ##View WAFCT structure
@@ -147,8 +169,11 @@ WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric))
 
 
 WAFCT <- WAFCT %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`))
+  mutate(SOP = ifelse(is.na(FATCE),
+    reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`),
+    reduce(select(.,
+                  'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`)))
 
 summary(WAFCT$SOP)
 
@@ -159,11 +184,14 @@ NOTE: The problem with converting to numeric is that number between [] are remov
 
 ####2) Malawi FCT
 
-1) Tagnames standardization for MAFOODS
+For Malawi dataset all the variables names need to be converted manually because in this FCT component names are not standardized using tagnames or other method. To rename all the component in a standardized way three parameters needs to be taken into account:
 
-For WAFCT is already done. It only needs some minor refinement for those column that report two type of components (i.e. CARTBEQ or CARTB). However, for Malawi dataset all the variables names need to be converted manually. Why this need to be manually done, because there are three parameters that needs to be taken into account when re-naming them: 1) the compenent name, the unit and the method. I.e. for total nitrogen reported in grams and calculated with Kjeldahl method the tagname is NT
+          1) component name
+          2) unit reported
+          3) method used for analysis or calculation. 
+      I.e. for total nitrogen reported in grams and calculated with Kjeldahl method the tagname is NT
 
-When we are doing the tagnames, we would look into 2010 tagnames, 2008 tagnames, 2007 tagnames. In that order. 
+The guidelines used to select the tagnames are 'FAO/INFOODS Guidelines for Checking Food Composition Data prior to the Publication of a User Table/Database Version 1.0, 2012', 'FAO/INFOODS Guidelines Guidelines for Converting Units, Denominators and Expressions Version 1.0, 2012' and the tagnames found in FAO/INFOODS website starting from the most recent (2010 tagnames > 2008 tagnames > 2007 tagnames). 
 
 Decisions for tagnames in Malawi dataset
 
@@ -185,8 +213,7 @@ NOTE: in the future we could use FAT for normal and FATCE for continuous extract
 8) Cholesterol (mg) = CHOLC (cholesterol; determined by chemical method (classical), Unit: mg). We don't have information on how this variable has been obtained and we have chosen the 'classial' version. 
 NOTE: This tagname could be updated in the future.
 
-9) Total CHO for UDB = CHOTSM (carbohydrate, total; calculated by summation, Unit: g, Comments: This value is the sum of the, sugars, starches, oligosaccharides, and carbohydrate dietary fibre.). It was the only total CHO by summation. (CHOALVDF + Total Fibre)
-UPDATE: We change CHOCSM to CHOCSM to make it consistent with FAO/INFOODS update for clarity where all the total carbohydrates are CHOT.
+9) Total CHO for UDB = CHOCSM (carbohydrate, total; calculated by summation, Unit: g, Comments: This value is the sum of the, sugars, starches, oligosaccharides, and carbohydrate dietary fibre.). It was the only total CHO by summation. (CHOALVDF + Total Fibre)
 
 10) Carbohydrate, avail. (g) = CHOAVLDF (This value is calculated: 100 g minus total grams of water, protein, fat, alcohol, ash and dietary fibre; or CHOCDF – dietary fibre.)
 
@@ -282,7 +309,7 @@ MAFOODS <- readxl::read_excel(here::here( 'data',
 #Renaming variables with tagnames and converting numeric variables into numeric
 
 FCT_tag <- c('code', 'ref', 'fooditem', 'foodgroup', 'WATER', 'ENERC1', 'ENERC2', 'NT',
-             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLC', 'CHOTSM', 'CHOAVLDF',
+             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLC', 'CHOCSM', 'CHOAVLDF',
              'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA',
              'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
              'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT', 'FCT')
@@ -503,17 +530,16 @@ ONLY PDF
 
 All the variables are already labelled following FAO/INFOODS, hence only minor cleaning is needed. For MN, we need to capitalize them
 
-13) FATCE: Fat values derived from Soxhlet method (FATCE)
+13) FATCE: Fat values derived from Soxhlet method (Unit: g)
 
-14) CHOCDF: 
+14) CHOCDF: total carbohydrate calculated by difference (Unit: g). This value is calculated: 100 - (weight in grams [water + protein + fat + ash + alcohol] in 100 g of food). In line with previous tagnames, we have changed 
 
-15) FIB: 
+15) FIB: We are going to assume that it is FIBGT, which is the recommended choice by FAO/INFOODS until we have more information. 
 
 There are an issue with some values of protein. 
 
 
 ```{r NGAFCT tagname }
-
 
 #Nigeria FCT - tagname standardization
 
@@ -558,16 +584,16 @@ names(NGAFCT) <- sub("_g|_mcg|_mg", "", names(NGAFCT))
 
 NGAFCT <- NGAFCT %>% rename_at(vars(16:25), funs(toupper)) %>%
   rename(VITA_RAE = 'VIT_A_RAE',
-         VITB6 = 'VIT_B6')
+         VITB6 = 'VIT_B6',
+         FIBGT = 'FIB')
 
 
 NGAFCT <- NGAFCT %>% mutate_at(vars(9:37), funs(as.numeric)) 
 
 
 NGAFCT <- NGAFCT %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF','FIB',  'ASH'), `+`))
-
+  mutate(SOP = reduce(select(., #It is measuring total CHO, which includes fibre
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF',  'ASH'), `+`))
 
 ```
 ####9) South Africa FCT

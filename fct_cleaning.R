@@ -1,6 +1,5 @@
 
 library(tidyverse)
-library(rvest)
 
 ###-------------------------LOADING FCT_QA SPREADSHEAT----------------------#####
 
@@ -98,8 +97,11 @@ WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric))
 
 
 WAFCT <- WAFCT %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`))
+  mutate(SOP = ifelse(is.na(FATCE),
+    reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`),
+    reduce(select(.,
+                  'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`)))
 
 
 ##################------2) Malawi FCT----#####################
@@ -128,7 +130,7 @@ MAFOODS <- readxl::read_excel(here::here( 'data',
 #Renaming variables with tagnames and converting numeric variables into numeric
 
 FCT_tag <- c('code', 'ref', 'fooditem', 'foodgroup', 'WATER', 'ENERC1', 'ENERC2', 'NT',
-             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLC', 'CHOTSM', 'CHOAVLDF',
+             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLC', 'CHOCSM', 'CHOAVLDF',
              'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA',
              'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
              'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT', 'FCT')
@@ -436,15 +438,16 @@ names(NGAFCT) <- sub("_g|_mcg|_mg", "", names(NGAFCT))
 
 NGAFCT <- NGAFCT %>% rename_at(vars(16:25), funs(toupper)) %>%
   rename(VITA_RAE = 'VIT_A_RAE',
-         VITB6 = 'VIT_B6')
+         VITB6 = 'VIT_B6',
+         FIBGT = 'FIB')
 
 
 NGAFCT <- NGAFCT %>% mutate_at(vars(9:37), funs(as.numeric)) 
 
 
 NGAFCT <- NGAFCT %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF','FIB',  'ASH'), `+`))
+  mutate(SOP = reduce(select(., #It is measuring total CHO, which includes fibre
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF',  'ASH'), `+`))
 
 
 
@@ -608,11 +611,36 @@ uPulses <- uPulses  %>%
 
 
 
+#Master data set with all FCT
+
+FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1,
+                 LSOFCT, NGAFCT,UGAFCT, uFish, uPulses)
+
+#Data set with all the missing values per FCT and variable
+
+missing <- FCT %>% filter(!is.na(fooditem)) %>% group_by (FCT) %>%
+  summarise_all(funs(sum(is.na(.))))
+
+missing_MN <- FCT %>% filter(!is.na(fooditem)) %>%
+  group_by (FCT) %>% 
+  summarise_at(vars('VITA_RAE', 'VITA', 'CARTB', 'VITC', 
+                    'VITB12', 'FOL', 'FOLDFE','FIBTG' , 'FIBC',
+                    'FIBTS' ,'SE',  'ZN', 'ID', 'FE' , 'CA', 'PHYT',
+                    'PHYTCPP', 'PHYTCPPD_I', 'PHYTAC', 'SOP'), funs(sum(is.na(.))))
 
 
-FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1, LSOFCT, UGAFCT, uFish, uPulses)
+#Data set with SOP mean, max and min per FCT and
 
-FCT %>% filter(!is.na(fooditem)) %>% group_by (FCT) %>% summarise_all(funs(sum(is.na(.))))
+SOP_sum <- FCT %>% group_by(FCT) %>%  summarise(no = length(fooditem),
+                                                mean_SOP = mean(SOP, na.rm = TRUE),
+                                                sd_SOP = sd(SOP, na.rm = TRUE),
+                                                min_SOP = min(SOP, na.rm = TRUE),
+                                                max_SOP = max(SOP, na.rm = TRUE))
+
+write_csv(missing_MN, here::here('data' ,'missing_MN.csv'))
+
+write_csv(SOP_sum, here::here('data' ,'SOP.csv'))
+
 
 #Quality checks - Variability of SOP
 
@@ -651,12 +679,19 @@ naniar::vis_miss(FCT)
 naniar::gg_miss_fct(FCT, fct = FCT)
 
 #heatmap of missing values of the key MNs by FCT
+#And saving it as png
+
+png("heatmap.png", width = 6, height = 4, units = 'in', res = 300)
 
 FCT %>% select('FCT', 'VITA_RAE', 'VITA', 'CARTB', 'VITC', 'VITB12', 'FOL', 'FOLDFE','FIBTG' , 'FIBC',
                'FIBTS' ,'SE',  'ZN', 'ID', 'FE' , 'CA', 'PHYT', 'PHYTCPP', 'PHYTCPPD_I', 'PHYTAC', 'SOP') %>% 
   naniar::gg_miss_fct(fct = FCT)
 
+dev.off()
+
 
 FCT %>% select('FCT', 'SE',  'ZN', 'ID', 'FE' , 'CA') %>% 
   naniar::gg_miss_fct(fct = FCT)
+
+
 
