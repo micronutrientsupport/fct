@@ -322,6 +322,8 @@ Eq.5:  VITA = mcg retinol + 1/6 mcg ß- carotene equivalent
 
 NOTE:Still need to arrange foodgroups
 
+NOTE: When calculating SOP, we do not include fibre because it is already included in CHOT.
+
 ####4) Gambia FCT
 
 Within the GMBFCT there are tagnames assigned to each food component
@@ -499,8 +501,75 @@ ONLY PDF
 
 ####8) Nigeria FCT
 
-All the variables are already labelled following FAO/INFOODS, hence only minor cleaning is needed.
+All the variables are already labelled following FAO/INFOODS, hence only minor cleaning is needed. For MN, we need to capitalize them
 
+13) FATCE: Fat values derived from Soxhlet method (FATCE)
+
+14) CHOCDF: 
+
+15) FIB: 
+
+There are an issue with some values of protein. 
+
+
+```{r NGAFCT tagname }
+
+
+#Nigeria FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 8
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>%
+  head()
+
+
+#Customized saving FCT
+
+NGAFCT <- readxl::read_excel(here::here(  'data', 
+                                          paste(paste(FCT_QA[x,6],
+                                                      FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                             sheet = 1) %>% mutate(FCT = 'NGAFCT')  %>% glimpse()
+
+NGAFCT <- NGAFCT %>% rename(
+  ref = 'REFID',
+  code = 'Code', 
+  foodgroup = 'Category',
+  fooditemNGA = 'LocalName',
+  fooditem = 'EnglishName',
+  scientificName = 'ScientificName',
+  fooditemFR = 'FrenchNames',
+  ENERC1 = 'ENERC_kcal',
+  ENERC2 = 'ENERC_kJ')
+
+
+#Removing units from variable names
+
+names(NGAFCT) <- sub("_g|_mcg|_mg", "", names(NGAFCT))
+
+NGAFCT <- NGAFCT %>% rename_at(vars(16:25), funs(toupper)) %>%
+  rename(VITA_RAE = 'VIT_A_RAE',
+         VITB6 = 'VIT_B6')
+
+
+NGAFCT <- NGAFCT %>% mutate_at(vars(9:37), funs(as.numeric)) 
+
+
+NGAFCT <- NGAFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF','FIB',  'ASH'), `+`))
+
+
+```
 ####9) South Africa FCT
 
 ONLY PDF
