@@ -13,6 +13,7 @@ FCT_QA <- readxl::read_excel(here::here('data', 'FCT_QA.xlsx'), sheet = 2)
 
 ##################------1) West Africa FCT----#####################
 
+## ---- WAFCT-tagname
 
 ##View WAFCT structure
 
@@ -103,6 +104,7 @@ WAFCT <- WAFCT %>%
     reduce(select(.,
                   'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`)))
 
+write.csv(WAFCT,  here::here('data', 'MAPS_WAFCT.csv'))
 
 ##################------2) Malawi FCT----#####################
 
@@ -145,6 +147,7 @@ MAFOODS <- MAFOODS %>%
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBC',  'ASH'), `+`))
 
 
+write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS.csv'))
 
 ##################------3) Ethiopia FCT----#####################
 
@@ -213,6 +216,8 @@ ETHFCT <- ETHFCT %>%
 
 ###Waiting for the food group standardization after finishing with tagnames
 
+write.csv(ETHFCT,  here::here('data', 'MAPS_ETHFCT.csv'))
+
 ##################------4) Gambia FCT----#####################
 
 #Gambia FCT - tagname standardization
@@ -259,6 +264,8 @@ GMBFCT$code <- as.character(GMBFCT$code)
 GMBFCT <- GMBFCT %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLM','FIBTS'), `+`))
+
+write.csv(GMBFCT,  here::here('data', 'MAPS_GMBFCT.csv'))
 
 ##################------5) Kenya FCT----#####################
 
@@ -313,6 +320,7 @@ KENFCT2 <- readxl::read_excel(here::here(  'data',
 
 KENFCT <- bind_cols(KENFCT1, KENFCT2)
 
+write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1.csv'))
 
 ##################------6) Lesotho FCT----#####################
 
@@ -392,6 +400,7 @@ LSOFCT <- LSOFCT %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
+write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCT.csv'))
 
 ##################------8) Nigeria FCT----#####################
 
@@ -449,7 +458,7 @@ NGAFCT <- NGAFCT %>%
   mutate(SOP = reduce(select(., #It is measuring total CHO, which includes fibre
                              'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF',  'ASH'), `+`))
 
-
+write.csv(NGAFCT,  here::here('data', 'MAPS_NGAFCT.csv'))
 
 ##################------11) Uganda FCT----#####################
 
@@ -509,6 +518,7 @@ UGAFCT <- UGAFCT %>%
 
 UGAFCT$code <- as.character(UGAFCT$code)
 
+write.csv(UGAFCT,  here::here('data', 'MAPS_UGAFCT.csv'))
 
 ##################------12) uFish FCT----#####################
 
@@ -557,6 +567,7 @@ uFish <- uFish %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
+write.csv(uFish,  here::here('data', 'MAPS_uFish.csv'))
 
 ##################------13) uPulses FCT----#####################
 
@@ -605,16 +616,18 @@ uPulses <- uPulses  %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
+write.csv(uPulses,  here::here('data', 'MAPS_uPulses.csv'))
 
 
-
-
+#########---------------END------------------##############
 
 
 #Master data set with all FCT
 
 FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1,
                  LSOFCT, NGAFCT,UGAFCT, uFish, uPulses)
+
+write.csv(FCT,  here::here('data', 'FCT_10.csv'))
 
 #Data set with all the missing values per FCT and variable
 
