@@ -1,0 +1,53 @@
+---
+title: "Fortification_checks"
+author: "LuciaSegovia"
+date: "8/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Fortification
+
+http://ffinetwork.org/country_profiles/country.php?record=130
+
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+I checked vitamin A values for self-declared fortified maize products (‘fortified in Vitamin A’) 
+
+VITA (RAE) mean = 395mcg 
+VITA (RAE) min. = 117mcg 
+
+Then, for self-declared unfortified maize (‘unfortified’)
+
+VITA (RAE) mean = 0.812mcg 
+VITA (RAE) max. = 13mcg 
+
+
+USDA value for corn 
+
+1) Corn grain, white: VITA (RAE) = 0mcg
+
+source: https://fdc.nal.usda.gov/fdc-app.html#/food-details/168920/nutrients
+
+
+2) Corn grain, yellow:  VITA (RAE) = 11mcg 
+
+source: https://fdc.nal.usda.gov/fdc-app.html#/food-details/170288/nutrients
+
+We have confirmed the values for corn flour, unfortified as well. 
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

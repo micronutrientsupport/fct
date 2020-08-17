@@ -11,7 +11,10 @@ output:
 ---
 
 ```{r setup, include=FALSE, warning=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE,warning=FALSE, message=FALSE) 
+
+knitr::read_chunk('fct_cleaning.R')
 
 library(tidyverse)
 
@@ -22,6 +25,9 @@ First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spr
 Then, we are going to explore all the FCT in excel. We need to identify if the file has more than one worksheets and, if it does, where FCT is located. 
 
 ...NOTE:This is something where I need to improve this bit of code
+
+```{r, WAFCT-tagname, echo=FALSE}
+```
 
 ```{r exploring sheets - loop}
 
@@ -83,6 +89,8 @@ We do not want to loose information but also we want to use the highest quality 
 A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for subsetting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
 
 UPDATE: We have updated SOP calculation to account for FAT and FATCE.
+
+
  
 ```{r WAFCT standard variables}
 
