@@ -436,7 +436,7 @@ KENFCT1 - We have review and update tagnames and we have cut the rows until 1242
 
 22) Retinol (mcg): RETOL (Retinol, Unit: mcg)
 
-27-28) Folates group: According to the User-guide all four forms were reported (Dietary folate eq., food folate, synthetic folate, total folate). However when exploring the variables only two are present (dietary folate eq., and food folate). FOLAC is reported as comments or food notes for those food items that where fortified. An control check should be implemented for fortified food, since some of the fortified food (FOLDFE ≠ FOLDF) are not always stated in the 'fooditem' (name). FOL was not found in the user-guider nor in the xlsx format. 
+27-28) Folates group: According to the User-guide all four forms were reported (Dietary folate eq., food folate, synthetic folate, total folate). However when exploring the variables only two are present (dietary folate eq., and food folate). FOLAC is reported as comments or food notes for those food items that where fortified. An control check should be implemented for fortified food, since some of the fortified food (FOLDFE ≠ FOLFD) are not always stated in the 'fooditem' (name). FOL was not found in the user-guider nor in the xlsx format. 
 
 KENFCT2 - We have incorporated tagnames as per in the dataset (with no modifications)
 
