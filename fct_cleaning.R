@@ -327,7 +327,7 @@ FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER',
             'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG', 'ASH', 
              'CA', 'FE', 'MG', 'P', 'K', 'NA', 'ZN', 'SE',
                'VITA_RAE', 'VITA', 'RETOL', 'CARBEQ', 
-             'THIA', 'RIBF', 'NIA', 'FOLDFE', 'FOLDF',
+             'THIA', 'RIBF', 'NIA', 'FOLDFE', 'FOLFD',
              'VITB12', 'VITC', 'CHOLE', 'OXALAC', 'PHYTCPPD', 'IP3', 'IP4',
               'IP5', 'IP6', 'FCT')
 
