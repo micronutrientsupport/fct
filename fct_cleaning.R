@@ -245,7 +245,7 @@ GMBFCT <- readxl::read_excel(here::here( 'data',
                              sheet = 1) %>% mutate(FCT = 'GMBFCT') %>% glimpse()
 
 
-FCT4_tag <- c('foodgroup','code',  'fooditem', 'ENERC1', 'ENERC2',  
+FCT4_tag <- c('foodgroup_code','code',  'fooditem', 'ENERC1', 'ENERC2',  
               'PROTCNT', 'FAT',  'CHOAVLM', 'FIBTS', 'PHYTAC',
               'WATER', 'CA',  'P', 'FE',  'ZN', 'CARTBEQ', 'VITC',
               'ref', 'FCT')
@@ -254,6 +254,34 @@ FCT4_tag <- c('foodgroup','code',  'fooditem', 'ENERC1', 'ENERC2',
 
 GMBFCT <- GMBFCT %>% rename_all( ~ FCT4_tag) %>% slice(3:527) %>%
   mutate_at(vars(4:17), funs(as.numeric)) 
+
+fggmb <- GMBFCT %>% filter(is.na(fooditem), !is.na(foodgroup_code)) %>% pull(foodgroup_code)
+
+rowgmb <- which(is.na(GMBFCT$fooditem) & !is.na(GMBFCT$foodgroup))
+
+LSOFCT <- LSOFCT %>% 
+  mutate(foodgroup = ifelse(grepl(nolso[1], code), fglso[1],
+                            ifelse(grepl(nolso[2], code), fglso[2],
+                                   ifelse(grepl(nolso[3], code), fglso[3],
+                                          ifelse(grepl(nolso[4], code), fglso[4], 
+                                                 ifelse(grepl(nolso[5], code), fglso[5], 
+                                                        ifelse(grepl(nolso[6], code), fglso[6], 
+                                                               ifelse(grepl(nolso[7], code), fglso[7],
+                                                                      ifelse(grepl(nolso[8], code), fglso[8], 
+                                                                             ifelse(grepl(nolso[9], code), fglso[9],
+                                                                                    ifelse(grepl(nolso[10], code), fglso[10], 
+                                                                                           ifelse(grepl(nolso[11], code), fglso[11],
+                                                                                                  ifelse(grepl(nolso[12], code), fglso[12], 
+                                                                                                         ifelse(grepl(nolso[13], code), fglso[13], 
+                                                                                                                ifelse(grepl(nolso[14], code), fglso[14],
+                                                                                                                       ifelse(grepl(nolso[15], code), fglso[15],
+                                                                                                                              ifelse(grepl(nolso[16], code), fglso[16],
+                                                                                                                                     ifelse(grepl(nolso[17], code), fglso[17],  
+                                                                                                                                            ifelse(grepl(nolso[18], code), fglso[18],
+                                                                                                                                                   ifelse(grepl(nolso[19], code), fglso[19],
+                                                                                                                                                          ifelse(grepl(nolso[20], code), fglso[20], 
+                                                                                                                                                                 'NA')))))))))))))))))))))%>% 
+  filter(!is.na(code))
 
 #Converting into character (needed for binding datasets)
 
@@ -308,17 +336,59 @@ KENFCT1 <- KENFCT1 %>% rename_all( ~ FCT5_tag)
 KENFCT1 <- KENFCT1 %>% slice(2:1241) %>%
   mutate_at(vars(3:37), funs(as.numeric)) 
 
+
+kenfg <- c('Cereals and cereal products',
+           'Starchy roots, bananas and tubers',
+           'Legumes and pulses',
+           'Vegetables and vegetable products',
+           'Fruits and fruit products',
+           'Milk and dairy products',
+           'Meats, poultry and eggs',
+           'Fish and sea foods',
+           'Oils and fats',
+           'Nuts and seeds',
+           'Sugar and sweetened products',
+           'Beverages',
+           'Condiments and spices Insects',
+           'Mixed dishes')
+
+KENFCT1 <- KENFCT1 %>% mutate(foodgroup = case_when(
+  str_starts(code, '10') ~ kenfg[1],
+  str_starts(code, '20') ~ kenfg[2],
+  str_starts(code, '30') ~ kenfg[3],
+  str_starts(code, '40') ~ kenfg[4],
+str_starts(code, '50') ~ kenfg[5],
+str_starts(code, '60') ~ kenfg[6],
+str_starts(code, '70') ~ kenfg[7],
+str_starts(code, '80') ~ kenfg[8],
+str_starts(code, '90') ~ kenfg[9],
+str_starts(code, '11') ~ kenfg[11],
+str_starts(code, '12') ~ kenfg[12],
+str_starts(code, '13') ~ kenfg[13],
+str_starts(code, '14') ~ kenfg[14],
+str_starts(code, '15') ~ kenfg[15])) 
+
+x <- which(KENFCT1$code == 10)
+
+y <- which(KENFCT1$code == 11)
+
+KENFCT10 <- KENFCT1 %>% slice(x:y) %>% mutate(foodgroup = kenfg[10])
+
+KENFCT1 <- KENFCT1 %>% slice(1:x, y:1241) %>%
+  bind_rows(., KENFCT10) %>% 
+  filter(!is.na(ENERC1))
+
 KENFCT1 <- KENFCT1 %>%
   mutate(SOP = reduce(select(.,       #We don't include fibre cause it's included in CHOT
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF', 'FIBTG', 'ASH'), `+`))
 
 
-KENFCT2 <- readxl::read_excel(here::here(  'data', 
-                                           paste(paste(FCT_QA[x,6],
-                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                              sheet = 4, skip = 3) %>% select(38:319) %>% glimpse()
+#KENFCT2 <- readxl::read_excel(here::here(  'data', 
+ #                                          paste(paste(FCT_QA[x,6],
+  #                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+   #                           sheet = 4, skip = 3) %>% select(38:319) %>% glimpse()
 
-KENFCT <- bind_cols(KENFCT1, KENFCT2)
+#KENFCT <- bind_cols(KENFCT1, KENFCT2)
 
 write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1.csv'))
 
@@ -625,86 +695,9 @@ write.csv(uPulses,  here::here('data', 'MAPS_uPulses.csv'))
 #Master data set with all FCT
 
 FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1,
-                 LSOFCT, NGAFCT,UGAFCT, uFish, uPulses)
+                 LSOFCT, NGAFCT,UGAFCT, uFish, uPulses) 
+
 
 write.csv(FCT,  here::here('data', 'FCT_10.csv'))
-
-#Data set with all the missing values per FCT and variable
-
-missing <- FCT %>% filter(!is.na(fooditem)) %>% group_by (FCT) %>%
-  summarise_all(funs(sum(is.na(.))))
-
-missing_MN <- FCT %>% filter(!is.na(fooditem)) %>%
-  group_by (FCT) %>% 
-  summarise_at(vars('VITA_RAE', 'VITA', 'CARTB', 'VITC', 
-                    'VITB12', 'FOL', 'FOLDFE','FIBTG' , 'FIBC',
-                    'FIBTS' ,'SE',  'ZN', 'ID', 'FE' , 'CA', 'PHYT',
-                    'PHYTCPP', 'PHYTCPPD_I', 'PHYTAC', 'SOP'), funs(sum(is.na(.))))
-
-
-#Data set with SOP mean, max and min per FCT and
-
-SOP_sum <- FCT %>% group_by(FCT) %>%  summarise(no = length(fooditem),
-                                                mean_SOP = mean(SOP, na.rm = TRUE),
-                                                sd_SOP = sd(SOP, na.rm = TRUE),
-                                                min_SOP = min(SOP, na.rm = TRUE),
-                                                max_SOP = max(SOP, na.rm = TRUE))
-
-write_csv(missing_MN, here::here('data' ,'missing_MN.csv'))
-
-write_csv(SOP_sum, here::here('data' ,'SOP.csv'))
-
-
-#Quality checks - Variability of SOP
-
-FCT %>% ggplot(aes(FCT, SOP)) + geom_boxplot() 
-
-FCT %>% filter(FCT != 'ETHFCT') %>% 
-  ggplot(aes(FCT, SOP)) + geom_boxplot() 
-
-#Variability of key MN (minerals) by FCT
-
-FCT %>% ggplot(aes(FCT, ZN)) + geom_boxplot() 
-
-FCT %>% ggplot(aes(FCT, SE)) + geom_boxplot() 
-
-FCT %>% ggplot(aes(FCT, FE)) + geom_boxplot() 
-
-FCT %>% ggplot(aes(FCT, ID)) + geom_boxplot() 
-
-FCT %>% ggplot(aes(FCT, CA)) + geom_boxplot() 
-
-#Variability of key MN (vitamins) by FCT
-
-FCT %>% ggplot(aes(FCT, VITA_RAE)) + geom_boxplot() 
-
-FCT %>% ggplot(aes(FCT, VITB12)) + geom_boxplot() 
-
-FCT %>% ggplot(aes(FCT, VITC)) + geom_boxplot() 
-
-
-# % of missing values
-
-naniar::vis_miss(FCT)
-
-#heatmap of missing values per FCT
-
-naniar::gg_miss_fct(FCT, fct = FCT)
-
-#heatmap of missing values of the key MNs by FCT
-#And saving it as png
-
-png("heatmap.png", width = 6, height = 4, units = 'in', res = 300)
-
-FCT %>% select('FCT', 'VITA_RAE', 'VITA', 'CARTB', 'VITC', 'VITB12', 'FOL', 'FOLDFE','FIBTG' , 'FIBC',
-               'FIBTS' ,'SE',  'ZN', 'ID', 'FE' , 'CA', 'PHYT', 'PHYTCPP', 'PHYTCPPD_I', 'PHYTAC', 'SOP') %>% 
-  naniar::gg_miss_fct(fct = FCT)
-
-dev.off()
-
-
-FCT %>% select('FCT', 'SE',  'ZN', 'ID', 'FE' , 'CA') %>% 
-  naniar::gg_miss_fct(fct = FCT)
-
 
 
