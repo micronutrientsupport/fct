@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
  We are going to check the average and standard desviation of the sum of proximates. Then, we are going to explore the percentage of items that fall within prefered and acceptable limits for the sum of proximates. We will use as reference the values given by the FAO/INFOODS guidelines (REF). 
  
  
-After checking the average values and sd, we have decided to exclude two FCT: NGAFCT and ETHFCT. Then, after checking the percentage of *fooditems* that fall out of the prefered and aceptable limits, we are excluiding GMBFCT and UGAFCT as well. 
+After checking the average values and sd, we have decided to exclude two FCT: NGAFCT and ETHFCT. Then, after checking the percentage of *fooditems* that fall out of the preferred and acceptable limits, we are excluiding GMBFCT and UGAFCT as well. 
 
 
 

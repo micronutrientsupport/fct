@@ -127,6 +127,6 @@ FCT %>% select('FCT', 'SE',  'ZN', 'ID', 'FE' , 'CA') %>%
   naniar::gg_miss_fct(fct = FCT)
 
 
-FCT06 <- FCT %>% filter(!FCT %in% c('ETHFCT','NGAFCT', 'GMBFCT', 'UGFCT') )
+FCT06 <- FCT %>% filter(!FCT %in% c('ETHFCT','NGAFCT', 'GMBFCT', 'UGAFCT') )
 
 write.csv(FCT06,  here::here('data', 'FCT_06.csv'))

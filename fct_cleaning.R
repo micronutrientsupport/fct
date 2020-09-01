@@ -81,6 +81,20 @@ WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
   mutate(FOLSUM = str_extract(FOL, '(?<=\\[).*?(?=\\])')) %>%
   mutate(PHYTCPPD_I = str_extract(PHYTCPP, '(?<=\\[).*?(?=\\])'))
 
+
+#This keeps numbers and create a variable with low_quality
+
+#NOTHING IS WORKING!!!
+
+x <- c('\\[' , '\\]')
+
+WAFCT %>% mutate(low_quality_FE = str_detect(FE, '\\[.*?\\]')) %>% pull(low_quality_FE)
+
+WAFCT %>% mutate(FE = str_remove(FE, x)) %>% pull(FE)
+
+WAFCT %>% mutate(FE = str_extract(FE, '(?<=\\[).*?(?=\\])')) %>% pull(FE)
+
+
 #Reordering variables
 
 WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
@@ -94,15 +108,24 @@ WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
 
 WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric)) 
 
-#Calculating SOP for the WAFCT
+
+#calculating Ash for oils
+
+WAFCT %>% filter(is.na(ASH))
+
+WAFCT<- WAFCT %>% rowwise %>% mutate( CL_cal = `NA`* 2.5)
+                  
+WAFCT<- WAFCT %>% mutate(               
+                 ASH_cal = ifelse(is.na(ASH), TRUE, FALSE),
+                  ASH = ifelse(is.na(ASH), 
+                   reduce(select(., 'CA', 'FE',  'CL_cal',
+                                                        'MG',  'P', 'K', 'NA', 'ZN',
+                                                        'CU')/1000, `+`), ASH))
 
 
-WAFCT <- WAFCT %>%
-  mutate(SOP = ifelse(is.na(FATCE),
-    reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`),
-    reduce(select(.,
-                  'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`)))
+#There is no need to calculate SOP for WAFCT
+
+summary(WAFCT$SOP)
 
 write.csv(WAFCT,  here::here('data', 'MAPS_WAFCT.csv'))
 
@@ -333,6 +356,11 @@ FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER',
 
 KENFCT1 <- KENFCT1 %>% rename_all( ~ FCT5_tag) 
 
+KENFCT1 <- KENFCT1 %>% mutate(is_FOLAC = case_when( 
+                                str_detect(FOLDFE, '[*]') ~ 'YES',
+                                TRUE ~ 'NO')) %>%
+                      mutate(FOLDFE = str_remove(FOLDFE, '[*]'))
+
 KENFCT1 <- KENFCT1 %>% slice(2:1241) %>%
   mutate_at(vars(3:37), funs(as.numeric)) 
 
@@ -469,6 +497,11 @@ LSOFCT <- LSOFCT %>%   mutate_at(vars(3:39), funs(as.numeric))
 LSOFCT <- LSOFCT %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+         
+
+LSOFCT <- LSOFCT %>% rowwise %>%  mutate(ENERC1 = sum(c(
+                                  (PROTCNT*4) , (FAT*9), (CHOAVLDF*4),(FIBTG *2))))
+
 
 write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCT.csv'))
 
