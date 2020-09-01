@@ -14,13 +14,11 @@ output:
 
 knitr::opts_chunk$set(echo = TRUE,warning=FALSE, message=FALSE) 
 
-knitr::read_chunk('fct_cleaning.R')
-
 library(tidyverse)
 
 ```
 
-First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spreadsheet is where all the information about each FCT is gathered. 
+First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spreadsheet is where all the information about each FCT is collated 
 
 Then, we are going to explore all the FCT in excel. We need to identify if the file has more than one worksheets and, if it does, where FCT is located. 
 
@@ -53,44 +51,54 @@ sheet
 
 Once we know what it is in each spreadsheet, we can load those sheets of interest. For instance, for West Africa FCT we will use the worksheet 5 ('05_sum_57 (per 100g EP)'). While for Kenya FCT, we need worksheet 4.
 
-Since we want to perform some analysis, we need to standardize the variables. This process is also valuable to analyze the quality of each FCT and to record potential issues or aspects that need to be kept in mind when working with different FCT. Such as, are all same variables calculated in the same way? Are they comparable/ interconverteable? Are same variables reported in the same units? Are our variables of interest reported? 
+Since we want to perform some analysis, we need to standardize the variables. This process is also valuable to analyze the quality of each FCT and to record potential issues or aspects that need to be kept in mind when working with different FCT. Such as, are all same variables calculated in the same way? Are they comparable? Are same variables reported in the same units? Are variables of interest reported? 
 
-Also, to run quality check such as, recalculation of variables, SOP, etc.
-
-For this section, we are going to calculate the missing values per MN of interest and the Sum of Proximates (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. 
+Also, it would allow us to run quality check such as, recalculation of variables, SOP, etc. Within the quality checks we will find count of missing values per MN of interest and sum of proximates (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. And, percentage of sum of proximates above or below recommeded thresholds (FAO/INFOODS, 2013). For more details see 'quality_check.Rmd'.
 
 SOP = SUM of WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH. 
 
-In order to do so, we are going to standardize variables names as descibed above for food items names and code and for food components tagnames (FAO/INFOODS). Additionally, food groups will be standardized using FoodEx2 classification system.
+As mentioned earlier, the first step is the standardization of variable names. The names used are detailed in the cookbook. In summary, food items names will be code as 'fooditem', food item code will be 'code', food categories or food groups will be 'foodgroup' and food components will be name using the FAO/INFOODS tagnames. Additionally, food groups will be standardized using FoodEx2 classification system and name 'foodgroup_FoodEx2'.
 
 ####Standtadization of variables using FAO/INFOODS tagname
 
 ####1) West Africa FCT
 
-Since WAFCT is very recent and it is been done according to FAO/INFOODS tagname, we do not need to standardize much of the variables. Only for code, fooditem, fooditemFR, scientificName, and ref.
+Since WAFCT is very recent and it has been done according to FAO/INFOODS tagname, we do not need to standardize much of the variables. Only for code, fooditem, fooditemFR, scientificName, and ref.
 
 UPDATE: Add rename to Energy variables following the standard that it is set below (MAFOODS) 
  +ENERC1 = ENERC...10 = Energy in kcal; 
  +ENERC2 = ENERC...10 = Energy in kJ).
  
-When different way of reporting same variable (i.e. dietary fibre vs crude fibre), most of the time they were reported between brackets. We have desegregated those values to be different variables (columns). Then, we can decide which values we want to use (hierarchical decision). It is also good pratice to visualize the real number of entries for a particular component. Particularly relevant for
 
-FOL: some of the values are reported as FOLSUM. This tagname is recommended to be discontinued. 
+There is an issue with values that are between [ ], when converting the variable into numeric those values are coerced as NA. There are two types of data between brackets: 1) Data that has been calculated using a different method or that report a different type of data (i.e. FIBTG vs FIBC). 2) Data that is of low quality. This is the case for minerals. 
 
-PHYYCPP: some values were reported as PHYTCPPD or PHYCPPI.
+To deal with the first type, when different way of reporting same variable (i.e. dietary fibre vs crude fibre). We have desegregated those values into different variables (columns). Then, we can decide which values we want to use (hierarchical decision). It is also good practice to visualize the real number of entries for a particular component. Particularly relevant for:
 
-There is an issue with values that are between [], when converting the variable into numeric those values are coerced as NA. There are two options here:
+  -FOL: some of the values are reported as FOLSUM. This tagname is recommended to be discontinued. 
+
+  -PHYYCPP: some values were reported as PHYTCPPD or PHYCPPI.
+
+Then, for minerals that report low quality data between brackets, there are two options here:
  
- 1) to eliminate the [] and to use the values: Then, we are loosing the reason of putting them between [] which is to remark the low quality of that entry.
+ 1) to eliminate the [ ] and to use the values: Then, we are loosing the reason of putting them between [ ] which is to remark the low quality of that entry.
+ 
  2) to allow them to be converted in NA: Hence, we are not using low quality information.
  
 We do not want to loose information but also we want to use the highest quality available. 
 
+*UPDATE: Bracket issue proposed solution*. We can remove the values from between the brackets and add another column to include a variable of low_quality_MN (yes/no). 
+
 A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for subsetting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
 
-UPDATE: We have updated SOP calculation to account for FAT and FATCE.
+UPDATE: We have updated SOP calculation to account for two variables used to report fat: FAT and FATCE. And to account for the two variables used to report fibre (FIBTG and FIBC).
 
+Additionally, we oils in this FCT has value NA, according to FAO/INFOODS Ash can be calculated as sum of minerals:
 
+Ash value (g/100 g EP)> (CA (mg) + FE (mg) + MG (mg)+ P (mg) + K (mg) + NA (mg) + ZN (mg)+ CU (mg) + MN (mg) + CL (mg))/1000
+
+When CL is not reported it can be calculated as NA*2.5). Minerals reported in mcg (i.e. selenium or iodine) are not considered due to the insignificant contribution.
+
+Sum of proximate is included in the original table. There is no need to re-calculated here. It would be re-calculated for quality checks. 
  
 ```{r WAFCT standard variables}
 
@@ -173,22 +181,23 @@ WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
 
 WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric)) 
 
-#Calculating SOP for the WAFCT
+#Oils in this FCT has value NA, according to FAO/INFOODS Ash can be calculated as sum of minerals:
 
+WAFCT %>% filter(is.na(ASH))
 
-WAFCT <- WAFCT %>%
-  mutate(SOP = ifelse(is.na(FATCE),
-    reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`),
-    reduce(select(.,
-                  'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG', 'ALC', 'ASH'), `+`)))
+WAFCT<- WAFCT %>% rowwise %>% mutate( CL_cal = `NA`* 2.5)
+                  
+WAFCT<- WAFCT %>% mutate(               
+                 ASH_cal = ifelse(is.na(ASH), TRUE, FALSE),
+                  ASH = ifelse(is.na(ASH), 
+                   reduce(select(., 'CA', 'FE',  'CL_cal',
+                                                        'MG',  'P', 'K', 'NA', 'ZN',
+                                                        'CU')/1000, `+`), ASH))
 
 summary(WAFCT$SOP)
 
 
 ```
-
-NOTE: The problem with converting to numeric is that number between [] are removed (as NA). It is also creating a issue with the calculation of SOP
 
 ####2) Malawi FCT
 
@@ -436,7 +445,12 @@ KENFCT1 - We have review and update tagnames and we have cut the rows until 1242
 
 22) Retinol (mcg): RETOL (Retinol, Unit: mcg)
 
-27-28) Folates group: According to the User-guide all four forms were reported (Dietary folate eq., food folate, synthetic folate, total folate). However when exploring the variables only two are present (dietary folate eq., and food folate). FOLAC is reported as comments or food notes for those food items that where fortified. An control check should be implemented for fortified food, since some of the fortified food (FOLDFE ≠ FOLFD) are not always stated in the 'fooditem' (name). FOL was not found in the user-guider nor in the xlsx format. 
+27-28) Folate group: According to the User-guide all four forms were reported (Dietary folate eq., food folate, synthetic folate, total folate). However when exploring the variables only two are present (dietary folate eq., and food folate). FOLAC is reported as comments or food notes for those food items that where fortified. An control check should be implemented for fortified food, since some of the fortified food (FOLDFE ≠ FOLFD) are not always stated in the 'fooditem' (name). FOL was not found in the user-guider nor in the xlsx format. 
+
+We removed [*] that indicates fortification and created a variable FOLAC with YES for those fortified food items. 
+
+There are values between [] they refer to those food items that folate was not calculated by microbiological array, instead other methods as HPLC were used. 
+
 
 KENFCT2 - We have incorporated tagnames as per in the dataset (with no modifications)
 
