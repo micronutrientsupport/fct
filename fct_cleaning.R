@@ -155,7 +155,7 @@ MAFOODS <- readxl::read_excel(here::here( 'data',
 #Renaming variables with tagnames and converting numeric variables into numeric
 
 FCT_tag <- c('code', 'ref', 'fooditem', 'foodgroup', 'WATER', 'ENERC1', 'ENERC2', 'NT',
-             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLC', 'CHOCSM', 'CHOAVLDF',
+             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM', 'CHOAVLDF',
              'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA',
              'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
              'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT', 'FCT')
