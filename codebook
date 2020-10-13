@@ -1,0 +1,78 @@
+
+
+
+standard_name, description, 
+
+fct, food composition name,
+code,  food items original code from FCT,
+fooditem, food item original name from FCT
+fooditemFR, food item orginal name from FCT in French,
+scientificName, scientific name as per original FCT,
+ref, reference and/or origin of the data,
+foodgroup, food group or food category,
+ISSCAAP, International Standard Statistical Classification of Aquatic Animals and Plants. Remind unchanged,
+three_alpha, 3-Alpha International code for fish,
+Habitat, referring to fish habitat coded as F - Farmed and W - Wild. Remind unchanged,
+food_state, referring to the state of the food such as raw (r) cooked (c) or processed/preserved (p),
+origin, reference of the origin of the food item,
+variety, refer to variety cultivar or accenssion for simplicity we have kept the most common name of the three possible, 
+
+
+
+tagname, description, unit, method, observations
+
+EDIBLE1, edible portion, g, , from market to household,
+EDIBLE2, edible portion, g, , from household to consumption,
+SOP, sum of proximates, g, WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH, , 
+ENERC1, energy, kcal,  , ENERC is the original form. We hace adde number (1) to identify that is kcal
+ENERC2, energy, kJ, , ENERC is the original form. We hace adde number (2) to identify that is kJ
+WATER, water, g, , , 
+NT, total nitrogen, g, kjeldahl method, 
+PROTCNT, total protein, g, NT*XN, calculated by total nitrogen multiplied by nitrogen factors (XN) (Jones factors). It could be multiply by Atwater gereral factor (6.25)
+FAT, total fat, g, mixed solvent extraction, ,
+FATCE, total fat, g, continous extraction, this includes Soxhlet extraction. It is considered low quality due to understimation for some food items and should be clearly identified in FCT
+FASAT, saturated FA, g, , ,
+FAMS, mono-unsaturated FA, g, , ,
+FAPU, polyunsaturated FA, g, , ,
+CHOLE, cholesterol, mg, , ,
+CHOCSM, total carbohydrate calculated by summation, g, calculated by summation, include fibre,
+CHOAVLDF, available carbohydrate by summation, g, 100 - (WATER + PROTCNT + FAT (FATCE) + ALC + ASH + FIBTG (FIBC)), 
+SUGAR, total sugar, g, sum of free mono- and di-saccharides, , this tag can be used for unknown method as well
+SUGAD, added sugar, g, , , 
+FIBC, crude fibre, g, , this is considered as low quality value and the use should be avoided when possible
+FIGBT, FIBTG, total dietary fibre, g, AOAC Prosky method, , 
+STARCH, total starch, g, , , 
+ALC, alcohol, g, , , 
+ASH, ash, g, , , 
+CA, calcium, mg, , , 
+FE, total iron, mg, , , 
+MG, magnesium, mg, , , 
+P, phosphorus, mg, , , 
+K, potassium, mg, , , 
+NA, sodium, mg, , ,
+ZN, zinc, mg, , , 
+CU, copper, mg, , ,
+MN, manganese, mcg, , , 
+ID, iodine, mcg, , , 
+SE, selenium, mcg, , , 
+VITA_RAE, total vitamin A activity expressed in mcg retinol activity equivalent, mcg, RAE = mcg retinol+ 1/12 mcg beta-carotene + 1/24 mcg other provitamin A carotenoids, , 
+VITA, vitamin A calculated by summation of the vitamin A activities of retinol and the active carotenoids, mcg, Total vitamin A activity = mcg retinol + 1/6 mcg beta-carotene + 1/12 mcg other provitamin A carotenoids, , 
+RETOL, Retinol, mcg, , , 
+THIA, thiamin, mg, , , 
+RIBF, riboflavin, mg, , , 
+NIA, niacin preformed, mg, , , , 
+VITB6, total vitamin B6, g, , , ,
+FOL, total folate, mcg, , , ,
+FOLDFE, dietary folate equivalent, g, folate eq. = food folate + 1.7 x synthetic folic acid, synthetic is multiplied by 1.7 to account for its higher activity,
+FOLDF, food folate, g, (determined by microbiological assay, folate occurring naturally in food,
+FOLAC, folic acid, g, , synthetic folic acid used in fortification, 
+VITB12, vitamin B12, mcg, , , 
+PANTAC, pantothenic acid, mg, , , ,
+BIOT, biotin, mcg, , , ,
+VITC, vitamin C, mg,
+VITD, vitamin D, mcg, calculated by summation of ergocalciferol and cholecalciferol, ,
+VITE ,vitamin E, mg, calculated by summation of the vitamin E activities of the active tocopherols and tocotrienols expressed as alpha-tocopherol equivalents, it can be used when the method is unkown
+PHYT, phytic acid, mg, unknown or variable method, , It should be written with a dash (-) but it would cause problems with R
+
+
+
