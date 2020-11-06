@@ -1,0 +1,33 @@
+---
+title: "Quality_Checks"
+author: "LuciaSegovia"
+date: "8/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Within the quality checks we will find c of interest and sum of proximates (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. And, percentage of sum of proximates above or below recommeded thresholds (FAO/INFOODS, 2013).
+
+
+##Quality Checks
+
+ 1) Sum of Proximates:
+ 
+ We are going to check the average and standard desviation of the sum of proximates. Then, we are going to explore the percentage of items that fall within prefered and acceptable limits for the sum of proximates. We will use as reference the values given by the FAO/INFOODS guidelines (REF). 
+ 
+ 
+After checking the average values and sd, we have decided to exclude two FCT: NGAFCT and ETHFCT. Then, after checking the percentage of *fooditems* that fall out of the preferred and acceptable limits, we are excluiding GMBFCT and UGAFCT as well. 
+
+For some FCT such as WAFCT, we need to re-calculate SOP to be compared witht he orinal data in the FCT.
+
+NOTE: The problem with converting to numeric is that number between [] are removed (as NA). It is also creating a issue with the calculation of SOP
+
+ 2) ASH 
+ 
+This quality check is important particularly for our project. This step will allow us to identify extremely high minerals values (ASH_cal > ASH). 
+
+
