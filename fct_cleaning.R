@@ -119,15 +119,18 @@ WAFCT<- WAFCT %>% mutate(
                  ASH_cal = ifelse(is.na(ASH), TRUE, FALSE),
                   ASH = ifelse(is.na(ASH), 
                    reduce(select(., 'CA', 'FE',  'CL_cal',
-                                                        'MG',  'P', 'K', 'NA', 'ZN',
-                                                        'CU')/1000, `+`), ASH))
+                              'MG',  'P', 'K', 'NA', 'ZN',
+                                  'CU')/1000, `+`), ASH))
 
 
 #There is no need to calculate SOP for WAFCT
 
 summary(WAFCT$SOP)
 
-write.csv(WAFCT,  here::here('data', 'MAPS_WAFCT.csv'))
+#We use this one to correctly import 'strange characters' (i.e. french accents)
+
+readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT.csv'))
+
 
 ##################------2) Malawi FCT----#####################
 
@@ -167,10 +170,47 @@ MAFOODS <- MAFOODS %>% rename_all( ~ FCT_tag) %>% mutate_at(vars(5:46), funs(as.
 
 MAFOODS <- MAFOODS %>%
   mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBC',  'ASH'), `+`))
-
+                             'WATER', 'PROTCNT' ,'FAT',
+                             'CHOAVLDF','FIBC',  'ASH'), `+`))
 
 write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS.csv'))
+
+###Identify potential errors in the data
+
+MAFOODS <- read.csv(here::here('data', 'MAPS_MAFOODS.csv'))
+
+EJ <- read.csv(here::here('data',
+                          'mineral-composition_2020-11-06.csv')) %>% 
+  select(-contains('median'))
+
+#Changing some mineral values on the data set (see documentation)
+
+MAFOOD_1 <- MAFOODS %>% filter(ref == '10')
+
+MAFOOD_2 <- MAFOOD_1 %>% inner_join(., EJ, by = c('code' = 'water_ref'))
+
+
+MAFOOD_2 <- MAFOOD_2 %>% mutate(
+                                CA = ca_mg_100g, 
+                                 CU = cu_mg_100g, 
+                                FE = fe_mg_100g, 
+                                MG = mg_mg_100g,
+                                SE = se_mcg_100g, 
+                                ZN = zn_mg_100g) %>% 
+  select(1:49) %>% 
+  rename(
+    X = "X.x", 
+    fooditem = "fooditem.x")
+
+#Substituting old (incorrect) values to new values
+
+MAFOODS <- MAFOODS %>% filter(ref != "10") %>% 
+  bind_rows(., MAFOOD_2)
+
+#Change the name of the release after performing major changes
+
+write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v01.csv'))
+
 
 ##################------3) Ethiopia FCT----#####################
 
@@ -730,7 +770,16 @@ write.csv(uPulses,  here::here('data', 'MAPS_uPulses.csv'))
 FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1,
                  LSOFCT, NGAFCT,UGAFCT, uFish, uPulses) 
 
+##Trying to solve issues with encoding
 
-write.csv(FCT,  here::here('data', 'FCT_10.csv'))
+#Encoding(FCT$fooditem) <- "UTF-8"
 
+#write.csv(FCT,  here::here('data', 'FCT_10.csv'), fileEncoding = 'UTF-8')
+
+#readr::write_csv(FCT,  here::here('data', 'FCT_10.csv'))
+
+#data.table::fwrite(FCT,  here::here('data', 'FCT_10.csv'))
+
+
+readr::write_excel_csv(FCT,  here::here('data', 'FCT_10.csv'))
 

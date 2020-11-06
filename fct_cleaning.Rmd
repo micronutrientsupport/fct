@@ -1,12 +1,14 @@
 ---
-title: "fct_cleaning"
+title: "fct_cleaning_protocol"
 author: "LuciaSegovia"
-date: "8/12/2020"
-output:
-  pdf_document: 
-    latex_engine: xelatex
+creation date: "08/12/2020"
+updated version date: "06/11/2020"
+version: "0.1"
+      output:
   html_document:
     df_print: paged
+  pdf_document: 
+    latex_engine: xelatex
   word_document: default
 ---
 
@@ -20,14 +22,14 @@ library(tidyverse)
 
 First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spreadsheet is where all the information about each FCT is collated 
 
-Then, we are going to explore all the FCT in excel. We need to identify if the file has more than one worksheets and, if it does, where FCT is located. 
+Then, we are going to explore all the FCTs saved in excel, which probably will have more than one worksheet. Hence, we need to identify in which of those worksheet is FCT information is located. 
 
 ...NOTE:This is something where I need to improve this bit of code
 
 ```{r, WAFCT-tagname, echo=FALSE}
 ```
 
-```{r exploring sheets - loop}
+```{r exploring sheets - loop, echo=FALSE}
 
 #Loading FCT_QA data set
 
@@ -53,13 +55,38 @@ Once we know what it is in each spreadsheet, we can load those sheets of interes
 
 Since we want to perform some analysis, we need to standardize the variables. This process is also valuable to analyze the quality of each FCT and to record potential issues or aspects that need to be kept in mind when working with different FCT. Such as, are all same variables calculated in the same way? Are they comparable? Are same variables reported in the same units? Are variables of interest reported? 
 
-Also, it would allow us to run quality check such as, recalculation of variables, SOP, etc. Within the quality checks we will find count of missing values per MN of interest and sum of proximates (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. And, percentage of sum of proximates above or below recommeded thresholds (FAO/INFOODS, 2013). For more details see 'quality_check.Rmd'.
+Also, it would allow us to run quality check such as, recalculation of variables, sum of proximates (SOP), ount of missing values per MN, etc. For more details see 'quality_check.Rmd'.
 
-SOP = SUM of WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH. 
+      SOP =  [WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH] 
+      
+
+####Standtadization of variables using FAO/INFOODS tagname
 
 As mentioned earlier, the first step is the standardization of variable names. The names used are detailed in the cookbook. In summary, food items names will be code as 'fooditem', food item code will be 'code', food categories or food groups will be 'foodgroup' and food components will be name using the FAO/INFOODS tagnames. Additionally, food groups will be standardized using FoodEx2 classification system and name 'foodgroup_FoodEx2'.
 
-####Standtadization of variables using FAO/INFOODS tagname
+####Standtadization of values reported
+
+[TO BE DONE]
+
+within this step, we aim to remove different formats that may make data unavailable (i.e. data encapsulated between []) or that some information is missed (i.e. low quality data reported as *italic* in the original spreadsheet). 
+
+We will remove special characters and/or add a new variable to identify those values. 
+We have identify a package that can be use to clean very untidy data. The tidyxl package (https://cran.r-project.org/web/packages/tidyxl/vignettes/tidyxl.html)can be used to identify diferent font, colour and other formatting implemented in the spreadsheet (i.e. excel). 
+
+####Identify potential errors in the data 
+
+After the data is cleaned, we need to run some descriptive and summary test to identify outliers. We can use the min and max values decribed in the data dictionary as reference. 
+
+Then, we should determine whether those values identified as outliers are a one-off mistake (a decimal error) or are produced by a systematic bias in the data (an error in unit calculation accross the fct).
+
+Then, we could try to solve it. If we identify the source of the problem and we can solve the data issue, it is extremely important to 1) document any changes done in the data (i.e. through semantic version), and 2) to inform original data owners.
+
+If we cannot solve the issue, we would still need to flag that data entry and to inform data owners (if relevant).
+
+
+
+
+
 
 ####1) West Africa FCT
 
@@ -201,18 +228,24 @@ summary(WAFCT$SOP)
 
 ####2) Malawi FCT
 
+###Standtadization of values reported
+
 For Malawi dataset all the variables names need to be converted manually because in this FCT component names are not standardized using tagnames or other method. To rename all the component in a standardized way three parameters needs to be taken into account:
 
-          1) component name and description
-          2) unit reported
-          3) method used for analysis or calculation. 
+  1) component name and description
+  2) unit reported
+  3) method used for analysis or calculation. 
       I.e. for total nitrogen reported in grams and calculated with Kjeldahl method the tagname is NT
 
 The guidelines used to select the tagnames are 'FAO/INFOODS Guidelines for Checking Food Composition Data prior to the Publication of a User Table/Database Version 1.0, 2012', 'FAO/INFOODS Guidelines Guidelines for Converting Units, Denominators and Expressions Version 1.0, 2012' and the tagnames found in FAO/INFOODS website starting from the most recent (2010 tagnames > 2008 tagnames > 2007 tagnames). 
 
 Decisions for tagnames in Malawi dataset
 
-1) Energy reported as kcal (ENERC1), energy reported in kJ (ENERC2)
+1) Energy reported as kcal (ENERC1), Calculated as: [Protein (g) x 4kcal] + [Fat (g) x 9kCal] + [Total Carbohydrates(g) x 4kcal]
+   Energy reported in kJ (ENERC2), Calculated as: [Protein (g) x 17kJ] + [Fat (g) x 37 kJ] + [Total Carbohydrates(g) x 17kJ]
+   
+Note: Alcohol has not been captured in this first draft of the MFCT, and thus not
+factored into Energy calculations
 
 2) Nitrogen (g) = NT because it is reported in grams and it is mainly calculared by Kjeldahl method
 
@@ -302,6 +335,19 @@ Note: information on tagnames for phytates are in the S. Dahdouh et al. 2019.
 
 
 Note: Some of the generic tagname should be followed by '-' (dash), however since this character could cause some issues with the code, we have dropped the '-'.
+
+###Standtadization of values reported
+
+###Identify potential errors in the data
+
+We identified several fooditems with extreme iron (FE) values. The first step is to identify the origin of the data. We identified that most of this values were coming from 2 references papers (ref 10 and ref 15). 
+
+Then, we cross-checked this references with MAFOODS documentation. The ref. 10 is EJ paper. Hence, we checked the data coming from that source. In that paper, data on mineral for a number of food items in Malawi were reported. Also, it is important to mention that the data reported was g/Kg dry weight. We identified that the source of discrepancy between the original data (EJ paper) and MAFOODS reported data is the conversion from dry to wet weight.
+
+Since we are able to track back those values and to correct them, we would be updating the data in MAFOODS for the following food items:
+
+
+
 
 
 ```{r MAFOODS tagname}
