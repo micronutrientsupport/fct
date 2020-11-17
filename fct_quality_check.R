@@ -5,6 +5,10 @@ library(tidyverse)
 
 FCT <-  read.csv(here::here('data', 'FCT_10.csv'))
 
+mwi_mn_raw <- readxl::read_excel(here::here('data',
+                                            '2015_Joy_crop-min-composition.xlsx'), 
+                                 sheet = 'STable7', skip = 2)
+
 ######---------------------1) SOP calculation -------------------------#########
 
 
@@ -182,4 +186,119 @@ FCT <- FCT %>%
 
 #Check when ASH_cal is > than ASH = TRUE then is.low.quality = TRUE
 #ASH_cal < than ASH can be due to lack of min data
+
+
+
+
+MAFOODS <-read.csv(here::here('data', 'MAPS_MAFOODS_v01.csv'))
+
+MAFOODS %>%
+  ggplot(aes(CA, foodgroup)) + geom_boxplot()
+
+#Create a function with a loop to see all the variables of interest (mineral mn)
+#sorted by foodgroup
+#we can use this f(x) for other dataset
+
+plotBoxFunc <- function(x, na.rm = TRUE, ...) {
+  nm <- c("CA", "CU", "FE", "MG", "SE", "ZN")
+  for (i in seq_along(nm)) {
+    plots <-ggplot(x,aes_string(x = nm[i])) + 
+      geom_boxplot(aes(y =  foodgroup))
+    ggsave(plots,filename=paste("plot",nm[i],".png",sep=""))
+  }
+}
+
+
+plotBoxFunc(MAFOODS) ## execute function
+
+
+
+
+
+
+MAFOODS %>% dplyr::filter(CA >700) %>%  pull(fooditem, ref)
+
+######-------------------4) VARIABILITY calculation -------------#####
+
+#Re-name variables
+
+mwi_mn <- mwi_mn_raw %>% rename(fooditem = '...1', 
+                                foodtissue = '...2', 
+                                foodnotes = '...3', 
+                                soiltype = '...4', 
+                                n_sample = 'Ca',
+                                ca_mean = '...7', 
+                                ca_sd = '...8',
+                                ca_median = '...9',
+                                cu_mean = '...16', 
+                                cu_sd = '...17',
+                                cu_median = '...18',
+                                fe_mean = '...25',
+                                fe_sd = '...26',
+                                fe_median = '...27', 
+                                mg_mean = '...34',
+                                mg_sd = '...35',
+                                mg_median = '...36',
+                                se_mean = '...43',
+                                se_sd = '...44',
+                                se_median = '...45',
+                                zn_mean = '...52',
+                                zn_sd = '...53',
+                                zn_median = '...54')
+
+#Filtering items with combined data and more than 1 sample
+
+mwi_mn <-  mwi_mn %>% 
+  filter(soiltype == 'Combined', n_sample != "1") %>% 
+  select(!starts_with('...'))
+
+mn <- c('ca', 'cu', 'fe', 'mg', 'se', 'zn')
+
+mwi_mn <-  mwi_mn %>% mutate_at(vars(starts_with(mn)), as.numeric)
+
+#Trying to identify food items with high variability
+#we want to flag possible quality issues w/i the data
+
+#Checking 3-sd > mean
+
+mwi_mn <-  mwi_mn %>% mutate(is_low_quality = case_when(
+  ca_mean < (ca_sd*3) ~ 'ca',
+  cu_mean < (cu_sd*3) ~ 'cu', 
+  fe_mean < (fe_sd*3) ~ 'fe', 
+  mg_mean < (mg_sd*3) ~ 'mg',
+  se_mean < (se_sd*3) ~ 'se', 
+  zn_mean < (zn_sd*3) ~ 'zn',
+  TRUE ~ 'NO'
+))
+
+#Checking 2-sd > mean
+
+
+mwi_mn <-  mwi_mn %>% mutate(is_low_quality = case_when(
+  ca_mean < (ca_sd*2) ~ 'ca',
+  cu_mean < (cu_sd*2) ~ 'cu', 
+  fe_mean < (fe_sd*2) ~ 'fe', 
+  mg_mean < (mg_sd*2) ~ 'mg',
+  se_mean < (se_sd*2) ~ 'se', 
+  zn_mean < (zn_sd*2) ~ 'zn',
+  TRUE ~ 'NO'
+))
+
+#Checking sd > mean
+
+
+mwi_mn <-  mwi_mn %>% mutate(is_low_quality = case_when(
+  ca_mean < ca_sd ~ 'ca',
+  cu_mean < cu_sd ~ 'cu', 
+  fe_mean < fe_sd ~ 'fe', 
+  mg_mean < mg_sd ~ 'mg',
+  se_mean < se_sd ~ 'se', 
+  zn_mean < zn_sd ~ 'zn',
+  TRUE ~ 'NO'
+))
+
+mwi_mn %>% filter(is_low_quality == 'NO')
+
+
+######---------------------END -------------#####
 
