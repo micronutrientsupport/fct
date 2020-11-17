@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-Within the quality checks we will find c of interest and sum of proximates (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. And, percentage of sum of proximates above or below recommeded thresholds (FAO/INFOODS, 2013).
+Within the quality checks we will find c of interest and sum of proximate (SOP) calculated as the sum of water, protein, fat, available carbohydrates, dietary fibre (or total carbohydrates), alcohol (if applicable) and ash. And, percentage of sum of proximate above or below recommended thresholds (FAO/INFOODS, 2013).
 
 
 ##Quality Checks
@@ -30,4 +30,18 @@ NOTE: The problem with converting to numeric is that number between [] are remov
  
 This quality check is important particularly for our project. This step will allow us to identify extremely high minerals values (ASH_cal > ASH). 
 
+ 3) MINIMUM AND MAXIMUM VALUES 
+ 
+We had identified extreme values in MAFOODS. After looking at those values references, we identified that a great proportion (n=17) of those values were coming from the same ref. (ref.10). The ref.10 is Joy, et. al. 2015, from this point onwards that paper and the data linked to that will be called EJ1. We accessed the data of that EJ1 and we identified that there was an issue with the conversion of the values from the original source to the MAFOODS. In order to solve that issue, we have recalculated the values for those minerals. More information regarding that process can be found in 'fct_cleaning'. 
 
+CA - acc. to USDA data the highest value is for firm tofu (683mg/100g). Most of the extreme value were in animal category followed by vegetables. In total, 22 items were higher than 700mg/100g. 
+
+CU
+
+FE - acc. to USDA data the highest value is for fortified cereals with 67.7mg/100g. We found a cod product (branded product) with 177mg/100g. 
+ 
+ 4) VARIABILITY OF THE SAMPLES (only for analytic data)
+ 
+After having re
+ 
+ 

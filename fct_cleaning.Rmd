@@ -344,9 +344,11 @@ We identified several fooditems with extreme iron (FE) values. The first step is
 
 Then, we cross-checked this references with MAFOODS documentation. The ref. 10 is EJ paper. Hence, we checked the data coming from that source. In that paper, data on mineral for a number of food items in Malawi were reported. Also, it is important to mention that the data reported was g/Kg dry weight. We identified that the source of discrepancy between the original data (EJ paper) and MAFOODS reported data is the conversion from dry to wet weight.
 
-Since we are able to track back those values and to correct them, we would be updating the data in MAFOODS for the following food items:
+Since we are able to track back those values and to correct them, we would be updating the data in MAFOODS for the following variables and food items:
 
+variables: "CA", "CU", "FE", "MG", "SE", "ZN"
 
+fooditems: "MW05_0016", "MW05_0019",  "MW02_0007",  "MW02_0014",  "MW02_0019",  "MW01_0011", "MW01_0016" , "MW01_0037", "MW01_0060",  "MW01_0065", "MW04_0004", "MW04_0011", "MW04_0012", "MW04_0019", "MW04_0020", "MW04_0031", "MW04_0036"
 
 
 

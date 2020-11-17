@@ -16,23 +16,30 @@ mwi_mn_raw <- readxl::read_excel(here::here('data',
                      sheet = 'STable7', skip = 2)
 
 
+#Re-name variables
+
 mwi_mn <- mwi_mn_raw %>% rename(fooditem = '...1', 
                   foodtissue = '...2', 
                   foodnotes = '...3', 
                   soiltype = '...4', 
                   n_sample = 'Ca',
-                  ca_median = '...9', 
-                  cu_median = '...18', 
+                  ca_median = '...9',
+                  cu_median = '...18',
                   fe_median = '...27', 
-                  mg_median = '...36', 
-                  se_median = '...45', 
+                  mg_median = '...36',
+                  se_median = '...45',
                   zn_median = '...54')
 
-
+#Filtering items with combined data and more than 1 sample
 
 mwi_mn <-  mwi_mn %>% 
   filter(soiltype == 'Combined', n_sample != "1") %>% 
   select(!starts_with('...'))
+
+mn <- c('ca', 'cu', 'fe', 'mg', 'se', 'zn')
+
+mwi_mn <-  mwi_mn %>% mutate_at(vars(starts_with(mn)), as.numeric)
+
 
 mwi_mn <-  mwi_mn %>% mutate(
   water = c(87.8, 
