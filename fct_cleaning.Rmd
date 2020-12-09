@@ -71,13 +71,13 @@ As mentioned earlier, the first step is the standardization of variable names. T
 within this step, we aim to remove different formats that may make data unavailable (i.e. data encapsulated between []) or that some information is missed (i.e. low quality data reported as *italic* in the original spreadsheet). 
 
 We will remove special characters and/or add a new variable to identify those values. 
-We have identify a package that can be use to clean very untidy data. The tidyxl package (https://cran.r-project.org/web/packages/tidyxl/vignettes/tidyxl.html)can be used to identify diferent font, colour and other formatting implemented in the spreadsheet (i.e. excel). 
+We have identify a package that can be use to clean very untidy data. The tidyxl package (https://cran.r-project.org/web/packages/tidyxl/vignettes/tidyxl.html)can be used to identify different font, colour and other formatting implemented in the spreadsheet (i.e. excel). 
 
 ####Identify potential errors in the data 
 
-After the data is cleaned, we need to run some descriptive and summary test to identify outliers. We can use the min and max values decribed in the data dictionary as reference. 
+After the data is cleaned, we need to run some descriptive and summary test to identify outliers. We can use the min and max values described in the data dictionary as reference. 
 
-Then, we should determine whether those values identified as outliers are a one-off mistake (a decimal error) or are produced by a systematic bias in the data (an error in unit calculation accross the fct).
+Then, we should determine whether those values identified as outliers are a one-off mistake (a decimal error) or are produced by a systematic bias in the data (an error in unit calculation across the fct).
 
 Then, we could try to solve it. If we identify the source of the problem and we can solve the data issue, it is extremely important to 1) document any changes done in the data (i.e. through semantic version), and 2) to inform original data owners.
 
@@ -115,7 +115,11 @@ We do not want to loose information but also we want to use the highest quality 
 
 *UPDATE: Bracket issue proposed solution*. We can remove the values from between the brackets and add another column to include a variable of low_quality_MN (yes/no). 
 
-A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for subsetting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
+In the version 01, brackets have been removed w/ accounting for the quality (see above). It has been done using a function (no_brackets). To see how it has been developed check (fct_loops.R)
+
+###Food groups
+
+A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for sub-setting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
 
 UPDATE: We have updated SOP calculation to account for two variables used to report fat: FAT and FATCE. And to account for the two variables used to report fibre (FIBTG and FIBC).
 
