@@ -91,3 +91,27 @@ plotBoxFunc <- function(x, na.rm = TRUE, ...) {
 
 
 plotBistFunc(MAFOODS) ## execute function
+
+
+#Working on a f(x) to remove all []
+
+
+b <- WAFCT %>% mutate(FE = case_when(
+  str_detect(FE, '\\[.*?\\]') == TRUE ~ str_extract(FE, '(?<=\\[).*?(?=\\])'), 
+  TRUE ~ FE))
+
+
+no_brackets <- function(i){
+  case_when(
+  str_detect(i, '\\[.*?\\]') == TRUE ~ str_extract(i, '(?<=\\[).*?(?=\\])'), 
+  TRUE ~ i)
+  }
+
+fat <- WAFCT$FAT
+
+no_brackets(fat)
+
+no_brackets(WAFCT$FAT)
+
+
+

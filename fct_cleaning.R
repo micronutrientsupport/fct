@@ -75,7 +75,8 @@ WAFCT <- WAFCT %>%
 
 #This keeps only numbers
 
-WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
+WAFCT <- WAFCT %>% 
+  mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
   mutate(FATCE = str_extract(FAT, '(?<=\\[).*?(?=\\])')) %>%
   mutate(TOCPHA = str_extract(VITE, '(?<=\\[).*?(?=\\])')) %>%
   mutate(FOLSUM = str_extract(FOL, '(?<=\\[).*?(?=\\])')) %>%
@@ -84,15 +85,19 @@ WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
 
 #This keeps numbers and create a variable with low_quality
 
-#NOTHING IS WORKING!!!
+a <- WAFCT %>% mutate(low_quality_FE = case_when(
+  str_detect(FE, '\\[.*?\\]') == TRUE ~ 'yes', 
+  TRUE ~ 'no')) 
+  
+#The following f(x) removes []
 
-x <- c('\\[' , '\\]')
-
-WAFCT %>% mutate(low_quality_FE = str_detect(FE, '\\[.*?\\]')) %>% pull(low_quality_FE)
-
-WAFCT %>% mutate(FE = str_remove(FE, x)) %>% pull(FE)
-
-WAFCT %>% mutate(FE = str_extract(FE, '(?<=\\[).*?(?=\\])')) %>% pull(FE)
+no_brackets <- function(i){
+  case_when(
+    str_detect(i, '\\[.*?\\]') == TRUE ~ str_extract(i, '(?<=\\[).*?(?=\\])'), 
+    TRUE ~ i)
+}
+  
+WAFCT <- WAFCT %>% mutate_if(is.character, no_brackets)
 
 
 #Reordering variables
@@ -129,7 +134,7 @@ summary(WAFCT$SOP)
 
 #We use this one to correctly import 'strange characters' (i.e. french accents)
 
-readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT.csv'))
+readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v01.csv'))
 
 
 ##################------2) Malawi FCT----#####################
@@ -151,9 +156,13 @@ readxl::read_excel(here::here( 'data',
 
 
 MAFOODS <- readxl::read_excel(here::here( 'data', 
-                                         paste(paste(FCT_QA[x,6],
-                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                              sheet = 1) %>% mutate(FCT = 'MAFOODS') %>% glimpse()
+            paste(paste(FCT_QA[x,6],
+              FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                sheet = 1) %>% mutate(FCT = 'MAFOODS') %>% glimpse()
+
+#Removing []
+
+MAFOODS <- MAFOODS %>% mutate_if(is.character, no_brackets)
 
 #Renaming variables with tagnames and converting numeric variables into numeric
 
@@ -164,7 +173,9 @@ FCT_tag <- c('code', 'ref', 'fooditem', 'foodgroup', 'WATER', 'ENERC1', 'ENERC2'
              'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT', 'FCT')
 
 
-MAFOODS <- MAFOODS %>% rename_all( ~ FCT_tag) %>% mutate_at(vars(5:46), funs(as.numeric)) 
+
+MAFOODS <- MAFOODS %>% rename_all( ~ FCT_tag) %>%
+  mutate_at(vars(5:46), funs(as.numeric)) 
 
 #Calculating SOP - Removing ALC and changing FIBTG for FIBC
 
@@ -209,7 +220,7 @@ MAFOODS <- MAFOODS %>% filter(ref != "10") %>%
 
 #Change the name of the release after performing major changes
 
-write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v01.csv'))
+write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.1.csv'))
 
 
 ##################------3) Ethiopia FCT----#####################
@@ -385,10 +396,11 @@ KENFCT1 <- readxl::read_excel(here::here(  'data',
                              sheet = 4)  %>% select(1:37) %>%  mutate(FCT = 'KENFCT') %>%
                                 slice(1:1241) %>% glimpse()
 
+#Rename variables acc. to tagnames (FAO/INFOODS)
 
 FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER', 
             'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG', 'ASH', 
-             'CA', 'FE', 'MG', 'P', 'K', 'NA', 'ZN', 'SE',
+             'CA', '(!is.na(ENERC2)) %>%FE', 'MG', 'P', 'K', 'NA', 'ZN', 'SE',
                'VITA_RAE', 'VITA', 'RETOL', 'CARBEQ', 
              'THIA', 'RIBF', 'NIA', 'FOLDFE', 'FOLFD',
              'VITB12', 'VITC', 'CHOLE', 'OXALAC', 'PHYTCPPD', 'IP3', 'IP4',
@@ -396,13 +408,20 @@ FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER',
 
 KENFCT1 <- KENFCT1 %>% rename_all( ~ FCT5_tag) 
 
-KENFCT1 <- KENFCT1 %>% mutate(is_FOLAC = case_when( 
-                                str_detect(FOLDFE, '[*]') ~ 'YES',
-                                TRUE ~ 'NO')) %>%
-                      mutate(FOLDFE = str_remove(FOLDFE, '[*]'))
+#Detecting FOLAC (folic acid used in fortified food)
+#Removing [] for all column
 
-KENFCT1 <- KENFCT1 %>% slice(2:1241) %>%
+KENFCT1 <- KENFCT1 %>%  
+  mutate(is_FOLAC = case_when( 
+                      str_detect(FOLDFE, '[*]') ~ 'YES',
+                          TRUE ~ 'NO')) %>% 
+  mutate_if(is.character, no_brackets)
+
+#convertin numeric variables in numeric
+
+KENFCT1 <- KENFCT1 %>% slice(3:n()) %>%
   mutate_at(vars(3:37), funs(as.numeric)) 
+
 
 
 kenfg <- c('Cereals and cereal products',
@@ -458,7 +477,7 @@ KENFCT1 <- KENFCT1 %>%
 
 #KENFCT <- bind_cols(KENFCT1, KENFCT2)
 
-write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1.csv'))
+write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1_v01.csv'))
 
 ##################------6) Lesotho FCT----#####################
 
@@ -531,7 +550,8 @@ LSOFCT <- LSOFCT %>%
                                                            'NA')))))))))))))))))))))%>% 
                                                filter(!is.na(code))
 
-LSOFCT <- LSOFCT %>%   mutate_at(vars(3:39), funs(as.numeric)) 
+LSOFCT <- LSOFCT %>%  mutate_if(is.character, no_brackets) %>% 
+  mutate_at(vars(3:39), funs(as.numeric)) 
 
 
 LSOFCT <- LSOFCT %>%
@@ -703,14 +723,15 @@ uFish <- uFish %>% rename(
 names(uFish) <- sub("\\(.*?\\)", "", names(uFish))
 
 
-uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
+uFish <- uFish %>% mutate_if(is.character, no_brackets) %>% 
+  mutate_at(vars(8:168), funs(as.numeric)) 
 
 
 uFish <- uFish %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
-write.csv(uFish,  here::here('data', 'MAPS_uFish.csv'))
+write.csv(uFish,  here::here('data', 'MAPS_uFish_v01.csv'))
 
 ##################------13) uPulses FCT----#####################
 
@@ -752,14 +773,15 @@ uPulses <- uPulses %>% rename(
 
 names(uPulses) <- sub("\\(.*?\\)", "", names(uPulses))
 
-uPulses <- uPulses %>% mutate_at(vars(8:68), funs(as.numeric)) 
+uPulses <- uPulses %>% mutate_if(is.character, no_brackets) %>% 
+  mutate_at(vars(8:68), funs(as.numeric)) 
 
 
 uPulses <- uPulses  %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
-write.csv(uPulses,  here::here('data', 'MAPS_uPulses.csv'))
+write.csv(uPulses,  here::here('data', 'MAPS_uPulses_v01.csv'))
 
 
 #########---------------END------------------##############
