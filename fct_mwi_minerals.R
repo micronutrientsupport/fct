@@ -36,10 +36,13 @@ mwi_mn <-  mwi_mn %>%
   filter(soiltype == 'Combined', n_sample != "1") %>% 
   select(!starts_with('...'))
 
+#Converting variables into numeric
+
 mn <- c('ca', 'cu', 'fe', 'mg', 'se', 'zn')
 
 mwi_mn <-  mwi_mn %>% mutate_at(vars(starts_with(mn)), as.numeric)
 
+#Adding water values for conversion and reference
 
 mwi_mn <-  mwi_mn %>% mutate(
   water = c(87.8, 
@@ -169,6 +172,9 @@ mwi_mn <-  mwi_mn %>% mutate(
 )
 
 
+#Calculation of averaged water values used above
+
+#1) median all leaves in MAFOODS
 
 
 fct %>%  
@@ -177,15 +183,8 @@ fct %>%
                       ignore.case = T))  %>%
   summarise(median(WATER))
 
-fct %>%  
-  dplyr::filter(FCT == 'MAFOODS') %>% 
-  dplyr::filter(grepl("leave", fooditem, 
-                      ignore.case = T))  %>%
-  dplyr::filter(grepl("boil", fooditem, 
-                      ignore.case = T))  %>%
-  summarise(median(WATER))
 
-#median all mushroom raw in MAFOODS
+#2) median all mushroom raw in MAFOODS
 
 fct %>%  
   dplyr::filter(FCT == 'MAFOODS') %>% 
@@ -195,7 +194,7 @@ fct %>%
                       ignore.case = T))  %>%
   summarise(median(WATER))
 
-#median mustard leave in LSOFCT
+#3) median mustard leave in LSOFCT
 
 fct %>%  
   dplyr::filter(grepl("mustard", fooditem, 
@@ -223,24 +222,8 @@ dry_wet <- function(x, y){
 }
 
 
-#a <- mwi_mn %>% mutate(
-#  FE_100g =  dry_wet(fe_median, water))
-
-for (lag_size in c('ca', 'cu', 'fe', 'mg', 'se', 'zn')) {
-  new_col_name <- paste0(lag_size, "_100g")
-  old_col_name <- paste0(lag_size, "_median")
-  
-  a <- a %>% 
-    mutate(!!sym(new_col_name) := dry_wet(x = old_col_name,
-                                          y = water, na.rm = TRUE))
-}
-
 a <- mwi_mn %>% mutate_at(vars(matches('_median')), as.numeric)
 
-x <- 'ca'
-
-a <- a %>% mutate(
-  ca_100g =  dry_wet(paste0(x, '_median'), water))
 
 a <- a %>% 
   mutate(across(matches('_median'),
