@@ -114,4 +114,25 @@ no_brackets(fat)
 no_brackets(WAFCT$FAT)
 
 
+#Loop to create variables w/ dry weight to wet weight
+
+#Not working!!
+
+for (lag_size in c('ca', 'cu', 'fe', 'mg', 'se', 'zn')) {
+  new_col_name <- paste0(lag_size, "_100g")
+  old_col_name <- paste0(lag_size, "_median")
+  
+  a <- a %>% 
+    mutate(!!sym(new_col_name) := dry_wet(x = old_col_name,
+                                          y = water, na.rm = TRUE))
+}
+
+for (lag_size in c('ca', 'cu', 'fe', 'mg', 'se', 'zn')) {
+  new_col_name <- paste0(lag_size, "_100g")
+  old_col_name <- paste0(lag_size, "_median")
+  
+  a <- a %>% 
+    mutate(!!sym(new_col_name) := dry_wet(x = old_col_name,
+                                          y = water))
+}
 
