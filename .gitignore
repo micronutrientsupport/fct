@@ -41,3 +41,7 @@ vignettes/*.pdf
 #data folder
 
 data/
+
+#Images and document
+
+*.png
