@@ -1,9 +1,13 @@
 
 library(tidyverse)
 
-###-------------------------LOADING FCT_QA SPREADSHEAT----------------------#####
+###-------------------------LOADING DATA
+
+#FCT_QA SPREADSHEAT
 
 FCT_QA <- readxl::read_excel(here::here('data', 'FCT_QA.xlsx'), sheet = 2)
+
+variables <- read.csv(here::here("data", "fct-variable-names.csv"))
 
 ######----------------------------------------------------------###################
 
@@ -132,9 +136,58 @@ WAFCT<- WAFCT %>% mutate(
 
 summary(WAFCT$SOP)
 
+#Rename variables according to MAPS-standards
+
+WAFCT<- WAFCT %>% rename(
+ original_food_id = "code",
+original_food_name = "fooditem",
+data_reference_publication = "ref",
+moisture_in_g = "WATER",
+energy_in_kcal = "ENERC1",
+energy_in_kj = "ENERC2", 
+totalprotein_in_g = "PROTCNT",
+totalfats_in_g = "FAT",
+saturatedfa_in_g = "FASAT", 
+monounsaturatedfa_in_g = "FAMS", 
+polyunsaturatedfa_in_g = "FAPU", 
+cholesterol_in_mg = "CHOLE",
+carbohydrates_in_g = "CHOAVLDF", 
+fibre_in_g = "FIBTG", 
+ash_in_g = "ASH",
+ca_in_mg = "CA", 
+fe_in_mg = "FE",
+mg_in_mg = "MG",
+p_in_mg = "P",
+k_in_mg = "K",
+na_in_mg = "NA", 
+zn_in_mg = "ZN", 
+cu_in_mg = "CU", 
+vitamina_in_rae_in_mcg = "VITA_RAE", 
+thiamin_in_mg = "THIA",
+riboflavin_in_mg = "RIBF", 
+niacin_in_mg = "NIA", 
+vitaminb6_in_mg = "VITB6C", 
+folicacid_in_mcg = "FOLAC", 
+folate_in_mcg = "FOL",
+vitaminb12_in_mcg = "VITB12", 
+vitaminc_in_mg = "VITC",
+vitamind_in_mcg = "VITD",
+vitamine_in_mg = "VITE", 
+phyticacid_in_mg = "PHYTCPP")
+
+#getting all the MAPS-starndard variables included in the dataset.
+
+var.dat <- variables %>% spread(Column.Name, Description) %>% 
+  mutate_all(as.numeric) %>%                               #fixing the type of
+  mutate_at(c("original_food_id", "original_food_name",
+              "data_reference_publication"),   #variables so I can
+                                       as.character)     #merge the two dataset
+
+WAFCT<- WAFCT %>% left_join(., var.dat)
+
 #We use this one to correctly import 'strange characters' (i.e. french accents)
 
-readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v01.csv'))
+readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v01.1.csv'))
 
 
 ##################------2) Malawi FCT----#####################
