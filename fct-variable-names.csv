@@ -7,7 +7,8 @@ food_group,The food group for this food_genus.
 food_subgroup,The food subgroup for this food genus.
 food_genus_confidence,"How confident we are in the matching. Mediums will show a warning to the user, low confidence fooditems won't be used in any calculations at all. Possible values: [ 'High' , 'Medium', 'Low']"
 fct_name,"The name (citation text?) for the food composition table from which this fooditem came. For example, 'Gambia Prynand Paul'."
-moisture_in_g,"The moisture content of this food item, in grams per 100g"
+data_reference_original_id,the original id of this citation
+moisture_in_g,
 energy_in_kcal,
 energy_in_kj,
 nitrogen_in_g,"Nitrogen content of this fooditem, in grams per 100g"

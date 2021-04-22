@@ -7,9 +7,21 @@ library(tidyverse)
 
 FCT_QA <- readxl::read_excel(here::here('data', 'FCT_QA.xlsx'), sheet = 2)
 
-variables <- read.csv(here::here("data", "fct-variable-names.csv"))
+variables <- read.csv(here::here( "fct-variable-names.csv"))
 
-######----------------------------------------------------------###################
+######-----------------------VARIABLE STANDARDIZATION---------------------########
+
+#getting the names of all the standard variables names, to filter them afterward
+var.name <- variables %>% select(Column.Name) %>% pull
+
+#getting all the MAPS-standard variables included in the dataset.
+
+var.dat <- variables %>% spread(Column.Name, Description) %>% 
+  mutate_all(as.numeric) %>%                               #fixing the type of
+  mutate_at(c("original_food_id", "original_food_name",
+              "data_reference_original_id",
+              "fct_name"),   #variables so I can
+            as.character)     #merge the two dataset
 
 
 ###########====== USING TAGNAMES FAO/INFOODS for HARMONIZATION OF VARIABLES=====##############
@@ -141,7 +153,8 @@ summary(WAFCT$SOP)
 WAFCT<- WAFCT %>% rename(
  original_food_id = "code",
 original_food_name = "fooditem",
-data_reference_publication = "ref",
+fct_name = "FCT",
+data_reference_original_id = "ref",
 moisture_in_g = "WATER",
 energy_in_kcal = "ENERC1",
 energy_in_kj = "ENERC2", 
@@ -175,19 +188,12 @@ vitamind_in_mcg = "VITD",
 vitamine_in_mg = "VITE", 
 phyticacid_in_mg = "PHYTCPP")
 
-#getting all the MAPS-starndard variables included in the dataset.
 
-var.dat <- variables %>% spread(Column.Name, Description) %>% 
-  mutate_all(as.numeric) %>%                               #fixing the type of
-  mutate_at(c("original_food_id", "original_food_name",
-              "data_reference_publication"),   #variables so I can
-                                       as.character)     #merge the two dataset
-
-WAFCT<- WAFCT %>% left_join(., var.dat)
+WAFCT<- WAFCT %>% left_join(., var.dat) %>% select(var.name)
 
 #We use this one to correctly import 'strange characters' (i.e. french accents)
 
-readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v01.1.csv'))
+readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v1.1.csv'))
 
 
 ##################------2) Malawi FCT----#####################
@@ -273,7 +279,58 @@ MAFOODS <- MAFOODS %>% filter(ref != "10") %>%
 
 #Change the name of the release after performing major changes
 
-write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.1.csv'))
+#write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.1.csv'))
+
+MAFOODS <- read.csv(here::here("data", "MAPS_MAFOODS_v1.2.csv"))
+
+#Rename variables according to MAPS-standards
+
+MAFOODS<- MAFOODS %>% rename(
+  original_food_id = "code",
+  original_food_name = "fooditem",
+  fct_name = "FCT",
+  data_reference_original_id = "ref",
+  moisture_in_g = "WATER",
+  energy_in_kcal = "ENERC1",
+  energy_in_kj = "ENERC2",
+  nitrogen_in_g = "NT",
+  totalprotein_in_g = "PROTCNT",
+  totalfats_in_g = "FAT",
+  saturatedfa_in_g = "FASAT", 
+  monounsaturatedfa_in_g = "FAMS", 
+  polyunsaturatedfa_in_g = "FAPU", 
+  cholesterol_in_mg = "CHOLE",
+  carbohydrates_in_g = "CHOAVLDF", 
+  fibre_in_g = "FIBC", 
+  ash_in_g = "ASH",
+  ca_in_mg = "CA", 
+  fe_in_mg = "FE",
+  mg_in_mg = "MG",
+  p_in_mg = "P",
+  k_in_mg = "K",
+  na_in_mg = "NA.", 
+  zn_in_mg = "ZN", 
+  cu_in_mg = "CU",
+  mn_in_mcg = "MN",
+  i_in_mcg = "ID",
+  se_in_mcg = "SE",
+  vitamina_in_rae_in_mcg = "VITA_RAE", 
+  thiamin_in_mg = "THIA",
+  riboflavin_in_mg = "RIBF", 
+  niacin_in_mg = "NIA", 
+  vitaminb6_in_mg = "VITB6", 
+  folate_in_mcg = "FOL",
+  vitaminb12_in_mcg = "VITB12",
+  pantothenate_in_mg = "PANTAC",
+  biotin_in_mcg = "BIOT",
+  vitaminc_in_mg = "VITC",
+  vitamind_in_mcg = "VITD",
+  vitamine_in_mg = "VITE", 
+  phyticacid_in_mg = "PHYT") %>% left_join(., var.dat) %>% select(var.name)
+
+#Change the name of the release after performing major changes
+
+write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.3.csv'))
 
 
 ##################------3) Ethiopia FCT----#####################
@@ -439,25 +496,25 @@ x <- 5
 readxl::read_excel(here::here(  'data', 
                               paste(paste(FCT_QA[x,6],
                                           FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
-  head()
+  str()
 
 #Customized saving FCT
 
 KENFCT1 <- readxl::read_excel(here::here(  'data', 
                                         paste(paste(FCT_QA[x,6],
                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                             sheet = 4)  %>% select(1:37) %>%  mutate(FCT = 'KENFCT') %>%
+                             sheet = 4)  %>% select(1:37, 60:62) %>%  mutate(FCT = 'KENFCT') %>%
                                 slice(1:1241) %>% glimpse()
 
 #Rename variables acc. to tagnames (FAO/INFOODS)
 
 FCT5_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER', 
             'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG', 'ASH', 
-             'CA', '(!is.na(ENERC2)) %>%FE', 'MG', 'P', 'K', 'NA', 'ZN', 'SE',
+             'CA', 'FE', 'MG', 'P', 'K', 'NA', 'ZN', 'SE',
                'VITA_RAE', 'VITA', 'RETOL', 'CARBEQ', 
              'THIA', 'RIBF', 'NIA', 'FOLDFE', 'FOLFD',
              'VITB12', 'VITC', 'CHOLE', 'OXALAC', 'PHYTCPPD', 'IP3', 'IP4',
-              'IP5', 'IP6', 'FCT')
+              'IP5', 'IP6','FASAT', "FAMS","FAPU", 'FCT')
 
 KENFCT1 <- KENFCT1 %>% rename_all( ~ FCT5_tag) 
 
@@ -470,10 +527,10 @@ KENFCT1 <- KENFCT1 %>%
                           TRUE ~ 'NO')) %>% 
   mutate_if(is.character, no_brackets)
 
-#convertin numeric variables in numeric
+#converting numeric variables in numeric
 
 KENFCT1 <- KENFCT1 %>% slice(3:n()) %>%
-  mutate_at(vars(3:37), funs(as.numeric)) 
+  mutate_at(vars(3:40), funs(as.numeric)) 
 
 
 
@@ -530,7 +587,58 @@ KENFCT1 <- KENFCT1 %>%
 
 #KENFCT <- bind_cols(KENFCT1, KENFCT2)
 
-write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1_v01.csv'))
+#write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1_v1.csv'))
+
+#Adding the reference (biblioID) to the main KENFCT
+
+ref <- readxl::read_excel(here::here('data','2018_KENFCT.xlsx'), 
+                                       sheet = 7, skip = 2) %>% 
+  rename(KEN93.code = "Code KEN93", 
+         code = "Code KFCT18",
+          fooditem = "Food names in English",
+         scientificName = "Scientific name",
+         ref = "BiblioID") %>% mutate_at("code", as.factor)
+
+KENFCT1<- KENFCT1 %>% mutate_at("code", as.factor) %>% 
+  left_join(., ref) %>% select(-KEN93.code)
+
+##----Standardization of variables for MAPS
+
+KENFCT1<- KENFCT1 %>% rename(
+  original_food_id = "code",
+  original_food_name = "fooditem",
+  fct_name = "FCT",
+  data_reference_original_id = "ref",
+  moisture_in_g = "WATER",
+  energy_in_kcal = "ENERC1",
+  energy_in_kj = "ENERC2",
+  totalprotein_in_g = "PROTCNT",
+  totalfats_in_g = "FAT",
+  saturatedfa_in_g = "FASAT", 
+  monounsaturatedfa_in_g = "FAMS", 
+  polyunsaturatedfa_in_g = "FAPU", 
+  cholesterol_in_mg = "CHOLE",
+  carbohydrates_in_g = "CHOAVLDF", 
+  fibre_in_g = "FIBTG", 
+  ash_in_g = "ASH",
+  ca_in_mg = "CA", 
+  fe_in_mg = "FE",
+  mg_in_mg = "MG",
+  p_in_mg = "P",
+  k_in_mg = "K",
+  na_in_mg = "NA", 
+  zn_in_mg = "ZN",
+  se_in_mcg = "SE",
+  vitamina_in_rae_in_mcg = "VITA_RAE", 
+  thiamin_in_mg = "THIA",
+  riboflavin_in_mg = "RIBF", 
+  niacin_in_mg = "NIA", 
+  folate_in_mcg = "FOLFD",
+  vitaminb12_in_mcg = "VITB12",
+  vitaminc_in_mg = "VITC",
+  phyticacid_in_mg = "PHYTCPPD") %>% left_join(., var.dat) %>% select(var.name)
+
+write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1_v1.1.csv'))
 
 ##################------6) Lesotho FCT----#####################
 
@@ -549,7 +657,7 @@ x <- 6
 readxl::read_excel(here::here(  'data', 
                                 paste(paste(FCT_QA[x,6],
                                             FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 6) %>%
-  head()
+  str()
 
 #Customized saving FCT
 
@@ -616,7 +724,59 @@ LSOFCT <- LSOFCT %>% rowwise %>%  mutate(ENERC1 = sum(c(
                                   (PROTCNT*4) , (FAT*9), (CHOAVLDF*4),(FIBTG *2))))
 
 
-write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCT.csv'))
+#write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCT.csv'))
+
+#Adding the reference (biblioID) to the main KENFCT
+
+ref.lso <- readxl::read_excel(here::here('data','2006_LSOFCT.xlsx'), 
+                          sheet = 5) %>% 
+  rename(ref = "FCT SOURCE") %>% select(code, ref) %>% 
+  filter(!is.na(code))
+
+LSOFCT<- LSOFCT %>% left_join(., ref.lso) 
+
+
+##----Standardization of variables for MAPS
+
+LSOFCT<- LSOFCT %>% rename(
+  original_food_id = "code",
+  original_food_name = "fooditem",
+  fct_name = "FCT",
+  data_reference_original_id = "ref",
+  moisture_in_g = "WATER",
+  energy_in_kcal = "ENERC1",
+  energy_in_kj = "ENERC2",
+  nitrogen_in_g = "NT",
+  totalprotein_in_g = "PROTCNT",
+  totalfats_in_g = "FAT",
+  saturatedfa_in_g = "FASAT", 
+  monounsaturatedfa_in_g = "FAMS", 
+  polyunsaturatedfa_in_g = "FAPU", 
+  cholesterol_in_mg = "CHOLE",
+  carbohydrates_in_g = "CHOAVLDF", 
+  fibre_in_g = "FIBTG", 
+  ash_in_g = "ASH",
+  ca_in_mg = "CA", 
+  fe_in_mg = "FE",
+  mg_in_mg = "MG",
+  p_in_mg = "P",
+  k_in_mg = "K",
+  na_in_mg = "NA", 
+  zn_in_mg = "ZN",
+  cu_in_mg = "CU",
+  se_in_mcg = "SE",
+  mn_in_mcg = "MN", 
+  vitamind_in_mcg = "VITD",
+  vitamine_in_mg = "VITE",
+  thiamin_in_mg = "THIA",
+  riboflavin_in_mg = "RIBF", 
+  niacin_in_mg = "NIA", 
+  vitaminb6_in_mg = "VITB6",
+  folate_in_mcg = "FOL",
+  vitaminc_in_mg = "VITC") %>% left_join(., var.dat) %>% select(var.name)
+
+write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCTv.1.0.csv'))
+
 
 ##################------8) Nigeria FCT----#####################
 
@@ -784,7 +944,46 @@ uFish <- uFish %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
-write.csv(uFish,  here::here('data', 'MAPS_uFish_v01.csv'))
+#write.csv(uFish,  here::here('data', 'MAPS_uFish_v1.csv'))
+
+uFish<- uFish %>% rename(
+  original_food_id = "code",
+  original_food_name = "fooditem",
+  fct_name = "FCT",
+  data_reference_original_id = "ref",
+  moisture_in_g = "WATER",
+  energy_in_kcal = "ENERC1",
+  energy_in_kj = "ENERC2",
+  nitrogen_in_g = "NT",
+  totalprotein_in_g = "PROTCNT",
+  totalfats_in_g = "FAT",
+  saturatedfa_in_g = "FASAT", 
+  monounsaturatedfa_in_g = "FAMS", 
+  polyunsaturatedfa_in_g = "FAPU", 
+  cholesterol_in_mg = "CHOLE",
+  carbohydrates_in_g = "CHOAVLDF", 
+  fibre_in_g = "FIBTG", 
+  ash_in_g = "ASH",
+  ca_in_mg = "CA", 
+  fe_in_mg = "FE",
+  mg_in_mg = "MG",
+  p_in_mg = "P",
+  k_in_mg = "K",
+  na_in_mg = "NA", 
+  zn_in_mg = "ZN", 
+  cu_in_mg = "CU",
+  i_in_mcg = "ID",
+  se_in_mcg = "SE",
+  thiamin_in_mg = "THIA",
+  riboflavin_in_mg = "RIBF", 
+  niacin_in_mg = "NIA", 
+  vitaminb6_in_mg = "VITB6C", 
+  folate_in_mcg = "FOL",
+  vitaminb12_in_mcg = "VITB12",
+  pantothenate_in_mg = "PANTAC",
+  vitaminc_in_mg = "VITC") %>% left_join(., var.dat) %>% select(var.name)
+
+write.csv(uFish,  here::here('data', 'MAPS_uFish_v1.1.csv'))
 
 ##################------13) uPulses FCT----#####################
 
@@ -834,8 +1033,45 @@ uPulses <- uPulses  %>%
   mutate(SOP = reduce(select(.,
                              'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
 
-write.csv(uPulses,  here::here('data', 'MAPS_uPulses_v01.csv'))
+#write.csv(uPulses,  here::here('data', 'MAPS_uPulses_v1.csv'))
 
+uPulses<- uPulses %>% rename(
+  original_food_id = "code",
+  original_food_name = "fooditem",
+  fct_name = "FCT",
+  data_reference_original_id = "ref",
+  moisture_in_g = "WATER",
+  energy_in_kcal = "ENERC1",
+  energy_in_kj = "ENERC2",
+  nitrogen_in_g = "NT",
+  totalprotein_in_g = "PROTCNT",
+  totalfats_in_g = "FATCE",
+  saturatedfa_in_g = "FASAT", 
+  monounsaturatedfa_in_g = "FAMS", 
+  polyunsaturatedfa_in_g = "FAPU", 
+  cholesterol_in_mg = "CHOLE",
+  carbohydrates_in_g = "CHOAVLDF", 
+  fibre_in_g = "FIBTG", 
+  ash_in_g = "ASH",
+  ca_in_mg = "CA", 
+  fe_in_mg = "FE",
+  mg_in_mg = "MG",
+  mn_in_mcg = "MN",
+  p_in_mg = "P",
+  k_in_mg = "K",
+  na_in_mg = "NA", 
+  zn_in_mg = "ZN", 
+  cu_in_mg = "CU",
+  vitamina_in_rae_in_mcg = "VITA_RAE",
+  thiamin_in_mg = "THIA",
+  riboflavin_in_mg = "RIBF", 
+  niacin_in_mg = "NIA", 
+  vitaminb6_in_mg = "VITB6C", 
+  folate_in_mcg = "FOL",
+  vitaminb12_in_mcg = "VITB12",
+  vitaminc_in_mg = "VITC") %>% left_join(., var.dat) %>% select(var.name)
+
+write.csv(uPulses,  here::here('data', 'MAPS_uPulses_v1.1.csv'))
 
 #########---------------END------------------##############
 
