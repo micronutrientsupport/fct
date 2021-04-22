@@ -55,10 +55,19 @@ Once we know what it is in each spreadsheet, we can load those sheets of interes
 
 Since we want to perform some analysis, we need to standardize the variables. This process is also valuable to analyze the quality of each FCT and to record potential issues or aspects that need to be kept in mind when working with different FCT. Such as, are all same variables calculated in the same way? Are they comparable? Are same variables reported in the same units? Are variables of interest reported? 
 
-Also, it would allow us to run quality check such as, recalculation of variables, sum of proximates (SOP), ount of missing values per MN, etc. For more details see 'quality_check.Rmd'.
+Also, it would allow us to run quality check such as, recalculation of variables, sum of proximates (SOP), count of missing values per MN, etc. For more details see 'quality_check.Rmd'.
 
       SOP =  [WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH] 
       
+##UPDATE:
+
+We have a new set of variables that are going to be standardized across all FCT for MAPS. Hence, they are included in the scripts and updated in the data set.
+
+**NOTE:** We have a spreadsheet with the variables (Standard-MAPS-FCT-variables) and the description of each (i.e., cu_in_mg|	The Copper content of this food item, in milligrams per 100g). We should add an extra-column with the FAO/INFOODS tagname. For two reasons: 1) for compatibility reasons, 2) to be transparent on each variable what could include. 
+
+Column.Name	| Description | FAO_INFOODS.tagname |
+-|-|-
+cu_in_mg|	The Copper content of this food item, in milligrams per 100g| CU |
 
 ####Standtadization of variables using FAO/INFOODS tagname
 
@@ -82,8 +91,6 @@ Then, we should determine whether those values identified as outliers are a one-
 Then, we could try to solve it. If we identify the source of the problem and we can solve the data issue, it is extremely important to 1) document any changes done in the data (i.e. through semantic version), and 2) to inform original data owners.
 
 If we cannot solve the issue, we would still need to flag that data entry and to inform data owners (if relevant).
-
-
 
 
 
@@ -508,6 +515,9 @@ There are values between [] they refer to those food items that folate was not c
 
 
 KENFCT2 - We have incorporated tagnames as per in the dataset (with no modifications)
+
+UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the original FCT dataset. We also added the ref (biblioID) and the scientificName from a different sheet in the FCT.
+
 
 ####6) Lesotho FCT
 
