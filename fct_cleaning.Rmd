@@ -361,6 +361,16 @@ variables: "CA", "CU", "FE", "MG", "SE", "ZN"
 
 fooditems: "MW05_0016", "MW05_0019",  "MW02_0007",  "MW02_0014",  "MW02_0019",  "MW01_0011", "MW01_0016" , "MW01_0037", "MW01_0060",  "MW01_0065", "MW04_0004", "MW04_0011", "MW04_0012", "MW04_0019", "MW04_0020", "MW04_0031", "MW04_0036"
 
+###Standardizing the variables for all MAPS and adding *Genus* codes
+
+We are using the matches that were used for the ihs4-FCT matches. Hence, the next step is to *manually* check and add the confidence to the match and to check for possible inconsistencies. 
+
+We found some inconsistencies mainly due to how matches were done, i.e. duplicated matches, imputation or substitutions 'mice meat' was matched to 'rabbit meat'. We solved most of the duplicated and those that could not been solved were left. That, ended up with items in MAFOODS that are now duplicated (i.e. beef meat, it's beef meat with and without bones).
+
+We have coded the confidence on the labels following the criteria:
+  - high: exact match (i.e., onion, raw and onion, raw)
+  - medium: same food item but differences in cooking method (i.e. cabbage, raw and cabbage, boiled).
+  - low: similar food items, for example food items that would be used in case of the 'original' food item is missing (i.e., rabbit, raw and mice, raw).
 
 
 ```{r MAFOODS tagname}
