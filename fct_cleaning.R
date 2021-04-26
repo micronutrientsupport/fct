@@ -332,6 +332,19 @@ MAFOODS<- MAFOODS %>% rename(
 
 write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.3.csv'))
 
+#Adding Genus codes
+
+MAFOODS <- read.csv(here::here("data", "MAPS_MAFOODS_v1.3.csv"))
+MAFOODSsl <- read.csv(here::here("MAPS_MAFOODS_standard-list.csv"))
+
+#This matches are derived from the ihs4-FCT matches.
+#We need to *manually* check and add the confidence to the match and 
+#check for possible inconsistencies. 
+
+ x <- MAFOODS %>% left_join(., MAFOODSsl, by = c("original_food_id" = "ref_fctcode"))
+
+write.csv(x,  here::here('MAPS_MAFOODS_v1.4.csv'), row.names = FALSE)
+
 
 ##################------3) Ethiopia FCT----#####################
 
