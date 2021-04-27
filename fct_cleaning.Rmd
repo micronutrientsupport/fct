@@ -370,8 +370,7 @@ We found some inconsistencies mainly due to how matches were done, i.e. duplicat
 We have coded the confidence on the labels following the criteria:
   - high: exact match (i.e., onion, raw and onion, raw)
   - medium: same food item but differences in cooking method (i.e. cabbage, raw and cabbage, boiled).
-  - low: similar food items, for example food items that would be used in case of the 'original' food item is missing (i.e., rabbit, raw and mice, raw).
-
+  - low: unspecific food item name used when no better match could be found (i.e. banana (musa) for enjira). 
 
 ```{r MAFOODS tagname}
 
