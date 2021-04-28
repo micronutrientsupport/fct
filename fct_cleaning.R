@@ -345,6 +345,17 @@ MAFOODSsl <- read.csv(here::here("MAPS_MAFOODS_standard-list.csv"))
 
 write.csv(x,  here::here('MAPS_MAFOODS_v1.4.csv'), row.names = FALSE)
 
+#loading the manually checked MAFOODS genus codes
+MAFOODS <- read.csv(here::here( "MAPS_MAFOODS_v1.4.csv"))
+
+#adjusting FCT formatting to MAPS standards
+
+MAFOODS %>% mutate(
+food_genus_id = ID_3,
+food_genus_description = FoodName_3,
+food_group = FoodName_0,
+food_subgroup = FoodName_1) %>% select(original_food_id:phyticacid_in_mg) %>% 
+  write.csv(here::here('MAPS_MAFOODS_v1.4.csv'), row.names = FALSE)
 
 ##################------3) Ethiopia FCT----#####################
 
