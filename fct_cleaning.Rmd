@@ -949,3 +949,4 @@ Eq.3: PROTCNT - (g/100 g EP) = nitrogen conversion factor (XN) × total nitrogen
 
 5) Fibre: Most of the dataset reported total fibre (FIBTG), while MAFOODS reported FIBC (and marked as italic when FIBTG was available) and GMBFCT that reported FIBTS (the sum of non-digestible polysaccharides and lignin). According to the FAO/INFOODS the preferred reporting method is FIBGT followed by FIBTS. While FIBC should be phased out. 
 
+6) Vitamin E: It is reported in some databases as vitamin E and in other it is reported as alpha-tocopherol. We would used vitamin E for both. But, it would be specified in the metadata database. (https://www.kcl.ac.uk/open-global/biomarkers/vitamin/vitamin-e)

@@ -19,8 +19,8 @@ var.name <- variables %>% select(Column.Name) %>% pull
 var.dat <- variables %>% spread(Column.Name, Description) %>% 
   mutate_all(as.numeric) %>%                               #fixing the type of
   mutate_at(c("original_food_id", "original_food_name",
-              "data_reference_original_id",
-              "fct_name"),   #variables so I can
+              "data_reference_original_id","food_genus_id", "food_genus_description",
+              "food_group","food_subgroup" , "fct_name"),   #variables so I can
             as.character)     #merge the two dataset
 
 
@@ -330,7 +330,7 @@ MAFOODS<- MAFOODS %>% rename(
 
 #Change the name of the release after performing major changes
 
-write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.3.csv'))
+write.csv(MAFOODS,  here::here('data', 'MAPS_MAFOODS_v1.3.csv'), row.names = F)
 
 #Adding Genus codes
 
@@ -1096,6 +1096,38 @@ uPulses<- uPulses %>% rename(
   vitaminc_in_mg = "VITC") %>% left_join(., var.dat) %>% select(var.name)
 
 write.csv(uPulses,  here::here('data', 'MAPS_uPulses_v1.1.csv'))
+
+
+### ----- 14) regional-SSA-fct
+
+regional <- read.csv(here::here("regional-SSA-fct_v.1.3.csv"))
+
+regional %>% mutate(
+  fct_name = "regional-SSA-fct") %>% 
+  rename(
+  region = "Region",
+  original_food_name = "food_item",
+  food_genus_id = "ID_3",
+  food_genus_description = "FoodName_3",
+  food_group = "FoodName_0",
+  food_subgroup = "FoodName_1",
+  energy_in_kcal = "Energy_kcal",
+  totalprotein_in_g = "Protein_g",
+  totalfats_in_g = "Fat_g",
+  carbohydrates_in_g = "Carbohydrates..available_g", 
+  fibre_in_g = "Fibre_g", 
+  ca_in_mg = "Ca_mg", 
+  fe_in_mg = "Fe_mg",
+  mg_in_mg = "Mg_mg",
+  zn_in_mg = "Zn_mg", 
+  cu_in_mg = "Cu_mg",
+  i_in_mcg = "I_µg",
+  se_in_mcg = "Se_µg",
+  phyticacid_in_mg = "Phytate_mg") %>% left_join(., var.dat) %>% 
+  select(var.name, region) %>% 
+  write.csv(here::here('MAPS_regional-SSA-fct_v1.4.csv'), row.names = FALSE)
+
+
 
 #########---------------END------------------##############
 
