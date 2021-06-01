@@ -2,8 +2,9 @@
 library(tidyverse)
 
 
-fct_metadata <- read.csv(here::here( "fct_metadata.csv"))
+###================== DO NOT RUN =========================#
 
+fct_metadata<- read.csv(here::here( "fct_metadata.csv"))
 
 fct_metadata$Variable_Name <-  str_replace(fct_metadata$Variable_Name, "in_.g$|in_kcal|in_kj", "method")
 
@@ -12,3 +13,64 @@ fct_metadata %>% mutate(Variable_Name = str_replace(Variable_Name, "_in_.*g$|_in
                         Variable_Name = str_replace(Variable_Name, 
                             "vitamina_method", "vitamina_rae_method")) %>% 
   write.csv(here::here("fct_metadata_v1.0.csv"), row.names = FALSE)
+###==================    END  =========================####
+
+fct_metadata_str <- read.csv(here::here( "fct_metadata_v1.0.csv"))
+
+FCT_QA <- readxl::read_excel(here::here('data', 'FCT_QA.xlsx'), sheet = 2)
+
+metadata_variables <- fct_metadata_str  %>%  pull(Variable_Name)
+
+var.metadat <- fct_metadata_str %>% spread(Variable_Name, 
+                                           Variables_Description) %>% 
+  mutate_all(as.numeric) %>%  mutate_all(as.character)
+
+fct_metadata <- FCT_QA %>% select(Name:Recipes,
+                                  -c(Contact,
+                                     Contact_email, 
+                                     FoodCategories,
+                                     CategoryList, Key_MN,
+                                     CARTB_cal )) %>% 
+  rename(
+    fct_name = "Name", 
+    fct_short_name = "Short_name",
+    fct_authors = "Authors",      
+    fct_region = "Country/Region",
+    fct_lead_organization = "LeadOrganization",
+    fct_year = "Year",       
+    fct_language = "Language" , 
+    fct_data_format = "DataFormat",
+    fct_documentation = "Metadata",       
+    fct_documentation_link = "Link",
+    fct_licence = "Licence",
+    fct_data_sources = "DataSources",   
+    fct_fooditem = "FoodItems",
+    fct_component = "Component" ,
+    fct_component_list = "ComponentList",
+    edible = "EDIBLE", 
+    energy_kcal_method = "ENERC_cal", 
+    totalprotein_method = "﻿PROT_cal",        
+    carbohydrates_method = "CHO_cal",
+    fibre_method = "FIBT_cal" ,
+    folate_method = "FOLDFE_cal",    
+    folicacid_method = "FOL_cal",
+    vitaminb12_method = "VITB12_cal",
+    vitamina_rae_method = "VITA_cal",    
+    vitaminc_method = "VITC_cal",
+    i_method = "ID_cal",         
+    zn_method = "ZN_cal",
+    se_method = "SE_cal",
+    fe_method = "FE_cal",
+    ca_method = "CA_cal",
+    phyticacid_method = "PHYTAC_cal",
+    edible_source = "EDIBLE_ref",    
+    yieldfactor = "YF",
+    yieldfactor_source = "YF_ref",
+    retentionfactor = "RF",
+    retentionfactor_source = "RF_ref",
+    recipe_method = "Recipes" ) %>%
+   mutate_at(c("fct_year", "fct_component"), as.character) %>% 
+  left_join(., var.metadat) %>% 
+  write.csv(here::here("fct_metadata_v1.1.csv"), row.names = FALSE)
+
+
