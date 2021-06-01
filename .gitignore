@@ -38,9 +38,10 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-#data folder
+#data and metadata folder
 
 data/
+metadata/
 
 #Images and document
 
