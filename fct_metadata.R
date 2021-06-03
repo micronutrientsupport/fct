@@ -73,4 +73,22 @@ fct_metadata <- FCT_QA %>% select(Name:Recipes,
   left_join(., var.metadat) %>% 
   write.csv(here::here("fct_metadata_v1.1.csv"), row.names = FALSE)
 
+#Adding metadata for regional-fct 
 
+fct_metadata <- read.csv(here::here("fct_metadata_v1.1.csv"))
+
+
+fct_metadata %>% add_row(
+  fct_name = "Supplementary Table 2. Food mineral composition data from literature sources, used in conjunction with Food Balance Sheets (FBSs) to estimate dietary mineral availability", 
+  fct_short_name = "regional-fct",
+  fct_authors = "Edward J. M. Joy, E. Louise Ander, Scott D. Young, Colin R. Black, Michael J. Watts, Allan D. C. Chilimba, Benson Chilima, Edwin W. P. Siyame, Alexander A. Kalimbira, Rachel Hurst, Susan J. Fairweather-Tait, Alexander J. Stein, Rosalind S. Gibson, Philip J. White, Martin R. Broadley",      
+  fct_region = "sub-Saharan Africa",
+  fct_lead_organization = "British Geological Survey, University of Nottingham",
+  fct_year = 2014,       
+  fct_language = "EN" , 
+  fct_data_format = "xlsx",
+  fct_documentation = "Joy et al, 2014. Physiologia Plantarum, Volume 151, Issue3, Pages 208-229",       
+  fct_documentation_link = "https://doi.org/10.1111/ppl.12144",
+  fct_licence = "This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, provided the original work is properly cited.",
+  fct_data_sources = "scientific literature, FCT") %>% 
+  write.csv(here::here("fct_metadata_v1.2.csv"), row.names = FALSE)
