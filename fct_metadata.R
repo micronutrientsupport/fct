@@ -75,7 +75,8 @@ fct_metadata <- FCT_QA %>% select(Name:Recipes,
 
 #Adding metadata for regional-fct 
 
-fct_metadata <- read.csv(here::here("fct_metadata_v1.1.csv"))
+fct_metadata <- read.csv(here::here("fct_metadata_v1.1.csv")) %>% 
+  rename(fct_documentation_citation = "fct_documentation")
 
 
 fct_metadata %>% add_row(
@@ -87,8 +88,16 @@ fct_metadata %>% add_row(
   fct_year = 2014,       
   fct_language = "EN" , 
   fct_data_format = "xlsx",
-  fct_documentation = "Joy et al, 2014. Physiologia Plantarum, Volume 151, Issue3, Pages 208-229",       
+  fct_documentation= "Joy et al, 2014. Physiologia Plantarum, Volume 151, Issue3, Pages 208-229",       
   fct_documentation_link = "https://doi.org/10.1111/ppl.12144",
   fct_licence = "This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, provided the original work is properly cited.",
   fct_data_sources = "scientific literature, FCT") %>% 
   write.csv(here::here("fct_metadata_v1.2.csv"), row.names = FALSE)
+
+#Changing variable fct_documentation to fct_documentation_citation
+
+read.csv(here::here("fct_metadata_v1.2.csv")) %>% 
+  rename(fct_documentation_citation = "fct_documentation") %>% 
+  write.csv(here::here("fct_metadata_v1.3.csv"), row.names = FALSE)
+
+
