@@ -149,10 +149,9 @@ fct.genus %>%
 
 fct.regional <- read.csv(here::here("regional-SSA-fct_2021-05-04.csv"))
 
-fct.SSA <- fct.regional %>% filter(Region == "W") %>%
-  mutate(Region = "M") %>% bind_rows(., fct.regional) 
-
-write.csv(fct.SSA, here::here("regional-SSA-fct_v.1.3.csv"), row.names = F)
+fct.regional %>% filter(Region == "W") %>%
+  mutate(Region = "M") %>% bind_rows(., fct.regional) %>% 
+  write.csv(., here::here("regional-SSA-fct-fbs-codes.csv"), row.names = F)
 
 fct.regional <- read.csv(here::here("MAPS_regional-SSA-fct_v1.4.csv"))
 
