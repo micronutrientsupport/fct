@@ -4,16 +4,23 @@ library(fuzzyjoin)
 
 ####================== LOADING DATASET =============================####
 
-
-fct.t <- read.csv(here::here('Simplified-match-FBS-region_2021-04-30.csv')) 
-
-dictionary <- read.csv(here::here('MAPS_Dictionary_v2.2.csv'))
-
-#Edward regional FCT as per his Suppl. mat. table 2
+#Joy et al. regional FCT as per his Suppl. mat. table 2
 
 fct <- readxl::read_xlsx(here::here("data", 'ppl12144-sup-0002-tables2.xlsx'), 
                          sheet = "S Table 2", skip = 2) %>% select(1:8) %>% 
   janitor::clean_names()
+
+#Data dictionary created and updated for the project
+#contains the genus code
+
+dictionary <- read.csv(here::here('metadata',
+'MAPS_Dictionary_v2.4.csv'))
+
+#Data on the fbs-fct from Joy et al. that was coded *manually* with
+#the genus code
+
+fct.t <- read.csv(here::here('metadata',
+                             'Simplified-match-FBS-region_v1.5.csv')) 
 
 ### ---- fct-ej-spread
 
@@ -32,18 +39,6 @@ fct.s <- fct %>%
               values_from = quantity) %>%
   janitor::clean_names()
 
-#
-#group_by(food_item, region) %>% 
-#
-#  summarise(source = list(source), 
-#
-#            across(Energy_kcal:Zn_mg, mean, na.rm = TRUE)) %>% 
-
-
-#We are removing the references/source data and join it with the authors/ publi
-#info in the original file
-
-#we are saving the data "Alone"
 
 fct.s %>% 
 write.csv(here::here("data", "EJ-regional-SSA-spread-FCT.csv"), row.names = F)
@@ -70,13 +65,13 @@ fct.ref %>%
 #need to be reviewed
 
 fct.t <- fct.t %>% select(Region:foodname_3, -Nutrient) %>% 
-  mutate(Item.FBS.category = str_replace(Item.FBS.category, "Rice" ,
-                                         "Rice (Milled Equivalent)"))
+  mutate(Item.FBS.category = ifelse(Item.FBS.category == "Rice" ,
+               "Rice (Milled Equivalent)", Item.FBS.category )) %>% 
+  rename(region = "Region") 
   
-
-fct <- fct %>% 
+fct <- fct.s %>% 
       left_join(., fct.t,
-        by = c("food_item" = "Item.FBS.category", "Region")) %>%
+        by = c("food_item" = "Item.FBS.category", "region")) %>%
   rename(
   FE2_3 = "code_3", 
   FoodName_3 = "foodname_3") %>% 
@@ -85,7 +80,7 @@ fct <- fct %>%
     "milk, cow" = "milk, cow, whole, raw",
     "pig meat, fresh, raw" = "pig meat, without bones, fresh, raw", 
     "beef, fresh, raw" = "beef, without bones, fresh, raw"))) %>% 
-     mutate_at("FoodName_3", str_to_lower) %>% glimpse()
+     mutate_at("FoodName_3", str_to_lower)
 
 #THIS IS NOT WORKING, I NEED TO FIX IT!! 
 #but not today....
@@ -111,8 +106,8 @@ fct %>% filter(!food_item %in% c("Aquatic Animals, Others",
 
 ### ---- Attaching all genus list 
 
-#fct.genus <- fct %>% filter(str_detect(FE2_3, "")) %>%
-  #left_join(., dictionary, by = c("FE2_3", "FoodName_3")) %>% glimpse()
+fct.genus <- fct %>% 
+  left_join(., dictionary, by = c("FoodName_3")) %>% glimpse()
 
 #THIS IS A LAME WORK AROUND BUT I CAN'T DO ANYTHING ELSE TODAY!!
 
@@ -134,26 +129,59 @@ fct.genus <- fct %>% filter(str_detect(FE2_3, "")) %>%
 #to join FAO - FOOD BALANCE SHEET!! Check if there is consistency!!
 
 
-fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>% pull(ID_1, FoodName_1)
+fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>%
+  pull(ID_1, FoodName_1)
+
+fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>%
+  pull(ID_3, FoodName_1)
 
 dictionary %>% filter(str_detect(FoodName_3, "milk")) %>% pull(FE2_3, FoodName_3)
 
 #we are removing the "source" variable to make the file lighter
 
 fct.genus %>% 
-  select(-source) %>% 
-  write.csv(here::here("regional-SSA-fct_2021-05-04.csv"), row.names = F)
+  write.csv(here::here( "data",
+    "MAPS_three-regions-Africa-fct_v1.5.csv"), row.names = F)
 
 #Loading the fct to "create" a middle region fct data copied from west
 #Africa, this should be reviewed in the near future
 
-fct.regional <- read.csv(here::here("regional-SSA-fct_2021-05-04.csv"))
+fct.regional <- read.csv(here::here("data",
+                                    "MAPS_three-regions-Africa-fct_v1.5.csv"))
 
-fct.regional %>% filter(Region == "W") %>%
-  mutate(Region = "M") %>% bind_rows(., fct.regional) %>% 
-  write.csv(., here::here("regional-SSA-fct-fbs-codes.csv"), row.names = F)
+fct.regional %>% filter(region == "W") %>%
+  mutate(region = "M") %>% bind_rows(., fct.regional) %>% 
+  write.csv(., here::here("data",
+                          "MAPS_regional-SSA-fct_v1.5.csv"), row.names = F)
 
-fct.regional <- read.csv(here::here("MAPS_regional-SSA-fct_v1.4.csv"))
+#Saving four independent regional FCT
+#KEEP working on this script
+
+fct.regional <- fct.regional %>% filter(region == "W") %>%
+  mutate(region = "M") %>% bind_rows(., fct.regional) %>% 
+  
+  fct.regional <- fct.regional %>% rename(
+    original_food_name = "food_item",
+    energy_in_kcal = "energy_kcal",
+    totalprotein_in_g = "protein_g",
+    totalfats_in_g = "fat_g",
+    carbohydrates_in_g = "carbohydrates_available_g", 
+    fibre_in_g = "fibre_g", 
+    ca_in_mg = "ca_mg", 
+    fe_in_mg = "fe_mg",
+    mg_in_mg = "mg_mg",
+    zn_in_mg = "zn_mg", 
+    cu_in_mg = "cu_mg",
+    i_in_mcg = "i_mg",
+    se_in_mcg = "se_mg",
+    phyticacid_in_mg = "phytate_mg",
+    food_genus_id = "ID_3",
+    food_genus_description = "FoodName_3",
+    food_group = "FoodName_0",
+    food_subgroup = "FoodName_1") %>% left_join(., var.dat) %>% 
+  select(var.name)
+
+#need to save them!!
 
 splitregion <- fct.regional %>% 
   group_by(region) %>% 
@@ -164,9 +192,8 @@ allNames <- fct.regional %>%
   group_keys()
 
 
-  for(i in 1:4){
-  saveName = paste0("MAPS_", i, "-Africa_v1.x.csv")
-  write.csv(splitregion[[i]], file = saveName)
-  }
 
-#KEEP working on this script
+      for(i in 1:4){
+  saveName = paste0("MAPS_", i , "-Africa_v1.5.csv")
+  write.csv(splitregion[[i]], file = saveName, row.names = F)
+  }
