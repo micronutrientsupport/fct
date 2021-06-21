@@ -2,7 +2,7 @@
 library(tidyverse)
 
 
-###================== DO NOT RUN =========================#
+###============================ DO NOT RUN =========================####
 
 fct_metadata<- read.csv(here::here( "fct_metadata.csv"))
 
@@ -13,7 +13,8 @@ fct_metadata %>% mutate(Variable_Name = str_replace(Variable_Name, "_in_.*g$|_in
                         Variable_Name = str_replace(Variable_Name, 
                             "vitamina_method", "vitamina_rae_method")) %>% 
   write.csv(here::here("fct_metadata_v1.0.csv"), row.names = FALSE)
-###==================    END  =========================####
+
+###============================  END  ===============================####
 
 fct_metadata_str <- read.csv(here::here( "fct_metadata_v1.0.csv"))
 

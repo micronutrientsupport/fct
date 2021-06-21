@@ -19,7 +19,8 @@ var.name <- variables %>% select(Column.Name) %>% pull
 var.dat <- variables %>% spread(Column.Name, Description) %>% 
   mutate_all(as.numeric) %>%                               #fixing the type of
   mutate_at(c("original_food_id", "original_food_name",
-              "data_reference_original_id","food_genus_id", "food_genus_description",
+              "data_reference_original_id","food_genus_id", 
+              "food_genus_description", "food_genus_confidence",         
               "food_group","food_subgroup" , "fct_name"),   #variables so I can
             as.character)     #merge the two dataset
 
@@ -1132,21 +1133,6 @@ regional %>% mutate(
 #########---------------END------------------##############
 
 
-#Master data set with all FCT
-
-FCT <- bind_rows(WAFCT, MAFOODS, ETHFCT, GMBFCT, KENFCT1,
-                 LSOFCT, NGAFCT,UGAFCT, uFish, uPulses) 
-
-##Trying to solve issues with encoding
-
-#Encoding(FCT$fooditem) <- "UTF-8"
-
-#write.csv(FCT,  here::here('data', 'FCT_10.csv'), fileEncoding = 'UTF-8')
-
-#readr::write_csv(FCT,  here::here('data', 'FCT_10.csv'))
-
-#data.table::fwrite(FCT,  here::here('data', 'FCT_10.csv'))
 
 
-readr::write_excel_csv(FCT,  here::here('data', 'FCT_10.csv'))
 
