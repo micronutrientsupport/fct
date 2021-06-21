@@ -22,6 +22,25 @@ dictionary <- read.csv(here::here('metadata',
 fct.t <- read.csv(here::here('metadata',
                              'Simplified-match-FBS-region_v1.5.csv')) 
 
+
+######-----------------------VARIABLE STANDARDIZATION---------------------########
+
+#Variable names for data standardization
+variables <- read.csv(here::here( "fct-variable-names.csv"))
+
+#getting the names of all the standard variables names, to filter them afterward
+var.name <- variables %>% select(Column.Name) %>% pull
+
+#getting all the MAPS-standard variables included in the dataset.
+
+var.dat <- variables %>% spread(Column.Name, Description) %>% 
+  mutate_all(as.numeric) %>%                               #fixing the type of
+  mutate_at(c("original_food_id", "original_food_name",
+              "data_reference_original_id","food_genus_id", 
+              "food_genus_description", "food_genus_confidence",         
+              "food_group","food_subgroup" , "fct_name"),   #variables so I can
+            as.character) 
+
 ### ---- fct-ej-spread
 
 #We have spread Edward FCT (to get same format as other FCT), we have also 
@@ -109,19 +128,8 @@ fct %>% filter(!food_item %in% c("Aquatic Animals, Others",
 fct.genus <- fct %>% 
   left_join(., dictionary, by = c("FoodName_3")) %>% glimpse()
 
-#THIS IS A LAME WORK AROUND BUT I CAN'T DO ANYTHING ELSE TODAY!!
 
-fct.genus <- fct %>% filter(str_detect(FE2_3, "")) %>%
-  left_join(., dictionary, by = "FoodName_3") %>% glimpse()
-
-#fct.genus <- fct %>% filter(!food_item %in% c("Aquatic Animals, Others", 
- #                                             "Oilcrops Oil, Other", 
-  #                                            "Ricebran Oil")) %>%
-  #left_join(., dictionary)
-
-#to avoid conflict we need to filter out those items without FE2_3
-#until are fixed
-
+fct.genus %>% filter(is.na(ID_1))
 
 #CHECKS BEFORE SAVING!!
 
@@ -135,32 +143,33 @@ fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>%
 fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>%
   pull(ID_3, FoodName_1)
 
-dictionary %>% filter(str_detect(FoodName_3, "milk")) %>% pull(FE2_3, FoodName_3)
+dictionary %>% filter(str_detect(FoodName_3, "milk")) %>% 
+  pull(FE2_3, FoodName_3)
 
-#we are removing the "source" variable to make the file lighter
+#saving the original regional-fct with genus codes
 
 fct.genus %>% 
   write.csv(here::here( "data",
     "MAPS_three-regions-Africa-fct_v1.5.csv"), row.names = F)
 
+
 #Loading the fct to "create" a middle region fct data copied from west
-#Africa, this should be reviewed in the near future
+#Africa, this should be reviewed in the near future.
+#And adding MAPS format to the dataset and confidence of the match
 
-fct.regional <- read.csv(here::here("data",
-                                    "MAPS_three-regions-Africa-fct_v1.5.csv"))
+fct.confidence <- read.csv(here::here(
+  "MAPS_regional-SSA-fct_v1.4.csv")) %>% select(food_genus_id, 
+                                                food_genus_confidence, 
+                                                region)
 
-fct.regional %>% filter(region == "W") %>%
-  mutate(region = "M") %>% bind_rows(., fct.regional) %>% 
-  write.csv(., here::here("data",
-                          "MAPS_regional-SSA-fct_v1.5.csv"), row.names = F)
 
-#Saving four independent regional FCT
-#KEEP working on this script
+#There are some extra-elements due to the merging fct.confidence
+#that I am unable to identify. 
 
-fct.regional <- fct.regional %>% filter(region == "W") %>%
-  mutate(region = "M") %>% bind_rows(., fct.regional) %>% 
-  
-  fct.regional <- fct.regional %>% rename(
+fct.genus <- fct.genus %>% filter(region == "W") %>%
+  mutate(region = "M") %>% bind_rows(., fct.genus) %>% 
+  mutate(fct_name = "regional-SSA-fct") %>% 
+   rename(
     original_food_name = "food_item",
     energy_in_kcal = "energy_kcal",
     totalprotein_in_g = "protein_g",
@@ -178,12 +187,33 @@ fct.regional <- fct.regional %>% filter(region == "W") %>%
     food_genus_id = "ID_3",
     food_genus_description = "FoodName_3",
     food_group = "FoodName_0",
-    food_subgroup = "FoodName_1") %>% left_join(., var.dat) %>% 
-  select(var.name)
+    food_subgroup = "FoodName_1") %>% 
+   left_join(., fct.confidence, by = c("food_genus_id", "region")) %>%
+  left_join(., var.dat) %>% select(var.name, region) 
+
+#checking that all food items has its confidence match
+
+fct.genus %>% filter(is.na(food_genus_confidence)) %>% 
+  distinct(food_genus_id)
+
+#missing three items
+
+fct.genus <- fct.genus %>% mutate(food_genus_confidence = case_when(
+  food_genus_id == "1587.01" ~ "l" ,   #aquatic animals = frog
+  food_genus_id == "1499.01.01" ~ "l" , #oil crop others = shea nuts
+  food_genus_id == "21691.01.01"  ~ "h", #ricebran oil = rice bran oil
+  TRUE ~ food_genus_confidence))
+
+  
+fct.genus %>% write.csv(., here::here("data",
+                          "MAPS_regional-SSA-fct_v1.5.csv"), row.names = F)
+
+#Saving four independent regional FCT
+#KEEP working on this script
 
 #need to save them!!
 
-splitregion <- fct.regional %>% 
+splitregion <- fct.genus %>% 
   group_by(region) %>% 
   group_split()
 
