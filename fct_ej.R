@@ -14,13 +14,13 @@ fct <- readxl::read_xlsx(here::here("data", 'ppl12144-sup-0002-tables2.xlsx'),
 #contains the genus code
 
 dictionary <- read.csv(here::here('metadata',
-'MAPS_Dictionary_v2.4.csv'))
+'MAPS_Dictionary_v2.5.csv'))
 
 #Data on the fbs-fct from Joy et al. that was coded *manually* with
 #the genus code
 
 fct.t <- read.csv(here::here('metadata',
-                             'Simplified-match-FBS-region_v1.5.csv')) 
+                             'Simplified-match-FBS-region_v1.6.csv')) 
 
 
 ######-----------------------VARIABLE STANDARDIZATION---------------------########
@@ -129,7 +129,7 @@ fct.genus <- fct %>%
   left_join(., dictionary, by = c("FoodName_3")) %>% glimpse()
 
 
-fct.genus %>% filter(is.na(ID_1))
+fct.genus %>% filter(is.na(ID_1)) 
 
 #CHECKS BEFORE SAVING!!
 
@@ -147,10 +147,11 @@ dictionary %>% filter(str_detect(FoodName_3, "milk")) %>%
   pull(FE2_3, FoodName_3)
 
 #saving the original regional-fct with genus codes
+#save into the ~FoodDictionary/data
 
 fct.genus %>% 
-  write.csv(here::here( "data",
-    "MAPS_three-regions-Africa-fct_v1.5.csv"), row.names = F)
+  write.csv(here::here("output",
+    "MAPS_three-regions-Africa-fct_v1.6.csv"), row.names = F)
 
 
 #Loading the fct to "create" a middle region fct data copied from west
@@ -194,19 +195,21 @@ fct.genus <- fct.genus %>% filter(region == "W") %>%
 #checking that all food items has its confidence match
 
 fct.genus %>% filter(is.na(food_genus_confidence)) %>% 
-  distinct(food_genus_id)
+  distinct(food_genus_id, food_genus_description)
 
 #missing three items
 
 fct.genus <- fct.genus %>% mutate(food_genus_confidence = case_when(
   food_genus_id == "1587.01" ~ "l" ,   #aquatic animals = frog
-  food_genus_id == "1499.01.01" ~ "l" , #oil crop others = shea nuts
+  food_genus_id == "1522.01" ~ "l" , #fish body oil = cod, body, oil
+  food_genus_id == "34550.01" ~ "l" , #oil crop others = vegetable oil
   food_genus_id == "21691.01.01"  ~ "h", #ricebran oil = rice bran oil
+  food_genus_id == "1701.02"  ~ "m ", #common beans = beans and products
   TRUE ~ food_genus_confidence))
 
   
 fct.genus %>% write.csv(., here::here("data",
-                          "MAPS_regional-SSA-fct_v1.5.csv"), row.names = F)
+                          "MAPS_regional-SSA-fct_v1.6.csv"), row.names = F)
 
 #Saving four independent regional FCT
 #KEEP working on this script
@@ -217,13 +220,13 @@ splitregion <- fct.genus %>%
   group_by(region) %>% 
   group_split()
 
-allNames <- fct.regional %>% 
+allNames <- fct.genus %>% 
   group_by(region) %>% 
   group_keys()
 
 
 
       for(i in 1:4){
-  saveName = paste0("MAPS_", i , "-Africa_v1.5.csv")
+  saveName = paste0("MAPS_", i , "-Africa_v1.6.csv")
   write.csv(splitregion[[i]], file = saveName, row.names = F)
   }
