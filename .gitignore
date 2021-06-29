@@ -42,6 +42,7 @@ vignettes/*.pdf
 
 data/
 metadata/
+output/
 
 #Images and document
 
