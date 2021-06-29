@@ -931,7 +931,27 @@ summary(uPulses$SOP)
 
 ```
 
-##Conclusion
+## regional fct
+
+This data is coming from Joy et al. (2014) study. We have reformated and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
+
+We have prepared a list of updates that could benefit the use of the regional fct for matching with the food balance sheet (or other surveys in sub-Saharan region). Updates to be done for the next release:
+
+1- There are three missing items in the regional food composition table when compared with all the food balance sheet possible items. The next step will be provide food composition values for those items. 
+
+|item_code| item |
+|-|-|
+| 2680 |infant food|
+| 2558 | rape and mustardseed|
+|  2562 | palm kernels|
+
+2- There are multiple matches that were classified as "low confidence", hence those items should be reviewed and updated when possible.
+
+3- The "middle region" food composition table is a exact copy of the "western region" fct, hence when possible and available data for that region should be generated. 
+
+
+
+## Conclusion
 
 1) Energy: Most of the FCT used the ENERC values and conversion factor as established by FAO/INFOODS. Most of the differences were including calculation for kcal and/or kJ. Including ALC or not into the calculation. Mozambique kcal were calculated as kJ and applying a conversion factor (Energy, kJ/4,184). Gambia did not account for fibre and the conversion factor used for CHO was 3.75 (due to the calculation is based on monosaccharide equivalents). In addition, Tanzania used total carbohydrates, hence fibre was included into the CHO fraction (not accounting for differences in fibre conversion factors). Three FCT (eth, nga, uga) did not report the method used to calculate the energy content. This variable will be (re-)calculated following the equations:
 
