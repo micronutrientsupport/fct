@@ -947,7 +947,9 @@ We have prepared a list of updates that could benefit the use of the regional fc
 
 2- There are multiple matches that were classified as "low confidence", hence those items should be reviewed and updated when possible.
 
-3- The "middle region" food composition table is a exact copy of the "western region" fct, hence when possible and available data for that region should be generated. 
+3- The regional fct only reported certain mineral micronutrients, hence we would include other micronurtients of interest to the fct. 
+
+4- The "middle region" food composition table is a exact copy of the "western region" fct, hence when possible and available data for that region should be generated. 
 
 
 
