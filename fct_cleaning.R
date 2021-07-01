@@ -149,7 +149,9 @@ WAFCT<- WAFCT %>% mutate(
 
 summary(WAFCT$SOP)
 
-#Rename variables according to MAPS-standards
+
+
+##2) Rename variables according to MAPS-standards
 
 WAFCT<- WAFCT %>% rename(
  original_food_id = "code",
@@ -195,6 +197,24 @@ WAFCT<- WAFCT %>% left_join(., var.dat) %>% select(var.name)
 #We use this one to correctly import 'strange characters' (i.e. french accents)
 
 readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v1.1.csv'))
+
+##3) Adding GENuS code (1)
+#and adjusting FCT formatting to MAPS standards
+
+WAFCT <- read.csv(here::here('data', 'MAPS_WAFCT_v1.1.csv'), 
+                  fileEncoding = 'UTF-8-BOM')
+
+wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
+
+WAFCT %>% left_join(., wafct.genus, by = c("original_food_id" = "ref_fctcode")) %>% 
+  mutate(
+  food_genus_id = ID_3,
+  food_genus_description = FoodName_3,
+  food_group = FoodName_0,
+  food_subgroup = FoodName_1, 
+  food_genus_confidence = fe2_confidence) %>% 
+  select(original_food_id:phyticacid_in_mg) %>% 
+  write.csv(here::here('output', 'MAPS_WAFCT_v1.2.csv'), row.names = FALSE)
 
 
 ##################------2) Malawi FCT----#####################
@@ -352,10 +372,10 @@ MAFOODS <- read.csv(here::here( "MAPS_MAFOODS_v1.4.csv"))
 #adjusting FCT formatting to MAPS standards
 
 MAFOODS %>% mutate(
-food_genus_id = ID_3,
-food_genus_description = FoodName_3,
-food_group = FoodName_0,
-food_subgroup = FoodName_1) %>% select(original_food_id:phyticacid_in_mg) %>% 
+  food_genus_id = ID_3,
+  food_genus_description = FoodName_3,
+  food_group = FoodName_0,
+  food_subgroup = FoodName_1) %>% select(original_food_id:phyticacid_in_mg) %>% 
   write.csv(here::here('MAPS_MAFOODS_v1.4.csv'), row.names = FALSE)
 
 ##################------3) Ethiopia FCT----#####################
@@ -665,6 +685,26 @@ KENFCT1<- KENFCT1 %>% rename(
 
 write.csv(KENFCT1,  here::here('data', 'MAPS_KENFCT1_v1.1.csv'))
 
+##3) Adding GENuS code (1)
+#and adjusting FCT formatting to MAPS standards
+
+KENFCT <- read.csv(here::here('data', 'MAPS_KENFCT1_v1.1.csv'), 
+                  fileEncoding = 'UTF-8-BOM')
+
+ken.genus <- read.csv(here::here('metadata', 'MAPS_KENFCT_standard-list.csv')) %>% 
+  mutate_all(., as.character)
+
+KENFCT %>% left_join(., ken.genus, by = c("original_food_id" = "ref_fctcode")) %>% 
+  mutate(
+    food_genus_id = ID_3,
+    food_genus_description = FoodName_3,
+    food_group = FoodName_0,
+    food_subgroup = FoodName_1, 
+    food_genus_confidence = fe2_confidence) %>% 
+  select(original_food_id:phyticacid_in_mg) %>% 
+  write.csv(here::here('output', 'MAPS_KENFCT_v1.2.csv'), row.names = FALSE)
+
+
 ##################------6) Lesotho FCT----#####################
 
 #Lesotho FCT - tagname standardization
@@ -802,6 +842,24 @@ LSOFCT<- LSOFCT %>% rename(
 
 write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCTv.1.0.csv'))
 
+
+##3) Adding GENuS code (1)
+#and adjusting FCT formatting to MAPS standards
+
+LSOFCT <- read.csv(here::here('data', 'MAPS_LSOFCTv.1.0.csv'), 
+                   fileEncoding = 'UTF-8-BOM')
+
+lso.genus <- read.csv(here::here('metadata', 'MAPS_LSOFCT_standard-list.csv'))
+
+LSOFCT %>% left_join(., lso.genus, by = c("original_food_id" = "ref_fctcode")) %>% 
+  mutate(
+    food_genus_id = ID_3,
+    food_genus_description = FoodName_3,
+    food_group = FoodName_0,
+    food_subgroup = FoodName_1, 
+    food_genus_confidence = fe2_confidence) %>% 
+  select(original_food_id:phyticacid_in_mg) %>% 
+  write.csv(here::here('output', 'MAPS_LSOFCT_v1.1.csv'), row.names = FALSE)
 
 ##################------8) Nigeria FCT----#####################
 
