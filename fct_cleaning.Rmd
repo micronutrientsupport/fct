@@ -933,7 +933,7 @@ summary(uPulses$SOP)
 
 ## regional fct
 
-This data is coming from Joy et al. (2014) study. We have reformated and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
+This data is coming from Joy et al. (2014) study. We have reformatted and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
 
 We have prepared a list of updates that could benefit the use of the regional fct for matching with the food balance sheet (or other surveys in sub-Saharan region). Updates to be done for the next release:
 

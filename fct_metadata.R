@@ -14,7 +14,12 @@ fct_metadata %>% mutate(Variable_Name = str_replace(Variable_Name, "_in_.*g$|_in
                             "vitamina_method", "vitamina_rae_method")) %>% 
   write.csv(here::here("fct_metadata_v1.0.csv"), row.names = FALSE)
 
+
+
+
 ###============================  END  ===============================####
+
+cc <- raster::ccodes() 
 
 fct_metadata_str <- read.csv(here::here( "fct_metadata_v1.0.csv"))
 
@@ -71,34 +76,56 @@ fct_metadata <- FCT_QA %>% select(Name:Recipes,
     retentionfactor_source = "RF_ref",
     recipe_method = "Recipes" ) %>%
    mutate_at(c("fct_year", "fct_component"), as.character) %>% 
-  left_join(., var.metadat) %>% 
-  write.csv(here::here("fct_metadata_v1.1.csv"), row.names = FALSE)
+  left_join(., var.metadat) 
 
-#Adding metadata for regional-fct 
-
-fct_metadata <- read.csv(here::here("fct_metadata_v1.1.csv")) %>% 
-  rename(fct_documentation_citation = "fct_documentation")
+#%>% 
+#  write.csv(here::here("fct_metadata_v1.1.csv"), row.names = FALSE)
 
 
-fct_metadata %>% add_row(
+#Adding metadata for regional-fct
+
+fct_metadata <- fct_metadata %>% add_row(
   fct_name = "Supplementary Table 2. Food mineral composition data from literature sources, used in conjunction with Food Balance Sheets (FBSs) to estimate dietary mineral availability", 
-  fct_short_name = "regional-fct",
+  fct_short_name = "Eastern-Africa, Middle-Africa, Southen-Africa, Western-Africa",
   fct_authors = "Edward J. M. Joy, E. Louise Ander, Scott D. Young, Colin R. Black, Michael J. Watts, Allan D. C. Chilimba, Benson Chilima, Edwin W. P. Siyame, Alexander A. Kalimbira, Rachel Hurst, Susan J. Fairweather-Tait, Alexander J. Stein, Rosalind S. Gibson, Philip J. White, Martin R. Broadley",      
   fct_region = "sub-Saharan Africa",
   fct_lead_organization = "British Geological Survey, University of Nottingham",
-  fct_year = 2014,       
+  fct_year = "2014",       
   fct_language = "EN" , 
   fct_data_format = "xlsx",
   fct_documentation= "Joy et al, 2014. Physiologia Plantarum, Volume 151, Issue3, Pages 208-229",       
   fct_documentation_link = "https://doi.org/10.1111/ppl.12144",
   fct_licence = "This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, provided the original work is properly cited.",
-  fct_data_sources = "scientific literature, FCT") %>% 
-  write.csv(here::here("fct_metadata_v1.2.csv"), row.names = FALSE)
+  fct_data_sources = "scientific literature, FCT") 
+#%>% 
+#  write.csv(here::here("fct_metadata_v1.2.csv"), row.names = FALSE)
 
 #Changing variable fct_documentation to fct_documentation_citation
+#create multple records for fct-regional and removing fct not used in the tool.
 
-read.csv(here::here("fct_metadata_v1.2.csv")) %>% 
+fct_metadata <- fct_metadata %>% 
   rename(fct_documentation_citation = "fct_documentation") %>% 
-  write.csv(here::here("fct_metadata_v1.3.csv"), row.names = FALSE)
+  filter(fct_short_name %in% c("MAFOODS", "WAFCT", "LSOFCT", "KENFCT", 
+              "Eastern-Africa, Middle-Africa, Southen-Africa, Western-Africa")) %>% 
+  separate_rows(fct_short_name, sep = ",") %>%
+  mutate_all(., str_squish) 
+
+africa.region <- cc %>% filter(continent == "Africa") %>% 
+  group_by(UNREGION1) %>% summarise(ISO = paste(ISO3, collapse = ","))
+
+fct_metadata <- fct_metadata %>% 
+  mutate(fct_region = case_when(
+    fct_short_name == "Eastern-Africa" ~ africa.region$ISO[1],
+    fct_short_name == "Middle-Africa" ~ africa.region$ISO[2],
+    fct_short_name == "Southen-Africa" ~ africa.region$ISO[4],
+    fct_short_name == "Western-Africa" ~ africa.region$ISO[5], 
+    TRUE ~ fct_region))
+  
+#fct_metadata %>% mutate_all(funs(replace_na(., "NULL"))) %>% 
+#   mutate_all(funs(str_replace_all(.,"NA", "NULL")))
+
+fct_metadata %>% mutate_all(funs(replace_na(., ""))) %>% #saving for MAPS
+  mutate_all(funs(str_replace_all(.,"NA", ""))) %>%      #changing NA for whitespaces
+  write.csv(here::here("output", "fct_metadata_v1.5.csv"), row.names = FALSE)
 
 
