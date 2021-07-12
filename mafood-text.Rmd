@@ -1,0 +1,44 @@
+---
+title: "Untitled"
+author: "Segovia D L Revilla, Lucia"
+date: "12/07/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting the data
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Getting from untidy to tidy format
+
+### 1) 
+
+MAFOODS design is a three rows per food item, hence we will have Energy (kCal), Starch (g), Vit-RE(mcg) in three consecutive rows. 
+We are going to get those three rows and paste it as columns side by side using a loop. Keep in mind that we can't index (mwi[[i]]) with value 0. Hence, we need to do a work around. 
+
+We have realized that if we only extract 3 rows, we are missing very important information, mainly the information for nutrients in the 3rd row (i.e., most of the vitamins), hence, we are extracting 4 rows. This is originating an issue with those items at the middle of the page, because it is picking the page number (see number 19 and 20 within food items MW01_0005 and MW01_0015). This difference in format means among other that the distance between one food item and the next instead of being 4 rows is 3 rows. Hence, we are getting a duplication of one item per page in the fourth row (mwi[[4]]). 
+
+This needs to be solved, otherwise we might be introducing some values per food item that are incorrect. 
+
+We are grouping together the three rows of the names, and extracting water content from the first row name. In addition, we are searching for [], because according to MAFOODS compilers: "Square brackets [ ] mean compilers are not confident
+with value reported.". we are coding that variables as `water.low`
+
+X.1...3 == Energy_in_kcal 
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
