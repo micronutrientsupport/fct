@@ -72,7 +72,7 @@ mwi_table_clean_rename %>% head() %>% knitr::kable()
 
 mwi <- list()
 
-for(i in 1:3){
+for(i in 1:4){
   
   f <- str_which(mwi_table_clean$X, "MW") %>% as.numeric()
   
@@ -85,6 +85,8 @@ for(i in 1:3){
 }
 
 
+mwi[[4]] %>% filter(str_detect(X, id))
+
 mwi_clean <- reduce(mwi, bind_cols)
 
 
@@ -95,11 +97,15 @@ mwi_clean %>% relocate(starts_with("GROUP.1"), .after = "X...1") %>%
   mutate(water = str_extract(GROUP.1..STAPLES...2, "[:digit:]{1,2}\\.[:digit:]{1,2}"),
          water.low = str_detect(GROUP.1..STAPLES...2, "\\[*\\]"))
 
-compo <- "[:digit:]{1,3}\\.[:digit:]{1,2}"
+compo <- "[:digit:]{1,3}\\.[:digit:]{1,2}|[:digit:]{1,4}"
+
+micro <- "[:digit:]{1,3}\\.[:digit:]{1,2}"
+
+ener <- "[:digit:]{1,4}"
 
 bracket <- "\\[.*?\\]"
 
-all <- "[:digit:]{1,3}\\.[:digit:]{1,2}|\\[.[:digit:]{1,3}\\.[:digit:]{1,2}\\]"
+all <- "[:digit:]{1,3}\\.[:digit:]{1,2}|\\[.*?\\]"
 
 id <- "MW[:digit:]{2}\\_[:digit:]{4}"
 
@@ -107,21 +113,43 @@ food.group <- "[:upper:]{1}[:lower:]{2,}"
 
 ref <- "R?[:digit:]{1,2}|[:upper:]{2,4}"
 
-mwi_clean %>% relocate(starts_with("GROUP.1"), .after = "X...1") %>% 
-  mutate(water = str_extract(GROUP.1..STAPLES...2, compo),
+mwi_clean <- mwi_clean %>% relocate(starts_with("GROUP.1"), .after = "X...1") %>% 
+  mutate(moisture_in_g = str_extract(GROUP.1..STAPLES...2, compo),
          water.low = str_detect(GROUP.1..STAPLES...2, bracket), 
          food.description = str_replace(GROUP.1..STAPLES...2, 
                                   all, "")) %>% 
-  mutate(fibre = str_extract(GROUP.1..STAPLES...16, compo),
+  mutate(fibre_in_g = str_extract(GROUP.1..STAPLES...16, compo),
          fibre.low = str_detect(GROUP.1..STAPLES...16, bracket), 
          food.description2 = str_replace_all(GROUP.1..STAPLES...16, all, ""), 
-         fibre.low = ifelse(is.na(fibre), str_detect(food.description, bracket), fibre.low),
-         fibre = ifelse(is.na(fibre), str_extract(food.description, compo), fibre))
+         fibre.low = ifelse(is.na(fibre_in_g), str_detect(food.description, bracket), fibre.low),
+         fibre_in_g = ifelse(is.na(fibre_in_g), str_extract(food.description, compo), fibre_in_g), 
+         food.description = str_replace(food.description, 
+                                        all, "")) %>% 
+  mutate(vitamina_in_rae_in_mcg = ifelse(str_detect(GROUP.1..STAPLES...30, compo), 
+                                         GROUP.1..STAPLES...30, str_extract(GROUP.1..STAPLES...44, compo)))
 
   
-mwi_clean %>% relocate(starts_with("X..."), before = "GROUP.1..STAPLES...2") %>% 
+mwi_clean <- mwi_clean %>% relocate(starts_with("X..."), before = "GROUP.1..STAPLES...2") %>% 
   mutate(code = str_extract(X...1, id), 
          food.group = ifelse(str_detect(X...15, food.group), 
                                         X...15, str_extract(X...1, food.group)),
          ref = ifelse(str_detect(X...29, ref),X...29, 
-                      str_extract(X...15, ref)))
+                      str_extract(X...15, ref)), 
+         food.name = str_c(food.description, food.description2, sep = "")) %>% 
+  relocate(c("food.name", "water"), .after = "ref")
+
+
+mwi_clean %>% relocate(starts_with("X.1."), .after = "X...1") %>% 
+  separate(Per.100g.edible.food...8, c("SFA", "MSFA"), sep = " ") %>% 
+  mutate(energy_in_kcal = X.1...3, 
+         energy_in_kj = X.2...4,
+         nitrogen_in_g = X.3...5, 
+         totalprotein_in_g = X.4...6, 
+         totalfats_in_g = X.5...7,
+         saturatedfa_in_g = str_extract(SFA, micro),
+         monounsaturatedfa_in_g	 = str_extract(MSFA, micro),
+         polyunsaturatedfa_in_g = X.6...9,
+         cholesterol_in_mg = X.7...10,
+         carbohydrates_total_in_g = X.8...11,
+         carbohydrates_avail_in_g = X.9...12, 
+         )
