@@ -1,23 +1,151 @@
 
 
 #install.packages("tabulizer")
+#install.packages("shiny")
+#install.packages("miniUI")
 
 library(tabulizer)
+library(shiny)
+library(miniUI)
 library(tidyverse)
+
+
+#PDF loaded into R -
 
 t <-  "https://dl.tufts.edu/downloads/g158bw806?filename=d217r336d.pdf"
 
-mwi_table <- extract_tables("https://dl.tufts.edu/downloads/g158bw806?filename=d217r336d.pdf",
+f <- locate_areas(t,pages = c(21))
+
+mwi_table <- extract_tables(t,
                             output = "data.frame",
-                            pages = c(21:27), 
+                            pages = c(21:27),
+                            area = list(
+                              c(56, 38, 544, 800)
+                            ), 
                             guess = FALSE)
+
+mwi_table_clean <- reduce(mwi_table, bind_rows)
+
+name2 <- mwi_table[[1]] %>% slice(2) %>% as.character()
+
+name2[1:2] <- c("food.group", "food.descr2")
+
+name4 <- mwi_table[[1]] %>% slice(5) %>% as.character()
+
+#name4[1:2] <- c("X1", "X2")
+
+#Cleaning to make information into one food item per row
+
+
+#This loop is working :)
+
+mwi <- list()
+
+for(i in 1:4){
+  
+  f <- str_which(mwi_table_clean$Code, "MW") %>% as.numeric()
+  
+  f <- f+i-1
+  
+  mwi[[i]] <- mwi_table_clean %>% slice(f)
+  
+  print(i)
+  
+}
+
+#renaming columns and selecting those that are not empty
+
+names1 <- mwi[[2]] %>% colnames()
+
+mwi[[2]] <- mwi[[2]] %>% rename_at(vars(names1), ~name2)
+
+mwi[[3]] <- mwi[[3]] %>% rename(
+  food.ref = "Code", 
+  food.descr3 = "Food.Item.Name") %>% select(1:2)
+
+mwi[[4]] <- mwi[[4]]  %>% select(3:16) %>% rename_at(vars(names1), ~name4)
+
+mwi_clean <- reduce(mwi, bind_cols) %>% janitor::clean_names()
+
+#combining three variables w/ name of food item and reordering variables.
+
+mwi_clean <- mwi_clean %>% unite(food_item_name, c(food_item_name,food_descr2,
+                                      food_descr3), sep = "") %>% 
+  relocate(c(food_group, food_ref), .after = "food_item_name")
+
+
+
+##3) Changing the varibles to the FAO tagnames
+
+FCT_tag <- c('code', 'fooditem', 'foodgroup', 'ref', 'WATER', 'ENERC1', 'ENERC2', 'NT',
+             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM', 'CHOAVLDF',
+             'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA.',
+             'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
+             'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT')
+
+
+mwi_clean <- mwi_clean %>% rename_all( ~ FCT_tag)
+
+##4) Removing [] and ()
+
+
+#This keeps numbers and create a variable with low_quality
+
+
+nut <- c('WATER', 'ENERC1', 'ENERC2', 'NT',
+         'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM', 'CHOAVLDF',
+         'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA',
+         'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
+         'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT')
+
+###############################################################################
+# for (i in nut) {    
+#   new_col_name <- paste0("low_", i)
+#   
+#   clean_data <- mwi_clean %>% 
+#     mutate(!!sym(new_col_name) := str_detect(i, '\\[.*?\\]'))
+#   
+#   print(i)
+# 
+#   }                       
+############################################################################## 
+
+mwi_low_quality <- mwi_clean %>% mutate_at(nut, ~str_detect(., '\\[.*?\\]'))
+
+#The following f(x) removes [] and ()
+
+no_brackets <- function(i){
+  case_when(
+    str_detect(i, '\\[.*?\\]') == TRUE ~ str_extract(i, '(?<=\\[).*?(?=\\])'),
+    str_detect(i, '\\(.*?\\)') == TRUE ~ str_extract(i, '(?<=\\().*?(?=\\))'),
+    TRUE ~ i)
+}
+
+
+#removing [] and () and converting nut variables into numeric
+
+mwi_clean <- mwi_clean %>% mutate_at(nut, no_brackets) %>% 
+  mutate_at(nut, as.numeric)
+
+
+
+
+##5) Changing mineral values in ref.10 to reconverted values
+
+
+
+
+
+##6) MAPS type format
+
+#Adding GENuS code and confidence
+
+#Rename variables according to MAPS-standards
+
 
 mwi_table <- extract_tables(t,
                             output = "data.frame",
                             pages = 21)
-
-
-mwi_table_clean <- reduce(mwi_table, bind_rows)
 
 mwi_table <- extract_tables(t,
 method = "decide", 
