@@ -36,8 +36,20 @@ with value reported.". we are coding that variables as `water.low`
 
 X.1...3 == Energy_in_kcal 
 
-All the above have been solved by using the area of table. And then, doing some minor ammendments. 
+All the above have been solved by using the area of table. And then, doing some minor amendments. 
 
+### 2) Tidying using the "old" script
+
+*List minor format changes and solutions* 
+ -[] some bits can be copied from fct_cleaning.Rmd
+
+*Amend wrong values w/ Edward values* 
+ - []Double check all values and specially 
+ - []Check MAFOODS - 5010 - Sweet potato - MAPS-MAFOODS - MW01_0065
+ - []Generate the ID-code for EJ paper data too
+
+*Check GENuS codes* 
+ - [] can we add some extra ones?
 
 
 
@@ -45,4 +57,13 @@ All the above have been solved by using the area of table. And then, doing some 
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Next steps for MAFOODS
+
+1) Add new GENuS code
+2) Check quality of the data
+3) Complete missing values:
+  3.1) with AHHA FCT data (imputed)
+  3.2) w/ new data (?)
+  3.3) MAPS tool fixing
+  
+  
