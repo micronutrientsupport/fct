@@ -266,3 +266,24 @@ mwi_check <- mwi_check %>%
 
 write.csv(mwi_check,
           here::here('data', 'mineral-composition.comparison_2020-11-02.csv'))
+
+
+
+
+water_adjustment <- function(x, y){
+  
+  mn <- mn * (100 - y)/(100 - x)
+  
+  mn
+  
+}
+
+#Functions
+
+water_adjustment <- function(y) {
+  
+  x <- y * (100-WATER.x)/(100-WATER.y)
+  
+  x
+  
+}

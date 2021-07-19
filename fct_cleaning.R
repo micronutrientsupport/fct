@@ -367,7 +367,7 @@ MAFOODSsl <- read.csv(here::here("MAPS_MAFOODS_standard-list.csv"))
 write.csv(x,  here::here('MAPS_MAFOODS_v1.4.csv'), row.names = FALSE)
 
 #loading the manually checked MAFOODS genus codes
-MAFOODS <- read.csv(here::here( "MAPS_MAFOODS_v1.4.csv"))
+MAFOODS <- read.csv(here::here("output", "MAPS_MAFOODS_v1.4.csv"))
 
 #adjusting FCT formatting to MAPS standards
 
