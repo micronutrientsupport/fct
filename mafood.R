@@ -14,25 +14,87 @@ library(tidyverse)
 
 t <-  "https://dl.tufts.edu/downloads/g158bw806?filename=d217r336d.pdf"
 
-f <- locate_areas(t,pages = c(21))
+f <- locate_areas(t,pages = c(21,56))
 
 mwi_table <- extract_tables(t,
                             output = "data.frame",
-                            pages = c(21:27),
+                            pages = c(21:27, #6
+                                      36:37, #1 each one is a food group
+                                      41:47, #6 in MAFOODS
+                                      53:55, #2
+                                      60:62,#2
+                                      65,   #1
+                                      67:75, #8
+                                      78), #1
                             area = list(
                               c(56, 38, 544, 800)
                             ), 
                             guess = FALSE)
 
+mwi_table[[22]] <-  mwi_table[[22]][,-16] #removing an extra empty column 
+
+mwi_table[34] <- extract_tables(t,
+                            output = "data.frame",
+                            pages = 56,
+                            area = list(
+                              c(73, 38, 388, 800)
+                            ), 
+                            guess = FALSE)
+
+mwi_table <- extract_tables(t,
+                            output = "data.frame",
+                            pages = c(21:27, #6
+                                      36:37, #1 each one is a food group
+                                      41:47, #6 in MAFOODS
+                                      53:55, #2
+                                      56,    #this is vege, but smaller table
+                                      60:62,#2
+                                      65,   #1
+                                      67:75, #8
+                                      78), #1
+                            area = list(
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(73, 38, 388, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800),
+                              c(56, 38, 544, 800)
+                            ), 
+                            guess = FALSE)
+
+
 mwi_table_clean <- reduce(mwi_table, bind_rows)
+
+mwi_table_clean <- mwi_table_clean %>% select(1:16)
 
 name2 <- mwi_table[[1]] %>% slice(2) %>% as.character()
 
 name2[1:2] <- c("food.group", "food.descr2")
 
-name4 <- mwi_table[[1]] %>% slice(5) %>% as.character()
+name4 <- mwi_table[[1]] %>% slice(5)  %>% as.character()
 
-#name4[1:2] <- c("X1", "X2")
+name4[1:2] <- c("X1", "X2")
 
 #Cleaning to make information into one food item per row
 
@@ -63,7 +125,7 @@ mwi[[3]] <- mwi[[3]] %>% rename(
   food.ref = "Code", 
   food.descr3 = "Food.Item.Name") %>% select(1:2)
 
-mwi[[4]] <- mwi[[4]]  %>% select(3:16) %>% rename_at(vars(names1), ~name4)
+mwi[[4]] <- mwi[[4]] %>% rename_at(vars(names1), ~name4) %>% select(3:16)
 
 mwi_clean <- reduce(mwi, bind_cols) %>% janitor::clean_names()
 
@@ -94,12 +156,13 @@ mwi_clean <- mwi_clean %>% rename_all( ~ FCT_tag)
 
 nut <- c('WATER', 'ENERC1', 'ENERC2', 'NT',
          'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM', 'CHOAVLDF',
-         'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA',
+         'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA.',
          'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
          'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT')
 
 ###############################################################################
-# for (i in nut) {    
+##This keeps numbers and create a variable with low_quality -NOT WORKING-
+#for (i in nut) {    
 #   new_col_name <- paste0("low_", i)
 #   
 #   clean_data <- mwi_clean %>% 
@@ -110,6 +173,7 @@ nut <- c('WATER', 'ENERC1', 'ENERC2', 'NT',
 #   }                       
 ############################################################################## 
 
+#Creating a dataset w/ the values that were of low quality (TRUE/FALSE)
 mwi_low_quality <- mwi_clean %>% mutate_at(nut, ~str_detect(., '\\[.*?\\]'))
 
 #The following f(x) removes [] and ()
@@ -122,18 +186,24 @@ no_brackets <- function(i){
 }
 
 
-#removing [] and () and converting nut variables into numeric
+#removing [] and () and converting nutrient variables (nut) into numeric
 
 mwi_clean <- mwi_clean %>% mutate_at(nut, no_brackets) %>% 
   mutate_at(nut, as.numeric)
 
 
 
-
 ##5) Changing mineral values in ref.10 to reconverted values
 
+#Filtering data entries in MAFOODS from Edward's paper
+#Not the same as in the excel (WHY!!??)
+
+mwi_clean %>% dplyr::filter(ref == "10")
 
 
+EJ <- read.csv(here::here('data',
+                          'mineral-composition_2020-11-06.csv')) %>% 
+  select(-contains('median'))
 
 
 ##6) MAPS type format
