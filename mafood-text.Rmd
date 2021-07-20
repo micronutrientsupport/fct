@@ -49,12 +49,15 @@ We have realized that if we only extract 3 rows, we are missing very important i
 
 This needs to be solved, otherwise we might be introducing some values per food item that are incorrect. 
 
-We are grouping together the three rows of the names, and extracting water content from the first row name. In addition, we are searching for [], because according to MAFOODS compilers: "Square brackets [ ] mean compilers are not confident
-with value reported.". we are coding that variables as `water.low`
-
-X.1...3 == Energy_in_kcal 
 
 All the above have been solved by using the area of table. And then, doing some minor amendments. 
+
+
+We are grouping together the three rows of the names, and extracting water content from the first row name. In addition, we are searching for [], because according to MAFOODS compilers: "Square brackets [ ] mean compilers are not confident
+with value reported.". we are creating a "metadata" table with TRUE/FALSE according to the presence of []. We could change the variable names as nut.low, such as `water.low`.
+
+Round brackets ( ) indicate that the value reported is based on an assumption. For example, vitamin B12 in vegetables. We are not including this in the metadata, for now. 
+
 
 
 ### 2) Tidying using the "old" script
@@ -62,7 +65,7 @@ All the above have been solved by using the area of table. And then, doing some 
 *List minor format changes and solutions* 
  -[] some bits can be copied from fct_cleaning.Rmd
 
-*Amend wrong values w/ Edward values* 
+*Amend wrong values w/ Joy et al. values* 
 
 When we identify the food items that were coded as reference 10, which was the reference that we found that has flaws in the conversion from dry matter to fresh weight. There are 17 food items in the MAFOODS (from the excel file) and the same number for the mwi_clean (from the pdf) however the list of food items are different in both data sources!!
 
@@ -79,9 +82,9 @@ The two food items reported in the pdf that came from Joy et al. () study, it do
 
  - []Double check all values and specially 
  - []Check MAFOODS - 5010 - Sweet potato - MAPS-MAFOODS - MW01_0065
- - []Generate the ID-code for EJ paper data too
+ - []Generate the ID-code for Joy et al., paper data too
 
-*Check GENuS codes* 
+*MAPS formatting and check GENuS codes* 
  - [] can we add some extra ones?
 
 
