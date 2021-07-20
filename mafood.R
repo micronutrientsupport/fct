@@ -14,18 +14,18 @@ library(tidyverse)
 
 t <-  "https://dl.tufts.edu/downloads/g158bw806?filename=d217r336d.pdf"
 
-f <- locate_areas(t,pages = c(21,56))
+f <- locate_areas(t, pages = c(21,56))
 
 mwi_table <- extract_tables(t,
                             output = "data.frame",
-                            pages = c(21:27, #6
-                                      36:37, #1 each one is a food group
-                                      41:47, #6 in MAFOODS
-                                      53:55, #2
-                                      60:62,#2
-                                      65,   #1
-                                      67:75, #8
-                                      78), #1
+                            pages = c(21:27, 
+                                      36:37, #each one is a food group
+                                      41:47, # in MAFOODS
+                                      53:55, #here missing one page
+                                      60:62,   #it's added below
+                                      65,       #different area
+                                      67:75, 
+                                      78), 
                             area = list(
                               c(56, 38, 544, 800)
                             ), 
@@ -35,11 +35,12 @@ mwi_table[[22]] <-  mwi_table[[22]][,-16] #removing an extra empty column
 
 mwi_table[34] <- extract_tables(t,
                             output = "data.frame",
-                            pages = 56,
-                            area = list(
+                            pages = 56,           #this is the missing page
+                            area = list(          #with different area  
                               c(73, 38, 388, 800)
                             ), 
                             guess = FALSE)
+
 
 mwi_table <- extract_tables(t,
                             output = "data.frame",
@@ -83,20 +84,26 @@ mwi_table <- extract_tables(t,
                             ), 
                             guess = FALSE)
 
+#from a list to a data.frame
 
 mwi_table_clean <- reduce(mwi_table, bind_rows)
 
-mwi_table_clean <- mwi_table_clean %>% select(1:16)
+#mwi_table_clean <- mwi_table_clean %>% select(1:16)
+
+#extracting variable names from fct
+#second row in MAFOODS
 
 name2 <- mwi_table[[1]] %>% slice(2) %>% as.character()
 
 name2[1:2] <- c("food.group", "food.descr2")
 
+#third row in MAFOODS
 name4 <- mwi_table[[1]] %>% slice(5)  %>% as.character()
 
 name4[1:2] <- c("X1", "X2")
 
-#Cleaning to make information into one food item per row
+#Cleaning steps to have information into one food item per row
+#creating a long data.frame w/ 1 obs. per row
 
 
 #This loop is working :)
@@ -135,14 +142,15 @@ mwi_clean <- mwi_clean %>% unite(food_item_name, c(food_item_name,food_descr2,
                                       food_descr3), sep = "") %>% 
   relocate(c(food_group, food_ref), .after = "food_item_name")
 
+mwi_clean %>% head() %>% knitr::kable()
 
+##3) Changing the variable names to the FAO tagnames
 
-##3) Changing the varibles to the FAO tagnames
-
-FCT_tag <- c('code', 'fooditem', 'foodgroup', 'ref', 'WATER', 'ENERC1', 'ENERC2', 'NT',
-             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM', 'CHOAVLDF',
-             'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA.',
-             'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
+FCT_tag <- c('code', 'fooditem', 'foodgroup', 'ref', 'WATER', 'ENERC1', 'ENERC2',
+             'NT', 'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM',
+             'CHOAVLDF','SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 
+             'MG', 'P', 'K', 'NA.', 'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE',
+             'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
              'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT')
 
 
@@ -195,7 +203,7 @@ mwi_clean <- mwi_clean %>% mutate_at(nut, no_brackets) %>%
 
 ##5) Changing mineral values in ref.10 to reconverted values
 
-#Filtering data entries in MAFOODS from Edward's paper
+#Filtering data entries in MAFOODS from Joy et al. paper
 #Not the same as in the excel (WHY!!??)
 
 mwi_clean %>% dplyr::filter(ref == "10")
@@ -212,6 +220,10 @@ EJ <- read.csv(here::here('data',
 
 #Rename variables according to MAPS-standards
 
+
+
+
+###========================= END =============================###
 
 mwi_table <- extract_tables(t,
                             output = "data.frame",
