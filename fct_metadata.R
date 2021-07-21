@@ -1,4 +1,6 @@
 
+#install.packages("xlsx")
+
 library(tidyverse)
 
 
@@ -18,6 +20,8 @@ fct_metadata %>% mutate(Variable_Name = str_replace(Variable_Name, "_in_.*g$|_in
 
 
 ###============================  END  ===============================####
+
+geonetwork <- readxl::read_excel(here::here('metadata', 'Geonetwork-Metadata.xlsx'), sheet = 1)
 
 cc <- raster::ccodes() 
 
@@ -118,7 +122,7 @@ fct_metadata <- fct_metadata %>%
     fct_short_name == "Eastern-Africa" ~ africa.region$ISO[1],
     fct_short_name == "Middle-Africa" ~ africa.region$ISO[2],
     fct_short_name == "Southen-Africa" ~ africa.region$ISO[4],
-    fct_short_name == "Western-Africa" ~ africa.region$ISO[5], 
+    fct_short_name == "Southen-Africa" ~ africa.region$ISO[5], 
     TRUE ~ fct_region))
   
 #fct_metadata %>% mutate_all(funs(replace_na(., "NULL"))) %>% 
@@ -128,4 +132,49 @@ fct_metadata %>% mutate_all(funs(replace_na(., ""))) %>% #saving for MAPS
   mutate_all(funs(str_replace_all(.,"NA", ""))) %>%      #changing NA for whitespaces
   write.csv(here::here("output", "fct_metadata_v1.5.csv"), row.names = FALSE)
 
+x <- meta %>% select(fct_name, fct_region, fct_lead_organization, fct_year,
+                fct_documentation_link, fct_licence) %>% 
+  mutate_at("fct_year", as.character) %>% 
+  mutate(start_date = fct_year, 
+         end_date = "current",
+         edition = fct_year, 
+         abstract = c("food composition for use in West-Africa", 
+                      "food compositon for use in Malawi",
+                      "food compositon for use in Kenya", 
+                      "food compositon for use in Lesotho", 
+                      "mineral food composition for use in Eastern-Africa",
+                      "mineral food composition for use in Middle-Africa",
+                      "mineral food composition for use in Southen-Africa",
+                      "mineral food composition for use in Southen-Africa"
+                      )) %>% 
+      mutate(status = "completed", 
+         contact_type = "Originator", 
+          maintainance = "Unknown", 
+         keywords = "food composition table, FCT, food composition databases,
+                       nutritonal composition of food, Africa", 
+         constraint_text = "NA", 
+        metadata_contact_name = "Lucia Segovia de la Revilla", 
+        metadata_contact = "Lucia.Segovia-De-La-Revilla@lshtm.ac.uk", 
+        supple = "NA") %>% relocate(
+          c(fct_year, start_date, end_date), .after = "fct_name") %>% 
+          relocate(
+            fct_lead_organization, .before = "contact_type") %>% 
+            relocate( fct_licence , .after = "keywords") %>% 
+            relocate( fct_documentation_link , .after = "supple") %>% 
+        rename_all(~geo.col) %>% glimpse()
+        
+        
+y <-   geonetwork %>% mutate_at("Edition", as.character) %>% 
+    bind_rows(., x)
+    
+    
+    xlsx::write.xlsx(as.data.frame(y), 
+                     file = "metadata/Geonetwork-Metadata.xlsx",
+                     sheetName="Sheet1", 
+                     col.names=TRUE, row.names=FALSE, append=FALSE)
+         
 
+
+
+      
+    
