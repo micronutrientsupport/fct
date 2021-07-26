@@ -25,7 +25,7 @@ c("food_genus_description"    , "food_group"               ,  "food_subgroup" ,
 #popcorn - AHHA - 1009 
 
 
-
+ihs5 <- read.csv("ihs5-fct_v1.1.csv")
 #mucuna - WAFCT - 03_059 and Joy et al., 
 #unprocess -
 
@@ -59,9 +59,38 @@ c("food_genus_description"    , "food_group"               ,  "food_subgroup" ,
  #same happened w/ green maize
  
  #BEST TO CHECK ALL ITEMS AND MATCHES ONE BY ONE!!!
- 
 
-# 
+ # Infant formula is in the file name: food-match-mwi_v02.csv
+ #
+
 # #
 # #
+ 
+ 
+ ihs5 %>% 
+   relocate(food_genus_id, .after = "ihs5_fooditem") %>% 
+   mutate(ref = ifelse(is.na(ref.x), ref.x.x, 
+                       ifelse(is.na(ref), ref.x, ref))) %>% 
+   select(-c("FoodName_3":"FoodName_2")) %>% 
+   select(-ends_with("_code")) %>% 
+   select(-ends_with("_fct")) %>% 
+   select(-ends_with(".x")) %>% 
+   filter(!food_genus_id %in% c("1530.06", "1321.02", "1322.02", "1324.02" )) %>% 
+   mutate(food_genus_id = case_when(
+     food_genus_id == "24230.03.03|24230.03.02" ~ "24230.03.02",
+     food_genus_id == "1290.01.01|1290.01.02" ~ "1290.01.03",
+     TRUE ~ food_genus_id)) %>% 
+   filter(ih5_itemid != )
+   write.csv(.,here::here("ihs5-fct_v1.2.csv"))
+ 
+#food_genus_id    n
+#1       1321.02 1249
+#2       1322.02 1249
+#3       1324.02 1249
+#4       1530.06   53
+#
+#5   21113.02.01  880
+#6   23991.01.02   16
+#7   39120.04.01  807
+ 
  
