@@ -137,6 +137,11 @@ Ash value (g/100 g EP)> (CA (mg) + FE (mg) + MG (mg)+ P (mg) + K (mg) + NA (mg) 
 When CL is not reported it can be calculated as (`NA`*2.5). Minerals reported in mcg (i.e. selenium or iodine) are not considered due to the insignificant contribution.
 
 Sum of proximate is included in the original table. There is no need to re-calculated here. It would be re-calculated for quality checks. 
+###Next steps:
+
+1) Deal with *tr*: there are some values that are coded as *trace* however, when we are converting the values into numbers those are converted to `NA` as it was done wit the []. Hence, we should convert those values coded as `tr` into `0`. 
+
+
  
 ```{r WAFCT standard variables}
 
@@ -347,7 +352,6 @@ Note: information on tagnames for phytates are in the S. Dahdouh et al. 2019.
 
 Note: Some of the generic tagname should be followed by '-' (dash), however since this character could cause some issues with the code, we have dropped the '-'.
 
-###Standtadization of values reported
 
 ###Identify potential errors in the data
 
@@ -931,11 +935,13 @@ summary(uPulses$SOP)
 
 ```
 
-## regional fct
+####14) regional fct
 
 This data is coming from Joy et al. (2014) study. We have reformatted and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
 
 We have prepared a list of updates that could benefit the use of the regional fct for matching with the food balance sheet (or other surveys in sub-Saharan region). Updates to be done for the next release:
+
+###Next steps:
 
 1- There are three missing items in the regional food composition table when compared with all the food balance sheet possible items. The next step will be provide food composition values for those items. 
 
