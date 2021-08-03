@@ -269,7 +269,6 @@ write.csv(mwi_check,
 
 
 
-
 water_adjustment <- function(x, y){
   
   mn <- mn * (100 - y)/(100 - x)

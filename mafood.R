@@ -229,6 +229,12 @@ mwi_water <- mwi_clean %>% dplyr::filter(ref == "10") %>%
 mafoods_water <- MAFOODS %>% dplyr::filter(ref == "10") %>% 
   arrange(code) %>% pull(code) 
 
+mafoods_water <- c("MW01_0011", "MW01_0016", "MW01_0037", "MW01_0060",
+                   "MW01_0065" ,"MW02_0007", "MW02_0014", "MW02_0019",
+                   "MW04_0004", "MW04_0011", "MW04_0012", "MW04_0019",
+                   "MW04_0020", "MW04_0031", "MW04_0036", "MW05_0016",
+                   "MW05_0019")
+
 mwi_water == mafoods_water
 
 setdiff(mwi_water, mafoods_water)
