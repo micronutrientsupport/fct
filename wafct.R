@@ -5,7 +5,9 @@
 library(tidyverse)
 
 
-##1) DOWNLOADING WEST-AFRICA FCT FROM FAO/INFOODS 
+##0) DOWNLOADING WEST-AFRICA FCT FROM FAO/INFOODS 
+
+#Only need to do it once!
 
 f <- "http://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx"
 
@@ -14,6 +16,7 @@ download.file(f,"./data/INFOODS-WAFCT_2019.xlsx",
               mode="wb")
 
 
+##1) LOADING WEST-AFRICA FCT FROM FAO/INFOODS
 
 ##View WAFCT structure
 
@@ -23,14 +26,15 @@ readxl::read_excel(here::here('data',
 
 ##Loading WAFCT, skip 2 first rows to use tagnames for components
 
-WAFCT <- readxl::read_excel(here::here( 'data', 
-                                        '2019_WAFCT.xlsx'), sheet = 5, skip = 2) %>%
+wafct <- readxl::read_excel(here::here( 'data', 
+                                        'INFOODS-WAFCT_2019.xlsx'), sheet = 5, skip = 2) %>%
   mutate(FCT = 'WAFCT') %>% glimpse()
 
+##2) TIDYING WEST-AFRICA FCT 
 
 #rename variables according to our standards
 
-WAFCT <- WAFCT %>% rename(code = '...1', 
+wafct <- wafct %>% rename(code = '...1', 
                           fooditem = '...2', 
                           fooditemFR = '...3',
                           scientificName = '...4',
@@ -43,12 +47,13 @@ WAFCT <- WAFCT %>% rename(code = '...1',
 
 #Extracting variables names only in English
 
-fgwa <- WAFCT %>% filter(is.na(fooditem), !is.na(code)) %>% pull(code) %>%
+fgwa <- wafct %>% filter(is.na(fooditem), !is.na(code)) %>% pull(code) %>%
   stringr::str_split_fixed( '/', n = 2) %>% as_tibble() %>% pull(V1)
 
 
-WAFCT <- WAFCT %>% 
-  mutate(foodgroup = ifelse(grepl("01_", code), fgwa[1],
+wafct <- wafct %>% 
+  mutate(foodgroup =
+   ifelse(grepl("01_", code), fgwa[1],
    ifelse(grepl("02_", code), fgwa[2],
    ifelse(grepl("03_", code), fgwa[3], 
    ifelse(grepl("04_", code), fgwa[4], 
@@ -65,81 +70,117 @@ WAFCT <- WAFCT %>%
           'NA'))))))))))))))) %>% 
    filter(!is.na(fooditem))
 
-#Extracting variables calculated with different method and reported as using []
 
 
-#This keeps [] 
 
-#WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, "\\[.*?\\]"))
+#Creating a dataset w/ the values that were of low quality [] 
+#trace or normal
+
+#selecting nutrient variable names where we want to check for quality/trace
+wa_nut <- wafct %>% select(EDIBLE1:XN) %>% colnames()
+
+#dataset w/ metadata info that will be removed from the dataset for use
+wa_meta_quality <- wafct %>% mutate_at(wa_nut,  ~case_when(
+  str_detect(. , '\\[.*?\\]') ~ "low_quality", 
+  str_detect(. , 'tr') ~ "trace",
+  TRUE ~ "normal_value"))
 
 
-#This keeps only numbers
+#Extracting variables calculated with different (lower quality) method 
+#and reported as using [] and removing them from the original variable
 
-WAFCT <- WAFCT %>% 
-  mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
+
+wafct <- wafct %>% 
   mutate(FATCE = str_extract(FAT, '(?<=\\[).*?(?=\\])')) %>%
+  mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
+  mutate(CARTB = str_extract(CARTBEQ, '(?<=\\[).*?(?=\\])')) %>%
   mutate(TOCPHA = str_extract(VITE, '(?<=\\[).*?(?=\\])')) %>%
+  mutate(NIA = str_extract(NIAEQ, '(?<=\\[).*?(?=\\])')) %>%
   mutate(FOLSUM = str_extract(FOL, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(PHYTCPPD_I = str_extract(PHYTCPP, '(?<=\\[).*?(?=\\])'))
+  mutate(PHYTCPPD_PHYTCPPI = str_extract(PHYTCPP, '(?<=\\[).*?(?=\\])')) %>% 
+  mutate_at(c("FAT", "FIBTG", "CARTBEQ", 
+              "VITE", "NIAEQ", "FOL", "PHYTCPP"),
+            ~ifelse(str_detect(. , '\\[.*?\\]') == TRUE, NA, 
+                    .))
 
 
-#This keeps numbers and create a variable with low_quality
+#The following f(x) removes [] and changing tr w/ 0
 
-a <- WAFCT %>% mutate(low_quality_FE = case_when(
-  str_detect(FE, '\\[.*?\\]') == TRUE ~ 'yes', 
-  TRUE ~ 'no')) 
-
-#The following f(x) removes []
-
-no_brackets <- function(i){
+no_brackets_tr <- function(i){
   case_when(
-    str_detect(i, '\\[.*?\\]') == TRUE ~ str_extract(i, '(?<=\\[).*?(?=\\])'), 
+    str_detect(i, '\\[.*?\\]')  ~ str_extract(i, '(?<=\\[).*?(?=\\])'),
+    str_detect(i, 'tr') ~ "0",
     TRUE ~ i)
 }
 
-WAFCT <- WAFCT %>% mutate_if(is.character, no_brackets)
-
+wafct <- wafct %>% 
+  mutate_at(wa_nut, no_brackets_tr)
 
 #Reordering variables
 
-WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
-  dplyr::relocate(FCT, .before = code)
-
-#WE don't need this bit anymore
-#WAFCT <- WAFCT[,c(64, 1:4, 65, 5:69)]
+wafct <- wafct %>% dplyr::relocate(foodgroup, .after = ref) %>%
+  dplyr::relocate(FCT, .before = code) 
 
 
 #Converting into numeric numeric variables  
 
-WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric)) 
+wafct <- wafct %>% mutate_at(vars(`EDIBLE1`:`PHYTCPPD_PHYTCPPI`), as.numeric)
+ 
+dictionary <- read.csv(here::here("metadata", 
+                                  "MAPS_Dictionary_v2.5.csv"))
+
+##3) MAPS type format
+
+wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
+
+variables <- read.csv(here::here( "fct-variable-names.csv"))
+
+source("dictionary.R")
+
+wafct.genus %>% filter(ID_3 == "F0623.02")
+wafct.genus %>% filter(ref_fctcode == "13_023")
+WAFCT %>% filter(code == "12_012") %>% glimpse()
+
+#check 24490 in dictionary
+#add one for Juice, canned or bottled, sweetened (e.g. apple) == 12_012
+
+wafct.genus %>%
+  filter(!ID_3 %in% c("24230.03.02", "24230.03.03", "23110.01",
+                      "1532.01", "23670.01.02", "24490.01", 
+                      "23670.01.01", "F0623.02"))  %>% pull(ref_fctcode)
 
 
-#calculating Ash for oils
+##3) Adding GENuS code (1)
 
-WAFCT %>% filter(is.na(ASH))
+wa_genus <- tribble(
+  ~ref_fctcode,   ~ID_3, ~confidence,
+  "03_022", "1701.02", "h",
+  "12_001", "24310.01.01", "m",
+  "03_057", "1708.01", "h",
+  "13_023", "F0623.01", "h",
+  "01_095", "118.03", "h", 
+  "10_002", "22211.01", "h",
+  "12_024" , "24490.02", "h",
+  "13_021", "F0666.01", "h", 
+  "07_063", "F1172.01", "m",
+  "12_002",  "24310.02.01", "h", 
+  "01_043", "23110.02", "h", 
+  "12_012" , "21435.01.01", "h")
+  
 
-WAFCT<- WAFCT %>% rowwise %>% mutate( CL_cal = `NA`* 2.5)
+wa_genus %>% left_join(., dictionary)
 
-WAFCT<- WAFCT %>% mutate(               
-  ASH_cal = ifelse(is.na(ASH), TRUE, FALSE),
-  ASH = ifelse(is.na(ASH), 
-               reduce(select(., 'CA', 'FE',  'CL_cal',
-                             'MG',  'P', 'K', 'NA', 'ZN',
-                             'CU')/1000, `+`), ASH))
+#Rename variables according to MAPS-standards
 
-
-#There is no need to calculate SOP for WAFCT
-
-summary(WAFCT$SOP)
-
-
-
-##2) Rename variables according to MAPS-standards
-
-WAFCT<- WAFCT %>% rename(
+MAPS_wafct<- wafct %>% rename(
   original_food_id = "code",
   original_food_name = "fooditem",
   fct_name = "FCT",
+  food_genus_id = "ID_3",
+  food_genus_description = "FoodName_3",
+  food_group = "FoodName_0",
+  food_subgroup = "FoodName_1", 
+  food_genus_confidence = "fe2_confidence",
   data_reference_original_id = "ref",
   moisture_in_g = "WATER",
   energy_in_kcal = "ENERC1",
@@ -175,26 +216,9 @@ WAFCT<- WAFCT %>% rename(
   phyticacid_in_mg = "PHYTCPP")
 
 
-WAFCT<- WAFCT %>% left_join(., var.dat) %>% select(var.name)
+WAFCT %>% left_join(., var.dat) %>% select(var.name) %>% 
+  readr::write_excel_csv(., 
+      here::here('output', 'MAPS_WAFCT_v1.2.csv'), #that f(x) is to 
+       row.names = FALSE)                #deal w/ special characters 
 
-#We use this one to correctly import 'strange characters' (i.e. french accents)
 
-readr::write_excel_csv(WAFCT,  here::here('data', 'MAPS_WAFCT_v1.1.csv'))
-
-##3) Adding GENuS code (1)
-#and adjusting FCT formatting to MAPS standards
-
-WAFCT <- read.csv(here::here('data', 'MAPS_WAFCT_v1.1.csv'), 
-                  fileEncoding = 'UTF-8-BOM')
-
-wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
-
-WAFCT %>% left_join(., wafct.genus, by = c("original_food_id" = "ref_fctcode")) %>% 
-  mutate(
-    food_genus_id = ID_3,
-    food_genus_description = FoodName_3,
-    food_group = FoodName_0,
-    food_subgroup = FoodName_1, 
-    food_genus_confidence = fe2_confidence) %>% 
-  select(original_food_id:phyticacid_in_mg) %>% 
-  write.csv(here::here('output', 'MAPS_WAFCT_v1.2.csv'), row.names = FALSE)

@@ -272,9 +272,7 @@ mwi_clean <- mwi_clean %>% dplyr::filter(!code %in% mafoods_water) %>%
 
 variables <- read.csv(here::here( "fct-variable-names.csv"))
 
-
-dictionary <- read.csv(here::here("metadata", 
-                                "MAPS_Dictionary_v2.5.csv"))
+source("dictionary.R")
 
 dictionary %>% filter(ID_3 == "01520.01.03")
 
