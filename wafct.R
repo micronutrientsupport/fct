@@ -85,6 +85,7 @@ wa_meta_quality <- wafct %>% mutate_at(wa_nut,  ~case_when(
   str_detect(. , 'tr') ~ "trace",
   TRUE ~ "normal_value"))
 
+wa_meta_quality %>% head()
 
 #Extracting variables calculated with different (lower quality) method 
 #and reported as using [] and removing them from the original variable
@@ -108,13 +109,15 @@ wafct <- wafct %>%
 
 no_brackets_tr <- function(i){
   case_when(
+    str_detect(i, 'tr|[tr]') ~ "0",
     str_detect(i, '\\[.*?\\]')  ~ str_extract(i, '(?<=\\[).*?(?=\\])'),
-    str_detect(i, 'tr') ~ "0",
     TRUE ~ i)
 }
 
 wafct <- wafct %>% 
   mutate_at(wa_nut, no_brackets_tr)
+
+
 
 #Reordering variables
 
@@ -125,9 +128,8 @@ wafct <- wafct %>% dplyr::relocate(foodgroup, .after = ref) %>%
 #Converting into numeric numeric variables  
 
 wafct <- wafct %>% mutate_at(vars(`EDIBLE1`:`PHYTCPPD_PHYTCPPI`), as.numeric)
- 
-dictionary <- read.csv(here::here("metadata", 
-                                  "MAPS_Dictionary_v2.5.csv"))
+
+wafct %>% head()
 
 ##3) MAPS type format
 

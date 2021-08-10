@@ -17,11 +17,6 @@ library(tidyverse)
    
 ```{r exploring sheets}
 
-#Printing the excel sheet names
-
-readxl::excel_sheets(here::here('OneDrive_London-School-of-Hygiene-and-Tropical-Medicine', 
-                                                'MAPS', '02_working-files', 'fct',
-                                                '2019_WAFCT.xlsx'))
 
 
 ```
@@ -35,91 +30,13 @@ We are going to standardize variables names as descibed above for food items nam
 UPDATE: Add rename to Energy variables folowing the standard that it is set below (MAFOODS) 
  +ENERC1 = ENERC...10 = Energy in kcal; 
  +ENERC2 = ENERC...10 = Energy in kJ).
+ 
+  -FOL: some of the values are reported as FOLSUM. This tagname is recommended to be discontinued. 
+
+  -PHYYCPP: some values were reported as PHYTCPPD or PHYCPPI.
 
 ```{r WAFCT standard variables}
 
-#1) Standardization of variables names
-
-#View WAFCT structure
-
-readxl::read_excel(here::here('OneDrive_London-School-of-Hygiene-and-Tropical-Medicine', 
-                              'MAPS', '02_working-files',  'fct', 
-                              '2019_WAFCT.xlsx'), sheet = 5) %>% head()
-
-
-
-#Loading WAFCT , skip 2 first rows to use tagnames for components
-
-WAFCT <- readxl::read_excel(here::here('OneDrive_London-School-of-Hygiene-and-Tropical-Medicine', 
-                                       'MAPS', '02_working-files',  'fct', 
-                                       '2019_WAFCT.xlsx'), sheet = 5, skip = 2) %>% glimpse()
-
-
-
-#rename variables according to our standards
-
-WAFCT <- WAFCT %>% rename(code = '...1', 
-                          fooditem = '...2', 
-                          fooditemFR = '...3',
-                          scientificName = '...4',
-                              ref = '...5', 
-                            ENERC2 = 'ENERC...9', 
-                           ENERC1 = 'ENERC...10') 
-
-
-
-#creating variable 'foodgroups'
-
-#Exrtacting variables names only in English
-
-fgwa <- WAFCT %>% filter(is.na(fooditem), !is.na(code)) %>% pull(code) %>%
-  str_split_fixed( '/', n = 2) %>% as_tibble() %>% pull(V1)
-
-
-WAFCT <- WAFCT %>% 
-  mutate(foodgroup = ifelse(grepl("01_", code), fgwa[1],
-                    ifelse(grepl("02_", code), fgwa[2],
-                     ifelse(grepl("03_", code), fgwa[3], 
-                    ifelse(grepl("04_", code), fgwa[4], 
-                     ifelse(grepl("05_", code), fgwa[5],
-                      ifelse(grepl("06_", code), fgwa[6],
-                       ifelse(grepl("07_", code),  fgwa[7],
-                       ifelse(grepl("08_", code), fgwa[8],
-                        ifelse(grepl("09_", code), fgwa[9], 
-                        ifelse(grepl("10_", code), fgwa[10], 
-                         ifelse(grepl("11_", code), fgwa[11],
-                         ifelse(grepl("12_", code),  fgwa[12],     
-                          ifelse(grepl("13_", code), fgwa[13],
-                           ifelse(grepl("14_", code), fgwa[14],
-                                   'NA'))))))))))))))) %>% 
-                            filter(!is.na(fooditem))
-
-#Extracting variables calculated with different method and reported as using []
-
-
-#This keeps [] 
-
-#WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, "\\[.*?\\]"))
-
-
-#This keeps only numbers
-
-WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
-                  mutate(FATCE = str_extract(FAT, '(?<=\\[).*?(?=\\])')) %>%
-                  mutate(CARTB = str_extract(CARTBEQ, '(?<=\\[).*?(?=\\])')) %>%
-                  mutate(TOCPHA = str_extract(VITE, '(?<=\\[).*?(?=\\])')) %>%
-                  mutate(NIA = str_extract(NIAEQ, '(?<=\\[).*?(?=\\])')) %>%
-                   mutate(FOLSUM = str_extract(FOL, '(?<=\\[).*?(?=\\])'))
-                  mutate(PHYTCPPD_I = str_extract(PHYTCPP, '(?<=\\[).*?(?=\\])'))
-                  
-#Reordering variables
-
-WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
-  dplyr::relocate(FCT, .before = code)
-
-#Making numeric variables as numeric
-  
-WAFCT<- WAFCT %>% mutate_at(vars(6:63), funs(as.numeric)) 
 
 ```
 
