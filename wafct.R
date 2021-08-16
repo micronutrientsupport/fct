@@ -16,10 +16,14 @@ download.file(f,"./data/INFOODS-WAFCT_2019.xlsx",
               mode="wb")
 
 
-##1) LOADING WEST-AFRICA FCT FROM FAO/INFOODS
+##1) LOADING WEST-AFRICA FCT 
+
+#Check all the sheet in the spreadsheet
+readxl::excel_sheets(here::here'data', 
+                     'INFOODS-WAFCT_2019.xlsx'))
+
 
 ##View WAFCT structure
-
 readxl::read_excel(here::here('data', 
                               'INFOODS-WAFCT_2019.xlsx'), sheet = 5) %>% head()
 

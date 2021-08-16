@@ -514,6 +514,9 @@ GMBFCT <- GMBFCT %>%
 
 ####5) Kenya FCT
 
+UPDATE: We have counted the number of distinct food items (acc. to unique codes) and there is a mismatch between the number of items reported in the pdf (651) and those find it in the excel file (658).
+
+
 Within this FCT there are a set of components with tagnames (majority of items not relevants for the project and with high amount of missing values) and other without. To facilitate the standardization of relevant component, we have cut the table in two
 
 KENFCT1 - We have review and update tagnames and we have cut the rows until 1242 to be consistent with the number of food items reported. The two extra-rows removed contains information on FOLAC for some food items and an the following statement '**values between [ ] were borrowed from an average of blood from other animals'. Then tagnames were standardized following the standard names as described above and on FCT_QA, some decision point are described below: 
@@ -523,6 +526,11 @@ KENFCT1 - We have review and update tagnames and we have cut the rows until 1242
 27-28) Folate group: According to the User-guide all four forms were reported (Dietary folate eq., food folate, synthetic folate, total folate). However when exploring the variables only two are present (dietary folate eq., and food folate). FOLAC is reported as comments or food notes for those food items that where fortified. An control check should be implemented for fortified food, since some of the fortified food (FOLDFE ≠ FOLFD) are not always stated in the 'fooditem' (name). FOL was not found in the user-guider nor in the xlsx format. 
 
 We removed [*] that indicates fortification and created a variable FOLAC with YES for those fortified food items. 
+UPDATE: We identified a mismatch between the food items identified with (*) as fortified with FOLAC (folic acid) in the pdf version and in the Excel version. According to the pdf there were 18 food item fortified (marked w/ asterisk). So, we were missing one item in the excel version, code(15065). That made us realize that it could be more food items that were not reported to being fortified but actually being fortified. For example, code (01042) was not reported as fortified but FOLDFE = 80mcg/100gFW-EP., while FOLD = 0mcg/100gFW-EP. This is in line w/ what was expressed in the line 523.
+
+The formula to calculate FOLDFE allows to calculate back the fortificant (FOLAC) from the values. Hence, we are adding a FOLAC column check and calculation by instead of searching for [*] by deducting FOLFFE - FOLFD and then dividing it by 1.7. The problem is that because we haven't removed all the brackets and other characters we can't do mathematial inferences as for now, all the columns are considered numeric. For more details on that, see West-Africa notes. 
+
+ Dietary Folate Equivalents (DFE) (mcg/100 g EP) = mcg food folate + (1.7 * mcg folic acid) (Eq.9)
 
 There are values between [] they refer to those food items that folate was not calculated by microbiological array, instead other methods as HPLC were used. 
 
