@@ -19,7 +19,7 @@ download.file(f,"./data/INFOODS-WAFCT_2019.xlsx",
 ##1) LOADING WEST-AFRICA FCT 
 
 #Check all the sheet in the spreadsheet
-readxl::excel_sheets(here::here'data', 
+readxl::excel_sheets(here::here('data', 
                      'INFOODS-WAFCT_2019.xlsx'))
 
 

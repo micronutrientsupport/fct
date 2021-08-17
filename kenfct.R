@@ -14,7 +14,9 @@ download.file(f,"./data/MOH-KENFCT_2018.xlsx",
               mode="wb")
 
 
-##1) LOADING KENYA FCT 
+##1) LOADING PACKAGES AND KENYA FCT 
+
+library(tidyverse)
 
 #Check all the sheet in the spreadsheet
 readxl::excel_sheets(here::here('data', "MOH-KENFCT_2018.xlsx"))
@@ -89,13 +91,53 @@ ken_meta_quality <- kenfct %>%
   str_detect(. , 'tr') ~ "trace",
   TRUE ~ "normal_value"))
 
+#codes of the items identified as fortified with folic acid
+folac <- kenfct %>% filter(str_detect(FOLDFE, '[*]')) %>% pull(code) 
 
 #Extracting variables calculated with different (lower quality) method 
-#and reported as using [] and removing them from the original variable
+#and reported as using [] and removing * from FOLDFE
+#and changing tr w/ 0
 
-#Use function to remove bracket and then the FOLDFE
+no_brackets_tr_ast <- function(i){
+  case_when(
+    str_detect(i, 'tr|[tr]') ~ "0",
+    str_detect(i, '\\[.*?\\]')  ~ str_extract(i, '(?<=\\[).*?(?=\\])'),
+    str_detect(i, '[*]')  ~ str_extract(i, "[:digit:]+"),
+    TRUE ~ i)
+}
+
+kenfct <- kenfct %>% 
+  mutate_at(vars(EDIBLE:`Fatty acid 24:6 (/100 g FA)`), no_brackets_tr_ast)
+
+#Check that all tr, [] and * are removed 
+#NOTE: tr will be found in non-numeric variables (i.e., fooditem)
+kenfct %>% str_which(.,"tr|[tr]|[*]|\\[.*?\\]")
+
+
+#Adding the reference (biblioID) and Scientific name to kenfct
+
+kenfct <- kenfct %>% left_join(., readxl::read_excel(here::here('data', "MOH-KENFCT_2018.xlsx"), 
+                   sheet = 7, skip = 2) %>%
+                  janitor::clean_names() %>% 
+                  select(2, 4,5) %>% 
+                  mutate_at("code_kfct18", as.character),
+                  by = c("code" = "code_kfct18")) 
+
+  
+#Reordering variables and converting nutrient variables into numeric
+
+kenfct <- kenfct %>% dplyr::relocate(c(scientific_name, foodgroup, biblio_id),
+                                     .after = fooditem) %>%
+  dplyr::relocate(FCT, .before = code) %>% 
+  mutate_at(vars(EDIBLE:`Fatty acid 24:6 (/100 g FA)`), as.numeric)
+
+kenfct %>% head()
+
 #Then convert to numeric to calculate FOLAC
 
+kenfct %>%  
+  mutate(FOLAC = (FOLDFE-FOLFD)/1.7) %>% select(code, FOLAC) %>% 
+  filter(!code %in% folac, FOLAC> 0) %>% arrange(FOLAC) %>% knitr::kable()
 
 
 #Detecting FOLAC (folic acid used in fortified food)
@@ -110,9 +152,11 @@ kenfct %>% filter(str_detect(FOLDFE, '[*]')) %>% pull(code, FOLDFE)
 kenfct %>% select(-fooditem) %>%  
   str_subset(., "[*]") 
 
+#Use function to remove bracket and create a new variable 
+#to calculate the fortification from FOLDFE
+
 kenfct %>%  
   mutate(FOLAC = ifelse( 
     str_detect(FOLDFE, '[*]'), str_extract(FOLDFE, "[:digit:]+"), FOLDFE)) %>% 
-  filter(!is.na(FOLAC)) %>% count(FOLAC)
-
-  mutate_if(is.character, no_brackets)
+   mutate_at(c("FOLAC", "FOLFD"), as.numeric) %>% 
+   mutate(FOLAC = (FOLAC-FOLFD)/1.7)

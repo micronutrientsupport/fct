@@ -42,12 +42,23 @@ UPDATE: Add rename to Energy variables folowing the standard that it is set belo
 
 NOTE: The problem with converting to numeric is that number between [] are removed (as NA). 
 
-####2) Kenya FCT
+## 2) Kenya FCT
 
-UPDATE: We have counted the number of distinct food items (acc. to unique codes) and there is a mismatch between the number of items reported in the pdf (651) and those find it in the excel file (658).
+### Downloading data
 
-We have reviewed INFOODS/FAO tagnames for the variables (nutrient/component) that are relevant for MAPS. The other set of variables are kept in the table but we are not reviewing them. Hence, issues may arise when looking at the values/content or description of those variables. 
+Data was downloaded from the MOH of Kenya because in FAO/INFOODS website the only verion available was the pdf. 
 
+### Importing the data
+
+We identify the sheet that contains the food composition information and imported it. 
+
+We have cut the two latest rows that contains information on FOLAC for some food items and the following statement '**values between [ ] were borrowed from an average of blood from other animals'. Then tagnames were standardized following the standard names as described above and on FCT_QA, some decision point are described below: 
+
+We have counted the number of distinct food items (acc. to unique codes) and there is a mismatch between the number of items reported in the pdf (651) and those find it in the excel file (658).
+
+We have reviewed FAO/INFOODS tagnames for the variables (nutrient/component) that are relevant for MAPS. The other set of variables are kept in the table but we are not reviewing them. Hence, issues may arise when looking at the values/content or description of those variables. 
+
+Fat, total: There is some contradictory information between what is reported as total, fat and the section on the limit of quantification (LOQ). 
 
 OLD-VERSION: KENFCT1 - We have review and update tagnames and we have cut the rows until 1242 to be consistent with the number of food items reported. The two extra-rows removed contains information on FOLAC for some food items and an the following statement '**values between [ ] were borrowed from an average of blood from other animals'. Then tagnames were standardized following the standard names as described above and on FCT_QA, some decision point are described below: 
 
@@ -62,7 +73,22 @@ The formula to calculate FOLDFE allows to calculate back the fortificant (FOLAC)
 
  Dietary Folate Equivalents (DFE) (mcg/100 g EP) = mcg food folate + (1.7 * mcg folic acid) (Eq.9)
 
-There are values between [] they refer to those food items that folate was not calculated by microbiological array, instead other methods as HPLC were used. 
+There are values between [] they refer to those food items that folate was not calculated by microbiological array, instead other methods as HPLC were used.
+
+When we recalculate Folic Ac., we realized that there are some items that has a minimum amount of folic acid that it is mainly a difference between Dietary and Food Folate due to different source of the values or due to rounding. However, others differences are probably due to differences in the source of the data and method used to calculate it
+
+```
+kenfct %>% mutate(FOLAC = (FOLDFE-FOLFD)/1.7) %>% select(code, FOLAC) %>%  filter(FOLAC >0) %>% knitr::kable()
+```
+
+1012  - Rounding
+1028  - Rounding or method (it's between brackets)
+1042  - It could be fortified since it reported DFE 80 vs FF 0. We found a website that provided the values for Atta fortified is 50.4mcg/100g [https://www.aashirvaad.com/fortified-chakki-atta.aspx]). If we multiplied by 1.7 it's 85. However, according to Indian FCT (A019-A020, one of the sources from BiblioIF) - Wheat flour Atta  FOLSUM = 29/30mcg. FOLSUM accounts for total folate (i.e., food folate + folic acid) and it's usually lower than FOL and it should not be used.It's also weird that food folate value is zero due to all other wheat food items have at least 20mcg/100g.  [http://www.indiaenvironmentportal.org.in/files/file/IFCT%202017%20Book.pdf]
+
+15065 - Fortified. Misreported in excel but reported in pdf
+15019 - It seems fortified, although it's not reported as such. 
+
+For MAPS tool, we should use Food Folate, as we are adding the fortificants after, as a second step. It is irrelevant for biofortification, as that will be considered as food folate and not folic acid, which is the fortificant (chemical compound) used for fortification and not naturally occurring in food.
 
 
 KENFCT2 - We have incorporated tagnames as per in the dataset (with no modifications)
