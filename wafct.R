@@ -178,7 +178,15 @@ wa_genus %>% left_join(., dictionary)
 
 #Rename variables according to MAPS-standards
 
-MAPS_wafct<- wafct %>% rename(
+  MAPS_wafct<- wafct %>%
+  left_join(., wa_genus, by = c("code" = "ref_fctcode")) %>% 
+  mutate(nitrogen_in_g = NA, 
+         mn_in_mcg = NA,
+         i_in_mcg = NA, 
+         se_in_mcg = NA, 
+         pantothenate_in_mg = NA, 
+         biotin_in_mcg = NA) %>% 
+  rename(
   original_food_id = "code",
   original_food_name = "fooditem",
   fct_name = "FCT",
@@ -222,7 +230,7 @@ MAPS_wafct<- wafct %>% rename(
   phyticacid_in_mg = "PHYTCPP")
 
 
-WAFCT %>% left_join(., var.dat) %>% select(var.name) %>% 
+  MAPS_wafct %>% left_join(., var.dat) %>% select(var.name) %>% 
   readr::write_excel_csv(., 
       here::here('output', 'MAPS_WAFCT_v1.2.csv'), #that f(x) is to 
        row.names = FALSE)                #deal w/ special characters 
