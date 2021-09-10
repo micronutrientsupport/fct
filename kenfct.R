@@ -196,7 +196,9 @@ ken_genus <- tribble(
   "12005",  "23914.02"  ,  "m",
   "13031",  "21399.01.01" ,"m",
   "12008",  "24212.02.01" ,"h",
-  "6026",   "22230.01.01" ,"h")
+  "6026",   "22230.01.01" ,"h",
+   "10006", "1442.01", "h",
+   "05009", "1491.02.01", "l")
 
 ken_genus <- ken_genus %>% left_join(., dictionary)
 
@@ -258,6 +260,6 @@ rename(
 
 MAPS_ken %>% head()
 
-readr::write_excel_csv(., 
-                       here::here('output', 'MAPS_KENFCT_v1.2.csv'), #that f(x) is to 
-                       row.names = FALSE)   
+MAPS_ken %>% readr::write_excel_csv(., 
+                       here::here('output', 'MAPS_KENFCT_v1.3.csv'))#that f(x) is to 
+                          

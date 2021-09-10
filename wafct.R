@@ -158,6 +158,7 @@ wafct.genus %>%
 
 ##3) Adding GENuS code (1)
 
+
 wa_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
   "03_022", "1701.02", "h",
@@ -171,10 +172,78 @@ wa_genus <- tribble(
   "07_063", "F1172.01", "m",
   "12_002",  "24310.02.01", "h", 
   "01_043", "23110.02", "h", 
-  "12_012" , "21435.01.01", "h")
+  "12_012" , "21435.01.01", "h",
+  "02_003", "01520.01.02", "m",
+  "02_001", "01520.01.01", "m",
+  "02_015", "1550.01", "h",
+  "02_081", "1510.02", "m",
+  "01_004", "112.01", "m",
+  "04_108", "1290.01.03", "m",
+  "02_004", "23170.01", "m",
+  "01_081", "23120.03.02", "l",
+  "02_045", "1313.01", "l",
+  "02_009", "1510.01", "h",
+  "01_037",  "23161.01.01", "h",
+  "01_039",  "114.01", "m",
+  "02_049",  "1530.02", "h",
+  "02_022",  "1530.01", "h",
+  "02_014", "1530.04", "h",
+  "03_004", "1706.02", "m",
+  "06_027", "142.02", "m",
+  "03_032", "1707.01", "h",
+  "03_008", "141.01", "h",
+  "07_103", "21121.03", "m",
+  "07_030", "21121.01", "m",
+  "08_002", "231.02", "h",
+  "08_001", "231.01", "h",
+  "14_001", "1533.01", "l",
+  "09_043", "1501.03", "h",
+  "07_046", "21116.01", "m",
+  "10_029", "2211.01", "h",
+  "07_072", "21115.01", "m",
+  "07_006", "21113.02.01", "m",
+  "07_007",  "21114.01", "h",
+  "04_005", "1212.01", "h",
+  "04_053", "1214.04", "m",
+  "04_017", "1239.01.01", "h",
+  "04_018", "1253.02.01", "h", 
+  "04_051", "1235.01", "m",
+  "04_021", "1234.01", "m",
+  "05_026", "1341.01", "m", 
+  "05_002", "1311.01", "h",
+  "05_003", "1312.01", "m",
+  "05_010", "1316.02", "h",
+  "05_037", "1316.01", "l",
+  "05_017", "1317.01", "h",
+  "05_018", "1318.01", "h")
   
+#List of non-available items compared w/ mwi_genus
+#F0022.04
+#118.02 - only pearl millet
+#23120.03.01
+#F0022.02
+#Check type of plantain
+#Check type of sorghum
+#1701.03
+#141.02
+#Check peanuts - all shelled
+  #142.02 - check shelled ?
+  #142.05 -check shelled?
+#21111.01.01 - check it said w/ bones
+#21170.01.03
+#1212.02
+#Check leaves - fresh or dried??
+#1214.03
+#1270.01
+#(1341.01) - apple here is w/ skin
+#(1316.01) - check mangoes here conservative pale flesh
+#21700.02.01 - margarine only fortified
+#1802.01
+#2899.01.01
 
-wa_genus %>% left_join(., dictionary)
+
+
+wa_genus <- wa_genus %>% left_join(., dictionary)
 
 #Rename variables according to MAPS-standards
 
@@ -194,7 +263,7 @@ wa_genus %>% left_join(., dictionary)
   food_genus_description = "FoodName_3",
   food_group = "FoodName_0",
   food_subgroup = "FoodName_1", 
-  food_genus_confidence = "fe2_confidence",
+  food_genus_confidence = "confidence",
   data_reference_original_id = "ref",
   moisture_in_g = "WATER",
   energy_in_kcal = "ENERC1",
@@ -230,9 +299,9 @@ wa_genus %>% left_join(., dictionary)
   phyticacid_in_mg = "PHYTCPP")
 
 
-  MAPS_wafct %>% left_join(., var.dat) %>% select(var.name) %>% 
+  MAPS_wafct  %>% select(var.name) %>% 
   readr::write_excel_csv(., 
-      here::here('output', 'MAPS_WAFCT_v1.2.csv'), #that f(x) is to 
-       row.names = FALSE)                #deal w/ special characters 
+      here::here('output', 'MAPS_WAFCT_v1.3.csv')) #that f(x) is to 
+        #deal w/ special characters 
 
 

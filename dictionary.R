@@ -1,5 +1,14 @@
 
 
+
+
+#getting the names of all the standard variables names, to filter them afterward
+
+variables <- read.csv(here::here( "fct-variable-names.csv"))
+var.name <- variables %>% select(Column.Name) %>% pull
+
+
+
 dictionary <- read.csv(here::here("metadata", 
                                   "MAPS_Dictionary_v2.5.csv")) %>% 
   select(-starts_with("X"))

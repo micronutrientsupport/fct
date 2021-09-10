@@ -270,8 +270,6 @@ mwi_clean <- mwi_clean %>% dplyr::filter(!code %in% mafoods_water) %>%
 
 #Loading data
 
-variables <- read.csv(here::here( "fct-variable-names.csv"))
-
 source("dictionary.R")
 
 dictionary %>% filter(ID_3 == "01520.01.03")
@@ -346,8 +344,6 @@ mwi_genus <-  mwi_genus %>% left_join(., dictionary)
 
 #Adding genus variables and 
 #Rename variables according to MAPS-standards
-#getting the names of all the standard variables names, to filter them afterward
-var.name <- variables %>% select(Column.Name) %>% pull
 
 MAPS_mwi <- mwi_clean %>% 
 left_join(., mwi_genus, by = c("code" = "ref_fctcode")) %>% 
@@ -401,6 +397,8 @@ left_join(., mwi_genus, by = c("code" = "ref_fctcode")) %>%
   phyticacid_in_mg = "PHYT") %>% 
   select(var.name)
 
+MAPS_mwi %>% readr::write_excel_csv(., 
+              here::here('output', 'MAPS_MAFOODS_v1.5.csv'))#that f(x) is to 
 
 
 ###========================= END =============================###
