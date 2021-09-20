@@ -1,0 +1,42 @@
+---
+title: "ihs5_matching"
+author: "Segovia D L Revilla, Lucia"
+date: "20/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## IHS5-foodid matching to Genus
+
+There are some items that should be removed:
+
+ 1) [106] There are two codes for identical item = rice. We amended genus to account for imported and local rice production hence, differentiate between the two. Unless, it is specified, we will sort for local when possible. 
+ 2) [510] It is a redundant code, as mice is actually rabbit meat. We should remove and use only rabbit until we found mice. 
+ 3) [816] Remove sweets, chocolate with milk because acc. to Gareth inputs that's hardly found in Malawi. We identified an issue that with the other code that should be solved at FCT level 
+ 4) [832] Remove orange-sweet potato. It also has an issue that it should be fixed at FCT level.
+ 5) [836] A typo in food genus that was solved in version 2.5 samosa and banana cake sharing the same id, was the cause of this error. Now it's solved. Hence it doesn't need to be removed any more. 
+
+```{r ihs5-quality-check}
+
+```
+
+## FCT-IHS5 matching to Genus
+
+Items that food item in the fct_ihs5 doesn't match to the genus code
+
+- 816 - 23670.01.01 - WAFCT - 13_021 sweets, chocolate, milk --> should be candies, hard
+- Roasted sweet potatoes: 1530.07 - AHHA - *sweet potato, white, eaten without skin, grilled --> should be orange flesh roasted/grilled sweet potato.
+
+Items that doesn't match and/or are redundant
+- 21119.01.01 - MAFOODS - MW03_0067 - rabbit meat --> should be mice, otherwise remove.
+- 23161.01.01 - Rice, imported. 
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

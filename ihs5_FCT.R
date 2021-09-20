@@ -3,16 +3,11 @@
 library(tidyverse)
 
 
-
-## loading data
-
-ihs5 <- read.csv("ihs5-fct_v1.0.csv")
-
 AHHA <- read.csv(here::here("data", "AHHA-FCT.csv"))
 
 MAFOODS <- read.csv(here::here("output", "MAPS_MAFOODS_v1.4.csv"))
 
-WAFCT <- read.csv(here::here("output", "MAPS_WAFCT_v1.2.csv"))
+WAFCT <- source("wafct.R")
 
 
 c("food_genus_description"    , "food_group"               ,  "food_subgroup" ,
@@ -92,5 +87,74 @@ ihs5 <- read.csv("ihs5-fct_v1.1.csv")
 #5   21113.02.01  880
 #6   23991.01.02   16
 #7   39120.04.01  807
+   
+   
+   ## loading data
+   
+   ihs5 <- read.csv("ihs5-fct_v1.2.csv") %>% select(-X)
+   
+   source("dictionary.R")
+   
+#---ihs5-quality-check
+   
+#1) Checking that ihs5 and genus matches are correct. 
+
+#Creating the list of ihs5 food items and its genus code
+  
+   
+#Fixing samosa vs banana cake id typo issue (see MAPS_Dictionary-Protocol update v2.5)
+ihs5$food_genus_id[ihs5$ihs5_foodid == "836" & ihs5$food_genus_id == "F0022.06"] <- "F0022.07"
+ 
+#checking that all the ihs5 food items matches make sense  
+ihs5_genus <- ihs5 %>% select(starts_with("ihs5"), food_genus_id) %>% 
+ left_join(., dictionary.df %>% select(ID_3, FoodName_3), by = c("food_genus_id" = "ID_3")) %>% 
+ arrange(ihs5_foodid)
+   
+   
+#Checked one by one all the matches and noted down the combination of codes that
+#did not make sense for further checking
+
+#836 - F0022.06 is no longer printing because solved above
+#I left it for record keeping
+
+ihs5_genus %>% 
+ filter(ihs5_foodid %in% c("816", "832" , "836", "106", "510") &
+          food_genus_id %in% c("F0666.01", "1530.07", "F0022.06",
+                                   "23161.01.01", "21119.01.01"))
+
+
+#removing matches that doesn't make sense in the ihs5-genus match    
+ihs5_genus <- ihs5_genus %>%
+     filter(!(ihs5_foodid %in% c("816", "832" , "836", "106", "510") &
+                food_genus_id %in% c("F0666.01", "1530.07", "F0022.06",
+                                     "23161.01.01", "21119.01.01")))
+
+#Saving a copy of the matches so Gareth can check it (and other)
+#write.csv(ihs5_genus, 
+#          here::here("output", "ihs5-genus_standard-food-list_v2.0.csv"), row.names = F)
+
+#TO-DO:
+#Fix fct_ihs5 genus id codes (i.e., 816 - 23670.01.01, 1530.07)
+#Remove redundant items (mice, rice imported, etc. ) - this is not very dramatic step, but it would help
+#to keep the fct clean.
+#Dissagregate aggregated items
+
+
+#removing matches that doesn't make sense   
+
+   
+      genus.double <- ihs5 %>% count(food_genus_id) %>% arrange(desc(n)) %>% 
+     filter(n>1) %>% pull(food_genus_id)
+   
+   ihs5 %>% filter(food_genus_id %in% genus.double) %>% arrange(food_genus_id)
+   
+   
+   genus.double <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>% 
+     count(food_genus_id) %>% arrange(desc(n)) %>% 
+     filter(n>1) %>% pull(food_genus_id)
+   
+   
+   ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
+     filter(food_genus_id %in% genus.double) %>% arrange(food_genus_id)
  
  
