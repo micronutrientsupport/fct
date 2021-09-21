@@ -139,22 +139,67 @@ ihs5_genus <- ihs5_genus %>%
 #to keep the fct clean.
 #Dissagregate aggregated items
 
+#2) Checking that fct_ihs5 and genus matches are correct. 
 
 #removing matches that doesn't make sense   
 
+#fct should only have all unique genus_id.
+
+#checking if we have duplicate genus 
+#removing ihs5_foods (because there could be dupli)
+#saving genus_id of the items that are dupli
+
+
+x <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
+   left_join(., dictionary.df %>% select(ID_3, FoodName_3),
+             by = c("food_genus_id" = "ID_3")) %>% 
+   relocate(c(FoodName_3, ref_fctcode, ref_fctitem), .after = food_genus_id) %>% select(1:4) %>% 
+   separate_rows(c("ref_fctcode", "ref_fctitem"), sep = ";")  %>% 
+   arrange(food_genus_id)
+
+genus.double <- x %>% count(food_genus_id) %>% arrange(desc(n)) %>% 
+   filter(n>1) %>% pull(food_genus_id)
+
+x <- x %>% filter(food_genus_id %in% genus.double)
+
+ihs5 %>% select(-starts_with("ihs5")) %>% 
+   separate_rows(c("ref_source", "ref_fctcode", "ref_fctitem"), sep = ";")  %>%
+   distinct() %>%
+   filter()
+      
+      
+food_genus_id  <- c("1215.02", "1215.03", "1219.01.01", "1322.01", "1323.01", "1359.9.01" ,
+"1359.9.02", "1501.02", "1501.05",  "1505.01", "1505.02", "1505.04", "1505.05",
+"1699.05", "21121.04", "21170.92.02", "21170.92.03", "21397.01.01", "21431.01",
+"2161.01", "2162.01", "21631.01.01", "22251.01.01", "23140.03.01",
+ "24310.02.01", "39120.04.01", "F0020.01", "F0020.02", "F0623.03") 
+
+ref_fctcode <-  c("MW04_0011", "MW04_0021", "MW04_0014", "MW05_0014", "MW05_0018", "MW05_0013", 
+"MW05_0005", "91010", "8010", "MW03_0020", "MW03_0031", "MW03_0023", "MW03_0047",
+"13002", "15073", "MW03_0069", "MW03_0009", "4025", "MW05_0012",
+"11_009", "11_003", "9013", "6005", "1009", 
+"12_002", "MW01_0035", "MW01_0004", "MW01_0003", "MW01_0061")
+
+good.matches <- bind_cols("food_genus_id" = food_genus_id, "ref_fctcode" = ref_fctcode)
+
+
+
+#Checking those without duplication
+
+x <- x %>% filter(!food_genus_id %in% genus.double) %>% arrange(food_genus_id)
+
+genus.double <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>% 
+  count(food_genus_id) %>% arrange(desc(n)) %>% 
+  filter(n>1) %>% pull(food_genus_id)
    
-      genus.double <- ihs5 %>% count(food_genus_id) %>% arrange(desc(n)) %>% 
-     filter(n>1) %>% pull(food_genus_id)
-   
-   ihs5 %>% filter(food_genus_id %in% genus.double) %>% arrange(food_genus_id)
-   
-   
-   genus.double <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>% 
-     count(food_genus_id) %>% arrange(desc(n)) %>% 
-     filter(n>1) %>% pull(food_genus_id)
-   
-   
-   ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
-     filter(food_genus_id %in% genus.double) %>% arrange(food_genus_id)
+
+x <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
+   filter(food_genus_id %in% genus.double) %>%
+   left_join(., dictionary.df %>% select(ID_3, FoodName_3),
+            by = c("food_genus_id" = "ID_3")) %>% 
+   relocate(c(FoodName_3, ref_fctcode, ref_fctitem), .after = food_genus_id) %>% 
+   arrange(food_genus_id) %>% select(1:4)
+
+
  
  
