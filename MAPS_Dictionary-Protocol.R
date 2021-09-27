@@ -265,6 +265,19 @@ dictionary.df <- dictionary.df %>% add_row(
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.01.01"] <- "rice grain, imported, white, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, local, white, raw"
 
+#Found a issue with some ID_0 classification
+#Need to change them to oil and seeds. 
+
+#PB Pulses and Beans 2561             sesame seed and products
+#PB Pulses and Beans 2571            soyabean oil and products
+#PB Pulses and Beans 2572           groundnut oil and products
+#PB Pulses and Beans 2579          sesameseed oil and products
+
+#We are adding canned beans, we need to decide where to put them
+#Since they are not dried and they are preserved, acc. to FAO
+#logic it should be under other vegetables.
+#additionally we are adding them to be matched to tinned vegetables, in 
+#ihs5....
 
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
