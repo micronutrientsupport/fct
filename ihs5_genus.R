@@ -3,13 +3,6 @@
 library(tidyverse)
 
 
-AHHA <- read.csv(here::here("data", "AHHA-FCT.csv"))
-
-MAFOODS <- read.csv(here::here("output", "MAPS_MAFOODS_v1.4.csv"))
-
-WAFCT <- source("wafct.R")
-
-
 c("food_genus_description"    , "food_group"               ,  "food_subgroup" ,
   "food_genus_confidence"    ,  "fct_name"  , "energy_in_kj", 
   "nitrogen_in_g"       ,       "totalprotein_in_g"      ,    "totalfats_in_g" ,
@@ -129,6 +122,10 @@ ihs5_genus <- ihs5_genus %>%
                 food_genus_id %in% c("F0666.01", "1530.07", "F0022.06",
                                      "23161.01.01", "21119.01.01")))
 
+#Adding 
+#118 - MAIZE UFA RAW MADEYA (bran flour - unprocessed)
+#39120.04.01 - maize bran, flour, raw 
+
 #Saving a copy of the matches so Gareth can check it (and other)
 #write.csv(ihs5_genus, 
 #          here::here("output", "ihs5-genus_standard-food-list_v2.0.csv"), row.names = F)
@@ -147,7 +144,7 @@ ihs5_genus <- ihs5_genus %>%
 
 #checking if we have duplicate genus 
 #removing ihs5_foods (because there could be dupli)
-#saving genus_id of the items that are dupli
+#saving genus_id of the items that are dupli.
 
 
 x <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
@@ -201,5 +198,4 @@ x <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
    arrange(food_genus_id) %>% select(1:4)
 
 
- 
  

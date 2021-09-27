@@ -18,6 +18,32 @@ There are some items that should be removed:
  3) [816] Remove sweets, chocolate with milk because acc. to Gareth inputs that's hardly found in Malawi. We identified an issue that with the other code that should be solved at FCT level 
  4) [832] Remove orange-sweet potato. It also has an issue that it should be fixed at FCT level.
  5) [836] A typo in food genus that was solved in version 2.5 samosa and banana cake sharing the same id, was the cause of this error. Now it's solved. Hence it doesn't need to be removed any more. 
+ 
+IHS5 - genus matches were sent to Gareth Osman to double-check that the assumptions made were consistent with Malawi reality. 
+
+Below are the comments to be solved:
+
+ 1) 118 - 'MAIZE UFA RAW MADEYA (bran flour - unprocessed), code 118, is missing. --> Fixed
+ 2) 412 - Tinned vegetables (specify) change to Tinned beans. = Tinned, beans (MW02_0003)
+ 3) 106 - rice was duplicated --> Fixed. 
+ 4) 829 - restaurant meals ---> Nsima (MW01_0031) - check min values for this recipe, chicken (MW03_0010), rape leaves, boiled (MW04_0020*Retention factor)
+
+-Recalculate min values for all sweet potato using Edward
+ 5) 832 and 831 - Add b) version w/ orange 
+ 6) 816 - Change compo to candies
+ 7) 204 - OFSP
+ 8) 203 - WFSP
+ 
+Make a note to fix all recipes in MAFOODS.
+
+- Check ref for small fish:
+
+ 9)  5023        Sun Dried fish (Small Variety)     
+ 10) 5033        Fresh fish (Small Variety)  
+ 11) 5123        Smoked fish (Small Variety) 
+
+- Check infant feeding formula
+
 
 ```{r ihs5-quality-check}
 
