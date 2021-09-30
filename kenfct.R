@@ -7,11 +7,11 @@ library(tidyverse)
 
 #Only need to do it once!
 
-f <- "http://www.nutritionhealth.or.ke/wp-content/uploads/Downloads/Kenya%20Food%20Composition%20Tables%20Excel%20files%202018.xlsx"
+#f <- "http://www.nutritionhealth.or.ke/wp-content/uploads/Downloads/Kenya%20Food%20Composition%20Tables%20Excel%20files%202018.xlsx"
 
-download.file(f,"./data/MOH-KENFCT_2018.xlsx",
-              method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
-              mode="wb")
+#download.file(f,"./data/MOH-KENFCT_2018.xlsx",
+ #             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+  #            mode="wb")
 
 
 ##1) LOADING PACKAGES AND KENYA FCT 
@@ -260,6 +260,6 @@ rename(
 
 MAPS_ken %>% head()
 
-MAPS_ken %>% readr::write_excel_csv(., 
-                       here::here('output', 'MAPS_KENFCT_v1.3.csv'))#that f(x) is to 
+#MAPS_ken %>% readr::write_excel_csv(., 
+ #                      here::here('output', 'MAPS_KENFCT_v1.3.csv'))#that f(x) is to 
                           

@@ -42,16 +42,132 @@ fct_ihs5 <- fct_ihs5 %>%
   select(-fooditem) 
 
 ##Adding item 118
+
 fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid == "103") %>% 
   mutate(ihs5_foodid = 118) %>% 
   bind_rows(., fct_ihs5)
 
-
 #Changing 412 to MW02_0003
 
+fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != 412) %>% 
+  bind_rows(.,mwi_clean %>% filter(code == "MW02_0003") %>% 
+  mutate(ihs5_foodid = 412,
+         ihs5_fooditem = "Tinned vegetables",
+         ref_source = "MAFOODS") %>% 
+  rename(ref_fctcode = "code",
+         ref_fctitem = "fooditem"))  %>% 
+  select(ihs5_foodid:ID_cal) 
 
 #Changing 829 to combo meal
+#MISSING retention factors
 
+
+
+rf_var <- c('fooditem', 'VITA_RAE', 'VITB1', "VITB2", "NIA", 
+            "FOLDFE", "VITB12", "VITC", "CA", "FE", "MG", "P",
+            "K", "NA.", "ZN", "SE", "PHYTCPPD")
+
+            
+
+rf_leaf <- readxl::read_excel(here::here('data', "MOH-KENFCT_2018.xlsx"), sheet = 6) %>% 
+  janitor::clean_names() %>% 
+  rename(item = "retention_factors_applied_according_to_the_cooking_methods_deriving_from_vasquez_caicedo_2008") %>% 
+  filter(item %in% c(NA,  "Leafy vegetables, boiled")) 
+
+rf_leaf <- rf_leaf %>% slice(2:3) %>% 
+  bind_cols(., rf_leaf %>% slice(5:6))  %>%
+  select(-c(x9...9,x10...10, item...11)) %>%  
+  rename_all(., ~rf_var) %>% 
+  mutate(ref_fct = "KENFCT") %>% slice(2) %>% 
+  mutate_at(c('VITA_RAE', 'VITB1', "VITB2", "NIA", 
+              "FOLDFE", "VITB12", "VITC", "CA", "FE", "MG", "P",
+              "K", "NA.", "ZN", "SE", "PHYTCPPD"), as.numeric)
+
+
+meal_vendor <- c("MW01_0031", "MW03_0010", "MW04_0020")
+
+item_name <- fct_ihs5 %>% filter(ihs5_foodid == 829) %>% pull(ihs5_fooditem)
+
+fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != 829) %>% 
+  bind_rows(., 
+        mwi_clean %>% filter(code %in% meal_vendor) %>% 
+     mutate(ihs5_foodid = 829) %>% 
+  group_by(ihs5_foodid) %>% 
+    summarise_if(is.numeric, mean, na.rm =T) %>% 
+  left_join(., mwi_clean %>% filter(code %in% meal_vendor) %>% 
+  mutate(ihs5_foodid = 829) %>% 
+  group_by(ihs5_foodid) %>% 
+    summarise_if(is.character, ~paste(., collapse = ", ")) %>% 
+    rename(ref_fctcode = "code",
+           ref_fctitem = "fooditem")) %>% 
+    mutate(ihs5_fooditem = item_name,
+           ref_source = "MAFOODS" )) %>% 
+  select(ihs5_foodid:ID_cal)  
 
 #Fixing OFSP and WFSP
 
+sp_id <- c("832", "831", "204", "203")
+
+fct_ihs5 %>% filter(ihs5_foodid %in% sp_id) %>% arrange(ihs5_foodid)
+
+fct_ihs5 <- fct_ihs5 %>% mutate_at("ihs5_foodid", as.character) %>% 
+  bind_rows(., fct_ihs5 %>% filter(ihs5_foodid == "203") %>%  
+  mutate(ihs5_foodid = "204b",
+         ihs5_fooditem = "Orange sweet potato",
+         VITA_RAE = 925.830, 
+         comment = "OSF equal compo as 203 (MW01_0065) 
+         but VITA_RAE from (MW01_0063)")) %>% 
+
+  bind_rows(.,fct_ihs5 %>% filter(ihs5_foodid == "832") %>%  
+  mutate(ihs5_foodid = "832b",
+         ihs5_fooditem = "Roasted orange sweet potatoes",
+         VITA_RAE = 925.830*0.83, 
+         comment = "OSF equal compo as 832 (AHHA - 5010) 
+         but VITA_RAE from (MW01_0063*retention factor 
+         calculated from Carpio et al., 2017)")) %>% 
+
+  bind_rows(., fct_ihs5 %>% filter(ihs5_foodid == "831") %>%  
+  mutate(ihs5_foodid = "831b",
+         ihs5_fooditem = "Boiled orange sweet potatoes",
+         VITA_RAE = 925.830*0.95, 
+         comment = "OSF equal compo as 832 (AHHA - 5010) but VITA_RAE
+         from (MW01_0063*retention factor KENFCT - Starchy root or potato,
+         boiled)")) 
+
+
+#Adding the infant formula compo #708
+
+formula_id <-  mwi_clean %>% filter(str_detect(code, "MW07"), 
+                     str_detect(fooditem, ("powder")), 
+                     !str_detect(fooditem, "follow-up")) %>% pull(code)
+
+fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != "708") %>% 
+  bind_rows(., 
+            mwi_clean %>% filter(code %in% formula_id) %>% 
+              mutate(ihs5_foodid = "708") %>% 
+              group_by(ihs5_foodid) %>% 
+              summarise_if(is.numeric, mean, na.rm = T) %>% 
+              left_join(., mwi_clean %>% filter(code %in% formula_id) %>% 
+                          mutate(ihs5_foodid = "708") %>% 
+                          group_by(ihs5_foodid) %>% 
+                          summarise_if(is.character, ~paste(., collapse = ", ")) %>% 
+                          rename(ref_fctcode = "code",
+                                 ref_fctitem = "fooditem")) %>% 
+              mutate(ihs5_fooditem = "Infant feeding formula (for bottle)",
+                     ref_source = "MAFOODS" , 
+                     comment = "We are assuming that VITA is coming
+                                   from as retinol and VITA = VITA_RAE" )) %>% 
+  select(ihs5_foodid:ID_cal)  
+
+fct_ihs5$VITA_RAE[fct_ihs5$ihs5_foodid == "708"] <- 640.10
+
+
+fct_ihs5 %>% write.csv(here::here("output", "fct_ihs5_v2.1.csv"), 
+                       row.names = F)
+
+
+read.csv(here::here("output", "fct_ihs5_v2.0.csv")) %>%
+  count(ihs5_foodid) %>% arrange(desc(n))
+
+read.csv(here::here("output", "fct_ihs5_v2.0.csv")) %>% 
+  filter(ihs5_foodid == "412")

@@ -24,13 +24,17 @@ IHS5 - genus matches were sent to Gareth Osman to double-check that the assumpti
 Below are the comments to be solved:
 
  1) 118 - 'MAIZE UFA RAW MADEYA (bran flour - unprocessed), code 118, is missing. --> Fixed
- 2) 412 - Tinned vegetables (specify) change to Tinned beans. = Tinned, beans (MW02_0003)
+ 2) 412 - Tinned vegetables (specify) change to Tinned beans. = Tinned, beans (MW02_0003) --> Fixed
  3) 106 - rice was duplicated --> Fixed. 
- 4) 829 - restaurant meals ---> Nsima (MW01_0031) - check min values for this recipe, chicken (MW03_0010), rape leaves, boiled (MW04_0020*Retention factor)
+ 4) 829 - restaurant meals ---> Nsima (MW01_0031) - check min values for this recipe, chicken (MW03_0010), rape leaves, boiled (MW04_0020*Retention factor) --> Fixed but w/o retention factors
+ 5) 816 - Change compo to candies
+ 6) 708 - Add infant formula data
+ 
+-Recalculate min values for all sweet potato using Edward:
 
--Recalculate min values for all sweet potato using Edward
- 5) 832 and 831 - Add b) version w/ orange 
- 6) 816 - Change compo to candies
+-Provisional fix to create OFSP version
+
+ 6) 832 and 831 - Add b) version w/ orange: copy and paste values and 
  7) 204 - OFSP
  8) 203 - WFSP
  
