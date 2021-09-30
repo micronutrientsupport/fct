@@ -231,10 +231,7 @@ allNames <- fct.genus %>%
   write.csv(splitregion[[i]], file = saveName, row.names = F)
   }
 
-read.csv(here::here("data",
-  "MAPS_regional-SSA-fct_v1.6.csv")) %>% 
-  filter(str_detect(original_food_name, "Cassava"), region == "W") %>% 
-  select(original_food_name, region,  starts_with(c("fe", "zn"))) %>% knitr::kable()
+
 
 
 read.csv(here::here("metadata", "EJ-regional-SSA-spread-citation.csv")) %>% 
