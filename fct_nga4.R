@@ -7,6 +7,7 @@ library(tidyverse)
 
 source("dictionary.R")
 source("wafct.R")
+source("kenfct.R")
 
 fbs <- read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv"))
 
@@ -30,7 +31,7 @@ nga4.foodlist <- read.csv(here::here("data", "nga4_foodlist_raw.csv")) %>%
 
 nga4.foodlist %>% distinct(nga4_foodgroup)
 
-nga4.foodlist %>% filter(nga4_foodgroup == "BEVERAGES") 
+nga4.foodlist %>% filter(nga4_foodgroup == "GRAINS AND FLOURS") 
 
 wafct %>% filter(str_detect(code, "12_")) %>%
   select(code, fooditem) %>% knitr::kable()
@@ -48,6 +49,11 @@ wafct %>% filter(str_detect(fooditem, "grain|flour")) %>%
                     "sorghum|millet|rice|maize|yam|cassava|wheat")) %>% 
   select(code, fooditem)
 
+
+#ken 9001  |Animal fat/ lard 
+#ken - duck 7008 
+#ken - doughnuts 15004 
+#ken - choco 12004
 
 #check "native red"
 #Cassava flour, non-fermented!
@@ -102,13 +108,19 @@ wafct %>% filter(str_detect(fooditem, "grain|flour")) %>%
 #Coffee [120] - powder
 #Chocolate drinks [121] - Ovaltine? 
 #Sugar - used unfortified but there is one fortified for Nigeria (Vit.A)
-#Unground Ogbono [142]
-#Ground Ogbono [143]
+#Unground Ogbono [142] == 06_008 - Dikanut (Ene-Obong et al.,)
+#Ground Ogbono [143] == 06_008 - Dikanut - Not powder 
 #Pepper - not powder
 #Melon seed (e- for all 2 [145, 146, 147] = Egusi
-#Water - only tap 
+#Water - only tap (used for bottle and sachet)
 #Juice canned, sweetened - but it can be averaged of different juices
 #Pito - sorghum beer, we could do an average with millet
+
+#check cassava flour fermented?
+wafct %>% 
+  filter(str_detect(fooditem, "Cassava|cassava")) %>% 
+  filter(str_detect(fooditem, "flour")) %>% 
+  select(code, fooditem, WATER, VITA_RAE, FE, ZN, VITB12)
 
 
 
@@ -126,11 +138,19 @@ nga4_wafct_list <- c("01_039", "01_017", "01_037", "01_036", "01_058", "02_036",
   "07_046", "07_027", NA, 
   NA, "09_003", NA, "09_053", "07_083", NA, "09_109", NA, "10_029", "10_002", 
   "10_011" , "10_016", "10_028", NA, "12_005", NA, "12_008", "13_002", 
-  "13_001", NA, "13_015", NA, NA, "13_014", "06_035", "06_035", "06_035", NA, 
-  NA, NA, NA, "12_024", "12_012", NA, "12_001", "12_006", "12_004", NA, NA)
+  "13_001", NA, "13_015", "06_008", "06_008", "13_014", "06_035", "06_035", "06_035", NA, 
+  "12_019", "12_019", NA, "12_024", "12_012", NA, "12_001", "12_006", "12_004", NA, NA)
 
 which(is.na(nga4_wafct_list))
 
+wafct_nga4 <- nga4_wafct_list  %>% cbind(., c(1:length(nga4_wafct_list)))
+
+#Fish compo checks
+
+wafct %>% filter(str_detect(code, "09_")) %>%  
+  ggplot(aes(FE)) + geom_histogram()
+  
+  
 
 #Buns, poff and donuts [27] - fried dough 
 
@@ -162,8 +182,6 @@ wafct %>% filter(code %in% gari.yellow) %>%  #change here
           summarise(across(c(fooditem, code), ~paste(.x, collapse = ";"))))
 
 
-mutate_at("ENERC2":"PHYTCPPD_PHYTCPPI", ~(. %*% recipe.conv)) %>% head()
-
 #animal fat [56] - 
  
 
@@ -187,28 +205,93 @@ wafct %>% filter(code %in% fresh.leaves) %>%  #change here
 wafct %>% filter(code %in% fresh.leaves) %>% 
   ggplot(aes(ZN)) + geom_histogram()
 
-#chicken - do an average of different cuts 
+#chicken [80] - do an average of different cuts, no offals
+
 wafct %>% filter(str_detect(fooditem, "Chicken")) %>%
   filter(str_detect(fooditem, "raw")) %>%
+  filter(str_detect(fooditem, "meat")) %>%
   select(code, fooditem) %>% knitr::kable()
 
-#Seafood - do average [105]
+chicken.meat <- wafct %>% filter(str_detect(fooditem, "Chicken")) %>%
+  filter(str_detect(fooditem, "raw")) %>%
+  filter(str_detect(fooditem, "meat")) %>%
+  select(code, fooditem)%>% pull(code)
+
+wafct %>% filter(code %in% chicken.meat) %>%  #change here
+  summarise(across(ENERC2:PHYTCPPD_PHYTCPPI, mean)) %>% 
+  cbind(., wafct %>% filter(code %in% chicken.meat) %>%  #change here
+          summarise(across(c(fooditem, code), ~paste(.x, collapse = ";"))))
+
+#duck [81]
+
+
+#Seafood - do average [105] - not including Clams because its high FE content
+#it might bias the average. 
 
 wafct %>% 
   filter(str_detect(fooditem, "crab|Crab|lobster|Lobster|Prawn|prawn|shrimp|Shrimp")) %>%
   filter(str_detect(fooditem, "raw")) %>%
   select(code, fooditem) %>% knitr::kable()
 
+seafood <- wafct %>% 
+  filter(str_detect(fooditem, "crab|Crab|lobster|Lobster|Prawn|prawn|shrimp|Shrimp")) %>%
+  filter(str_detect(fooditem, "raw")) %>%
+  select(code, fooditem) %>% pull(code)
+
+wafct %>% filter(code %in% seafood) %>%  #change here
+  summarise(across(ENERC2:PHYTCPPD_PHYTCPPI, mean)) %>% 
+  cbind(., wafct %>% filter(code %in% seafood) %>%  #change here
+          summarise(across(c(fooditem, code), ~paste(.x, collapse = ";"))))
+
+
 #Fresh fish [100], we need to do average or disaggregate.
 
-#Canned fish
+wafct %>% filter(str_detect(code, "09_")) %>%
+  filter(str_detect(fooditem, "Sardine|Mullet|Mola|Catfish|Mackerel")) %>%
+  filter(str_detect(fooditem, "raw")) %>%
+  select(code, fooditem, WATER, VITA_RAE, FE, ZN) %>% knitr::kable()
+
+#Smoked fish [102], we need to do average or disaggregate
+#Maybe using grilled instead of smoked?
+
+wafct %>% filter(str_detect(code, "09_")) %>%
+  filter(str_detect(fooditem, "Sardine|Mullet|Mola|Catfish")) %>%
+  filter(str_detect(fooditem, "smoke|grill")) %>%
+  select(code, fooditem, WATER, VITA_RAE, FE, ZN)
+
+#Fish - dried [103], change to average of including Shrimp crayfish?
+
+wafct %>% filter(str_detect(code, "09_")) %>%
+  filter(str_detect(fooditem, "dried")) %>%
+  select(code, fooditem, WATER, VITA_RAE, FE, ZN)
+
+##Canned fish/seafood [106] - we used mackerel but we could do an average
+#particularly because mackerel is very high in VITA_RAE
 
 wafct %>% filter(str_detect(code, "09_")) %>%
   filter(str_detect(fooditem, "canned")) %>%
   select(code, fooditem) %>% knitr::kable()
 
+wafct %>% filter(str_detect(code, "09_")) %>%
+  filter(str_detect(fooditem, "canned")) %>%
+  select(code, fooditem, WATER, VITA_RAE, FE, ZN)
+
+canned.fish <- wafct %>% filter(str_detect(code, "09_")) %>%
+  filter(str_detect(fooditem, "canned")) %>%
+  pull(code)
+
+wafct %>% filter(code %in% canned.fish) %>%  #change here
+  summarise(across(ENERC2:PHYTCPPD_PHYTCPPI, mean)) %>% 
+  cbind(., wafct %>% filter(code %in% canned.fish) %>%  #change here
+          summarise(across(c(fooditem, code), ~paste(.x, collapse = ";"))))
+
+#Unground Ogbono [142]
+#Ground Ogbono [143]
 
 
+wafct %>% filter(str_detect(code, "12_")) %>%
+  filter(str_detect(fooditem, "water|Water")) %>% 
+  select(code, fooditem, WATER, VITA_RAE, FE, ZN)
 
 ## check values for Zn, Fe
 
