@@ -254,6 +254,27 @@ nga4_adj_fct <- nga4_adj_fct %>%
   select(code, fooditem, WATER, ENERC1, VITA_RAE, FE, ZN) %>% 
     mutate(nga4_foodid = "81"))
 
+#goat [93]
+
+wafct %>% filter(str_detect(fooditem, "Lamb ")) %>% 
+  filter(str_detect(fooditem, "raw"))%>% select(code, fooditem, FE, ZN) %>% 
+  summarise(across(where(is.numeric), mean))
+
+#14 = 100% 
+#12 = meat (86%)
+#2 = offals (14%)
+
+#07_046 - Goat meat, moderately fat, ca. 10% fat, raw
+
+#FE = 2.65
+(6*.14)+(2.2*.86)
+
+#ZN = 3.24
+(2.32*.14)+(3.39*.86)
+
+
+#Mutton [91]
+
 #Fresh fish [100], we need to do average 
 
 wafct %>% filter(str_detect(code, "09_")) %>%

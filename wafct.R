@@ -6,15 +6,15 @@ library(tidyverse)
 
 
 ##0) DOWNLOADING WEST-AFRICA FCT FROM FAO/INFOODS 
-
-#Only need to do it once!
-
-f <- "http://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx"
-
-download.file(f,"./data/INFOODS-WAFCT_2019.xlsx",
-              method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
-              mode="wb")
-
+#
+# Only need to do it the first time!
+# 
+#  f <- "http://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx"
+# 
+#  download.file(f,"./data/INFOODS-WAFCT_2019.xlsx",
+#               method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+#               mode="wb")
+# 
 
 ##1) LOADING WEST-AFRICA FCT 
 
@@ -31,7 +31,8 @@ readxl::read_excel(here::here('data',
 ##Loading WAFCT, skip 2 first rows to use tagnames for components
 
 wafct <- readxl::read_excel(here::here( 'data', 
-                                        'INFOODS-WAFCT_2019.xlsx'), sheet = 5, skip = 2) %>%
+                                        'INFOODS-WAFCT_2019.xlsx'), 
+                            sheet = 5, skip = 2) %>%
   mutate(FCT = 'WAFCT') %>% glimpse()
 
 ##2) TIDYING WEST-AFRICA FCT 
@@ -167,12 +168,12 @@ wa_genus <- tribble(
   "13_023", "F0623.01", "h",
   "01_095", "118.03", "h", 
   "10_002", "22211.01", "h",
-  "12_024" , "24490.02", "h",
+  "12_024", "24490.02", "h",
   "13_021", "F0666.01", "h", 
   "07_063", "F1172.01", "m",
   "12_002",  "24310.02.01", "h", 
   "01_043", "23110.02", "h", 
-  "12_012" , "21435.01.01", "h",
+  "12_012", "21435.01.01", "h",
   "02_003", "01520.01.02", "m",
   "02_001", "01520.01.01", "m",
   "02_015", "1550.01", "h",
@@ -202,7 +203,7 @@ wa_genus <- tribble(
   "10_029", "2211.01", "h",
   "07_072", "21115.01", "m",
   "07_006", "21113.02.01", "m",
-  "07_007",  "21114.01", "h",
+  "07_007", "21114.01", "h",
   "04_005", "1212.01", "h",
   "04_053", "1214.04", "m",
   "04_017", "1239.01.01", "h",
@@ -227,8 +228,8 @@ wa_genus <- tribble(
 #1701.03
 #141.02
 #Check peanuts - all shelled
-  #142.02 - check shelled ?
-  #142.05 -check shelled?
+  #142.02 - check shelled?
+  #142.05 - check shelled?
 #21111.01.01 - check it said w/ bones
 #21170.01.03
 #1212.02
