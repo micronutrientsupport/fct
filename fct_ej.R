@@ -230,3 +230,9 @@ allNames <- fct.genus %>%
   saveName = paste0("MAPS_", i , "-Africa_v1.6.csv")
   write.csv(splitregion[[i]], file = saveName, row.names = F)
   }
+
+
+
+
+read.csv(here::here("metadata", "EJ-regional-SSA-spread-citation.csv")) %>% 
+  filter(str_detect(food_item, "Cassava"), region == "W")
