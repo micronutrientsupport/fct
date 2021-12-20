@@ -4,8 +4,8 @@
 library(tidyverse)
 
 ## loading data
-
 ihs5 <- read.csv("ihs5-fct_v1.2.csv") %>% select(-X)
+
 
 AHHA <- read.csv(here::here("data", "AHHA-FCT.csv"))
 
@@ -16,6 +16,7 @@ source("wafct.R")
 source("mafood.R")
 
 #Cleaning variables
+
 
 #ref_item is empty and fooditem is ref_item
 
@@ -50,7 +51,7 @@ fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid == "103") %>%
 #Changing 412 to MW02_0003
 
 fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != 412) %>% 
-  bind_rows(.,mwi_clean %>% filter(code == "MW02_0003") %>% 
+  bind_rows(., mwi_clean %>% filter(code == "MW02_0003") %>% 
   mutate(ihs5_foodid = 412,
          ihs5_fooditem = "Tinned vegetables",
          ref_source = "MAFOODS") %>% 

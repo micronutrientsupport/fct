@@ -161,6 +161,10 @@ Leaves(cocoyam, spinach, etc.) [78], we have used an average of all raw availabl
 
 The selection of leaves will benefit from a) reviewing and b) geographic disaggreagation 
 
+*Chocolate drinks*
+
+Goat meat, adjust for "whole animal" consumption. 
+
 *Fresh fish*
 
 Fresh fish [100], we did an average of all the fish reported as raw in the WAFCT (see Bradley., 2020, Ene-Obong, 2013), we only removed "Mola carplet" because the VIT_RAE content was extremely high when compared with the rest of the fish (probably because it is a "whole fish") and because in the report was not mentioned. 
