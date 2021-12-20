@@ -173,7 +173,11 @@ wa_genus <- tribble(
   "07_063", "F1172.01", "m",
   "12_002",  "24310.02.01", "h", 
   "01_043", "23110.02", "h", 
+<<<<<<< HEAD
   "12_012", "21435.01.01", "h",
+=======
+  "12_012" , "21435.01.01", "h",
+>>>>>>> master
   "02_003", "01520.01.02", "m",
   "02_001", "01520.01.01", "m",
   "02_015", "1550.01", "h",
@@ -203,7 +207,11 @@ wa_genus <- tribble(
   "10_029", "2211.01", "h",
   "07_072", "21115.01", "m",
   "07_006", "21113.02.01", "m",
+<<<<<<< HEAD
   "07_007", "21114.01", "h",
+=======
+  "07_007",  "21114.01", "h",
+>>>>>>> master
   "04_005", "1212.01", "h",
   "04_053", "1214.04", "m",
   "04_017", "1239.01.01", "h",
@@ -217,6 +225,7 @@ wa_genus <- tribble(
   "05_037", "1316.01", "l",
   "05_017", "1317.01", "h",
   "05_018", "1318.01", "h")
+<<<<<<< HEAD
 
 
 #List of non-available items compared w/ mwi_genus
@@ -225,13 +234,26 @@ wa_genus <- tribble(
 #118.02 - only pearl millet
 #23120.03.01 = maize, flour, white, unrefined, non-fermented, raw
 #F0022.02 = dough, sweet, fried?
+=======
+  
+#List of non-available items compared w/ mwi_genus
+#F0022.04
+#118.02 - only pearl millet
+#23120.03.01
+#F0022.02
+>>>>>>> master
 #Check type of plantain
 #Check type of sorghum
 #1701.03
 #141.02
 #Check peanuts - all shelled
+<<<<<<< HEAD
   #142.02 - check shelled?
   #142.05 - check shelled?
+=======
+  #142.02 - check shelled ?
+  #142.05 -check shelled?
+>>>>>>> master
 #21111.01.01 - check it said w/ bones
 #21170.01.03
 #1212.02
@@ -244,6 +266,7 @@ wa_genus <- tribble(
 #1802.01
 #2899.01.01
 
+<<<<<<< HEAD
 #Checking the items of the list above
 
 dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01", 
@@ -255,6 +278,11 @@ dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01",
 
 
 wa_genus <- wa_genus %>% left_join(., dictionary.df)
+=======
+
+
+wa_genus <- wa_genus %>% left_join(., dictionary)
+>>>>>>> master
 
 #Rename variables according to MAPS-standards
 
@@ -311,7 +339,11 @@ wa_genus <- wa_genus %>% left_join(., dictionary.df)
     select(var.name)
 
 
+<<<<<<< HEAD
   MAPS_wafct  %>% 
+=======
+  MAPS_wafct  %>% select(var.name) %>% 
+>>>>>>> master
   readr::write_excel_csv(., 
       here::here('output', 'MAPS_WAFCT_v1.3.csv')) #that f(x) is to 
         #deal w/ special characters 

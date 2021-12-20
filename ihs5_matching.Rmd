@@ -1,0 +1,147 @@
+---
+title: "ihs5_matching"
+author: "Segovia D L Revilla, Lucia"
+date: "20/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## IHS5-foodid matching to Genus
+
+There are some items that should be removed:
+
+ 1) [106] There are two codes for identical item = rice. We amended genus to account for imported and local rice production hence, differentiate between the two. Unless, it is specified, we will sort for local when possible. 
+ 2) [510] It is a redundant code, as mice is actually rabbit meat. We should remove and use only rabbit until we found mice. 
+ 3) [816] Remove sweets, chocolate with milk because acc. to Gareth inputs that's hardly found in Malawi. We identified an issue that with the other code that should be solved at FCT level 
+ 4) [832] Remove orange-sweet potato. It also has an issue that it should be fixed at FCT level.
+ 5) [836] A typo in food genus that was solved in version 2.5 samosa and banana cake sharing the same id, was the cause of this error. Now it's solved. Hence it doesn't need to be removed any more. 
+ 
+IHS5 - genus matches were sent to Gareth Osman to double-check that the assumptions made were consistent with Malawi reality. 
+
+Below are the comments to be solved:
+
+ 1) 118 - 'MAIZE UFA RAW MADEYA (bran flour - unprocessed), code 118, is missing. --> Fixed
+ 2) 412 - Tinned vegetables (specify) change to Tinned beans. = Tinned, beans (MW02_0003) --> Fixed
+ 3) 106 - rice was duplicated --> Fixed. 
+ 4) 829 - restaurant meals ---> Nsima (MW01_0031) - check min values for this recipe, chicken (MW03_0010), rape leaves, boiled (MW04_0020*Retention factor) --> Fixed but w/o retention factors
+ 5) 816 - Change compo to candies
+ 6) 708 - Add infant formula data
+ 
+-Recalculate min values for all sweet potato using Edward:
+
+-Provisional fix to create OFSP version
+
+ 6) 832 and 831 - Add b) version w/ orange: copy and paste values and 
+ 7) 204 - OFSP
+ 8) 203 - WFSP
+ 
+Make a note to fix all recipes in MAFOODS.
+
+- Check ref for small fish:
+
+ 9)  5023        Sun Dried fish (Small Variety)     
+ 10) 5033        Fresh fish (Small Variety)  
+ 11) 5123        Smoked fish (Small Variety) 
+
+- Check infant feeding formula
+
+
+```{r ihs5-quality-check}
+
+```
+
+## FCT-IHS5 matching to Genus
+
+
+Keep 
+
+* 1214.05 = NA
+* 1214.06 = NA
+- 1215.02 = MW04_0011
+- 1215.03 = MW04_0021
+- 1219.01.01 = MW04_0014
+- 1322.01 = MW05_0014
+- 1323.01 = MW05_0018
+- 1359.9.01 = MW05_0013
+- 1359.9.02 = MW05_0005
+- 1501.02 = 91010          
+- 1501.05 = 8010           
+- 1505.01 = MW03_0020
+- 1505.02 = MW03_0031
+- 1505.04 = MW03_0023
+- 1505.05 = MW03_0047
+* 1699.04 = NA
+- 1699.05 = 13002
+* 21111.01.02 = NA
+* 21116.02 = NA
+- 21121.04 = 15073
+- 21170.92.02 = MW03_0069  (??)
+- 21170.92.03 = MW03_0009
+- 21397.01.01 = 4025
+- 21431.01 = MW05_0012
+- 2161.01 = 11_009
+- 2162.01 = 11_003
+- 21631.01.01 = 9013
+- 22251.01.01 = 6005
+- 23140.03.01 = 1009
+* 23140.03.02 = NA
+- 23991.01.01 == All??
+- 24310.02.01 = 12_002
+- 39120.04.01 = MW01_0035
+- F0020.01 = MW01_0004
+- F0020.02 = MW01_0003
+* F0022.06 = NA
+- F0623.03 = MW01_0061
+- F0666.01 == REMOVE ??
+
+
+
+food_genus_id - ref_fctcode that should be removed:
+
+01520.01.03 - MW01_0010 # roasted vs boiled cassava
+1235.01 - MW04_0034 # raw vs boiled pumpkin ??
+1290.01.01 - MW01_0040 #raw vs boiled green maize ?? 
+1290.01.02 - MW01_0040 #roasted vs boiled green maize ??
+142.03 - MW02_0015 #fresh vs boiled peanuts ??
+142.04 - 8006 # wrong name 
+1501.04 - MW03_0030 # tilapia vs catfish
+1530.07 - 5010 #white vs orange flesh sweet potato
+1532.01 - 07_063 #sardines tinned vs meat tinned
+1699.06 - 13031 #tabasco vs tomato ketchup *has different genus
+21119.01.01 - MW03_0067 #rat/mice vs rabbit
+21121.02 - MW03_0011 # chicken meat vs minced chicken meat
+21170.01.01 - MW03_0065 #pigeon vs quail ??
+21170.01.02 - MW03_0065 #guinea fowl vs quail ??
+23110.01 - 01_043 #unrefined vs refined wheat flour
+23161.01.01 - MW01_0058 #imported vs local rice
+23670.01.01 - 13_021 #chocolate vs candies
+23670.01.02 - 12_012 #flavoured ice - carbonated drink  ??
+2413.01 - 22007 #gin vs wine
+24230.03.03 - 12_002 #sorghum and maize beer vs maize beer ??
+24310.04.01 - 140001 #sorghum beer vs beer
+F0022.01 - MW01_0041 #buns vs scones
+F0623.02 - 13_023 #jelly vs jam
+
+
+24310.02.01 - 140001 #beer
+F0022.06  -  15026 #vege samosa
+23670.01.01 - 13_021 sweets, chocolate, milk
+
+Items that food item in the fct_ihs5 doesn't match to the genus code
+
+- 816 - 23670.01.01 - WAFCT - 13_021 sweets, chocolate, milk --> should be candies, hard
+- Roasted sweet potatoes: 1530.07 - AHHA - *sweet potato, white, eaten without skin, grilled --> should be orange flesh roasted/grilled sweet potato.
+
+Items that doesn't match and/or are redundant
+- 21119.01.01 - MAFOODS - MW03_0067 - rabbit meat --> should be mice, otherwise remove.
+- 23161.01.01 - Rice, imported. 
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
