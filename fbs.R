@@ -1,6 +1,6 @@
 
 
-
+library(tidyverse)
 
 
 
@@ -55,5 +55,6 @@ fbs <- fbs %>% filter(!(food_genus_id == "1532.01" & original_id == "2763")) %>%
  filter(!(food_genus_id == "23161.01.01" & original_id == "2805"))  
 
 
-readr::write_excel_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.0.csv"))
+readr::write_excel_csv2(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.0.csv"))
+readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.0.csv"))
 

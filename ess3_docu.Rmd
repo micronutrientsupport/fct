@@ -1,0 +1,60 @@
+---
+title: "Ethiopia HCES food matching"
+author: "Segovia D L Revilla, Lucia"
+date: "03/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Matching to dictionary
+
+Check Notes
+
+1. Teff needed to be added to dictionary.
+2. Wheat - what should be matched to? - refined and unrefined grain?
+3. Barley - new to dictionary & check how is consumed (unrefined?)
+4. Maize - how is consumed (yellow and white grain)
+7. Horsebean = broad bean - new to dictionary. Is it dried or fresh?
+8. Field peas = dried peas
+9. chickpeas - new to dictionary
+9. Other pulse or nut (SPEC --> wrong coding. We should recode it to 9 = chickpeas.
+10. Lentils - what type?
+11. Haricot bean - Double-check variety
+12. Niger seeds - New to dictionary
+17. kocho - bread-like food from ensete - new to dictionary. We put it under roots and tuber (ref. Food balance sheet handbook, 2001, page 70) 
+20. Cheese - we used cottage cheese because Ethiopian cheese is similar.
+25. Chat / Kat - Not sure if this is food..
+24. Bula - ensete flour - new to dictionary 
+60. Other cereal (SPECIFY) - should check
+111. Other pulse or nut (SPEC - should check
+131. Other seed (SPECIFY) - check
+143. "Greens" - cabbage and spinach, but should check what are the mean greens!
+145. Other vegetable (SPECIFY - check
+152. Other fruit (SPECIFY) - check
+170. Sweet potato - white flesh
+173. Godere = taro
+174. Other tuber or stem (SPE - check (low no.)
+183. Fish - very low consumption (only reported 99 times) - used tilapia (ref. FAO 2022. Fishery and Aquaculture Country Profiles. Ethiopia. Country Profile Fact Sheets. Fisheries and Aquaculture Division [online]. Rome. [Cited Thursday, March 3rd 2022]. https://www.fao.org/fishery/en/facp/eth?lang=en )
+195. PuUrchased Injera - new to dictionary
+196. "Purchased Bread or Biscu" - bread, refined flour and biscuits - check
+198. Other prepared food and - check
+202. Oils (processed) - palm oil. Acc. to publications (Sheehy, et al., 2019; FAO, 2008) and FBS.
+206. Tella - traditional beer made from maize or wheat. (https://doi.org/10.1016/j.jef.2015.08.002)
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

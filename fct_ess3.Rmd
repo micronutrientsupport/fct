@@ -1,0 +1,60 @@
+---
+title: "Food matching: ESS3 food list with food composition data"
+author: "Segovia D L Revilla, Lucia"
+date: "21/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1) Data Access
+
+The data can be accessed through the World Bank website. The dataset where the information regarding food consumption in the past seven days is on the file "sect5a_hh_w3" under the folder "household". We have downloaded in csv format but it can be accessed in other format such as Stata or SPSS. 
+
+The variables that we are interested in are two: "item_cd" and "hh_s5aq0a" which are the variables for food_id and food_name. There are two entries that are coded wrongly (i.e., "Chick pea" id is coded as 111 instead of 9 and "Other pulse or nut (Specify)" is coded as 9 instead of 111. 
+
+We could check that the list of the foods is completed and correct by checking the questionnaire " 2015-16 Ethiopian Socioeconomic Survey, Household Questionnaire" that can be access here [https://microdata.worldbank.org/index.php/catalog/2783/download/48256]. We could otherwise review the "item_cd" in the data description. In there, there are more item_cd than in both the questionnaire and the dataset. Those items are similar to the ones that were identified as "other". 
+
+We have removed three rows that contained duplicated items: 111 - chickpea, 9 - other pulse, and 143 - greens. In summary, we had 55 foods that needed to be matched to their nutritional content and hence needed to be matched to at least one food item from the food composition table(s).
+
+Data source citation: "Central Statistical Agency of Ethiopia. Ethiopia Socioeconomic Survey,Wave 3 (ESS3) 2015-2016. Public Use Dataset.Ref: ETH_2015_ESS_v02_M. Downloaded from https://microdata.worldbank.org/index.php/catalog/2783 on 21/12/2-21"
+
+
+
+```{r Loading datasets}
+
+```
+
+## 2) Food genus
+
+We had added the Genus code (or the harmonised food description system) to the food list. Here are described most of the decision that were made.
+
+   - 170 Sweet potato 1530.01 -> We choose white-flesh as we normally will model the biofortification as separated step. 
+    -  24 Coffee       23912.02.02 -> We need to check whether this coffee is liquid or it's powder. 
+    - 20 Cheese     22251.01.01 -> We selected cottage cheese because, the Ethiopian cheese (called Ayib) is similar to the cottage cheese (Ref. https://www.ncbi.nlm.nih.gov/books/NBK234693/).
+    - 203 Tea        23914.01 -> Same as coffee. 
+    - 19 Milk        2211.01 -> We used whole cow milk. (Double-check)
+    - 181 Beef       21111.01.01 -> We need to check how people is reporting the meat. 
+
+For *wheat and maize*, we checked the contribution of different fractions in the SUA to the total reported by the FAO in Ethiopia for 2015-2016 (acc. to the dates of the survey), for which only flour was reported to be supplied for human consumption. 
+
+    - 2 Wheat      23110.02  wheat grain, refined
+    - 2 Wheat      23110.01  wheat flour, unrefined
+    
+For *fish*, as it is a very broad category, we need to do a special search of the fish that are consumed in the country. According to FBS data for Ethiopia (2015-2016), mostly Freshwater fish was supplied for consumption for that period and a small portion of pelagic fish. No supply for food consumption was recorded for Demersal and Marine fish. 
+
+
+
+NOTES: We are adding the "ideal" food genus to the standard food list. This means that what would be "ideally" the food matches for that food item. Then, we will try to find those foods in our FCT selection. If those are not found, then we will amend the Genus code to the next best food. We are doing in this fashion so if in the future new datasets or better FCT is available we could easily update those matches by re-running the script. We are going to use the fuzzy match and see how that function performs with non-English food items. 
+
+## 3) Food matching
+
+For this food matching we used as primary FCT the FOA/INFOODS Western Africa Food Composition table (2019). 
+
+
+```{r food-matching, echo=FALSE}
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
