@@ -1,6 +1,13 @@
 
+################################################################################
+#
+#                          
+#           Kenya Food Composition Table (KENFCT, 2018)
+#
+#
+#
+################################################################################
 
-library(tidyverse)
 
 
 ##0) DOWNLOADING KENYA FCT FROM HUMAN NUTRION AND DIETETICS UNIT, MOH, KENYA
@@ -14,9 +21,10 @@ library(tidyverse)
   #            mode="wb")
 
 
-##1) LOADING PACKAGES AND KENYA FCT 
+##1) LOADING PACKAGES, DICTIONARY,AND KENYA FCT 
 
 library(tidyverse)
+source("dictionary.R")
 
 #Check all the sheet in the spreadsheet
 readxl::excel_sheets(here::here('data', "MOH-KENFCT_2018.xlsx"))
@@ -168,7 +176,7 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
 var.name <- read.csv(here::here("fct-variable-names.csv")) %>% 
   select(Column.Name) %>% pull()
 
-source("dictionary.R")
+
 
 ## Adding GENuS code (1)
 
@@ -177,7 +185,7 @@ ken.genus %>% count(ref_fctcode) %>% arrange(desc(n))
 #        15026 2
 
 kenfct %>% filter(code == "6026") %>% pull(fooditem)
-dictionary %>% filter(ID_3 == "22230.01.01")
+dictionary.df %>% filter(ID_3 == "22230.01.01")
 
 ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
@@ -200,7 +208,7 @@ ken_genus <- tribble(
    "10006", "1442.01", "h",
    "05009", "1491.02.01", "l")
 
-ken_genus <- ken_genus %>% left_join(., dictionary)
+ken_genus <- ken_genus %>% left_join(., dictionary.df)
 
 
 #Rename variables according to MAPS-standards
@@ -261,5 +269,6 @@ rename(
 MAPS_ken %>% head()
 
 #MAPS_ken %>% readr::write_excel_csv(., 
- #                      here::here('output', 'MAPS_KENFCT_v1.3.csv'))#that f(x) is to 
+ #                     here::here('output', 
+  #                                'MAPS_KENFCT_v1.4.csv'))#that f(x) is to 
                           

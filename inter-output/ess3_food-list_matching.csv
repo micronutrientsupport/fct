@@ -1,0 +1,62 @@
+"ref_foodid","ref_fooditem","ID_3","confidence","ID_0","FoodName_0","ID_1","FoodName_1","ID_2","FoodName_2","FE2_3","FoodName_3","Description1","Desc1.ref","Description2"
+"1","Teff","1199.9.01","h","CE","Cereals",2520,"cereals, other and products","1199.9","other cereals n.e.c.","","teff grain, dried, unrefined, raw",NA,NA,NA
+"2","Wheat","111.01","l","CE","Cereals",2511,"wheat and products","111","wheat","A001N#F10.A06HR","wheat grain, unrefined","","",""
+"2","Wheat","111.02","l","CE","Cereals",2511,"wheat and products","111","wheat","A001N#F10.A07XK","wheat grain, refined","","",""
+"3","Barley","115.01","l","CE","Cereals",2513,"barley and products","115","barley","","barley grain, dried, unrefined, raw",NA,NA,NA
+"4","Maize","112.01","l","CE","Cereals",2514,"maize and products (including white maize)","112","maize (corn)","A000T#F28.A07HS$F28.A07KG$F10.A0F2R","maize, grain, white, dried, raw","","",""
+"4","Maize","112.02","l","CE","Cereals",2514,"maize and products (including white maize)","112","maize (corn)","A000T#F28.A07HS$F28.A07KG$F10.A0F5H","maize, grain, yellow, dried, raw","","",""
+"5","Sorghum","114.01","m","CE","Cereals",2518,"sorghum and products","114","sorghum","A001L#F28.A07HS","sorghum grain, raw","","",""
+"6","Millet","118.01","m","CE","Cereals",2517,"millet and products","118","millet","A001B#F02.A066Q$F01.A059M$F27.A001B","millet, grain","","",""
+"7","Horsebeans","1701.05","m","PB","Pulses and Beans",2546,"beans and products","1701","beans, dry","","horse bean, dried, raw",NA,NA,NA
+"8","Field Pea","1705.01","m","PB","Pulses and Beans",2547,"peas and products","1705","peas, dry","A013J#F28.A07HS","peas, dried, raw","","",""
+"9","Chick Pea","1703.01","h","PB","Pulses and Beans",2549,"pulses, other and products","1703","chick peas, dry","","chick peas, dried, raw",NA,NA,NA
+"10","Lentils","1704.01","m","PB","Pulses and Beans",2549,"pulses, other and products","1704","lentils, dry","A013Q#F28.A07HS","lentils, dried, raw","","",""
+"11","Haricot Beans","1701.02","m","PB","Pulses and Beans",2546,"beans and products","1701","beans, dry","A012T#F28.A07HS","common beans, dried, raw","","",""
+"12","Niger Seed","1449.9.01","h","OT","Other foods",2570,"oilcrops, other and products","1449.9","other oil seeds, n.e.c.","","niger seeds, dried, raw",NA,NA,NA
+"13","Linseed","1441.01","h","OT","Other foods",2570,"oilcrops, other and products","1441","linseed","A015G#F02.A066S$F01.A05RV$F27.A015G","linseeds","","",""
+"14","Onion","1253.02.01","h","FV","Fruits and Vegetables",2602,"onions and products","1253.02","onions and shallots, dry (excluding dehydrated)","A00HC#F28.A07HS","onions, raw","","",""
+"15","Banana","1312.01","h","FV","Fruits and Vegetables",2615,"bananas and products","1312","bananas","A01LC#F28.A07HS","banana, raw","","",""
+"16","Potato","1510.01","h","RT","Roots and Tubers",2531,"potatoes and products","1510","potatoes","A00ZT#F28.A07HS","potatoes, raw","","",""
+"17","Kocho","23170.02.01","h","RT","Roots and Tubers",2534,"roots, other and products","23170.02","flour of roots and tubers nes","","bread, ensete pulp, fermented, raw","kocho: bread-like fermented food made from chopped and grated ensete pulp","https://en.wikipedia.org/wiki/Kocho_(food)",NA
+"19","Milk","2211.01","m","AP","Animal Products",2848,"milk - (excluding excluding butter butter) and products","2211","raw milk of cattle","A02LY#F28.A07HS","milk, cow, whole, raw","","",""
+"20","Cheese","22251.01.01","m","AP","Animal Products",2848,"milk - (excluding excluding butter butter) and products","22251.01","cheese from whole cow milk","A02QG#F02.A06BL$F27.A02LT$F28.A0C6E","cheese, cow milk, cottage","","",""
+"21","Eggs","231.01","h","AP","Animal Products",2744,"eggs and products","231","hen eggs in shell, fresh","A031G#F28.A07HS","egg, chicken, raw","","",""
+"22","Sugar","23520.01","m","OT","Other foods",2542,"sugar (raw equivalent) and products","23520","refined sugar","A032J#F02.A0EPY$F28.A0C04$F28.A0BZT$F10.A07XK","sugar, white","Sugar, Refined: Production covers domestic production, plus or minus imports and/or exports of raw centrifugal sugar in terms of refined sugar.","FAOSTAT Commodity List (FCL)",""
+"23","Salt","1699.02","h","OT","Other foods",2645,"spices, other and products","1699","other stimulant, spice and aromatic crops, n.e.c. ","A042P#F02.A06BZ$F01.A0BYJ$F27.A042P","salt","","",""
+"24","Coffee","23912.02.02","l","OT","Other foods",2630,"coffee and products","23912.02","coffee extracts","A03KC#F02.A068Y$F28.A07MK$F04.A03DK$F04.A03GN$F10.A06HV","coffee beverages","","",""
+"25","Chat / Kat",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"26","Bula","23170.02.02","h","RT","Roots and Tubers",2534,"roots, other and products","23170.02","flour of roots and tubers nes","","ensete, flour, raw","bula",NA,NA
+"60","Other cereal (SPECIFY)",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"110","Ground nuts","142.01","m","PB","Pulses and Beans",2556,"groundnuts (shelled eq) and products","142","groundnuts, excluding shelled","A015H#F20.A07QD","peanut, unshelled","","",""
+"111","Other pulse or nut (SPEC",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"131","Other seed (SPECIFY)",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"141","Green chili pepper (kari","1652.01","m","FV","Fruits and Vegetables",2641,"pimento and products","1652","chillies and peppers, dry (capsicum spp. and pimenta spp.), raw","A00HZ#F28.A07HS","pepper, raw","","",""
+"142","Red pepper (berbere)","1652.02","m","FV","Fruits and Vegetables",2641,"pimento and products","1652","chillies and peppers, dry (capsicum spp. and pimenta spp.), raw","A019K#F28.A07HS","peppers, dried, raw","","",""
+"143","Greens (kale, cabbage, e","1212.01","l","FV","Fruits and Vegetables",2605,"vegetables, other and products","1212","cabbages","A00GC#F28.A07HS","cabbages, white, raw","","",""
+"143","Greens (kale, cabbage, e","1215.01","l","FV","Fruits and Vegetables",2605,"vegetables, other and products","1215","spinach","A00MJ#F28.A07HS","spinach, raw","","",""
+"144","Tomato","1234.01","m","FV","Fruits and Vegetables",2601,"tomatoes and products","1234","tomatoes","A0DMX#F28.A07HS","tomatoes, raw","","",""
+"145","Other vegetable (SPECIFY",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"151","Orange","1323.01","m","FV","Fruits and Vegetables",2611,"oranges, mandarines and products","1323","oranges","A0DZB#F28.A07HS","oranges, raw","","",""
+"152","Other fruit (SPECIFY)",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"170","Sweet potato","1530.01","m","RT","Roots and Tubers",2533,"sweet potatoes and products","1530","sweet potatoes","A010C#F28.A07HS$F10.A0F2R","sweet potato, white-flesh, raw","Nutritional disaggregation","","vitamin A"
+"171","Boye/Yam","1540.01","m","RT","Roots and Tubers",2535,"yams and products","1540","yams","A010D#F28.A07HS","yams, raw","","",""
+"172","Cassava","01520.01.01","m","RT","Roots and Tubers",2532,"cassava and products","1520.01","cassava, fresh","A00ZZ#F28.A07HS","cassava root, raw","","",""
+"173","Godere","1550.01","m","RT","Roots and Tubers",2534,"roots, other and products","1550","taro ","A010B#F28.A07HS","taros, raw","","",""
+"174","Other tuber or stem (SPE",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"180","Goat & mutton meat","21116.01","m","AP","Animal Products",2732,"mutton & and goat meat and products","21116","meat of goat, fresh or chilled","A01RL#F28.A07HS","goat meat, fresh, raw","","",""
+"180","Goat & mutton meat","21115.01","m","AP","Animal Products",2732,"mutton & and goat meat and products","21115","meat of sheep, fresh or chilled","A01RH#F28.A07HS","sheep meat, fresh, raw","","",""
+"181","Beef","21111.01.01","l","AP","Animal Products",2731,"bovine meat and products","21111.01","meat of cattle with the bone, fresh or chilled","A01QX#F28.A07HS$F20.A07QL","beef, with bones, fresh, raw","","",""
+"182","Poultry","21121.01","l","AP","Animal Products",2734,"poultry meat and products","21121","meat of chickens, fresh or chilled","A01SP#F28.A07HS","chicken meat, fresh, raw","","",""
+"183","Fish","1501.03","l","AP","Animal Products",2761,"freshwater fish","1501","freshwater fish, fresh","A028A#F28.A0EJY","tilapia, fresh, grilled ","","Grilling/griddling (high temperature cooking) - bbq type",""
+"195","PuUrchased Injera","23140.08.01","h","CE","Cereals",2520,"cereals, other and products","23140.08","cereal preparations","","injera, teff grain, ready-to-eat",NA,NA,NA
+"196","Purchased Bread or Biscu","F0020.01","l","CE","Cereals",2511,"wheat and products","F0020","bread","A004Y#F02.A06CN$F04.A001M$F10.A07XK","bread, wheat flour, refined","","",""
+"196","Purchased Bread or Biscu","F0022.03","l","CE","Cereals",2511,"wheat and products","F0022","pastry","A009X#F02.A06DN","biscuits, sweet, plain","","",""
+"197","Pasta/Maccaroni","23710.01","h","CE","Cereals",2511,"wheat and products","23710","uncooked pasta, not stuffed or otherwise prepared","A007L#F28.A07HS","pasta, dried, raw","","",""
+"198","Other prepared food and",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"201","Butter/ghee","22241.01.01","m","AP","Animal Products",2740,"butter, ghee and products","22241.01","butter of cow milk [only calories]","A039C#F02.A06BE$F27.A02LV$F28.A07MH","butter","","",""
+"201","Butter/ghee","22241.02.01","m","AP","Animal Products",2740,"butter, ghee and products","22241.02","ghee from cow milk [only calories]","A038Y#F02.A06BD$F27.A02LV$F28.A0BZT","ghee","","",""
+"202","Oils (processed)","2165.01","l","OT","Other foods",2577,"palm oil and products","2165","palm oil","A037N#F02.A068M$F27.A016P$F28.A0C02","palm oil","","",""
+"203","Tea","23914.01","l","OT","Other foods",2635,"tea (including mate) and products","23914","extracts, essences and concentrates of tea or mate, and preparations with a basis thereof or with a basis of tea or maté","A03LB#F02.A068Y$F28.A07MK$F04.A03HQ","tea beverages","","",""
+"204","Soft drinks/Soda","24490.02","l","OT","Other foods",2543,"sweeteners, other and products","24490","other non-alcoholic caloric beverages n.e.c","A03FR#F02.A0ENS$F10.A0CQG","sugar sweetned beverage, cola","","",""
+"205","Beer","24310.01.01","m","OT","Other foods",2656,"beer and products","24310.01","Beer of barley, malted","A03ME#F02.A0ENH$F28.A0C01$F10.A06HV","beer, regular","","",""
+"206","Tella","24310.02.01","l","CE","Cereals",2657,"beverages, fermented and products","24310.02","Beer of maize, malted","A03MB#F04.A000T","beer, maize grain","","",""

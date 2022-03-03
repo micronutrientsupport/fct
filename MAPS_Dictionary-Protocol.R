@@ -256,7 +256,19 @@ dictionary.df <- dictionary.df %>% add_row(
       FoodName_2 = "palm kernels [only calories]",
       ID_3 = "1491.02.01",
       FE2_3 = "A0DAJ#F28.A07HS",
-      FoodName_3 = " palm kernel, raw") 
+      FoodName_3 = " palm kernel, raw") %>% 
+  add_row(
+    ID_0 = "FV",
+    FoodName_0 = "Fruits and Vegetable", 
+    ID_1 = 2617,
+    FoodName_1 = "apples and products", 
+    ID_2 = "21435.01", 
+    FoodName_2 = "apple juice",
+    ID_3 = "21435.01.01",
+    FE2_3 = "A039M#F10.A077J", #We used qualitative info w/ added sugar to specify that it's sweetened 
+    FoodName_3 = " apple juice, sweetened")  #we did not used the #sweetened agent bc we did not know 
+                                                   #the sweetened used. 
+  
 
 #making a distinction between two rice that were named the same
 #we will use local rice whenever possible 
@@ -279,6 +291,118 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, lo
 #additionally we are adding them to be matched to tinned vegetables, in 
 #ihs5....
 
+#food-group fixing 
+
+#sugar
+dictionary.df$FoodName_0[dictionary.df$ID_3 == "23511.02.01"] <- "Other foods"
+dictionary.df$ID_0[dictionary.df$ID_3 == "23511.02.01"] <- "OT"
+
+#juice
+dictionary.df$FoodName_2[dictionary.df$ID_2 == "21435.01"] 
+dictionary.df$FoodName_1[dictionary.df$ID_2 == "21435.01"] 
+dictionary.df$FoodName_0[dictionary.df$ID_2 == "21435.01"] 
+
+#Adding new entries from Ethiopia HCES
+
+dictionary.df <- dictionary.df %>% add_row(
+  ID_0 = "CE",
+  FoodName_0 = "Cereals", 
+  ID_1 = 2520,
+  FoodName_1 = "cereals, other and products", 
+  ID_2 = "1199.9", 
+  FoodName_2 =  "other cereals n.e.c.",
+  ID_3 = "1199.9.01",
+  FE2_3 = "",
+  FoodName_3 = "teff grain, dried, unrefined, raw") %>% 
+  add_row(
+    ID_0 = "CE",
+    FoodName_0 = "Cereals", 
+    ID_1 = 2513,
+    FoodName_1 = "barley and products", 
+    ID_2 = "115", 
+    FoodName_2 =  "barley",
+    ID_3 = "115.01",
+    FE2_3 = "",
+    FoodName_3 = "barley grain, dried, unrefined, raw") %>% 
+  add_row(
+    ID_0 = "PB",
+    FoodName_0 = "Pulses and Beans", 
+    ID_1 = 2546,
+    FoodName_1 = "beans and products", 
+    ID_2 = "1701", 
+    FoodName_2 =  "beans, dry",
+    ID_3 = "1701.05",
+    FE2_3 = "",
+    FoodName_3 = "horse bean, dried, raw") %>% 
+  add_row(
+    ID_0 = "PB",
+    FoodName_0 = "Pulses and Beans", 
+    ID_1 = 2549,
+    FoodName_1 = "pulses, other and products", 
+    ID_2 = "1703", 
+    FoodName_2 =  "chick peas, dry",
+    ID_3 = "1703.01",
+    FE2_3 = "",
+    FoodName_3 = "chick peas, dried, raw") %>% 
+  add_row(
+    ID_0 = "OT",
+    FoodName_0 = "Other foods", 
+    ID_1 = 2570,
+    FoodName_1 = "oilcrops, other and products", 
+    ID_2 = "1449.9", 
+    FoodName_2 =  "other oil seeds, n.e.c.",
+    ID_3 = "1449.9.01",
+    FE2_3 = "",
+    FoodName_3 = "niger seeds, dried, raw") %>% 
+  add_row(
+    ID_0 = "RT",
+    FoodName_0 = "Roots and Tubers", 
+    ID_1 = 2534,
+    FoodName_1 = "roots, other and products", 
+    ID_2 = "1599.1", 
+    FoodName_2 =  "edible roots and tubers with high starch or inulin content, n.e.c., fresh",
+    ID_3 = "1599.1.01",
+    FE2_3 = "",
+    FoodName_3 = "ensete, raw", 
+    Description1 = "it is often called false banana",
+    Desc1.ref = "https://iopscience.iop.org/article/10.1088/1748-9326/ac40b2") %>% 
+  add_row(
+    ID_0 = "RT",
+    FoodName_0 = "Roots and Tubers", 
+    ID_1 = 2534,
+    FoodName_1 = "roots, other and products", 
+    ID_2 = "23170.02", 
+    FoodName_2 =  "flour of roots and tubers nes",
+    ID_3 = "23170.02.01",
+    FE2_3 = "",
+    FoodName_3 = "bread, ensete pulp, fermented, raw", 
+    Description1 = "kocho: bread-like fermented food made from chopped and grated ensete pulp", 
+    Desc1.ref = "https://en.wikipedia.org/wiki/Kocho_(food)") %>% 
+  add_row(
+    ID_0 = "RT",
+    FoodName_0 = "Roots and Tubers", 
+    ID_1 = 2534,
+    FoodName_1 = "roots, other and products", 
+    ID_2 = "23170.02", 
+    FoodName_2 =  "flour of roots and tubers nes",
+    ID_3 = "23170.02.02",
+    FE2_3 = "",
+    FoodName_3 = "ensete, flour, raw", 
+    Description1 = "bula") %>% 
+  add_row(
+      ID_0 = "CE",
+      FoodName_0 = "Cereals", 
+      ID_1 = 2520,
+      FoodName_1 = "cereals, other and products", 
+      ID_2 = "23140.08", 
+      FoodName_2 =  "cereal preparations",
+      ID_3 = "23140.08.01",
+      FE2_3 = "",
+      FoodName_3 = "injera, teff grain, ready-to-eat")
+
+
+
+                
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
@@ -289,12 +413,13 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, lo
 
 #here we are checking where the previous version was stored:
 #
-#rproject.path <- "C:/Users/LuciaSegoviaDeLaRevi/OneDrive - London School of Hygiene and Tropical Medicine/MAPS/02_working-files/r-project"
-#
-##knowing all the MAPS_Dictionary-Protocol.R
-#x  <- list.files(rproject.path, 
-#           pattern = "MAPS_Dictionary-Protocol.R",
-#           recursive = TRUE)
+rproject.path <- "C:/Users/LuciaSegoviaDeLaRevi/OneDrive - London School of Hygiene and Tropical Medicine/MAPS/02_working-files/r-project"
+
+#knowing all the MAPS_Dictionary-Protocol.R
+
+x  <- list.files(rproject.path, 
+           pattern = "MAPS_Dictionary-Protocol.R",
+           recursive = TRUE)
 #
 #
 #

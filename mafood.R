@@ -399,3 +399,7 @@ left_join(., mwi_genus, by = c("code" = "ref_fctcode")) %>%
 
 
 ###========================= END =============================###
+
+MAPS_mwi <- read.csv(here::here('output', 'MAPS_MAFOODS_v1.5.csv'))
+
+MAPS_mwi %>% filter(str_detect(food_genus_description, "pig"))

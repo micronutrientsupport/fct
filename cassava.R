@@ -162,3 +162,11 @@ fct_cassava %>%
 
 # Closing the graphical device
 dev.off() 
+
+
+
+fbs %>% filter(country_id == "NGA", date_consumed == "2018") %>% 
+  left_join(., MAPS_wafct, by = "food_genus_id") %>%
+  filter(amount_consumed_in_g> 0, !is.na(original_food_id)) %>% count()
+
+
