@@ -189,27 +189,61 @@ dictionary.df %>% filter(ID_3 == "22230.01.01")
 
 ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
-  "1004",   "F0022.03",    "h",
+  "1004",   "F0022.03",    "m",
   "6001",   "22241.01.01", "h",
   "12004",  "F0665.01",    "m", 
-  "12003",  "23912.02.01", "h", 
-  "4016",   "1232.01"  ,   "h",
+  "12003",  "23912.02.01", "m", 
+  "4016",   "1232.01"  ,   "m",
   "11001",  "2910.01"  ,   "h",
-  "10010",  "1379.9.01" ,  "h", 
+  "10010",  "1379.9.01" ,  "m", 
   "13027",  "1699.02"   ,  "m", #salt, ionized vs salt
   "15026",  "F0022.05"  ,  "h",
-  "1031",   "23710.01"  ,  "h", 
+  "1031",   "23710.01"  ,  "m", 
   "13028",  "1699.03"   ,  "h",
-  "11003",  "23520.01"  ,  "h",
+  "11003",  "23520.01"  ,  "m",
   "12005",  "23914.02"  ,  "m",
   "13031",  "21399.01.01" ,"m",
-  "12008",  "24212.02.01" ,"h",
-  "6026",   "22230.01.01" ,"h",
+  "12008",  "24212.02.01" ,"m",
+  "6026",   "22230.01.01" ,"m",
    "10006", "1442.01", "h",
-   "05009", "1491.02.01", "l")
+   "05009", "1491.02.01", "l",
+  "1041", "1199.9.01", "m",
+  "1045", "111.01", "m", 
+  "3001", "1701.05", "m", 
+  "3010", "1703.01", "m",
+  "13023", "1253.02.01", "l", 
+  "2009", "1510.01", "m", 
+  "10009", "142.01", "l",
+  "13006", "1652.01", "m", 
+  "13007", "1652.02", "m", 
+  "7009", "21121.01", "m", #change to this instead of 21121.02
+  "8010", "1501.05", "m",
+  "1007", "F0020.01", "m",
+  "6008", "22241.02.01", "h")
 
-ken_genus <- ken_genus %>% left_join(., dictionary.df)
 
+
+ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
+  filter(FCT.code != "7009") %>% #removing chicken - wrong code (21121.02)
+  select(FCT.code, MAPS.ID.code, Confidence) %>% 
+  mutate(confidence = case_when(
+    Confidence == "high" ~ "h", 
+    Confidence == "medium" ~ "m", 
+    Confidence == "low" ~ "l", 
+    TRUE ~ Confidence)) %>% select(-Confidence) %>%
+  mutate_at("FCT.code", as.character) %>% 
+   rename(ref_fctcode = "FCT.code", 
+         ID_3 = "MAPS.ID.code") %>% 
+  bind_rows(ken_genus) %>% distinct()
+
+dupli <- ken_genus %>%  count(ref_fctcode) %>% 
+  filter(n>1) %>% pull(ref_fctcode)
+
+ken_genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
+kenfct %>% filter(code %in% dupli) %>% arrange(desc(code)) %>% select(code, fooditem)
+
+ken_genus <- ken_genus %>% filter(!(ref_fctcode =="10010" & confidence == "l")) %>%  #filtering out macadamia low confidence
+  left_join(., dictionary.df)
 
 #Rename variables according to MAPS-standards
 
@@ -267,6 +301,11 @@ rename(
 
 
 MAPS_ken %>% head()
+
+MAPS_ken %>% filter(str_detect(original_food_name, "beer|Beer")) %>% select(1:2) %>% knitr::kable()
+MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
+MAPS_ken %>% filter(original_food_id == "12005")
+
 
 #MAPS_ken %>% readr::write_excel_csv(., 
  #                     here::here('output', 
