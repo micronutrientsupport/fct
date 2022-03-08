@@ -76,7 +76,7 @@ fuzzy_output <- stringdist_join(foodlist, dict_testsample, #This selects the two
 fuzzy_output %>%
   arrange(dist) %>%  knitr::kable()
 
-tribble(
+ess_food <- tribble(
   ~ref_foodid, ~ref_fooditem,   ~ID_3, ~confidence,
    
   
@@ -104,7 +104,8 @@ tribble(
   "21", "Eggs", "231.01", "h",
   "22",  "Sugar", "23520.01", "m", 
   "23", "Salt",        "1699.02", "h", 
-  "24",  "Coffee",       "23912.02.02", "l", 
+#  "24",  "Coffee",       "23912.02.02", "l", 
+   "24",  "Coffee",       "23912.02.01", "l", 
   "25", "Chat / Kat", NA, NA, 
   "26", "Bula", "23170.02.02", "h", 
   "60", "Other cereal (SPECIFY)", NA, NA,   
@@ -126,9 +127,9 @@ tribble(
   "174", "Other tuber or stem (SPE", NA, NA, 
   "180", "Goat & mutton meat", "21116.01", "m", 
   "180", "Goat & mutton meat", "21115.01", "m", 
-  "181", "Beef",      "21111.01.01", "l", 
+  "181", "Beef",      "21111.02.01", "l", 
   "182",  "Poultry", "21121.01", "l", 
-  "183", "Fish", "1501.03", "l", 
+  "183", "Fish", "1501.05", "l", 
   "195", "PuUrchased Injera", "23140.08.01", "h",
   "196", "Purchased Bread or Biscu", "F0020.01", "l", 
   "196", "Purchased Bread or Biscu", "F0022.03", "l", 
@@ -137,13 +138,16 @@ tribble(
   "201",  "Butter/ghee",  "22241.01.01", "m", 
   "201",  "Butter/ghee",  "22241.02.01", "m", 
   "202",   "Oils (processed)", "2165.01", "l",
-  "203",  "Tea",         "23914.01", "l", 
+ # "203",  "Tea",         "23914.01", "l", 
+  "203",  "Tea",         "23914.02", "l", 
   "204",   "Soft drinks/Soda" ,"24490.02", "l", 
   "205",  "Beer",        "24310.01.01", "m",
   "206", "Tella", "24310.02.01", "l") %>% 
-  left_join(., dictionary.df %>% distinct()) %>% 
-  write.csv(., here::here("inter-output", "ess3_food-list_matching.csv"),
-            row.names = FALSE)
+  left_join(., dictionary.df %>% distinct()) 
+
+# ess_food %>% 
+#   write.csv(., here::here("inter-output", "ess3_food-list_matching.csv"),
+#             row.names = FALSE)
  
   
   
@@ -155,10 +159,27 @@ tribble(
   dictionary %>% filter(ID_2 == "23140.08") 
   dictionary %>% filter(ID_1 == "2520")  %>% distinct(FoodName_2)
   dictionary %>% filter(ID_0 == "RT") %>% distinct(FoodName_1)
+
+#New dataset from 2018-2019.
   
+ess4_food <- read.csv(here::here("inter-output", "eth_fct_match_v1.csv")) %>% 
+  select(1, 2) %>% mutate(
+    ref_fooditem = str_replace(item_code, "[:digit:]{2,3}\\.", "")) %>% 
+  mutate_at("ref_fooditem", str_squish) %>% select(-item_code)
+
+ess4_food %>% left_join(., ess_food) %>% filter(is.na(ref_foodid))
+
 
 #3) Food matching
 
+#KENFCT, 2018
+source("kenfct.R")
+
+no_match <- ess_food %>% filter(!is.na(ID_3)) %>% 
+  left_join(., MAPS_ken, by = c("ID_3" = "food_genus_id")) %>% 
+  filter(is.na(energy_in_kcal)) %>% select(1:3)
+  
+  
 #WAFCT, 2019
 
 source("wafct.R")

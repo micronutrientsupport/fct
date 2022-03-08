@@ -22,12 +22,13 @@ Check Notes
 9. chickpeas - new to dictionary
 9. Other pulse or nut (SPEC --> wrong coding. We should recode it to 9 = chickpeas.
 10. Lentils - what type?
-11. Haricot bean - Double-check variety
+11. Haricot bean - Double-check variety 
 12. Niger seeds - New to dictionary
 17. kocho - bread-like food from ensete - new to dictionary. We put it under roots and tuber (ref. Food balance sheet handbook, 2001, page 70) 
 20. Cheese - we used cottage cheese because Ethiopian cheese is similar.
 25. Chat / Kat - Not sure if this is food..
-24. Bula - ensete flour - new to dictionary 
+24. Coffee - beverage, but check
+26. Bula - ensete flour - new to dictionary 
 60. Other cereal (SPECIFY) - should check
 111. Other pulse or nut (SPEC - should check
 131. Other seed (SPECIFY) - check
@@ -37,11 +38,13 @@ Check Notes
 170. Sweet potato - white flesh
 173. Godere = taro
 174. Other tuber or stem (SPE - check (low no.)
+181. Beef, used w/o bones. 
 183. Fish - very low consumption (only reported 99 times) - used tilapia (ref. FAO 2022. Fishery and Aquaculture Country Profiles. Ethiopia. Country Profile Fact Sheets. Fisheries and Aquaculture Division [online]. Rome. [Cited Thursday, March 3rd 2022]. https://www.fao.org/fishery/en/facp/eth?lang=en )
 195. PuUrchased Injera - new to dictionary
 196. "Purchased Bread or Biscu" - bread, refined flour and biscuits - check
 198. Other prepared food and - check
 202. Oils (processed) - palm oil. Acc. to publications (Sheehy, et al., 2019; FAO, 2008) and FBS.
+203. Tea - matched to beverage - check
 206. Tella - traditional beer made from maize or wheat. (https://doi.org/10.1016/j.jef.2015.08.002)
 
 
@@ -49,9 +52,31 @@ Check Notes
 summary(cars)
 ```
 
-## Including Plots
+## Matching with KENFCT
 
-You can also embed plots, for example:
+There are 29 food items w/o a match. We are checking whether they are available or nor in KENFCT.
+
+List of items not found and possible exchange (if any)
+
+1. There is no refined wheat grain
+2. There is no barley
+3. Haricot beans, lima bean
+4. Niger seeds
+5. Linseed 
+6. Kocho 
+7. Coffee, beverage, instant coffee powder (Check what type of coffee and units)
+8. Bula
+9. Sheep/mutton meat
+10. Injera
+11. Oil - only red palm oil
+12. Soft drinks/Soda
+13. Beer
+14. Tella
+
+Need to change code
+ 1. Chicken - was wrong code. Need to fix it from fuzzy_matching input
+
+
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
