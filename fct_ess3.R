@@ -88,7 +88,7 @@ ess_food <- tribble(
   "4", "Maize",  "112.02", "l", 
   "5", "Sorghum", "114.01", "m",
   "6", "Millet", "118.01", "m", 
-  "7", "Horsebeans", "1701.05", "m", 
+  "7", "Horsebeans", "1702.01", "m", 
   "8", "Field Pea", "1705.01", "m", 
   "9", "Chick Pea", "1703.01", "h", 
   "10", "Lentils", "1704.01", "m", 
@@ -162,13 +162,33 @@ ess_food <- tribble(
 
 #New dataset from 2018-2019.
   
-ess4_food <- read.csv(here::here("inter-output", "eth_fct_match_v1.csv")) %>% 
+ess4_food_list <- read.csv(here::here("inter-output", "eth_fct_match_v1.csv")) %>% 
   select(1, 2) %>% mutate(
     ref_fooditem = str_replace(item_code, "[:digit:]{2,3}\\.", "")) %>% 
   mutate_at("ref_fooditem", str_squish) %>% select(-item_code)
 
-ess4_food %>% left_join(., ess_food) %>% filter(is.na(ref_foodid))
 
+ess4_food <- ess4_food_list  %>%  left_join(., ess_food) %>% 
+  filter( !str_detect(ref_fooditem, "Other")) %>% 
+  mutate(
+           ref_foodid = case_when(
+             str_detect(ref_fooditem, "Wheat") ~"2",
+             str_detect(ref_fooditem, "Barley") ~ "3", 
+             str_detect(ref_fooditem, "Green chili") ~  "141", 
+             str_detect(ref_fooditem, "Red pepper") ~   "142",
+             str_detect(ref_fooditem, "Injera") ~   "195",
+             str_detect(ref_fooditem, "bread") ~   "196",
+             TRUE ~ ref_foodid)) 
+ 
+ess4_food <- ess4_food %>% filter(!is.na(ref_foodid), is.na(ID_3)) %>% select(1:3) %>% 
+  left_join(., ess_food %>% select(-ref_fooditem)) %>% 
+  bind_rows(., ess4_food %>% filter(!is.na(ID_3))) 
+
+
+ess4_food_list %>% left_join(., ess4_food) %>% filter(is.na(ID_3)) %>% 
+  filter( !str_detect(ref_fooditem, "Other"))
+
+#Assigning 
 
 #3) Food matching
 

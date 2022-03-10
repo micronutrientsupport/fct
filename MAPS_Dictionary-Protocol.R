@@ -302,7 +302,7 @@ dictionary.df$FoodName_2[dictionary.df$ID_2 == "21435.01"]
 dictionary.df$FoodName_1[dictionary.df$ID_2 == "21435.01"] 
 dictionary.df$FoodName_0[dictionary.df$ID_2 == "21435.01"] 
 
-#Adding new entries from Ethiopia HCES
+#Adding new entries from Ethiopia HCES - ess3
 
 dictionary.df <- dictionary.df %>% add_row(
   ID_0 = "CE",
@@ -327,11 +327,11 @@ dictionary.df <- dictionary.df %>% add_row(
   add_row(
     ID_0 = "PB",
     FoodName_0 = "Pulses and Beans", 
-    ID_1 = 2546,
-    FoodName_1 = "beans and products", 
-    ID_2 = "1701", 
-    FoodName_2 =  "beans, dry",
-    ID_3 = "1701.05",
+    ID_1 = 2549,
+    FoodName_1 = "pulses, other and products", 
+    ID_2 = "1702", 
+    FoodName_2 =  "broad beans and horse beans, dry",
+    ID_3 = "1702.01",
     FE2_3 = "",
     FoodName_3 = "horse bean, dried, raw") %>% 
   add_row(
@@ -400,8 +400,59 @@ dictionary.df <- dictionary.df %>% add_row(
       FE2_3 = "",
       FoodName_3 = "injera, teff grain, ready-to-eat")
 
+#Adding new entries from Ethiopia HCES - ESS4
 
-
+dictionary.df <- dictionary.df %>%
+  add_row(
+  ID_0 = "PB",
+  FoodName_0 = "Pulses and Beans", 
+  ID_1 = 2549,
+  FoodName_1 = "pulses, other and products", 
+  ID_2 = "1709.01", 
+  FoodName_2 =  "vetches",
+  ID_3 = "1709.01.01",
+  FE2_3 = "",
+  FoodName_3 = "vetch, dried, raw") %>% 
+  add_row(
+    ID_0 = "OT",
+    FoodName_0 = "Other foods", 
+    ID_1 = 2570,
+    FoodName_1 = "oilcrops, other and products", 
+    ID_2 = "1449.9", 
+    FoodName_2 =  "other oil seeds, n.e.c.",
+    ID_3 = "1449.9.02",
+    FE2_3 = "",
+    FoodName_3 = "fenugreek, dried, raw") %>%
+  add_row(
+    ID_0 = "PB",
+    FoodName_0 = "Pulses and Beans", 
+    ID_1 = 2549,
+    FoodName_1 = "pulses, other and products", 
+    ID_2 = "1709.9", 
+    FoodName_2 =  "other pulses n.e.c.",
+    ID_3 = "1709.9.01",
+    FE2_3 = "",
+    FoodName_3 = "mung bean, dried, raw") %>%
+  add_row(
+    ID_0 = "PB",
+    FoodName_0 = "Pulses and Beans", 
+    ID_1 = 2549,
+    FoodName_1 = "pulses, other and products", 
+    ID_2 = "23170.03", 
+    FoodName_2 =  "flour of pulses",
+    ID_3 = "23170.03.01",
+    FE2_3 = "",
+    FoodName_3 = "chick peas flour, dried, raw") %>%
+  add_row(
+    ID_0 = "FV",
+    FoodName_0 = "Fruits and Vegetables", 
+    ID_1 = 2605,
+    FoodName_1 = "vegetables, other and products", 
+    ID_2 = "1212", 
+    FoodName_2 =  "cabbages",
+    ID_3 = "1212.04",
+    FE2_3 = "",
+    FoodName_3 = "kale, cabbage leaves, raw") 
                 
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
