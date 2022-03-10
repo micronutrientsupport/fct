@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Matching to dictionary
 
+### ESS3
+
 Check Notes
 
 1. Teff needed to be added to dictionary.
@@ -46,6 +48,20 @@ Check Notes
 202. Oils (processed) - palm oil. Acc. to publications (Sheehy, et al., 2019; FAO, 2008) and FBS.
 203. Tea - matched to beverage - check
 206. Tella - traditional beer made from maize or wheat. (https://doi.org/10.1016/j.jef.2015.08.002)
+
+### ESS4
+
+207. Vetch = *Vicia Sativa* (acc. to FBS handbook) (Fava bean/ broad bean) - new to dictionary.
+208. Fenugreek - new to dictionary
+209. mung bean = *Vigna ssp.* (acc. to FBS handbook) new to dictionary
+210. Processed pulses (Shiro) - chick peas flour - doble-check
+404. kale - add to dictionary
+404. cabbage - cabbages, white, raw
+406. Garlic - add to dictionary
+407. Moringa - add to dictionary
+608. Carrot - add to dictionary
+609. Beetroot - add to dictionary
+807. Gesho (hops stem) - add to dictionary
 
 
 ```{r cars}
