@@ -76,13 +76,14 @@ fuzzy_output <- stringdist_join(foodlist, dict_testsample, #This selects the two
 fuzzy_output %>%
   arrange(dist) %>%  knitr::kable()
 
-ess_food <- tribble(
+ess3_food_st <- tribble(
   ~ref_foodid, ~ref_fooditem,   ~ID_3, ~confidence,
    
   
   "1", "Teff",  "1199.9.01", "h", 
   "2", "Wheat", "111.01", "l", 
-  "2", "Wheat", "111.02", "l", 
+  #"2", "Wheat", "111.02", "l", 
+  "2", "Wheat", "23110.02", "l", #no refined grain, changed to refined wheat flour
   "3", "Barley", "115.01", "l", 
   "4", "Maize",  "112.01", "l", 
   "4", "Maize",  "112.02", "l", 
@@ -142,7 +143,7 @@ ess_food <- tribble(
   "203",  "Tea",         "23914.02", "l", 
   "204",   "Soft drinks/Soda" ,"24490.02", "l", 
   "205",  "Beer",        "24310.01.01", "m",
-  "206", "Tella", "24310.02.01", "l") %>% 
+  "206", "Tella", "24310.02.01", "l")  %>% 
   left_join(., dictionary.df %>% distinct()) 
 
 # ess_food %>% 
@@ -154,39 +155,13 @@ ess_food <- tribble(
   fuzzy_output %>% filter(dist > 0.285) %>%
     arrange(dist) 
   
-  dictionary %>% filter(str_detect(fooditem, "pea"))
+  dictionary %>% filter(str_detect(fooditem, "wheat"))
   dictionary %>% filter(str_detect(FoodName_2, "seed"))
   dictionary %>% filter(ID_2 == "23140.08") 
   dictionary %>% filter(ID_1 == "2520")  %>% distinct(FoodName_2)
   dictionary %>% filter(ID_0 == "RT") %>% distinct(FoodName_1)
 
-#New dataset from 2018-2019.
-  
-ess4_food_list <- read.csv(here::here("inter-output", "eth_fct_match_v1.csv")) %>% 
-  select(1, 2) %>% mutate(
-    ref_fooditem = str_replace(item_code, "[:digit:]{2,3}\\.", "")) %>% 
-  mutate_at("ref_fooditem", str_squish) %>% select(-item_code)
 
-
-ess4_food <- ess4_food_list  %>%  left_join(., ess_food) %>% 
-  filter( !str_detect(ref_fooditem, "Other")) %>% 
-  mutate(
-           ref_foodid = case_when(
-             str_detect(ref_fooditem, "Wheat") ~"2",
-             str_detect(ref_fooditem, "Barley") ~ "3", 
-             str_detect(ref_fooditem, "Green chili") ~  "141", 
-             str_detect(ref_fooditem, "Red pepper") ~   "142",
-             str_detect(ref_fooditem, "Injera") ~   "195",
-             str_detect(ref_fooditem, "bread") ~   "196",
-             TRUE ~ ref_foodid)) 
- 
-ess4_food <- ess4_food %>% filter(!is.na(ref_foodid), is.na(ID_3)) %>% select(1:3) %>% 
-  left_join(., ess_food %>% select(-ref_fooditem)) %>% 
-  bind_rows(., ess4_food %>% filter(!is.na(ID_3))) 
-
-
-ess4_food_list %>% left_join(., ess4_food) %>% filter(is.na(ID_3)) %>% 
-  filter( !str_detect(ref_fooditem, "Other"))
 
 #Assigning 
 
@@ -195,7 +170,7 @@ ess4_food_list %>% left_join(., ess4_food) %>% filter(is.na(ID_3)) %>%
 #KENFCT, 2018
 source("kenfct.R")
 
-no_match <- ess_food %>% filter(!is.na(ID_3)) %>% 
+no_match <- ess3_food_list %>% filter(!is.na(ID_3)) %>% 
   left_join(., MAPS_ken, by = c("ID_3" = "food_genus_id")) %>% 
   filter(is.na(energy_in_kcal)) %>% select(1:3)
   

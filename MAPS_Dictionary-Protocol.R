@@ -24,6 +24,9 @@ library(fuzzyjoin)
 # 
 ##----- creating the food-dictionary-----
 
+#Searching terms and correspondences with categories - use CPC
+#http://datalab.review.fao.org/datalab/caliper/web/concepts-search
+
 #Updating MAPS-Dictionary with EJ food groups
 
 #dataset with the food groups and names
@@ -459,10 +462,50 @@ dictionary.df <- dictionary.df %>%
     ID_1 = 2605,
     FoodName_1 = "vegetables, other and products", 
     ID_2 = "1252", 
-    FoodName_2 =  "green garlic",
+    FoodName_2 =  "green garlic", #http://datalab.review.fao.org/datalab/caliper/web/concept-page/0406-garlic
     ID_3 = "1252.01",
     FE2_3 = "",
-    FoodName_3 = "garlic, dried, raw") 
+    FoodName_3 = "garlic, fresh, raw") %>% 
+  add_row(
+    ID_0 = "OT",
+    FoodName_0 = "Other foods", 
+    ID_1 = 2645,
+    FoodName_1 = "spices, other and products", 
+    ID_2 = "1699", 
+    FoodName_2 =  "other stimulant, spice and aromatic crops, n.e.c.",
+    ID_3 = "1699.08",
+    FE2_3 = "",
+    FoodName_3 = "moringa, leaves, raw") %>%
+  add_row(
+    ID_0 = "FV",
+    FoodName_0 = "Fruits and Vegetables", 
+    ID_1 = 2605,
+    FoodName_1 = "vegetables, other and products", 
+    ID_2 = "1251", 
+    FoodName_2 =  "carrots and turnips", 
+    ID_3 = "1251.01",
+    FE2_3 = "",
+    FoodName_3 = "carrot, raw")  %>% 
+  add_row(
+    ID_0 = "FV",
+    FoodName_0 = "Fruits and Vegetables", 
+    ID_1 = 2605,
+    FoodName_1 = "vegetables, other and products", 
+    ID_2 = "1290.9", 
+    FoodName_2 =  "other vegetables, fresh n.e.c.", 
+    ID_3 = "1290.9.01",
+    FE2_3 = "",
+    FoodName_3 = "beetroot, raw")  %>% 
+  add_row(
+    ID_0 = "OT",
+    FoodName_0 = "Other foods", 
+    ID_1 = 2645,
+    FoodName_1 = "spices, other and products", 
+    ID_2 = "1699", 
+    FoodName_2 =  "other stimulant, spice and aromatic crops, n.e.c.",
+    ID_3 = "1699.09",
+    FE2_3 = "",
+    FoodName_3 = "hops, dried, raw") 
                 
 
 #Run this to over-write any new upgrades in adding new food dictionary codes

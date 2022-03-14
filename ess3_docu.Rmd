@@ -68,7 +68,9 @@ Check Notes
 summary(cars)
 ```
 
-## Matching with KENFCT
+## Matching ess3 with KENFCT
+
+We are only interested in energy in kcal, vitamin A (RAE) and zn. 
 
 There are 29 food items w/o a match. We are checking whether they are available or nor in KENFCT.
 
@@ -80,7 +82,7 @@ List of items not found and possible exchange (if any)
 4. Niger seeds
 5. Linseed 
 6. Kocho 
-7. Coffee, beverage, instant coffee powder (Check what type of coffee and units)
+7. Coffee, beverage, instant coffee powder (Check what type of coffee and units) - Fixed
 8. Bula
 9. Sheep/mutton meat
 10. Injera
@@ -92,10 +94,53 @@ List of items not found and possible exchange (if any)
 Need to change code
  1. Chicken - was wrong code. Need to fix it from fuzzy_matching input
 
+## Matching ess4 with KENFCT
+
+There were 29 items w/o a match. From those w/o a match, there are some that they do have a match in KENFCT but Genus is missing, i.e., rice. Others, has no matched. Note that those items w/o a match in ess3 did not have a match in ess4 either. 
+
+Missing GENUS: 
+
+1. Rice  
+2. Fenugreek
+3. Mung bean == Gram, green, dry, raw (*Vigna radiata*) 
+4. Sesame seed
+5. Sunflower seed
+6. Kale - found two type - choose Ethiopian kale
+7. Lettuce
+8. Garlic - fresh (around ~60% moisture content)
+9. Papaya
+10. Carrot
+11. Beetroot
+
+Missing item (see above ess3) +:
+
+1. Oat - only oat bran or oatmeal (high mosture content)
+2. Vetches - Faba bean/ broad bean
+3. Processed pulses (Shiro) - Chickpeas flour
+4. Moringa leaves
+5. Hops (gesho)
+
+## Matching ess4 with WAFCT
+
+We found matches for five of the 18 foods. We will proceed to check the missing values, whether they are present in WAFCT or not:
+
+Missing GENUS in WAFCT:
+
+1. palm oil - refined
+2. Oat
+3. Moringa leaves
+
+Missing items in WAFCT:
+
+1. Wheat - refined grain --> we are going to change it to refined flour. 
+2. Barley
+3. Niger seeds --> Indian FCT (black) H015
+4. Bula 
+5. Purchased injera --> Teff grain, boiled (WAFCT = 01_186)
+6. Vetches
+7. Processed pulses - Shiro --> Chick peas flour (USDA = FDC ID: 174288 )
+8. Gesho - NA
 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
