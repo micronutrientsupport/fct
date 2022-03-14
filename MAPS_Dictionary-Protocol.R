@@ -416,11 +416,11 @@ dictionary.df <- dictionary.df %>%
   add_row(
     ID_0 = "OT",
     FoodName_0 = "Other foods", 
-    ID_1 = 2570,
-    FoodName_1 = "oilcrops, other and products", 
-    ID_2 = "1449.9", 
-    FoodName_2 =  "other oil seeds, n.e.c.",
-    ID_3 = "1449.9.02",
+    ID_1 = 2645,
+    FoodName_1 = "spices, other and products", 
+    ID_2 = "1699", 
+    FoodName_2 =  "other stimulant, spice and aromatic crops, n.e.c.",
+    ID_3 = "1699.07",
     FE2_3 = "",
     FoodName_3 = "fenugreek, dried, raw") %>%
   add_row(
@@ -452,7 +452,17 @@ dictionary.df <- dictionary.df %>%
     FoodName_2 =  "cabbages",
     ID_3 = "1212.04",
     FE2_3 = "",
-    FoodName_3 = "kale, cabbage leaves, raw") 
+    FoodName_3 = "kale, cabbage leaves, raw") %>%
+  add_row(
+    ID_0 = "FV",
+    FoodName_0 = "Fruits and Vegetables", 
+    ID_1 = 2605,
+    FoodName_1 = "vegetables, other and products", 
+    ID_2 = "1252", 
+    FoodName_2 =  "green garlic",
+    ID_3 = "1252.01",
+    FE2_3 = "",
+    FoodName_3 = "garlic, dried, raw") 
                 
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
