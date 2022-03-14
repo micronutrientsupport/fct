@@ -223,7 +223,10 @@ wa_genus <- tribble(
   "05_010", "1316.02", "h",
   "05_037", "1316.01", "l",
   "05_017", "1317.01", "h",
-  "05_018", "1318.01", "h")
+  "05_018", "1318.01", "h", 
+  "11_007", "2165.01", "l", 
+  "01_101",  "23140.07.01", "m", 
+   "04_011", "1699.08", "m")
 
 
 #List of non-available items compared w/ mwi_genus
@@ -321,6 +324,13 @@ wa_genus <- wa_genus %>% left_join(., dictionary.df)
 
 
 MAPS_wafct %>% filter(!is.na(food_genus_id), is.na(food_subgroup))  
+
+#Looking up foods in the fct
+
+MAPS_wafct %>% filter(str_detect(original_food_name, "Gesho|gesho")) %>% select(1:3) %>% knitr::kable()
+MAPS_wafct %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
+MAPS_wafct %>% filter(original_food_id == "01_101") %>% glimpse()
+MAPS_wafct %>% filter(food_genus_id == "1699.08")
   
 #Saving FCT output into a csv file
   

@@ -180,12 +180,13 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 
 ## Adding GENuS code (1)
 
-ken.genus %>% count(ref_fctcode) %>% arrange(desc(n))
+#ken.genus %>% count(ref_fctcode) %>% arrange(desc(n))
 #       13031 2
 #        15026 2
 
 kenfct %>% filter(code == "6026") %>% pull(fooditem)
 dictionary.df %>% filter(ID_3 == "22230.01.01")
+
 
 ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
@@ -219,9 +220,24 @@ ken_genus <- tribble(
   "7009", "21121.01", "m", #change to this instead of 21121.02
   "8010", "1501.05", "m",
   "1007", "F0020.01", "m",
-  "6008", "22241.02.01", "h")
+  "6008", "22241.02.01", "h", 
+   "1034" ,  "23161.01.01", "m",
+  "13017", "1699.07", "h", 
+   "3019", "1709.9.01", "m", 
+  "10014", "1444.01", "m", 
+  "10015", "1445.01", "m",
+  "4019", "1212.04", "m",
+  "4022", "1214.01", "h",
+   "13019", "1252.01", "m", 
+  "5024", "1317.01", "m", 
+  "4011", "1251.01", "m", 
+  "2005", "1290.9.01", "m"
+  
+  
+  )
 
 
+dictionary.df %>% filter(ID_3 == "1290.9.01")
 
 ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
   filter(FCT.code != "7009") %>% #removing chicken - wrong code (21121.02)
@@ -241,6 +257,9 @@ dupli <- ken_genus %>%  count(ref_fctcode) %>%
 
 ken_genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
 kenfct %>% filter(code %in% dupli) %>% arrange(desc(code)) %>% select(code, fooditem)
+
+#Fixing horse bean/ broad bean code
+ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.01"
 
 ken_genus <- ken_genus %>% filter(!(ref_fctcode =="10010" & confidence == "l")) %>%  #filtering out macadamia low confidence
   left_join(., dictionary.df)
@@ -302,9 +321,10 @@ rename(
 
 MAPS_ken %>% head()
 
-MAPS_ken %>% filter(str_detect(original_food_name, "beer|Beer")) %>% select(1:2) %>% knitr::kable()
+MAPS_ken %>% filter(str_detect(original_food_name, "hop")) %>% select(1:3) %>% knitr::kable()
 MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
-MAPS_ken %>% filter(original_food_id == "12005")
+MAPS_ken %>% filter(original_food_id == "5024") %>% glimpse()
+MAPS_ken %>% filter(food_genus_id == "23170.03.01")
 
 
 #MAPS_ken %>% readr::write_excel_csv(., 
