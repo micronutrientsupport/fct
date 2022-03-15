@@ -143,16 +143,17 @@ source("wafct.R")
 missig_values %>% filter(!is.na(ID_3)) %>% 
    left_join(., MAPS_wafct, by = c("ID_3" = "food_genus_id")) %>% 
    filter(is.na(energy_in_kcal)) %>% 
-   select(1:2,4)
+   select(1:3)
 
 missig_values <- missig_values %>% filter(!is.na(ID_3)) %>% 
    left_join(., MAPS_wafct, by = c("ID_3" = "food_genus_id")) %>% 
    filter(!is.na(energy_in_kcal)) %>% 
-   select(1:2,4, original_food_id, original_food_name, fct_name, moisture_in_g,
+   select(1:3, original_food_id, original_food_name, fct_name, moisture_in_g,
           energy_in_kcal,vitamina_in_rae_in_mcg, zn_in_mg) %>% 
    add_row(
       ref_foodid = "103",
       ref_fooditem =  "Barley (Incl. Beso: roasted & milled barely)",
+      ID_3 = "115.01", 
       original_food_id = "170284",
       original_food_name = "Barley, pearled, raw",
       fct_name = "USDA", 
@@ -163,6 +164,7 @@ missig_values <- missig_values %>% filter(!is.na(ID_3)) %>%
    add_row(
       ref_foodid = "301",
       ref_fooditem =  "Niger Seed",
+      ID_3 = "1449.9.01",
       original_food_id = "H015",
       original_food_name = "Niger seeds, black (Guizotia abyssinica)",
       fct_name = "INFCT", 
@@ -173,6 +175,7 @@ missig_values <- missig_values %>% filter(!is.na(ID_3)) %>%
    add_row(
       ref_foodid = "302",
       ref_fooditem =  "Linseed",
+      ID_3 = "1441.01",
       original_food_id = "H014",
       original_food_name = "Linseeds (Linum usitatissimum)",
       fct_name = "INFCT", 
@@ -183,6 +186,7 @@ missig_values <- missig_values %>% filter(!is.na(ID_3)) %>%
    add_row(
       ref_foodid = "602",
       ref_fooditem =  "Kocho",
+      ID_3 = "23170.02.01", 
       original_food_id = "biblio1",
       original_food_name = "Kocho (multiple varietes)",
       fct_name = "Bosha et al. 2016", 
@@ -193,6 +197,7 @@ missig_values <- missig_values %>% filter(!is.na(ID_3)) %>%
    add_row(
       ref_foodid = "603",
       ref_fooditem =  "Bulla",
+      ID_3 = "23170.02.02", 
       original_food_id = "biblio2",
       original_food_name = "Bulla",
       fct_name = "Daba, T. and Shigeta, M., 2016", 
@@ -203,6 +208,7 @@ missig_values <- missig_values %>% filter(!is.na(ID_3)) %>%
    add_row(
       ref_foodid = "901",
       ref_fooditem =  "purchased Injera",
+      ID_3 = "23140.08.01", 
       original_food_id = "biblio3",
       original_food_name = "Injera: from fermented white and red teff dough",
       fct_name = "Abebe, et al.,  2007", 
@@ -268,4 +274,4 @@ ess4_fct$vitamina_in_rae_in_mcg <- as.numeric(ess4_fct$vitamina_in_rae_in_mcg)
 
 hist(ess4_fct$vitamina_in_rae_in_mcg)
 
-ess4_fct %>% write.csv(here::here("output", "ess4-fct.csv"))
+ess4_fct %>% write.csv(here::here("output", "ess4-fct.csv"), row.names = F)
