@@ -321,7 +321,7 @@ rename(
 
 MAPS_ken %>% head()
 
-MAPS_ken %>% filter(str_detect(original_food_name, "hop")) %>% select(1:3) %>% knitr::kable()
+MAPS_ken %>% filter(str_detect(original_food_name, "lea")) %>% select(1:3) %>% knitr::kable()
 MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
 MAPS_ken %>% filter(original_food_id == "5024") %>% glimpse()
 MAPS_ken %>% filter(food_genus_id == "23170.03.01")

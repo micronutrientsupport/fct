@@ -15,14 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Check Notes
 
-1. Teff needed to be added to dictionary.
-2. Wheat - what should be matched to? - refined and unrefined grain?
-3. Barley - new to dictionary & check how is consumed (unrefined?)
-4. Maize - how is consumed (yellow and white grain)
-7. Horsebean = broad bean - new to dictionary. Is it dried or fresh?
-8. Field peas = dried peas
-9. chickpeas - new to dictionary
-9. Other pulse or nut (SPEC --> wrong coding. We should recode it to 9 = chickpeas.
+01. Teff needed to be added to dictionary.
+02. Wheat - what should be matched to? - refined and unrefined grain?
+03. Barley - new to dictionary & check how is consumed (unrefined?)
+04. Maize - how is consumed (yellow and white grain)
+07. Horsebean = broad bean - new to dictionary. Is it dried or fresh?
+08. Field peas = dried peas
+09. chickpeas - new to dictionary
+09. Other pulse or nut (SPEC --> wrong coding. We should recode it to 9 = chickpeas.
 10. Lentils - what type?
 11. Haricot bean - Double-check variety 
 12. Niger seeds - New to dictionary
@@ -54,7 +54,7 @@ Check Notes
 207. Vetch = *Vicia Sativa* (acc. to FBS handbook) (Fava bean/ broad bean) - new to dictionary.
 208. Fenugreek - new to dictionary
 209. mung bean = *Vigna ssp.* (acc. to FBS handbook) new to dictionary
-210. Processed pulses (Shiro) - chick peas flour - doble-check
+210. Processed pulses (Shiro) - chick peas flour - double-check
 404. kale - add to dictionary
 404. cabbage - cabbages, white, raw
 406. Garlic - add to dictionary
@@ -133,14 +133,32 @@ Missing GENUS in WAFCT:
 Missing items in WAFCT:
 
 1. Wheat - refined grain --> we are going to change it to refined flour. 
-2. Barley
-3. Niger seeds --> Indian FCT (black) H015
-4. Bula 
-5. Purchased injera --> Teff grain, boiled (WAFCT = 01_186)
-6. Vetches
+2. Barley --> (USDA = FDC ID: 170284) 
+3. Niger seeds --> Indian FCT (black) H015 VITA_RAE = retinol +beta-caro/12+caretonoid/24 == 2.15/12+295/24 ==12.47
+4. Linseed --> Indian FCT H014
+5. Kocho --> Biblio1 = Bosha et al. (2016) (no VITA) 
+6. Bula --> biblio2 = Daba, T. and Shigeta, M., 2016 (no VITA)
+5. Purchased injera --> Biblio3 = Abebe, et al., 2007 + Teff grain, boiled (WAFCT = 01_186)
+6. Vetches --> change to horse bean
 7. Processed pulses - Shiro --> Chick peas flour (USDA = FDC ID: 174288 )
 8. Gesho - NA
 
+Because some of these items are only consumed in Ethiopia, there was no information in the FCTs. Hence, we extacted some values from published literature:
 
+Values for Zn were extracted from: [Zinc (mg/100 g)]
 
+Biblio3: Abebe, Y., Bogale, A., Hambidge, K. M., Stoecker, B. J., Bailey, K., & Gibson, R. S. (2007). Phytate, zinc, iron and calcium content of selected raw and prepared foods consumed in rural Sidama, Southern Ethiopia, and implications for bioavailability. Journal of Food Composition and Analysis, 20(3), 161–168. https://doi.org/10.1016/j.jfca.2006.09.003
 
+1. Barley, white flour: roasted, milled - 3.29 - no moisture content reported...
+2. Niger seed: whole - 2.73 - - no moisture content reported...
+3. Kocho, fresh: pulp [moisture(Q1-Q3) 85g/100g(82, 86)] - 0.09 (0.08, 0.15) - Not used...
+4. Bulla: desiccated juice from enset pulp [moisture(Q1-Q3) 57 (54, 58)] - 0.07 (0.05, 0.09)
+5. Injera: from fermented white and red teff dough [moisture 67.8] - 0.93
+
+Biblio2: Daba, T. and Shigeta, M. (2016), “Enset (Ensete ventricosum) production in Ethiopia: its nutritional and
+socio-cultural values”, Agriculture and Food Sciences Research, Vol. 3 No. 2, pp. 66-74.
+
+Vit. A Rae - three high values:
+Moringa 
+Carrot -> USDA = Vitamin A, RAE	835µg
+Butter -> USDA = Vitamin A, RAE	758µg
