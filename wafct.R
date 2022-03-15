@@ -327,9 +327,9 @@ MAPS_wafct %>% filter(!is.na(food_genus_id), is.na(food_subgroup))
 
 #Looking up foods in the fct
 
-MAPS_wafct %>% filter(str_detect(original_food_name, "Gesho|gesho")) %>% select(1:3) %>% knitr::kable()
+MAPS_wafct %>% filter(str_detect(original_food_name, "Plant")) %>% select(1:3) %>% knitr::kable()
 MAPS_wafct %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
-MAPS_wafct %>% filter(original_food_id == "01_101") %>% glimpse()
+MAPS_wafct %>% filter(original_food_id == "02_042") %>% glimpse()
 MAPS_wafct %>% filter(food_genus_id == "1699.08")
   
 #Saving FCT output into a csv file

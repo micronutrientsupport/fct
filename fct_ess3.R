@@ -10,7 +10,7 @@
 #  Socioeconomic Survey,Wave 3 (ESS3) 2015-2016. Public Use Dataset. 
 #  Ref: ETH_2015_ESS_v02_M. 
 #  Downloaded from https://microdata.worldbank.org/index.php/catalog/2783
-#  on 21/12/2-21"
+#  on 21/12/2021"
 #
 ################################################################################
 
@@ -19,7 +19,6 @@
 #0) Loading r packages
 
 library(tidyverse)
-
 
 #1) Loading dataset
 
@@ -170,7 +169,7 @@ ess3_food_st <- tribble(
 #KENFCT, 2018
 source("kenfct.R")
 
-no_match <- ess3_food_list %>% filter(!is.na(ID_3)) %>% 
+no_match <- ess3_food_st %>% filter(!is.na(ID_3)) %>% 
   left_join(., MAPS_ken, by = c("ID_3" = "food_genus_id")) %>% 
   filter(is.na(energy_in_kcal)) %>% select(1:3)
   
