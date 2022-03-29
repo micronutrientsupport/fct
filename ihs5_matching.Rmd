@@ -38,6 +38,9 @@ Below are the comments to be solved:
  7) 204 - OFSP
  8) 203 - WFSP
  
+Changed value of VITA_RAE of (831) white bolied sweet potato to match raw white sweet potato adjusted w/ retention factor. We did not do a water adjustement because the water content difference in water was <10%, hence according to FAO/ INFOODS Guidelines there is no need to water adjust 
+[2.213000*(100-76.00/100-77.28)]
+ 
 Make a note to fix all recipes in MAFOODS.
 
 - Check ref for small fish:

@@ -130,9 +130,16 @@ fct_ihs5 <- fct_ihs5 %>% mutate_at("ihs5_foodid", as.character) %>%
   mutate(ihs5_foodid = "831b",
          ihs5_fooditem = "Boiled orange sweet potatoes",
          VITA_RAE = 925.830*0.95, 
-         comment = "OSF equal compo as 832 (AHHA - 5010) but VITA_RAE
+         comment = "OSF equal compo as 831 (MAFOODS - MW01_0066) but VITA_RAE
          from (MW01_0063*retention factor KENFCT - Starchy root or potato,
          boiled)")) 
+
+#Changed VITA_RAE of white bolied sweet potato to match raw white sweet potato
+#Difference in water is <10% there is no need to water adjust 
+#2.213000*(100-76.00/100-77.28)
+
+fct_ihs5$VITA_RAE[fct_ihs5$ihs5_foodid == "831"] <-  2.213000*0.95
+fct_ihs5$comment[fct_ihs5$ihs5_foodid == "831"] <- "VITA_RAE from (MW01_0063*retention factor KENFCT - Starchy root or potato,boiled)"
 
 
 #Adding the infant formula compo #708
@@ -157,12 +164,12 @@ fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != "708") %>%
                      ref_source = "MAFOODS" , 
                      comment = "We are assuming that VITA is coming
                                    from as retinol and VITA = VITA_RAE" )) %>% 
-  select(ihs5_foodid:ID_cal)  
+  select(ihs5_foodid:comment)  
 
 fct_ihs5$VITA_RAE[fct_ihs5$ihs5_foodid == "708"] <- 640.10
 
 
-fct_ihs5 %>% write.csv(here::here("output", "fct_ihs5_v2.1.csv"), 
+fct_ihs5 %>% write.csv(here::here("output", "fct_ihs5_v2.2.csv"), 
                        row.names = F)
 
 
