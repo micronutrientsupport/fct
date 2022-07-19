@@ -184,9 +184,24 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 #       13031 2
 #        15026 2
 
-kenfct %>% filter(code == "6026") %>% pull(fooditem)
-dictionary.df %>% filter(ID_3 == "22230.01.01")
+#1234.01
 
+kenfct %>% filter(code == "1051") %>% pull(fooditem)
+subset(kenfct, code == "1007", select = c(fooditem, ID_3, confidence)) 
+subset(kenfct, ID_3 == "23161.02.01") 
+
+dictionary.df %>% filter(ID_3 == "1290.01.03")
+subset(dictionary.df, ID_2 == "1290.9")
+subset(dictionary.df, ID_1 == "2805")
+
+subset(kenfct, str_detect(fooditem, "ground nut"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(kenfct, str_detect(scientific_name, ""), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(dictionary.df, str_detect(FoodName_3, "maize"))
+
+#Eggplant (4017) scientific name is "Solalum melongena", instead of 
+#"Solanum melongena"
 
 ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
@@ -196,8 +211,8 @@ ken_genus <- tribble(
   "12003",  "23912.02.01", "m", 
   "4016",   "1232.01"  ,   "m",
   "11001",  "2910.01"  ,   "h",
-  "10010",  "1379.9.01" ,  "m", 
-  "13027",  "1699.02"   ,  "m", #salt, ionized vs salt
+  "10010",  "1379.9.01" ,  "l", 
+ # "13027",  "1699.02"   ,  "m", #salt, ionized 
   "15026",  "F0022.05"  ,  "h",
   "1031",   "23710.01"  ,  "m", 
   "13028",  "1699.03"   ,  "h",
@@ -217,7 +232,7 @@ ken_genus <- tribble(
   "10009", "142.01", "l",
   "13006", "1652.01", "m", 
   "13007", "1652.02", "m", 
-  "7009", "21121.01", "m", #change to this instead of 21121.02
+  "7009", "21121.01.01", "h", 
   "8010", "1501.05", "m",
   "1007", "F0020.01", "m",
   "6008", "22241.02.01", "h", 
@@ -231,16 +246,23 @@ ken_genus <- tribble(
    "13019", "1252.01", "m", 
   "5024", "1317.01", "m", 
   "4011", "1251.01", "m", 
-  "2005", "1290.9.01", "m"
+  "2005", "1290.9.01", "m",
+ "8002", "1505.07", "h",
+ "4034", "1290.9.02", "m", 
+ "2004", "1313.01", "m", 
+ "4001", "1215.02", "m", 
+ "1023", "1290.01.01", "h", 
+ "1051", "1290.01.03", "m"
+ 
   
   
   )
 
 
-dictionary.df %>% filter(ID_3 == "1290.9.01")
+dictionary.df %>% filter(ID_3 == "1702.01")
 
 ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
-  filter(FCT.code != "7009") %>% #removing chicken - wrong code (21121.02)
+  filter(!FCT.code %in% c("7009", "10010")) %>% #removing chicken - wrong code (21121.02) and macadamia wrong confidence
   select(FCT.code, MAPS.ID.code, Confidence) %>% 
   mutate(confidence = case_when(
     Confidence == "high" ~ "h", 
@@ -258,16 +280,22 @@ dupli <- ken_genus %>%  count(ref_fctcode) %>%
 ken_genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
 kenfct %>% filter(code %in% dupli) %>% arrange(desc(code)) %>% select(code, fooditem)
 
-#Fixing horse bean/ broad bean code
-ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.01"
+#Fixing horse bean to broad bean code (but they are all fava vicia)
+ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.02"
+#Fixing rice - acc. to SUA for Kenya all milled rice was coded
+#23161.02 (whether imported or produced), hence we are changing
+ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
 
-ken_genus <- ken_genus %>% filter(!(ref_fctcode =="10010" & confidence == "l")) %>%  #filtering out macadamia low confidence
-  left_join(., dictionary.df)
+kenfct <- kenfct %>% 
+  left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
+  relocate(ID_3, .after = fooditem)
+
+
 
 #Rename variables according to MAPS-standards
 
 MAPS_ken <- kenfct %>% 
-  left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>%   
+#  left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>%   
 rename(
   original_food_id = "code",
   original_food_name = "fooditem",
