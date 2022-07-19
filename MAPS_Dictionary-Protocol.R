@@ -171,8 +171,12 @@ library(fuzzyjoin)
 
 #save as output a list of genus_id and genus_name available
 
-dictionary.df <- read.csv(here::here("metadata", "MAPS_Dictionary_v2.5.csv")) %>% 
+dictionary.df <- read.csv(here::here("metadata", "MAPS_Dictionary_v2.6.csv")) %>% 
   select(-starts_with("X"))
+
+dictionary.df$scientific_name <- NA
+
+colnames(dictionary.df)
 
 #It was a typo that duplicated two contiguous food items,
 #here we are solving it
@@ -506,7 +510,73 @@ dictionary.df <- dictionary.df %>%
     ID_3 = "1699.09",
     FE2_3 = "",
     FoodName_3 = "hops, dried, raw") 
-                
+
+### Animal products (AP) ----
+
+dictionary.df$ID_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "F1061"
+dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"              
+
+which(dictionary.df$ID_3 == "21121.01")
+
+dictionary.df[643,] <- dictionary.df[440,]
+
+dictionary.df[643,7] <- "21121.01.01"
+dictionary.df[643,8] <- NA
+dictionary.df[643,9] <- "chicken meat, fresh, meat, skin, without bones, raw"
+
+#Silver cyprinid
+subset(dictionary.df, ID_2 == "1505")
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1505.03")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1505.07"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cyprinid, silver, dried, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:11; Taxonomic Code:1400207001; Inter-Agency3-Alpha Code:ENA"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/07/19). (2022)"
+dictionary.df[n1,12] <- "Lake Victoria sardine (https://www.catalogueoflife.org/data/taxon/4RLTW)"
+dictionary.df[n1,13] <- "Rastrineobola argentea"
+
+### Pulses and Beans (PB) ----
+
+#Broad bean
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1702.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1702.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "broad bean, dried, raw"
+dictionary.df[n1,13] <- "Vicia faba"
+
+
+### Fruits and Vegetables (FV) ----
+
+#Leaves can be fresh or dried. 
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.01"] <- "spinach, fresh, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, fresh, raw"
+
+#Exist another code for onions
+#01253.01 - Onions, shallots, green
+
+#Sweet potato leaves
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "sweet potato leaves, fresh, raw"
+
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
