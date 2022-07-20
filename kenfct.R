@@ -186,19 +186,20 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 
 #1234.01
 
-kenfct %>% filter(code == "1051") %>% pull(fooditem)
-subset(kenfct, code == "1007", select = c(fooditem, ID_3, confidence)) 
-subset(kenfct, ID_3 == "23161.02.01") 
+kenfct %>% filter(code == "9009") %>% pull(fooditem)
+subset(kenfct, code == "13019", select = c(fooditem, ID_3, confidence)) 
+subset(kenfct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "1290.01.03")
-subset(dictionary.df, ID_2 == "1290.9")
-subset(dictionary.df, ID_1 == "2805")
+dictionary.df %>% filter(ID_3 == "231.01")
+subset(dictionary.df, ID_2 == "1317")
+subset(dictionary.df, ID_1 == "2547")
+subset(dictionary.df, ID_0 == "FV")
 
-subset(kenfct, str_detect(fooditem, "ground nut"), 
+subset(kenfct, str_detect(fooditem, "Garlic"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(kenfct, str_detect(scientific_name, ""), 
+subset(kenfct, str_detect(scientific_name, "Phaseolus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_3, "maize"))
+subset(dictionary.df, str_detect(FoodName_2, "melon"))
 
 #Eggplant (4017) scientific name is "Solalum melongena", instead of 
 #"Solanum melongena"
