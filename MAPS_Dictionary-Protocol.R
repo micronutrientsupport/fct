@@ -539,9 +539,14 @@ dictionary.df[n1,9] <- "cyprinid, silver, dried, raw"
 dictionary.df[n1,10] <- "ISSCAAP Code:11; Taxonomic Code:1400207001; Inter-Agency3-Alpha Code:ENA"
 dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/07/19). (2022)"
 dictionary.df[n1,12] <- "Lake Victoria sardine (https://www.catalogueoflife.org/data/taxon/4RLTW)"
-dictionary.df[n1,13] <- "Rastrineobola argentea"
+dictionary.df[n1,13] <- "rastrineobola argentea"
 
 ### Pulses and Beans (PB) ----
+
+#Fixing names
+#Peanuts 
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "142.01"] <- "peanut, unshelled, dried, raw"
+
 
 #Broad bean
 n1 <- dim(dictionary.df)[1]+1
@@ -553,7 +558,23 @@ dictionary.df[n1,] <- dictionary.df[n2,]
 dictionary.df[n1,7] <- "1702.02"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "broad bean, dried, raw"
-dictionary.df[n1,13] <- "Vicia faba"
+dictionary.df[n1,13] <- "vicia faba"
+
+#├ New category from ID_2 ----
+
+#Peanut butter
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "21495.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21495.02.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "peanut butter"
+dictionary.df[n1,13] <- "arachis hypogaea"
+
 
 
 ### Fruits and Vegetables (FV) ----
@@ -564,6 +585,46 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, f
 
 #Exist another code for onions
 #01253.01 - Onions, shallots, green
+
+#├ New category from ID_2 ----
+
+#Eggplants
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1233")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1233.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "eggplant, fresh, raw"
+dictionary.df[n1,13] <- "solalum melongena"
+
+#Peas, fresh
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1242")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1242.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "peas, green, fresh, raw"
+dictionary.df[n1,13] <- "pisum sativuma"
+
+#Watermelon
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1221")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1221.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "watermelon, fresh, raw"
+dictionary.df[n1,13] <- "citrullus lanatus"
+
 
 #Sweet potato leaves
 
@@ -576,6 +637,25 @@ dictionary.df[n1,] <- dictionary.df[n2,]
 dictionary.df[n1,7] <- "1290.9.02"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "sweet potato leaves, fresh, raw"
+
+
+### Other foods (OT) ---- 
+
+#├ New category from ID_2 ----
+
+#Ginger
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1657")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1657.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "ginger, fresh, raw"
+dictionary.df[n1,13] <- "zingiber officinale"
+
 
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
