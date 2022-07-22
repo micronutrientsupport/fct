@@ -511,11 +511,67 @@ dictionary.df <- dictionary.df %>%
     FE2_3 = "",
     FoodName_3 = "hops, dried, raw") 
 
+### Cereals (CE) ----
+
+
+#├ New item (ID_3) ----
+
+#Adding description
+dictionary.df$Description1[dictionary.df$ID_3 == "23710.01"] <- "default pasta (spaghetti)"
+
+#Macaroni
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "23710.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "23710.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "pasta, macaroni, wheat, dried, raw"
+dictionary.df[n1,10] <- NA
+dictionary.df[n1,11] <- NA
+
+#Mandazi
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "F0022.04")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F0022.08"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "dough, fried"
+dictionary.df[n1,10] <- "mandazi"
+dictionary.df[n1,11] <- "TZFCT, KENFCT"
+
+
 ### Animal products (AP) ----
 
+#Correcting codes
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "F1061"
 dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"              
 
+#├ New category from ID_2 ----
+
+#├ New item (ID_3) ----
+
+#Cream
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "22120.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "22120.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cream, cow milk, 35%"
+dictionary.df[n1,13] <- NA
+
+#Chicken
 which(dictionary.df$ID_3 == "21121.01")
 
 dictionary.df[643,] <- dictionary.df[440,]
@@ -576,7 +632,6 @@ dictionary.df[n1,9] <- "peanut butter"
 dictionary.df[n1,13] <- "arachis hypogaea"
 
 
-
 ### Fruits and Vegetables (FV) ----
 
 #Leaves can be fresh or dried. 
@@ -588,8 +643,20 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, f
 
 #├ New category from ID_2 ----
 
-#Eggplants
+#Tomato tinned
+n1 <- dim(dictionary.df)[1]+1
 
+n2 <- which(dictionary.df$ID_2 == "21399.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21399.02.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "tomatoes, whole, tinned"
+dictionary.df[n1,13] <- NA
+
+
+#Eggplants
 n1 <- dim(dictionary.df)[1]+1
 
 n2 <- which(dictionary.df$ID_2 == "1233")
@@ -600,6 +667,18 @@ dictionary.df[n1,7] <- "1233.01"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "eggplant, fresh, raw"
 dictionary.df[n1,13] <- "solalum melongena"
+
+#Spring onions
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1253.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1253.01.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "spring onion, fresh, raw"
+dictionary.df[n1,13] <- "allium cepa"
 
 #Peas, fresh
 n1 <- dim(dictionary.df)[1]+1
@@ -613,6 +692,18 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "peas, green, fresh, raw"
 dictionary.df[n1,13] <- "pisum sativuma"
 
+#Cowpea, fresh
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1241.9")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1241.9.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cow peas, green, fresh, raw"
+dictionary.df[n1,13] <- "vigna unguiculata"
+
 #Watermelon
 n1 <- dim(dictionary.df)[1]+1
 
@@ -625,6 +716,34 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "watermelon, fresh, raw"
 dictionary.df[n1,13] <- "citrullus lanatus"
 
+#Jackfruit
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1319")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1319.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "jackfruit, fresh, raw"
+dictionary.df[n1,10] <- "Fruit, tropical fresh nes (603)"
+dictionary.df[n1,11] <- "FAO (2022). Supply Utilization Accounts. Accessed last on 2022-07-22. https://www.fao.org/faostat/en/#data/SCL"
+dictionary.df[n1,13] <- "artocarpus heterophyllus"
+
+#Pear
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1342.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1342.01.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "pear, fresh, raw"
+dictionary.df[n1,13] <- "pyrus communis "
+
+
+#├ New item (ID_3) ----
 
 #Sweet potato leaves
 
@@ -638,8 +757,53 @@ dictionary.df[n1,7] <- "1290.9.02"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "sweet potato leaves, fresh, raw"
 
+#Coriander leaves
+#Note that in KE18 the food group is "condiments", also in FAO-SUA there is a 
+#mention to coriander seeds under spices. 
 
-### Other foods (OT) ---- 
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.03"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "coriander leaves, fresh, raw"
+dictionary.df[n1,13] <- "coriandrum sativum"
+
+#Celery
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.04"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "celery, fresh, raw"
+dictionary.df[n1,13] <- "apium graveolens"
+
+#Courgette
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1235.03")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1235.04"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "courgette, green, fresh, raw"
+dictionary.df[n1,10] <- "also called zucchini, baby marrow, summer squash"
+dictionary.df[n1,13] <- "cucurbita pepo var. Cylindrica"
+
+
+########## Other foods (OT) ##############
+
+#Correcting codes
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1460.01"] <- "coconut, mature, fresh, raw"
 
 #├ New category from ID_2 ----
 
@@ -656,7 +820,70 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "ginger, fresh, raw"
 dictionary.df[n1,13] <- "zingiber officinale"
 
+#Vegetable fat
 
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "F1243")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F1243.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "vegetable, fat"
+dictionary.df[n1,13] <- NA
+
+#├ New item (ID_3) ----
+
+#Tea with milk
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "23914.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "23914.03"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "tea with milk"
+
+#Curry powder
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1699.03")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1699.10"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "curry powder"
+
+#Coconut, inmature
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1460.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1460.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "coconut, inmature, fresh, raw"
+dictionary.df[n1,13] <- "cocos nucifera"
+
+#Animal fat
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "F1243.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F1243.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "Animal, fat"
+dictionary.df[n1,13] <- NA
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
