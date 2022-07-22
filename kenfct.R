@@ -41,6 +41,8 @@ kenfct <- readxl::read_excel(here::here('data', "MOH-KENFCT_2018.xlsx"),
   slice(1:1240) %>%   #removing last rows that are empty only provide notes info
   glimpse()
 
+dim(kenfct)
+
 ##2) TIDYING KENYA FCT 
 
 #Rename variables acc. to tagnames (FAO/INFOODS)
@@ -186,23 +188,35 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 
 #1234.01
 
-kenfct %>% filter(code == "9009") %>% pull(fooditem)
-subset(kenfct, code == "13019", select = c(fooditem, ID_3, confidence)) 
+#DOUBLE CHECK!! - 1025 is duplicated!!
+
+
+x <- kenfct %>% filter(code %in% c("1031", "1030"))
+
+subset(kenfct, code == "15081", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "231.01")
-subset(dictionary.df, ID_2 == "1317")
-subset(dictionary.df, ID_1 == "2547")
-subset(dictionary.df, ID_0 == "FV")
+dictionary.df %>% filter(ID_3 == "21151.02")
+subset(dictionary.df, ID_2 == "23914")
+subset(dictionary.df, ID_1 == "1807")
+subset(dictionary.df, ID_0 == "PB")
 
-subset(kenfct, str_detect(fooditem, "Garlic"), 
+subset(kenfct, str_detect(fooditem, "Tea"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(kenfct, str_detect(scientific_name, "Phaseolus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "melon"))
+subset(dictionary.df, str_detect(FoodName_2, "tea"))
 
+#Scientific names "issues"
 #Eggplant (4017) scientific name is "Solalum melongena", instead of 
 #"Solanum melongena"
+
+#The scientific name of Coriander, leaves, fresh, raw is wrong!
+kenfct$scientific_name[kenfct$code == "13011"] <- "Coriandrum sativum"
+
+#The scientific namr of coconut (3 entries) is wrong
+kenfct$scientific_name[kenfct$code %in% c("10002", "10003", "10004")] <- "Cocos nucifera"
+
 
 ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
@@ -253,9 +267,25 @@ ken_genus <- tribble(
  "2004", "1313.01", "m", 
  "4001", "1215.02", "m", 
  "1023", "1290.01.01", "h", 
- "1051", "1290.01.03", "m"
- 
-  
+ "1051", "1290.01.03", "m", 
+ "13024", "1253.01.01", "h",
+ "6007", "22120.02", "h",
+ "13011", "1290.9.03", "h", 
+ "7020", "21113.02.01", "h", #assumed w/o bones bc EP = 1
+  "15125", "F0022.08", "h", 
+ "13015", "1699.10", "h", 
+ "4013", "1290.9.04", "h", 
+ "1005", "F0020.02", "m", 
+ "5012", "1319.01", "m", 
+ "7019", "21115.01", "m",
+ "10003", "1460.02", "m",
+  "9011", "34550.02", "m", 
+ "9001", "F1243.02", "m",
+ "5028", "1342.01.01", "m",
+ "4014", "1235.04", "m", 
+ "4037", "21399.02.01", "m", 
+ "1030", "23710.02", "h",
+ "15081", "23914.03", "m"
   
   )
 
@@ -292,6 +322,7 @@ kenfct <- kenfct %>%
   relocate(ID_3, .after = fooditem)
 
 
+dim(kenfct)
 
 #Rename variables according to MAPS-standards
 
