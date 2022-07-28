@@ -191,21 +191,21 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 #DOUBLE CHECK!! - 1025 is duplicated!!
 
 
-x <- kenfct %>% filter(code %in% c("1031", "1030"))
+x <- kenfct %>% filter(code %in% c("6015", "6016"))
 
-subset(kenfct, code == "15081", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "4004", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
 dictionary.df %>% filter(ID_3 == "21151.02")
-subset(dictionary.df, ID_2 == "23914")
+subset(dictionary.df, ID_2 == "21184.01")
 subset(dictionary.df, ID_1 == "1807")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(kenfct, str_detect(fooditem, "Tea"), 
+subset(kenfct, str_detect(fooditem, "Milk"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(kenfct, str_detect(scientific_name, "Phaseolus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "tea"))
+subset(dictionary.df, str_detect(FoodName_2, "broc"))
 
 #Scientific names "issues"
 #Eggplant (4017) scientific name is "Solalum melongena", instead of 
@@ -285,9 +285,19 @@ ken_genus <- tribble(
  "4014", "1235.04", "m", 
  "4037", "21399.02.01", "m", 
  "1030", "23710.02", "h",
- "15081", "23914.03", "m"
-  
-  )
+ "15081", "23914.03", "m",
+ "6019", "22110.02.01", "h",
+ "5025", "1319.02", "h",
+ "8011", "1553.02", "h",
+ "5031", "21346.01", "h",
+ "4021", "1254.01", "h", 
+ "4012", "1213.01", "m", 
+ "5027", "1345.01", "m",
+ "5034", "1354.01", "h", 
+ "7025", "21184.02.01", "m",#No info on prep.
+  "7022", "21184.01.01", "m", #No info on prep.
+ "4004", "1213.02", "h", 
+ )
 
 
 dictionary.df %>% filter(ID_3 == "1702.01")
