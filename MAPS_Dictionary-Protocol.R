@@ -556,7 +556,69 @@ dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"
 
 #├ New category from ID_2 ----
 
+#Beef sausages
+
+id2 <- "21184.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "beef, sausage, raw"
+dictionary.df[n1,13] <- "bos taurus"
+
+
+
+#Pork sausages
+
+id2 <- "21184.02"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "pork, sausage, raw"
+dictionary.df[n1,13] <- "sus scrofa domesticus"
+
+
+
+#Skimmed milk
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "22110.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "22110.02.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "milk, cow, skimmed, raw"
+dictionary.df[n1,13] <- "bos taurus"
+
+
 #├ New item (ID_3) ----
+
+#Prawns
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1553.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1553.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "prawns, fresh, raw"
+dictionary.df[n1,13] <- "penaeidae"
+
 
 #Cream
 
@@ -643,7 +705,76 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, f
 
 #├ New category from ID_2 ----
 
+#Strawberry
+
+id2 <-  "1354"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "strawberries, fresh, raw"
+dictionary.df[n1,13] <- "fragaria X ananassa"
+
+
+#Peaches
+
+id2 <-  "1345"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "peaches, fresh, raw"
+dictionary.df[n1,13] <- "prunus persica"
+
+
+#Cauliflower
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1213")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1213.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cauliflower, fresh, raw"
+dictionary.df[n1,13] <- "brassica oleracea var. botrytis"
+
+#Leeks
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1254")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1254.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "leeks, fresh, raw"
+dictionary.df[n1,13] <- "allium porrum"
+
+#Plums
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 == "1346")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21346.01"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "plums, purple skin, fresh, raw"
+dictionary.df[n1,13] <- "prunus domestica"
+
 #Tomato tinned
+
 n1 <- dim(dictionary.df)[1]+1
 
 n2 <- which(dictionary.df$ID_2 == "21399.02")
@@ -744,6 +875,34 @@ dictionary.df[n1,13] <- "pyrus communis "
 
 
 #├ New item (ID_3) ----
+
+#Broccoli
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1213.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1213.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "broccoli, fresh, raw"
+dictionary.df[n1,13] <- "brassica oleracea var. italica"
+
+
+#Purple passion fruit
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1319.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1319.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "passion fruit, dark purple skin, fresh, raw"
+dictionary.df[n1,13] <- "passiflora edulis"
+
 
 #Sweet potato leaves
 
