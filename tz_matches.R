@@ -1,0 +1,54 @@
+
+
+#FRESH WATER
+"Labeo spp.", catfish, lake Tanganyika & sardine?, Lake Nyasa
+
+"Engraulis encrasicolus", Engraulicypris sp., sardine, (Usipa/dagaa), Lake Nyasa
+
+"Bagrus spp.", Bagrus docmak/Bagrus , Catfish (Mbofu, Kibogobogo)/ Sardine (Mbofu)/ Sardine (Vitoga?), Lake Tanganyika/ Lake Nyasa /Mtera dam
+
+"Synodontis spp.", Synodontis lacustricolus/ Synodontis, Catfish (Ngogo/Gogogo/Kolokolo)/ Sardine (Ngogo)/ Sardine (Kambale), Lake Tanganyika/Lake Nyasa /Mtera dam 
+"Clarias gariepinus", Clarias gariepinus/ Clarias theodorae/ Clarias liocephalus/Clarias gariepinus/ Clarias sp. , Catfish (Kambale,Mumi)/ Catfish (Kambale) (x3)/ Sardine (Ngogo), Lake Tanganyika/ Lake Victoria (x3)/ Mtera dam
+"Lates niloticus" , Lates stappersii (Mgebuka/Mkeke/Mvolo)/ Lates anguistifrons (Sangara)/ Lates mariae (Sangara /Ng’omba)/ Lates microlepis (Sangara/Nonzi)/ Lates niloticus, Nile perch (x4)/ Nile perch (Sangara), Lake Tanganyika (x4)/ Lake Victoria
+"Oreochromis spp./Tilappia spp.", Oreochromis tanganicae (Serotheron) (Ngege)/ Oreochromis niloticus (Sato/Perege)/ Oreochromis rukwaensis (Sasala)/ Oreochromis leucostictus (Satu, Ngege)/ Tilapi zillii (Sato)/Tilapia rendalli (Kayabo)/ Oreochromis sp. (Magege)/ Oreochromis urolepis (Perege) , Tilapia , Lake Tanganyika /Lake Victoria (x5)/Lake Nyasa/ Mtera dam
+
+
+#MARINE
+
+"Sphyraena spp.", Sphyrae na obtusata/ Sphyraenella chrysotaenia , NA/ Obtuse barracuda (Msusa/Mzia)
+"Scomberomorus spp.", Scomberomorus plurilineatus, King fish (Nguru) 
+"Sardinella spp.", Sardinella neglecta, East African sardinella (Dagaa-papa)
+"Family: Penaeidae" , Penaeus bubulus, Giant tiger prawn (Kamba mti)
+"Thunnus spp.", Thunnus obesus (Jodari macho makubwa) (tuna-like)
+
+
+#NO REPORTED
+"Gadus morhua" 
+"Trachurus trachurus"
+"Cyprinus carpio" 
+"Callinectes spp." 
+"Trachurus symmetricus" 
+"Coryphaena hippurus" 
+"Amblypharyngodon mola" 
+"Mormyrus spp."
+"Family: Buccinidae" 
+"Polydactylus spp."
+"Families: Palaemonidae/Penaeidae"
+"Family: Palaemonidae"
+"Family: Veneridae"  
+"Epinephelus spp." 
+
+
+subset(wafct, str_detect(foodgroup, "Fish") 
+       #& str_detect(fooditem, "raw")
+       , 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+
+x <- kenfct$FAT[kenfct$code %in% c("7001", "7002", "7004")]
+#x[4:6] <- wafct$FAT[wafct$code %in% c("07_014", "07_009", "07_002")]
+y <- wafct$FAT[wafct$code %in% c("07_014", "07_009", "07_002")]
+mean(y)
+
+wafct$ref[wafct$code %in% c("07_014", "07_009", "07_002")]
+kenfct$biblio_id[kenfct$code %in% c("7001", "7002", "7004")]
+kenfct$EDIBLE[kenfct$code %in% c("7001", "7002", "7004")]
