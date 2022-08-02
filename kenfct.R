@@ -193,7 +193,7 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 #Checking dictionary/ fct ids availability 
 x <- kenfct %>% filter(code %in% c("6015", "6016"))
 
-subset(kenfct, code == "4004", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "8018", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
 dictionary.df %>% filter(ID_3 == "21151.02")
