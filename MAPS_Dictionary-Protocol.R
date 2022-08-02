@@ -606,6 +606,23 @@ dictionary.df[n1,13] <- "bos taurus"
 
 #├ New item (ID_3) ----
 
+#Sardines
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1527.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1527.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "sardines, fresh, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:35; Taxonomic Code:12105012XX; Inter-Agency3-Alpha Code:SIX"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
+dictionary.df[n1,12] <- "10.48580/dfpk-37v"
+dictionary.df[n1,13] <- "sardinella spp."
+
+
 #Prawns
 
 n1 <- dim(dictionary.df)[1]+1
@@ -663,7 +680,8 @@ dictionary.df[n1,13] <- "rastrineobola argentea"
 
 #Fixing names
 #Peanuts 
-dictionary.df$FoodName_3[dictionary.df$ID_3 == "142.01"] <- "peanut, unshelled, dried, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "142.01"] <- "peanuts, unshelled, dried, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "21421.01"] <- "peanuts, shelled, dried, raw"
 
 
 #Broad bean
@@ -876,6 +894,20 @@ dictionary.df[n1,13] <- "pyrus communis "
 
 #├ New item (ID_3) ----
 
+#Green beans
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1241.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1241.9.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "green beans, fresh, raw"
+dictionary.df[n1,13] <- "phaseolus vulgaris"
+
+
 #Broccoli
 
 n1 <- dim(dictionary.df)[1]+1
@@ -963,6 +995,9 @@ dictionary.df[n1,13] <- "cucurbita pepo var. Cylindrica"
 
 #Correcting codes
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "1460.01"] <- "coconut, mature, fresh, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "23511.02.01"] <- "sugar, from unrefined sugar cane"
+dictionary.df$Description2[dictionary.df$ID_3 == "23511.02.01"] <- "jaggery, panela, raw sugar"
+dictionary.df$Desc1.ref2[dictionary.df$ID_3 == "23511.02.01"] <- "https://doi.org/10.1016/j.foodchem.2017.01.134"
 
 #├ New category from ID_2 ----
 
@@ -1043,6 +1078,29 @@ dictionary.df[n1,7] <- "F1243.02"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "Animal, fat"
 dictionary.df[n1,13] <- NA
+
+
+########## Roots and Tubers (RT) ##############
+
+#Cassava dried
+
+id2 <- "1520.02"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cassava, root, dried, raw"
+dictionary.df[n1,13] <- "manihot esculenta"
+
+
+
+
+
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
