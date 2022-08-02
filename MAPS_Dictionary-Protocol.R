@@ -894,6 +894,32 @@ dictionary.df[n1,13] <- "pyrus communis "
 
 #├ New item (ID_3) ----
 
+#Taro leaves
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1241.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.06"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "taro leaves, fresh, raw"
+dictionary.df[n1,13] <- "colocasia esculenta"
+
+#Cow peas leaves
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1241.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.05"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cow pea leaves, fresh, raw"
+dictionary.df[n1,13] <- "vigna unguiculata"
+
 #Green beans
 
 n1 <- dim(dictionary.df)[1]+1
