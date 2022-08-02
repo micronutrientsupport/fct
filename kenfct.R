@@ -190,7 +190,7 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 
 #DOUBLE CHECK!! - 1025 is duplicated!!
 
-
+#Checking dictionary/ fct ids availability 
 x <- kenfct %>% filter(code %in% c("6015", "6016"))
 
 subset(kenfct, code == "4004", select = c(fooditem, ID_3, scientific_name)) 
@@ -201,7 +201,7 @@ subset(dictionary.df, ID_2 == "21184.01")
 subset(dictionary.df, ID_1 == "1807")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(kenfct, str_detect(fooditem, "Milk"), 
+subset(kenfct, str_detect(fooditem, "Beef"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(kenfct, str_detect(scientific_name, "Phaseolus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
@@ -297,7 +297,8 @@ ken_genus <- tribble(
  "7025", "21184.02.01", "m",#No info on prep.
   "7022", "21184.01.01", "m", #No info on prep.
  "4004", "1213.02", "h", 
- )
+ "1018", "21691.02.01", "h",
+ "8012", "1527.02", "h ")
 
 
 dictionary.df %>% filter(ID_3 == "1702.01")

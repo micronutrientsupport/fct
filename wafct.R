@@ -49,7 +49,7 @@ wafct <- readxl::read_excel(here::here( 'data',
 wafct <- wafct %>% rename(code = '...1', 
                           fooditem = '...2', 
                           fooditemFR = '...3',
-                          scientificName = '...4',
+                          scientific_name = '...4',
                           ref = '...5' ,
                           ENERC2 = 'ENERC...9', 
                           ENERC1 = 'ENERC...10') 
@@ -155,6 +155,26 @@ wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "13_023")
 wafct %>% filter(code == "12_012") %>% glimpse()
 
+#Checking code availability 
+x <- wafct %>% filter(code %in% c("01_047", "01_046"))
+
+subset(wafct, code == "02_002", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "142.01") 
+
+dictionary.df %>% filter(ID_3 == "21184.02.01")
+subset(dictionary.df, ID_2 == "1520.02")
+subset(dictionary.df, ID_1 == "2536")
+subset(dictionary.df, ID_0 == "PB")
+
+subset(wafct, str_detect(fooditem, "king|King"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(wafct, str_detect(foodgroup, "Fish"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
+
+
 #check 24490 in dictionary
 #add one for Juice, canned or bottled, sweetened (e.g. apple) == 12_012
 
@@ -226,7 +246,12 @@ wa_genus <- tribble(
   "05_018", "1318.01", "h", 
   "11_007", "2165.01", "l", 
   "01_101",  "23140.07.01", "m", 
-   "04_011", "1699.08", "m")
+   "04_011", "1699.08", "m", 
+  "04_003", "1241.9.02", "h",
+  "09_004", "1527.02", "h",
+  "02_002", "1520.02.01", "h"
+  
+  )
 
 
 #List of non-available items compared w/ mwi_genus
@@ -265,13 +290,16 @@ dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01",
                                      "21700.02.01", "1802.01","2899.01.01"))
 
 
-wa_genus <- wa_genus %>% left_join(., dictionary.df)
+#wa_genus <- wa_genus %>% left_join(., dictionary.df)
 
+#Adding dictionary code
+
+wafct <- wafct %>%
+  left_join(., wa_genus, by = c("code" = "ref_fctcode"))
 
 #Rename variables according to MAPS-standards
 
-  MAPS_wafct<- wafct %>%
-  left_join(., wa_genus, by = c("code" = "ref_fctcode")) %>% 
+  MAPS_wafct<- wafct %>% 
   mutate(nitrogen_in_g = NA, 
          mn_in_mcg = NA,
          i_in_mcg = NA, 
