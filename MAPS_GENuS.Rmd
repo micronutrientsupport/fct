@@ -1,0 +1,148 @@
+---
+title: "Food-Dictionary"
+author: "Segovia D L Revilla, Lucia"
+date: "28/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Introduction
+
+In this document the creation and use of the MAPS-Food-Dictionary (also referred as Food GENuS code) is detailed. 
+
+A list of datasets that uses/ are connected by the Genus code:
+
+-MAPS_fct_mafood // MAPS_mafoods_vx.x
+-MAPS_fct_wa  // MAPS_wafct_vx.x
+-MAPS_fct_ken // MAPS_kenfct_vx.x
+-MAPS_hces_ihs4
+-MAPS_hces_ihs5
+
+
+## Food Composition Data
+
+1) Food composition data are the "original" source of the "GENuS" code. Hence, `food_genus_code` should be unique per food item in each fct. If there are two food items in one food composition table that could be coded with the same `food_genus_code` a distinction should be made OR a choice should be taken. 
+
+
+## Food Balance Sheet
+
+Food Balance Sheet (FBS) provides underlying data for MAPS tool. This data will allow to show food supply estimates that will be used to provide estimates of micronutrient supplies in all countries in sub-Saharan region. There have been some methodological update to the FBS, and hence they are divided by old FBS and new FBS. Therefore, two workflows might be implemented in order to provide both dataset with GENuS codes. 
+
+We will start with the old FBS for two main reasons: 1) it provides longer time-span data, 2) we can assume stability and no futher changes in that dataset. 
+
+Data source: http://www.fao.org/faostat/en/#data/FBSH
+
+Regions = Eastern, Middle, Southern and Western Africa > (list)
+Elements = Food supply quantity (kg/capita/yr)
+Items = Select All
+Years = Select All
+
+In the first steps, the matches were done at regional level following the data in the study of Joy et al., however, because we need to provide data at country level a disaggregation into countries was needed. 
+
+Hence, we downloaded the data from FAOSTAT website for Southern, Eastern, Western and Middle Africa region countries. Then, we matched the countries with it's region (acc. to UN description) using the raster package. Although, we are using the `NAME_FAO` to merge, there are six countries without match due to differences in the name and/or spelling. 
+
+Then coded for the MAPS matching were supplied at country level but according to the region. 
+
+Once we have added the region, we need to create a `region` variable, with the values (E, W, M and S) that we will use for the merging.
+
+The location is now sorted, hence we need to add the GENuS code that will allow MAPS tool to match food supply and food composition. To do so, we have *manually* coded each food item in Joy et al, study as reference, we did it for the Energy matches and we will carry those across the whole dataset. That original, manually coded template is called "Simplified-match-FBS-region_vxx.csv" and will serve as reference. 
+
+Because in the original study there was no "Middle" region, we need to create a middle region in fbs_ref. This will be done, following the same procedure as in the fct, by copying "Western" region. 
+
+This was generating issues due to differences in name spelling, then we decided to use the regional-fct to merge the GENuS code. Again, multiple issue were introduced due to differences in the spelling. We decided to use the FAO and ID_1 code for the merging to avoid issues with different spellings.
+
+And we identified some issues with regards of the code merging. We need to identify if this issue is due to the food selected for certain categories in the regional FCT or it is at "Food Dictionary" level. 
+
+The items to be checked are:
+
+item_code                 item       item in FCT
+1      2586  oilcrops oil, other --> oilcrops, other (2570) = fixed GENuS tag (confidence low)
+2      2614        citrus, other --> orange, mandarines(2611) = change item code (confidence low)
+3      2781       fish, body oil --> fish, liver oil (2782) = fixed GENuS tag (confidence low)
+4      2764   marine fish, other --> pelagic fish (2763)  = change item code (confidence low)
+5      2680          infant food --> NA 
+6      2558 rape and mustardseed --> NA 
+7      2562         palm kernels --> NA
+
+
+One and three were fixed in the regional fct and/or Food Dictionary leading to the release of the regional-fct_v1.6 and Food-Dictionary_v2.6. The ID_1 for those items are not as they should be, and they need to be amended accordingly. We will keep those `NA` as they are because the are not currently included in the FCT (hence they will not have a match), until further updates on the FCT. It is very important to highlight that matched need to be done base on item_code and NOT using item_name, due to challenges in the different name versions!.
+
+We are going to use the same script for new fbs data, we are using this approach to get an idea of how similar or different both old and new fbs are in term of structure and food item codes used. 
+
+
+Data source: http://www.fao.org/faostat/en/#data/FBS
+
+Regions = Eastern, Middle, Southern and Western Africa > (list)
+Elements = Food supply quantity (kg/capita/yr)
+Items = Select All
+Years = Select All
+
+Step 1: Allocating countries into its respective region did not need any adjustment in comparison with using the old FBS (FBSH). 
+
+Step 2: We identified nine food items without match in the regional fct. The new items identified are in bold. Rice and groundnuts were expected to be diferent due to changes in the definition of both items in comparison with the FBSH. In the new version, rice is reported as paddy equivalents (before was husked, eq.) and groundnuts are reported in shell equivalents (previously reported as shelled eq.). Similarly, *alcohol, non-food* and *miscellaneous* have been newly introduced and there is no data available in FBSH. We will use the same approach as in FBSH for solving the "missmatches" between regional fct and the FBS. We will change the new rice and groundnut code to the old one, for the time being. This will be likely to change after we account for edible portion and further data cleaning steps (i.e. including SUA data instead of FBS). Those changes will be listed and create a "new releases" pipeline, as it was done for the regional fct. For those analysis check fbs project. 
+
+|item_code| item               item in FCT
+|-|-|
+|**2807**|  **rice and products** --> rice and products (2805)  = change item code (confidence low)
+|**2552**| **groundnuts**|        --> groundnuts (shelled eq) and products (2556)  = change item code (confidence low)
+|2558| rape and mustardseed|      --> NA
+|2614| citrus, other|             --> orange, mandarines(2611) = change item code (confidence low) 
+|2764|  marine fish, other|       --> pelagic fish (2763)  = change item code (confidence low)
+|2680| infant food|               --> NA
+|**2899**| **miscellaneous**|     --> NA
+|2562| palm kernels|              --> NA
+|**2659**| **alcohol, non-food**| --> NA
+
+
+
+
+
+
+```{r fbs}
+
+
+```
+
+## Household Consumption and Expenditure Survey
+
+#1) IHS4
+
+We **manually** matched IHS4 food items to a FoodEx2 code and provided some information about the rationale for the choices. However, it is still missing the confidence to the matches. Hence, we create a template to add the confidence for ihs4 to GENuS codes. Then, we filled that confidence values **manually** in excel. 
+
+There are some mismatching between the "old FoodEx2" and the GENuS code that need to be solved.
+
+The last items are iteration of the original ihs4 food items, and hence they are going to be excluded the original ihs4 standard item list. 
+
+We create a template to be attached to the FCT, so we can supply a GENuS code for those items used in the IHS4 food matching. 
+
+
+
+```{r ihs4, echo=FALSE}
+
+
+```
+
+
+## Development issues that should be tackled 
+
+1) When updating the `food_genus_code` how to update it in a way that all the dataset that are affected are correctly and timely updated, so no dataset that depends on the Genus is left behind. 
+
+2) We realized that there are who group ids (ID_2) that are identical. Those ids were derived from SUA for crops and livestock and from FAO-Fishstat for fish and seafood. Thus, this conflict arouse. As a solution, we are going to add a line of code that changes the id values for fish. - FIXED
+
+3) Updating all r-projects/ folders that uses the dictionary. We wrote a piece of code that find the Dictionary_vx.x (latest version) and save a copy of the new version in the same location. 
+
+4) In every folder that the Food Dictionary is used to find always the most updated/recent version to be loaded. 
+
+
+
+```{r tracking-issue-2, echo=FALSE}
+
+
+```
+
+# Food description
+
+Fortification is often misreported in the food item name and description, for instance, in kenfct the item "Chapati, white" (15019) used fortified flour, although it is not mentioned in the item name. We can check this by looking ant the recipes and by checking the VITA_RAE content (in comparison with "Chapati, brown (15020). Hence, for "wheat flour and products" we would need to generate a different entry for fortified and unfortified entries, and allocating the dictionary code that applies. Ensure that we double-check the quantities of the fortifiable nutrients. Also, it could be cases that it is due to other ingredientes and not because a fortification. For example, if using ghee or other dairy products, vit. A (RAE) would be higher that if only using plant-based products. 
+

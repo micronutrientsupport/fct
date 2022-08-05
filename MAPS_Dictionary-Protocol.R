@@ -519,8 +519,65 @@ dictionary.df <- dictionary.df %>%
 #Adding description
 dictionary.df$Description1[dictionary.df$ID_3 == "23710.01"] <- "default pasta (spaghetti)"
 
-#Macaroni
+#Chapati, white, fortified
 
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "F0020.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F0020.06"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "chapati, wheat flour, refined, fortified ghee"
+dictionary.df[n1,10] <- NA
+dictionary.df[n1,11] <- NA
+
+#Chapati, with ghee
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "F0020.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F0020.05"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "chapati, wheat flour, unrefined, added ghee"
+dictionary.df[n1,10] <- "Also called \"Indian chapati\""
+dictionary.df[n1,11] <- NA
+
+#Chapati, brown
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "F0020.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F0020.04"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "chapati, wheat flour, unrefined"
+dictionary.df[n1,10] <- NA
+dictionary.df[n1,11] <- NA
+
+
+#Chapati, white
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "F0020.02")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "F0020.03"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "chapati, wheat flour, refined"
+dictionary.df[n1,10] <- NA
+dictionary.df[n1,11] <- NA
+
+
+#Macaroni
 n1 <- dim(dictionary.df)[1]+1
 
 n2 <- which(dictionary.df$ID_3 == "23710.01")
@@ -723,6 +780,21 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, f
 
 #├ New category from ID_2 ----
 
+#Capsicum, green
+
+id2 <-  "1231"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "capsicum, green, raw"
+dictionary.df[n1,13] <- "capsicum annuum"
+
 #Strawberry
 
 id2 <-  "1354"
@@ -893,6 +965,32 @@ dictionary.df[n1,13] <- "pyrus communis "
 
 
 #├ New item (ID_3) ----
+
+#Capsicum, red
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1231.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1231.03"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "capsicum, yellow, raw"
+dictionary.df[n1,13] <- "capsicum annuum"
+
+#Capsicum, red
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1231.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1231.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "capsicum, red, raw"
+dictionary.df[n1,13] <- "capsicum annuum"
 
 #Taro leaves
 

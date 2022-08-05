@@ -166,7 +166,7 @@ subset(dictionary.df, ID_2 == "1520.02")
 subset(dictionary.df, ID_1 == "2536")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(wafct, str_detect(fooditem, "king|King"), 
+subset(wafct, str_detect(fooditem, "chapa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(foodgroup, "Fish"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))

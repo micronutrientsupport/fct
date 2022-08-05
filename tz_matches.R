@@ -1,5 +1,12 @@
 
 
+subset(dictionary.df, str_detect(FoodName_1, "wheat"))
+subset(dictionary.df, ID_2 == "F0020")
+
+#### Capsicum -------
+
+
+
 #### Leaves -------
 
 subset(kenfct, str_detect(fooditem, "cow pea")  & str_detect(fooditem, "raw"), 
