@@ -191,9 +191,9 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 #DOUBLE CHECK!! - 1025 is duplicated!!
 
 #Checking dictionary/ fct ids availability 
-x <- kenfct %>% filter(code %in% c("6015", "6016"))
+x <- kenfct %>% filter(code %in% c("15019", "15020", "15130"))
 
-subset(kenfct, code == "8018", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "15025", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
 dictionary.df %>% filter(ID_3 == "21151.02")
@@ -201,7 +201,7 @@ subset(dictionary.df, ID_2 == "21184.01")
 subset(dictionary.df, ID_1 == "1807")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(kenfct, str_detect(fooditem, "Beef"), 
+subset(kenfct, str_detect(fooditem, "Chicken"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(kenfct, str_detect(scientific_name, "Phaseolus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
@@ -216,6 +216,10 @@ kenfct$scientific_name[kenfct$code == "13011"] <- "Coriandrum sativum"
 
 #The scientific namr of coconut (3 entries) is wrong
 kenfct$scientific_name[kenfct$code %in% c("10002", "10003", "10004")] <- "Cocos nucifera"
+
+#There is a typo in "Roti"
+kenfct$fooditem[kenfct$code = "15003"] <- "Roti (Indian Chapati)"
+
 
 
 ken_genus <- tribble(
@@ -298,7 +302,16 @@ ken_genus <- tribble(
   "7022", "21184.01.01", "m", #No info on prep.
  "4004", "1213.02", "h", 
  "1018", "21691.02.01", "h",
- "8012", "1527.02", "h ")
+ "8012", "1527.02", "h",
+ "4008", "1231.01", "h",
+ "4009", "1231.02", "h",
+ "4010", "1231.03", "h", 
+ "15019", "F0020.06", "h", 
+ "15020", "F0020.04", "h", 
+ "15130" ,"F0020.05", "h",
+ "15003", "F0022.04", "m", 
+ "15025", "F0022.07", "m"
+ )
 
 
 dictionary.df %>% filter(ID_3 == "1702.01")
