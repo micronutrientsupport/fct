@@ -19,7 +19,7 @@
 #download.file(f,"./data/MOH-KENFCT_2018.xlsx",
  #             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
   #            mode="wb")
-
+#
 
 ##1) LOADING PACKAGES, DICTIONARY,AND KENYA FCT 
 
@@ -191,7 +191,7 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
 #DOUBLE CHECK!! - 1025 is duplicated!!
 
 #Checking dictionary/ fct ids availability 
-x <- kenfct %>% filter(code %in% c("15019", "15020", "15130"))
+x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
 
 subset(kenfct, code == "15025", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
@@ -218,7 +218,7 @@ kenfct$scientific_name[kenfct$code == "13011"] <- "Coriandrum sativum"
 kenfct$scientific_name[kenfct$code %in% c("10002", "10003", "10004")] <- "Cocos nucifera"
 
 #There is a typo in "Roti"
-kenfct$fooditem[kenfct$code = "15003"] <- "Roti (Indian Chapati)"
+kenfct$fooditem[kenfct$code == "15003"] <- "Roti (Indian Chapati)"
 
 
 
@@ -310,7 +310,10 @@ ken_genus <- tribble(
  "15020", "F0020.04", "h", 
  "15130" ,"F0020.05", "h",
  "15003", "F0022.04", "m", 
- "15025", "F0022.07", "m"
+ "15025", "F0022.07", "m",
+ "7001" , "21111.01.03", "h",
+ "7002" , "21111.01.01", "h"
+ 
  )
 
 
@@ -340,6 +343,8 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.02"
 #Fixing rice - acc. to SUA for Kenya all milled rice was coded
 #23161.02 (whether imported or produced), hence we are changing
 ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
+#Fixing beef to acc. for fat content variability
+ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.01.02"
 
 kenfct <- kenfct %>% 
   left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 

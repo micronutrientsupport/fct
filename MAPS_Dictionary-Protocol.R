@@ -607,9 +607,22 @@ dictionary.df[n1,11] <- "TZFCT, KENFCT"
 
 ### Animal products (AP) ----
 
-#Correcting codes
+#Fixing FoodName_2 of fish
+dictionary.df$FoodName_2[dictionary.df$ID_2 == "1503"] <- "freshwater & diadromous fish, fresh fillets"
+
+
+#Fixing codes
+#Chicken prep.
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "F1061"
-dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"              
+dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"
+#beef prep.
+dictionary.df$ID_2[dictionary.df$FoodName_3 == "beef, fresh, grilled"] <- "F0875"
+dictionary.df$ID_3[dictionary.df$FoodName_3 == "beef, fresh, grilled"]  <- "F0875.01"
+
+#Fixing food desc
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "21111.01.01"] <- "beef, lean, with bones, fresh, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "21111.02.01"] <- "beef, lean, without bones, fresh, raw"
+
 
 #├ New category from ID_2 ----
 
@@ -660,8 +673,137 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "milk, cow, skimmed, raw"
 dictionary.df[n1,13] <- "bos taurus"
 
+#Fish loop - we added several fishes from the same category
+#Info of the English names, and other variables were taken 
+#from the ASFIS dataset and from the Fisheries Global NCT
+#work
+#https://www.fao.org/fishery/en/collection/asfis/en
+
+fish_name <- tolower(c("West African lungfish", "Nile perch" ,"Nile tilapia" ,        
+             "Rhinofishes nei","Naked catfishes","Upsidedown catfishes" ,
+     "North African catfish" ,"Tilapias nei"))
+
+isscaap <- c( "13", "13" ,"12" ,"11", "13", "13" ,"13" ,"12")
+
+taxo <- c("1160200202" ,"1700116707", "1705905102" ,"14002024XX", "14108111XX",
+          "14132008XX","1411803003" ,"17059051XX")
+
+alpha <- c("PPG" ,"NIP" ,"TLN" ,"RHI" ,"CAN", "CSY", "CLZ", "TLP")
+
+fish_scientific <-  c("Protopterus annectens", "Lates niloticus" ,
+                      "Oreochromis niloticus", "Labeo spp",   "Bagrus spp"  ,
+                      "Synodontis spp", "Clarias gariepinus" ,"Oreochromis spp" )
+
+for(i in 1:8){
+  
+id2 <- "1503"
+
+n1 <- dim(dictionary.df)[1]+i
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".0", i)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- paste0(fish_name[i], ", fillet, fresh, raw")
+dictionary.df[n1,10] <- paste0("ISSCAAP Code: ", isscaap[i],"; Taxonomic Code: ", taxo[i], "; Inter-Agency3-Alpha Code: ", alpha[i])
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,13] <- fish_scientific[i]
+
+}
+
 
 #├ New item (ID_3) ----
+
+
+
+#Shark
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1514.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1514.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "shark, fresh, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:38; Taxonomic Code:10802010XX; Inter-Agency3-Alpha Code:CWZ"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,12] <- NA
+dictionary.df[n1,13] <- "carcharhinus spp."
+
+
+#Shark
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1514.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1514.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "shark, fresh, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:38; Taxonomic Code:10802010XX; Inter-Agency3-Alpha Code:CWZ"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,12] <- NA
+dictionary.df[n1,13] <- "carcharhinus spp."
+
+
+#Beef, high fat w/o bones
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "21111.02.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21111.02.03"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "beef, high fat, without bones, fresh, raw"
+dictionary.df[n1,13] <- "bos taurus"
+
+#Beef, moderate fat w/o bones
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "21111.02.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21111.02.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "beef, moderate fat, without bones, fresh, raw"
+dictionary.df[n1,13] <- "bos taurus"
+
+#Beef, high fat w/ bones
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "21111.01.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21111.01.03"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "beef, high fat, with bones, fresh, raw"
+dictionary.df[n1,13] <- "bos taurus"
+
+#Beef, moderate fat w/ bones
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "21111.01.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "21111.01.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "beef, moderate fat, with bones, fresh, raw"
+dictionary.df[n1,13] <- "bos taurus"
+
 
 #Sardines
 
@@ -1124,6 +1266,23 @@ dictionary.df$Description2[dictionary.df$ID_3 == "23511.02.01"] <- "jaggery, pan
 dictionary.df$Desc1.ref2[dictionary.df$ID_3 == "23511.02.01"] <- "https://doi.org/10.1016/j.foodchem.2017.01.134"
 
 #├ New category from ID_2 ----
+
+#Brown sugar
+
+id2 <- "2351F"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "sugar, brown"
+dictionary.df[n1,13] <- NA
+
+print(paste0(id2, ".01"))
 
 #Ginger
 
