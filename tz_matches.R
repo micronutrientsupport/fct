@@ -1,7 +1,39 @@
 
+source("kenfct.R")
+source("wafct.R")
 
-subset(dictionary.df, str_detect(FoodName_1, "wheat"))
-subset(dictionary.df, ID_2 == "F0020")
+
+subset(dictionary.df, str_detect(FoodName_2, "demer"))
+subset(dictionary.df, ID_2 == "1503")
+
+
+code <- c( "1553",
+ "1542",
+ "1540",
+"15291",
+"15290",
+ "1529",
+"15271",
+"15270",
+ "1527",
+ "1514",
+"15030",
+ "1503")
+
+food <- "beef"
+
+id1 <-  "2731"
+
+subset(dictionary.df, str_detect(FoodName_2, food))
+subset(kenfct, str_detect(fooditem, food))
+
+subset(dictionary.df, ID_1 %in% id1)
+subset(dictionary.df, ID_2 %in% code, select = c(FoodName_2, ID_2))
+
+subset(dictionary.df, ID_2 == "2351F",
+       select = "FoodName_2")
+
+#### Brown sugar -------
 
 #### Capsicum -------
 
@@ -31,6 +63,21 @@ subset(wafct, str_detect(foodgroup, "Fish")
 subset(wafct, str_detect(foodgroup, "Fish") & str_detect(fooditem, " raw"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
+fish_code <- c("Labeo spp.",
+"Engraulis encrasicolus",
+"Bagrus spp.",
+"Synodontis spp.",
+"Clarias gariepinus",
+"Lates niloticus" ,
+"Oreochromis spp./Tilappia spp.",
+"Sphyraena spp.",
+"Scomberomorus spp.",
+"Sardinella spp.",
+"Family: Penaeidae" ,
+"Thunnus spp.")
+
+subset(wafct, 
+       scientific_name %in% fish_code, select = code) %>% pull()
 
 #FRESH WATER
 
@@ -73,9 +120,9 @@ subset(wafct, str_detect(foodgroup, "Fish") & str_detect(fooditem, " raw"),
 #8008, Nile perch, dry, raw 
 
 subset(kenfct, str_detect(fooditem, "Fish|fish") 
-       #& str_detect(fooditem, "raw")
+        & str_detect(fooditem, "dri")
        , 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+       select = c(code, fooditem, ID_3, scientific_name))
 
 subset(kenfct, str_detect(foodgroup, "FISH") 
        #& is.na(scientific_name) 
@@ -85,6 +132,17 @@ subset(kenfct, str_detect(foodgroup, "FISH")
 subset(kenfct, str_detect(foodgroup, "FISH")  &  str_detect(fooditem, " raw") ,
        select =  c(code, fooditem, ID_3, foodgroup, scientific_name)) 
 
+subset(kenfct, 
+ scientific_name %in% c("Rastrineobola argentea",
+  "Protopterus annectens",
+  "Clarias gariepinus",
+  "Lates niloticus" ,
+  "Oreochromis niloticus",
+  "Rastrelliger kanagurta",
+  "Carcharhinus spp.",
+  "Penaeidae" ,
+  "Sardinella spp.",
+  "Thunnus albacares/T. thynnus"), select = code)
 
 #FRESH WATER
 
