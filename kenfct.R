@@ -203,7 +203,7 @@ subset(dictionary.df, ID_0 == "PB")
 
 subset(kenfct, str_detect(fooditem, "Chicken"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(kenfct, str_detect(scientific_name, "Phaseolus"), 
+subset(kenfct, str_detect(scientific_name, "Basella"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(dictionary.df, str_detect(FoodName_2, "broc"))
 
@@ -312,7 +312,10 @@ ken_genus <- tribble(
  "15003", "F0022.04", "m", 
  "15025", "F0022.07", "m",
  "7001" , "21111.01.03", "h",
- "7002" , "21111.01.01", "h"
+ "7002" , "21111.01.01", "h",
+ "4003",  "1290.9.06", "h",
+ "4029", "1290.9.07", "h",
+ "4038", "1290.9.08", "h"
  
  )
 

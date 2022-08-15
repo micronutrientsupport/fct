@@ -153,16 +153,17 @@ source("dictionary.R")
 
 wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "13_023")
-wafct %>% filter(code == "12_012") %>% glimpse()
+wafct %>% filter(code == "03_022") %>% glimpse()
 
 #Checking code availability 
 x <- wafct %>% filter(code %in% c("01_047", "01_046"))
 
-subset(wafct, code == "02_002", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "09_043", select = fooditem) 
+subset(wafct, code == "09_041", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "21184.02.01")
-subset(dictionary.df, ID_2 == "1520.02")
+dictionary.df %>% filter(ID_3 == "F0623.02")
+subset(dictionary.df, ID_2 == "23110")
 subset(dictionary.df, ID_1 == "2536")
 subset(dictionary.df, ID_0 == "PB")
 
@@ -170,7 +171,7 @@ subset(wafct, str_detect(fooditem, "chapa"),
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(foodgroup, "Fish"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
+subset(wafct, str_detect(scientific_name, "Oreochromis spp"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
 
@@ -189,18 +190,18 @@ wafct.genus %>%
 
 wa_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
-  "03_022", "1701.02", "h",
+  #"03_022", "1701.02", "h",
   "12_001", "24310.01.01", "m",
   "03_057", "1708.01", "h",
-  "13_023", "F0623.01", "h",
+  "13_023", "F0623.01", "m",
   "01_095", "118.03", "h", 
   "10_002", "22211.01", "h",
-  "12_024", "24490.02", "h",
+ # "12_024", "24490.02", "h",
   "13_021", "F0666.01", "h", 
   "07_063", "F1172.01", "m",
   "12_002",  "24310.02.01", "h", 
   "01_043", "23110.02", "h", 
-  "12_012" , "21435.01.01", "h",
+  "12_012" , "21435.01.01", "m",
   "02_003", "01520.01.02", "m",
   "02_001", "01520.01.01", "m",
   "02_015", "1550.01", "h",
@@ -249,10 +250,32 @@ wa_genus <- tribble(
    "04_011", "1699.08", "m", 
   "04_003", "1241.9.02", "h",
   "09_004", "1527.02", "h",
-  "02_002", "1520.02.01", "h"
-  
+  "02_002", "1520.02.01", "h",
+ "09_053", "1505.00.01", "l",
+ "09_007", "1503.04", "h", 
+  "09_015", "1503.05", "h",
+ "09_018", "1503.06", "h",
+ "09_060", "1503.07", "h",
+ "09_032", "1503.02", "h",
+ "09_041", "1503.08", "h"
+ 
   )
 
+# Checking for dictionary duplicates -----
+
+wafct.genus <- wafct.genus %>% 
+ filter(!ref_fctcode %in%
+        c("01_043", "07_063","10_002", "12_002",
+          "12_012", "13_021", "13_023")) %>% #removing dupli
+  select(ref_fctcode, ID_3, fe2_confidence) %>%
+  mutate_at("ref_fctcode", as.character) %>% 
+  rename(confidence = "fe2_confidence") %>% 
+  bind_rows(wa_genus) %>% distinct()
+
+wafct.genus %>%  count(ref_fctcode) %>% 
+  filter(n>1) 
+
+subset(wafct.genus, ref_fctcode == "13_023")
 
 #List of non-available items compared w/ mwi_genus
 
@@ -295,7 +318,7 @@ dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01",
 #Adding dictionary code
 
 wafct <- wafct %>%
-  left_join(., wa_genus, by = c("code" = "ref_fctcode"))
+  left_join(., wafct.genus, by = c("code" = "ref_fctcode"))
 
 #Rename variables according to MAPS-standards
 
@@ -361,9 +384,9 @@ MAPS_wafct %>% filter(original_food_id == "02_042") %>% glimpse()
 MAPS_wafct %>% filter(food_genus_id == "1699.08")
   
 #Saving FCT output into a csv file
-  
- MAPS_wafct  %>% 
-   readr::write_excel_csv(., 
-       here::here('output', 'MAPS_WAFCT_v1.5.csv')) #that f(x) is to 
-         #deal w/ special characters 
-  
+#  
+# MAPS_wafct  %>% 
+#   readr::write_excel_csv(., 
+#       here::here('output', 'MAPS_WAFCT_v1.5.csv')) #that f(x) is to 
+#         #deal w/ special characters 
+#  

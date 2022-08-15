@@ -216,15 +216,16 @@ dictionary.df %>% distinct(FoodName_2, ID_2) %>%
 dictionary.df %>% filter(ID_2 %in% c("1510", "1530"))
 
 #checking that the new proposed ids
-dictionary.df %>% filter(ID_2 %in% c("2510", "2530"))
+dictionary.df %>% filter(ID_2 %in% c("15100", "15300"))
 
 #changing fish ids to new ones:
 
 dictionary.df <-  dictionary.df %>% mutate(ID_2 = case_when(
-  FoodName_2 == "freshwater fish, liver oil" ~ "2510",
-  FoodName_2 == "pelagic fish, frozen, fillet" ~ "2530", 
+  FoodName_2 == "freshwater fish, liver oil" ~ "15100",
+  FoodName_2 == "pelagic fish, frozen, fillet" ~ "15300", 
   TRUE ~ ID_2
 ))
+
 
 #New codes coming from FBS and FBSH
 
@@ -287,10 +288,31 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, lo
 #Found a issue with some ID_0 classification
 #Need to change them to oil and seeds. 
 
+#PB Pulses and Beans "2561",             sesame seed and products
+#PB Pulses and Beans "2571",            soyabean oil and products
+#PB Pulses and Beans "2572",           groundnut oil and products
+#PB Pulses and Beans "2579",          sesameseed oil and products
+
+#Found a issue with some ID_0 classification
+#Need to change them to Other foods. 
+
 #PB Pulses and Beans 2561             sesame seed and products
 #PB Pulses and Beans 2571            soyabean oil and products
 #PB Pulses and Beans 2572           groundnut oil and products
 #PB Pulses and Beans 2579          sesameseed oil and products
+
+#checking what items with duplicated ids
+dictionary.df %>% filter(ID_1 %in% c("2561",
+                                     "2571",
+                                     "2572",
+                                     "2579"))
+
+dictionary.df$ID_0[dictionary.df$ID_1 %in% c("2561", "2571",
+                                             "2572","2579")] <- "OT"
+
+dictionary.df$FoodName_0[dictionary.df$ID_1 %in% c("2561", "2571",
+                                               "2572","2579")] <- "Other foods"
+
 
 #We are adding canned beans, we need to decide where to put them
 #Since they are not dried and they are preserved, acc. to FAO
@@ -622,6 +644,12 @@ dictionary.df$ID_3[dictionary.df$FoodName_3 == "beef, fresh, grilled"]  <- "F087
 #Fixing food desc
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "21111.01.01"] <- "beef, lean, with bones, fresh, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "21111.02.01"] <- "beef, lean, without bones, fresh, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1501.02"] <- "North African catfish, fresh, raw"
+
+#Adding scientific name
+dictionary.df$scientific_name[dictionary.df$ID_3 == "1501.02"] <- "clarias gariepinus"
+
+
 
 
 #├ New category from ID_2 ----
@@ -641,8 +669,6 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "beef, sausage, raw"
 dictionary.df[n1,13] <- "bos taurus"
 
-
-
 #Pork sausages
 
 id2 <- "21184.02"
@@ -658,8 +684,6 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "pork, sausage, raw"
 dictionary.df[n1,13] <- "sus scrofa domesticus"
 
-
-
 #Skimmed milk
 
 n1 <- dim(dictionary.df)[1]+1
@@ -672,6 +696,9 @@ dictionary.df[n1,7] <- "22110.02.01"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "milk, cow, skimmed, raw"
 dictionary.df[n1,13] <- "bos taurus"
+
+
+##├├  Fish -----
 
 #Fish loop - we added several fishes from the same category
 #Info of the English names, and other variables were taken 
@@ -717,25 +744,89 @@ dictionary.df[n1,13] <- fish_scientific[i]
 #├ New item (ID_3) ----
 
 
+##├├  Fish -----
 
-#Shark
+# Dried fish - general (00)
 
 n1 <- dim(dictionary.df)[1]+1
 
-n2 <- which(dictionary.df$ID_3 == "1514.01")
+n2 <- which(dictionary.df$ID_3 == "1505.01")
 
 dictionary.df[n1,] <- dictionary.df[n2,]
 
-dictionary.df[n1,7] <- "1514.02"
+dictionary.df[n1,7] <- "1505.00.01"
 dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "shark, fresh, raw"
-dictionary.df[n1,10] <- "ISSCAAP Code:38; Taxonomic Code:10802010XX; Inter-Agency3-Alpha Code:CWZ"
+dictionary.df[n1,9] <- "fish, dried, raw"
+dictionary.df[n1,10] <- "multiple species, used as \"mean\", \"other\""
+dictionary.df[n1,11] <- NA
+dictionary.df[n1,12] <- NA
+dictionary.df[n1,13] <- NA
+
+# Nile perc, dried
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1505.07")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1505.08"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "nile perc, dried, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:13; Taxonomic Code:1700116707; Inter-Agency3-Alpha Code:NIP"
 dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
 dictionary.df[n1,12] <- NA
-dictionary.df[n1,13] <- "carcharhinus spp."
+dictionary.df[n1,13] <- "lates niloticus"
 
+# Rhinofishes nei (sometimes called catfish)
 
-#Shark
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1501.06")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1501.07"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "rhinofishes nei, fresh, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:11; Taxonomic Code:14002024XX; Inter-Agency3-Alpha Code:RHI"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,12] <- "also called catfish, african carp"
+dictionary.df[n1,13] <- "labeo spp."
+
+# Naked catfishes (sometimes called catfish)
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1501.07")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1501.08"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "naked catfishes, fresh, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:13; Taxonomic Code:14108111XX; Inter-Agency3-Alpha Code:CAN"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,12] <- "also called catfish, bayad"
+dictionary.df[n1,13] <- "bagrus spp."
+
+# Upsidedown catfishes (sometimes called catfish)
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1501.07")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1501.09"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "upsidedown catfishes, fresh, raw"
+dictionary.df[n1,10] <- "ISSCAAP Code:13; Taxonomic Code:14132008XX; Inter-Agency3-Alpha Code:CSY"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,12] <- "also called catfish"
+dictionary.df[n1,13] <- "synodontis spp."
+
+# Shark
 
 n1 <- dim(dictionary.df)[1]+1
 
@@ -1107,6 +1198,62 @@ dictionary.df[n1,13] <- "pyrus communis "
 
 
 #├ New item (ID_3) ----
+
+# Malabar Spinach
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.08"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "malabar spinach, leaves, fresh, raw"
+dictionary.df[n1,10] <- "also called Vine (African) spinach"
+dictionary.df[n1,11] <- "KE18, and https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/nderema/#:~:text=Nderema%2C%20also%20known%20as%20vine,green%20or%20brownish%2Dpurple%20stems."
+dictionary.df[n1,13] <- "basella alba"
+
+# Spider plant
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.07"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "spider plant, leaves, fresh, raw"
+dictionary.df[n1,13] <- "gynandropsis gynandra"
+
+
+# Black Nightshade
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.06"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "black nightshade, leaves, fresh, raw"
+dictionary.df[n1,13] <- "solanum scabrum"
+
+
+#Native eggplant
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "1290.9.05"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "native eggplant, raw"
+dictionary.df[n1,13] <- "solanum macrocarpon"
 
 #Capsicum, red
 
