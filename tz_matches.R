@@ -3,8 +3,8 @@ source("kenfct.R")
 source("wafct.R")
 
 
-subset(dictionary.df, str_detect(FoodName_2, "demer"))
-subset(dictionary.df, ID_2 == "1503")
+subset(dictionary.df, str_detect(FoodName_2, "maize"))
+subset(dictionary.df, ID_2 == "2165")
 
 
 code <- c( "1553",
@@ -20,18 +20,27 @@ code <- c( "1553",
 "15030",
  "1503")
 
-food <- "beef"
+food <- "whisper"
 
-id1 <-  "2731"
+id1 <-  "1505"
+id2 <-  "1290.9"
 
 subset(dictionary.df, str_detect(FoodName_2, food))
+subset(dictionary.df, str_detect(FoodName_3, "spinach"))
 subset(kenfct, str_detect(fooditem, food))
+subset(kenfct, str_detect(code, "4003"))
+subset(wafct, str_detect(code, "04_074"))
 
-subset(dictionary.df, ID_1 %in% id1)
+subset(dictionary.df, ID_2 %in% id2)
 subset(dictionary.df, ID_2 %in% code, select = c(FoodName_2, ID_2))
 
 subset(dictionary.df, ID_2 == "2351F",
        select = "FoodName_2")
+
+
+#### Vegetables others -------
+
+vege <- subset(kenfct, foodgroup == "VEGETABLE AND VEGETABLE PROCUCTS")
 
 #### Brown sugar -------
 
@@ -52,7 +61,7 @@ subset(dictionary.df, str_detect(FoodName_3, "lea"),
 
 ###### wafct  -------
 
-subset(wafct, str_detect(fooditem, "Fish") & str_detect(fooditem, "raw"), 
+subset(wafct, str_detect(fooditem, "Fish") & str_detect(fooditem, "dried"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
 subset(wafct, str_detect(foodgroup, "Fish") 
@@ -120,7 +129,7 @@ subset(wafct,
 #8008, Nile perch, dry, raw 
 
 subset(kenfct, str_detect(fooditem, "Fish|fish") 
-        & str_detect(fooditem, "dri")
+        & str_detect(fooditem, "dr")
        , 
        select = c(code, fooditem, ID_3, scientific_name))
 

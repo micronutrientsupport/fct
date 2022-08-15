@@ -2,6 +2,7 @@
 
 library(tidyverse)
 
+library(tidyverse)
 
 
 
@@ -53,6 +54,11 @@ fct %>% filter(food_genus_id == "23161.02.01") #rice, local
 fbs <- fbs %>% filter(!(food_genus_id == "1532.01" & original_id == "2763")) %>% 
  filter(!(food_genus_id == "1527.01" & original_id == "2764")) %>% 
  filter(!(food_genus_id == "23161.01.01" & original_id == "2805"))  
+
+
+fbs %>% select(1,4:5) %>%  distinct() %>% 
+  left_join(., dictionary.df, by = c("food_genus_id" = "ID_3")) %>% 
+  filter(is.na(FoodName_3)) %>% distinct()
 
 
 readr::write_excel_csv2(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.0.csv"))

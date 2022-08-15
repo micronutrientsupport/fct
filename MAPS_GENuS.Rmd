@@ -146,3 +146,13 @@ We create a template to be attached to the FCT, so we can supply a GENuS code fo
 
 Fortification is often misreported in the food item name and description, for instance, in kenfct the item "Chapati, white" (15019) used fortified flour, although it is not mentioned in the item name. We can check this by looking ant the recipes and by checking the VITA_RAE content (in comparison with "Chapati, brown (15020). Hence, for "wheat flour and products" we would need to generate a different entry for fortified and unfortified entries, and allocating the dictionary code that applies. Ensure that we double-check the quantities of the fortifiable nutrients. Also, it could be cases that it is due to other ingredientes and not because a fortification. For example, if using ghee or other dairy products, vit. A (RAE) would be higher that if only using plant-based products. 
 
+
+ISSUE with Dictionary --> SUA and Fish share the same code!!
+
+ ID_0  FoodName_0        ID_1 FoodName_1                  ID_2  FoodName_2                  
+  <chr> <chr>            <dbl> <chr>                       <chr> <chr>                       
+1 RT    Roots and Tubers  2531 potatoes and products       1510  potatoes                    
+2 RT    Roots and Tubers  2533 sweet potatoes and products 1530  sweet potatoes              
+3 AP    Animal Products   2782 fish, liver oil             1510  freshwater fish, liver oil  
+4 AP    Animal Products   2763 pelagic fish                1530  pelagic fish, frozen, fillet
+
