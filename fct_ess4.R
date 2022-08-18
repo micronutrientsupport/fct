@@ -241,7 +241,7 @@ ess4_ref <- ess4_ken %>% bind_rows(., missig_values) %>%
 
 ess4_fct <- ess4_ref %>% left_join(., ess4_nv) %>% glimpse()
 
-#Function to assign ref. per NV (when all coming from the same ref.)
+#Loop to assign ref. per NV (when all coming from the same ref.)
 
 nv_name <- c("moisture", "energy", "vita_rae", "zn") 
 
@@ -250,6 +250,8 @@ for(i in nv_name){
 ess4_fct[c(paste0("original_food_id_",i), paste0("original_food_name_", i),
  paste0("fct_name_", i))] <- ess4_fct[c("original_food_id", "original_food_name", "fct_name")]
 }
+
+# Missing values for Zn
 
 ess4_fct %>% filter(is.na(zn_in_mg))
 
