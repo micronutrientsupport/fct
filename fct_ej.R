@@ -241,6 +241,16 @@ allNames <- c("Eastern", "Middle", "Southern", "Western")
 
 
 
-
 read.csv(here::here("metadata", "EJ-regional-SSA-spread-citation.csv")) %>% 
   filter(str_detect(food_item, "Cassava"), region == "W")
+
+#Piece of code that check that FBS and regional FCT matches. 
+
+read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv")) %>%
+  select(food_genus_id) %>% unique() %>% filter(!is.na(food_genus_id)) %>%
+  inner_join(.,read.csv(here::here("data", "MAPS_Western-Africa_v1.6.csv")))
+
+
+read.csv(here::here("data", "MAPS_Western-Africa_v1.6.csv")) %>%
+  anti_join(., read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv")) %>%
+              select(food_genus_id) %>% unique() %>% filter(!is.na(food_genus_id)))
