@@ -2,9 +2,14 @@
 source("kenfct.R")
 source("wafct.R")
 
+#Codes to be added
+paste0("22270.0", seq(1, 4, by = 1))
 
-subset(dictionary.df, str_detect(FoodName_2, "maize"))
-subset(dictionary.df, ID_2 == "2165")
+subset(dictionary.df, str_detect(FoodName_2, "broad"))
+subset(dictionary.df, ID_2 == "1533")
+subset(dictionary.df, ID_3 == "23120.03.02")
+subset(dictionary.df, ID_1 == "2532")
+distinct(subset(dictionary.df, ID_1 == "2733", select = c(ID_2, FoodName_2)))
 
 
 code <- c( "1553",
@@ -20,16 +25,18 @@ code <- c( "1553",
 "15030",
  "1503")
 
-food <- "whisper"
+food <- "drop"
 
 id1 <-  "1505"
 id2 <-  "1290.9"
 
-subset(dictionary.df, str_detect(FoodName_2, food))
-subset(dictionary.df, str_detect(FoodName_3, "spinach"))
-subset(kenfct, str_detect(fooditem, food))
-subset(kenfct, str_detect(code, "4003"))
-subset(wafct, str_detect(code, "04_074"))
+subset(dictionary.df, str_detect(FoodName_2, "juice"))
+subset(dictionary.df, str_detect(FoodName_3, "bread"))
+subset(kenfct, str_detect(fooditem, "Ice")) %>% pull(code)
+subset(kenfct, str_detect(code, "5035"))
+
+subset(kenfct, str_detect(ID_3, "23120.03.02"))
+subset(wafct, str_detect(code, "12_012"))
 
 subset(dictionary.df, ID_2 %in% id2)
 subset(dictionary.df, ID_2 %in% code, select = c(FoodName_2, ID_2))

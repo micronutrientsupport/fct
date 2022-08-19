@@ -151,29 +151,6 @@ variables <- read.csv(here::here( "fct-variable-names.csv"))
 
 source("dictionary.R")
 
-wafct.genus %>% filter(ID_3 == "F0623.02")
-wafct.genus %>% filter(ref_fctcode == "13_023")
-wafct %>% filter(code == "03_022") %>% glimpse()
-
-#Checking code availability 
-x <- wafct %>% filter(code %in% c("01_047", "01_046"))
-
-subset(wafct, code == "09_043", select = fooditem) 
-subset(wafct, code == "09_041", select = c(fooditem, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "142.01") 
-
-dictionary.df %>% filter(ID_3 == "F0623.02")
-subset(dictionary.df, ID_2 == "23110")
-subset(dictionary.df, ID_1 == "2536")
-subset(dictionary.df, ID_0 == "PB")
-
-subset(wafct, str_detect(fooditem, "chapa"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(wafct, str_detect(foodgroup, "Fish"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(wafct, str_detect(scientific_name, "Oreochromis spp"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
 
 
 #check 24490 in dictionary
@@ -263,7 +240,7 @@ wa_genus <- tribble(
 
 # Checking for dictionary duplicates -----
 
-wafct.genus <- wafct.genus %>% 
+wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) %>% 
  filter(!ref_fctcode %in%
         c("01_043", "07_063","10_002", "12_002",
           "12_012", "13_021", "13_023")) %>% #removing dupli
@@ -320,9 +297,40 @@ dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01",
 wafct <- wafct %>%
   left_join(., wafct.genus, by = c("code" = "ref_fctcode"))
 
+# Checking dicttionary codes
+
+wafct.genus %>% filter(ID_3 == "F0623.02")
+wafct.genus %>% filter(ref_fctcode == "13_023")
+wafct %>% filter(code == "03_022") %>% glimpse()
+
+#Checking code availability 
+x <- wafct %>% filter(code %in% c("01_047", "01_046"))
+
+subset(wafct, code == "09_043", select = fooditem) 
+subset(wafct, code == "09_041", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "142.01") 
+
+dictionary.df %>% filter(ID_3 == "F0623.02")
+subset(dictionary.df, ID_2 == "23110")
+subset(dictionary.df, ID_1 == "2536")
+subset(dictionary.df, ID_0 == "PB")
+
+subset(wafct, str_detect(fooditem, "chapa"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(wafct, str_detect(foodgroup, "Fish"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(wafct, str_detect(scientific_name, "Oreochromis spp"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
+
+
 #Rename variables according to MAPS-standards
 
-  MAPS_wafct<- wafct %>% 
+  MAPS_wafct<- wafct %>%
+    left_join(.,dictionary.df %>% 
+                select(ID_3, FoodName_3, 
+                       FoodName_0, FoodName_1) %>%
+                filter(str_detect(ID_3, "\\b"))) %>% 
   mutate(nitrogen_in_g = NA, 
          mn_in_mcg = NA,
          i_in_mcg = NA, 

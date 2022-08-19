@@ -179,33 +179,7 @@ var.name <- read.csv(here::here("fct-variable-names.csv")) %>%
   select(Column.Name) %>% pull()
 
 
-
-## Adding GENuS code (1)
-
-#ken.genus %>% count(ref_fctcode) %>% arrange(desc(n))
-#       13031 2
-#        15026 2
-
-#1234.01
-
-#DOUBLE CHECK!! - 1025 is duplicated!!
-
-#Checking dictionary/ fct ids availability 
-x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
-
-subset(kenfct, code == "15025", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "142.01") 
-
-dictionary.df %>% filter(ID_3 == "21151.02")
-subset(dictionary.df, ID_2 == "21184.01")
-subset(dictionary.df, ID_1 == "1807")
-subset(dictionary.df, ID_0 == "PB")
-
-subset(kenfct, str_detect(fooditem, "Chicken"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(kenfct, str_detect(scientific_name, "Basella"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "broc"))
+# Fixing Spelling and typos
 
 #Scientific names "issues"
 #Eggplant (4017) scientific name is "Solalum melongena", instead of 
@@ -220,7 +194,7 @@ kenfct$scientific_name[kenfct$code %in% c("10002", "10003", "10004")] <- "Cocos 
 #There is a typo in "Roti"
 kenfct$fooditem[kenfct$code == "15003"] <- "Roti (Indian Chapati)"
 
-
+## Adding Dictionary codes (GENuS) code 
 
 ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
@@ -301,7 +275,7 @@ ken_genus <- tribble(
  "7025", "21184.02.01", "m",#No info on prep.
   "7022", "21184.01.01", "m", #No info on prep.
  "4004", "1213.02", "h", 
- "1018", "21691.02.01", "h",
+ "9002", "21691.02.01", "h",
  "8012", "1527.02", "h",
  "4008", "1231.01", "h",
  "4009", "1231.02", "h",
@@ -315,9 +289,19 @@ ken_genus <- tribble(
  "7002" , "21111.01.01", "h",
  "4003",  "1290.9.06", "h",
  "4029", "1290.9.07", "h",
- "4038", "1290.9.08", "h"
- 
- )
+ "4038", "1290.9.08", "h",
+ "1036", "F0022.02", "h",
+ "3002", "1243.01", "h",
+ "1024", "23120.05.01", "h", 
+ "1026", "23120.05.02", "h", 
+ "6009", "22270.01", "h", 
+ "6010", "22270.02", "h",
+ "6011", "22270.03", "h",
+ "6012", "22270.04", "h",
+ "6013", "22270.05", "h",
+ "1038", "23120.06.01", "h", 
+ "1040", "23120.06.02", "h",
+ "8035", "1533.02", "h" )
 
 
 dictionary.df %>% filter(ID_3 == "1702.01")
@@ -335,8 +319,14 @@ ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>%
          ID_3 = "MAPS.ID.code") %>% 
   bind_rows(ken_genus) %>% distinct()
 
-dupli <- ken_genus %>%  count(ref_fctcode) %>% 
-  filter(n>1) %>% pull(ref_fctcode)
+(dupli <- ken_genus %>%  count(ref_fctcode) %>% 
+  filter(n>1) %>% pull(ref_fctcode))
+
+##Find a way to stop it running if dupli == TRUE
+x <- if(length(dupli) == 0){NA}else{length(dupli)} 
+#x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
+
+if(!(is.na(x)))stop("duplicated code")
 
 ken_genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
 kenfct %>% filter(code %in% dupli) %>% arrange(desc(code)) %>% select(code, fooditem)
@@ -349,17 +339,40 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
 #Fixing beef to acc. for fat content variability
 ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.01.02"
 
+#Fixing samosa dictionary code
+ken_genus$ID_3[ken_genus$ref_fctcode == "15025"] <-  "F0022.06"
+
 kenfct <- kenfct %>% 
   left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
   relocate(ID_3, .after = fooditem)
 
-
 dim(kenfct)
+
+#Checking dictionary/ fct ids availability 
+x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
+
+subset(kenfct, code == "15025", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "142.01") 
+
+dictionary.df %>% filter(ID_3 == "21151.02")
+subset(dictionary.df, ID_2 == "21184.01")
+subset(dictionary.df, ID_1 == "1807")
+subset(dictionary.df, ID_0 == "PB")
+
+subset(kenfct, str_detect(fooditem, "Chicken"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(kenfct, str_detect(scientific_name, "Basella"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(dictionary.df, str_detect(FoodName_2, "broc"))
+
 
 #Rename variables according to MAPS-standards
 
 MAPS_ken <- kenfct %>% 
-#  left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>%   
+  left_join(.,dictionary.df %>% 
+              select(ID_3, FoodName_3, 
+               FoodName_0, FoodName_1) %>%
+              filter(str_detect(ID_3, "\\b"))) %>%   
 rename(
   original_food_id = "code",
   original_food_name = "fooditem",
