@@ -126,7 +126,7 @@ library(fuzzyjoin)
 # 
 # 
 
-####-----New GENuS code --------#####
+####-----New Dictionary codes --------#####
 
 
 #Fixing names and/ typos
@@ -535,11 +535,71 @@ dictionary.df <- dictionary.df %>%
 
 ### Cereals (CE) ----
 
+#├ New category from ID_2 ----
+
+#Flour of sorghum, red
+
+id2 <- "23120.06"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "sorghum, red, flour raw"
+dictionary.df[n1,13] <- "sorghum bicolor"
+
+#Flour of millet, pearl
+
+id2 <- "23120.05"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "millet, pearl, flour, raw"
+dictionary.df[n1,12] <- "also called bulrush millet"
+dictionary.df[n1,13] <- "pennisetum glaucum"
 
 #├ New item (ID_3) ----
 
 #Adding description
 dictionary.df$Description1[dictionary.df$ID_3 == "23710.01"] <- "default pasta (spaghetti)"
+
+#Flour of sorghum, white
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "23120.06.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "23120.06.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "sorghum, white, flour raw"
+dictionary.df[n1,12] <- NA
+dictionary.df[n1,13] <- "sorghum bicolor"
+
+#Flour of millet, finger
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 == "23120.05.01")
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- "23120.05.02"
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "millet, finger, flour,raw"
+dictionary.df[n1,12] <- NA
+dictionary.df[n1,13] <- "eleusine coracana"
 
 #Chapati, white, fortified
 
@@ -649,10 +709,31 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "1501.02"] <- "North African catf
 #Adding scientific name
 dictionary.df$scientific_name[dictionary.df$ID_3 == "1501.02"] <- "clarias gariepinus"
 
-
-
-
 #├ New category from ID_2 ----
+
+#Ice cream - loop
+
+foods <- tolower(c("Ice cream, caramel flavour, regular fat" ,
+ "Ice cream, chocolate flavour, regular fat" ,
+ "Ice cream, strawberry flavour, regular fat",
+ "Ice cream, vanilla flavour, regular fat" ,           
+ "Ice cream, vanilla flavour, with nuts, regular fat"))
+
+for(i in 1:length(foods)){
+
+id2 <- "22270"
+
+n1 <- dim(dictionary.df)[1]+i
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".0", i)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- paste0(foods[i])
+
+}
 
 #Beef sausages
 
@@ -700,11 +781,51 @@ dictionary.df[n1,13] <- "bos taurus"
 
 ##├├  Fish -----
 
-#Fish loop - we added several fishes from the same category
+# Pelagic fish fillet
+
+fish_name <- tolower(c("Barracudas nei", "Seerfishes nei", "Sardinellas nei",
+                       "True tunas nei"))
+
+isscaap <- c( "37", "36", "35", "36")
+
+taxo <- c("17710001XX", "17501015XX", "12105012XX", "17501026XX")
+
+alpha <- c("BAR", "KGX", "SIX", "TUS")
+
+other_name <- c("Barracuda", "Mackerel", "Sardines, Dagaa", "Tuna" )
+
+fish_scientific <- tolower(c("Sphyraena spp.", "Scomberomorus spp.", 
+                             "Sardinella spp." , "Thunnus spp."))
+
+for(i in 1:length(fish_name)){
+  
+  id2 <- "1529"
+  
+  n1 <- dim(dictionary.df)[1]+i
+  
+  n2 <- which(dictionary.df$ID_2 %in% id2)
+  
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  
+  dictionary.df[n1,7] <- paste0(id2, ".0", i)
+  dictionary.df[n1,8] <- NA
+  dictionary.df[n1,9] <- paste0(fish_name[i], ", fillet, fresh, raw")
+  dictionary.df[n1,10] <- paste0("ISSCAAP Code: ", isscaap[i],"; Taxonomic Code: ", taxo[i], "; Inter-Agency3-Alpha Code: ", alpha[i])
+  dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+  dictionary.df[n1,12] <- paste0("also called ", other_name[i])
+   dictionary.df[n1,13] <- fish_scientific[i]
+  
+}
+
+
+#Fish loop 
+#we added several fishes from the same category
 #Info of the English names, and other variables were taken 
 #from the ASFIS dataset and from the Fisheries Global NCT
 #work
 #https://www.fao.org/fishery/en/collection/asfis/en
+
+# Freshwater fish fillet
 
 fish_name <- tolower(c("West African lungfish", "Nile perch" ,"Nile tilapia" ,        
              "Rhinofishes nei","Naked catfishes","Upsidedown catfishes" ,
@@ -717,9 +838,9 @@ taxo <- c("1160200202" ,"1700116707", "1705905102" ,"14002024XX", "14108111XX",
 
 alpha <- c("PPG" ,"NIP" ,"TLN" ,"RHI" ,"CAN", "CSY", "CLZ", "TLP")
 
-fish_scientific <-  c("Protopterus annectens", "Lates niloticus" ,
+fish_scientific <-  tolower(c("Protopterus annectens", "Lates niloticus" ,
                       "Oreochromis niloticus", "Labeo spp",   "Bagrus spp"  ,
-                      "Synodontis spp", "Clarias gariepinus" ,"Oreochromis spp" )
+                      "Synodontis spp", "Clarias gariepinus" ,"Oreochromis spp" ))
 
 for(i in 1:8){
   
@@ -762,11 +883,31 @@ dictionary.df[n1,11] <- NA
 dictionary.df[n1,12] <- NA
 dictionary.df[n1,13] <- NA
 
+#Sardines, grilled
+
+id3 <- "1533.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(str_extract(id3, 
+    "[[:alnum:]]{2,5}\\.\\d{1}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "sardines, fresh, grilled"
+dictionary.df[n1,10] <- "ISSCAAP Code:35; Taxonomic Code:12105012XX; Inter-Agency3-Alpha Code:SIX"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
+dictionary.df[n1,12] <- "10.48580/dfpk-37v"
+dictionary.df[n1,13] <- "sardinella spp."
+
 # Nile perc, dried
 
 n1 <- dim(dictionary.df)[1]+1
 
-n2 <- which(dictionary.df$ID_3 == "1505.07")
+n2 <- which(dictionary.df$ID_3 == "1505.06")
 
 dictionary.df[n1,] <- dictionary.df[n2,]
 
@@ -1013,6 +1154,36 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, f
 
 #├ New category from ID_2 ----
 
+#Juices, canned bottled, sweetened
+
+id2 <-  "21439.9"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "juices, canned bottled, sweetened"
+
+
+#Broad beans, green
+
+id2 <-  "1243"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "broad beans, green, raw"
+dictionary.df[n1,13] <- "vicia faba"
+
 #Capsicum, green
 
 id2 <-  "1231"
@@ -1198,6 +1369,22 @@ dictionary.df[n1,13] <- "pyrus communis "
 
 
 #├ New item (ID_3) ----
+
+#Juices, canned bottled, sweetened
+
+id3 <- "21439.9.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+            "[[:alnum:]]{2,5}\\.\\d{1}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                              as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "juices, canned bottled, unsweetened"
 
 # Malabar Spinach
 
@@ -1512,6 +1699,7 @@ dictionary.df[n1,13] <- NA
 
 ########## Roots and Tubers (RT) ##############
 
+
 #Cassava dried
 
 id2 <- "1520.02"
@@ -1527,9 +1715,28 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "cassava, root, dried, raw"
 dictionary.df[n1,13] <- "manihot esculenta"
 
+#├ New item (ID_3) ----
 
+#Changing name cocyam and adding scientific name (1591.01)
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1591.01"] <- "cocoyam, white, fresh, raw"
+dictionary.df$Description1[dictionary.df$ID_3 == "1591.01"] <- "Also called tannias, and yautia"
+dictionary.df$Description1[dictionary.df$ID_3 == "1591.01"] <- "xanthosoma sagittifolium"
 
+#Cocoyam, yellow
 
+id3 <- "1591.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(str_extract(id3, "[[:alnum:]]{2,5}\\.\\d{1}"),
+                              as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "cocoyam, yellow, fresh, raw"
+dictionary.df[n1,13] <- "xanthosoma sagittifolium"
 
 
 #Run this to over-write any new upgrades in adding new food dictionary codes

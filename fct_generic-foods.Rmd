@@ -1,0 +1,39 @@
+---
+title: "fct_generic-foods"
+authors:
+- "Segovia de la Revilla, Lucia"
+- "Codd, Thomas"
+- "Ander, Louise" 
+date: '2022-08-19'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Generic foods FCT
+
+####Fisheries
+
+1. Get data from Fisheries Global NCT
+2. Filter FCTs that are currenlty used in MAPS, and approved by FAO
+3. Get means by:
+  3.1. ISSCAAP code and "fish_prep"
+  3.2. ICS code (SUA fish), and "fish_prep"
+  3.2. "fish_prep"
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
