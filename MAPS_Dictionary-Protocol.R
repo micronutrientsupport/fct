@@ -174,6 +174,7 @@ library(fuzzyjoin)
 dictionary.df <- read.csv(here::here("metadata", "MAPS_Dictionary_v2.6.csv")) %>% 
   select(-starts_with("X"))
 
+
 dictionary.df$scientific_name <- NA
 
 colnames(dictionary.df)
@@ -696,6 +697,7 @@ dictionary.df$FoodName_2[dictionary.df$ID_2 == "1503"] <- "freshwater & diadromo
 #Fixing codes
 #Chicken prep.
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "F1061"
+dictionary.df$FoodName_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "poultry meat preparations"
 dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"
 #beef prep.
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "beef, fresh, grilled"] <- "F0875"
