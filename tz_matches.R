@@ -2,15 +2,34 @@
 source("kenfct.R")
 source("wafct.R")
 
+#Change 23670.01.01 FoodName_3 to sweets, including chewing gum
+#Add 23540 - molasses
+#Any "whole fat would be under raw milk
+#Add two - 22290 - milk flavoured, chocolate, and strawberry, banana
+#Add two - 22290 - milk fermented, industrial, and traditional
+#Add two - 23991.01 infant formula, 3 months, fortified, and 6 months, fortified"
+#Add - 21340 - pickles, sweet
+#Add - 1533 - same as "1529.02" but grilled. 
+
 #Codes to be added
 paste0("22270.0", seq(1, 4, by = 1))
 
-subset(dictionary.df, str_detect(FoodName_2, "broad"))
-subset(dictionary.df, ID_2 == "1533")
-subset(dictionary.df, ID_3 == "23120.03.02")
-subset(dictionary.df, ID_1 == "2532")
-distinct(subset(dictionary.df, ID_1 == "2733", select = c(ID_2, FoodName_2)))
+subset(dictionary.df, 
+      str_detect(FoodName_2, "meat") 
+      #&
+      #str_detect(FoodName_2, "milk")
+      )
 
+subset(dictionary.df, 
+       str_detect(scientific_name, "scomberomorus"))
+
+subset(dictionary.df, ID_2 == "F1061")
+subset(dictionary.df, ID_3 == "2211.01")
+subset(dictionary.df, ID_1 == "2734")
+distinct(subset(dictionary.df, ID_1 == "2734", select = c(ID_2, FoodName_2)))
+
+subset(dictionary.df, ID_2 == "F1061" &
+         FoodName_2 == "meat of chickens, fresh or chilled")
 
 code <- c( "1553",
  "1542",
