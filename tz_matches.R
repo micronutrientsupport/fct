@@ -2,20 +2,30 @@
 source("kenfct.R")
 source("wafct.R")
 
-#Change 23670.01.01 FoodName_3 to sweets, including chewing gum
-#Add 23540 - molasses
-#Any "whole fat would be under raw milk
-#Add two - 22290 - milk flavoured, chocolate, and strawberry, banana
-#Add two - 22290 - milk fermented, industrial, and traditional
-#Add two - 23991.01 infant formula, 3 months, fortified, and 6 months, fortified"
-#Add - 21340 - pickles, sweet
-#Add - 1533 - same as "1529.02" but grilled. 
+
+
+
+#Amend yeast (1699.04) --> F1232.06
+#Amend baking powder (1699.05) --> F1232.07
+#Amend tabasco sauce (1699.06)  --> F1232.08
+#Add - 141 - soya milk
+#Add - F0875 - meatballs, beef 
+#Add - 23162 - rice, brown, raw
+#Add - 23162 - rice, brown, boiled
+#Add - 23161.01 - rice, parboiled, imported, raw
+#Add - 23161.01 - rice, parboiled, imported, boiled
+#Add - 23161.02 - rice, parboiled, local, raw
+#Add - 23161.02 - rice, parboiled, local, boiled
+#Add - F0020 - bread, sweet, wheat flour, refined
+#Add - 1290.9 - radish, fresh, raw
+#Add - 1251 - carrot, fresh, raw
+#Add - 1251 - turnip, fresh, raw
 
 #Codes to be added
 paste0("22270.0", seq(1, 4, by = 1))
 
 subset(dictionary.df, 
-      str_detect(FoodName_2, "meat") 
+      str_detect(FoodName_2, "preserve") 
       #&
       #str_detect(FoodName_2, "milk")
       )
@@ -23,10 +33,11 @@ subset(dictionary.df,
 subset(dictionary.df, 
        str_detect(scientific_name, "scomberomorus"))
 
-subset(dictionary.df, ID_2 == "F1061")
-subset(dictionary.df, ID_3 == "2211.01")
-subset(dictionary.df, ID_1 == "2734")
-distinct(subset(dictionary.df, ID_1 == "2734", select = c(ID_2, FoodName_2)))
+subset(dictionary.df, ID_2 == "F1232")
+subset(dictionary.df, ID_3 == "1529.02")
+subset(dictionary.df, ID_1 == "2625")
+distinct(subset(dictionary.df, ID_1 == "2625", select = c(ID_2, FoodName_2)))
+distinct(subset(dictionary.df, ID_0 == "CE", select = c(ID_1, FoodName_1)))
 
 subset(dictionary.df, ID_2 == "F1061" &
          FoodName_2 == "meat of chickens, fresh or chilled")
