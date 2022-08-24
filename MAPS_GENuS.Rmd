@@ -156,3 +156,10 @@ ISSUE with Dictionary --> SUA and Fish share the same code!!
 3 AP    Animal Products   2782 fish, liver oil             1510  freshwater fish, liver oil  
 4 AP    Animal Products   2763 pelagic fish                1530  pelagic fish, frozen, fillet
 
+
+
+# Adding values
+
+## Milk and products (dairy)
+##NOTES:
+##Any "whole fat would be under raw milk

@@ -689,9 +689,14 @@ dictionary.df[n1,11] <- "TZFCT, KENFCT"
 
 
 ### Animal products (AP) ----
+##NOTES:
+##Any "whole fat would be under raw milk
 
-#Fixing FoodName_2 of fish
+#Fixing FoodName_2
+#of fish
 dictionary.df$FoodName_2[dictionary.df$ID_2 == "1503"] <- "freshwater & diadromous fish, fresh fillets"
+#of beef prep.
+dictionary.df$FoodName_2[dictionary.df$ID_2 == "F0875"] <- "beef and veal preparations nes"
 
 
 #Fixing codes
@@ -866,7 +871,6 @@ dictionary.df[n1,13] <- fish_scientific[i]
 
 #├ New item (ID_3) ----
 
-
 ##├├  Fish -----
 
 # Dried fish - general (00)
@@ -985,6 +989,26 @@ dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information Sy
 dictionary.df[n1,12] <- NA
 dictionary.df[n1,13] <- "carcharhinus spp."
 
+#seerfishes nei, fillet, fresh, raw
+
+id3 <- "1533.02"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,9] <- "seerfishes nei, fillet, fresh, grilled"
+dictionary.df[n1,10] <- "ISSCAAP Code: 36; Taxonomic Code: 17501015XX; Inter-Agency3-Alpha Code: KGX"
+dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
+dictionary.df[n1,12] <- "also called Mackerel"
+dictionary.df[n1,13] <- "scomberomorus spp."
+
+############ End fish ##################
 
 #Beef, high fat w/o bones
 
@@ -1108,6 +1132,76 @@ dictionary.df[n1,10] <- "ISSCAAP Code:11; Taxonomic Code:1400207001; Inter-Agenc
 dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/07/19). (2022)"
 dictionary.df[n1,12] <- "Lake Victoria sardine (https://www.catalogueoflife.org/data/taxon/4RLTW)"
 dictionary.df[n1,13] <- "rastrineobola argentea"
+
+
+#milk flavoured, chocolate 
+
+id3 <- "22290.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "milk flavoured, chocolate"
+
+#milk flavoured, strawberry, banana
+
+id3 <- "22290.02"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "milk flavoured, strawberry, banana"
+
+#milk fermented, industrial
+
+id3 <- "22290.03"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "milk fermented, industrial"
+
+#milk fermented, traditional
+
+id3 <- "22290.04"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "milk fermented, traditional"
+
 
 ### Pulses and Beans (PB) ----
 
@@ -1367,7 +1461,24 @@ dictionary.df[n1,] <- dictionary.df[n2,]
 dictionary.df[n1,7] <- "1342.01.01"
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "pear, fresh, raw"
-dictionary.df[n1,13] <- "pyrus communis "
+dictionary.df[n1,13] <- "pyrus communis"
+
+#pickles, sweet
+
+id2 <- "21340"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "pickles, sweet"
+dictionary.df[n1,13] <- NA
+
+print(paste0(id2, ".01"))
 
 
 #├ New item (ID_3) ----
@@ -1383,7 +1494,7 @@ n2 <- which(dictionary.df$ID_3 %in% id3)
 dictionary.df[n1,] <- dictionary.df[n2,]
 
 dictionary.df[n1,7] <- paste0( str_extract(id3, 
-            "[[:alnum:]]{2,5}\\.\\d{1}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+            "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
 dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "juices, canned bottled, unsweetened"
@@ -1597,11 +1708,30 @@ dictionary.df[n1,13] <- "cucurbita pepo var. Cylindrica"
 
 #Correcting codes
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "1460.01"] <- "coconut, mature, fresh, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "23670.01.01"] <- "sweets, including chewing gum"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23511.02.01"] <- "sugar, from unrefined sugar cane"
 dictionary.df$Description2[dictionary.df$ID_3 == "23511.02.01"] <- "jaggery, panela, raw sugar"
 dictionary.df$Desc1.ref2[dictionary.df$ID_3 == "23511.02.01"] <- "https://doi.org/10.1016/j.foodchem.2017.01.134"
 
+
 #├ New category from ID_2 ----
+
+#Molasses
+
+id2 <- "23540"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "molasses"
+dictionary.df[n1,13] <- NA
+
+print(paste0(id2, ".01"))
 
 #Brown sugar
 
@@ -1647,6 +1777,41 @@ dictionary.df[n1,9] <- "vegetable, fat"
 dictionary.df[n1,13] <- NA
 
 #├ New item (ID_3) ----
+
+#sauces and spice
+
+foods <- c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge")
+
+for(i in 1:length(foods)){
+  
+  id2 <- "F1232"
+  
+  n1 <- dim(dictionary.df)[1]+i
+  
+  n2 <- which(dictionary.df$ID_2 %in% id2)
+  
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  dictionary.df[n1,7] <- paste0(id2, ".0", i)
+  dictionary.df[n1,8] <- NA
+  dictionary.df[n1,9] <- paste0(foods[i])
+  
+}
+
+#candies, hard 
+
+id3 <- "23670.01.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,9] <- "candies, hard"
+
 
 #Tea with milk
 
@@ -1698,6 +1863,39 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "Animal, fat"
 dictionary.df[n1,13] <- NA
 
+#infant formula, 3 months, fortified
+
+id3 <- "23991.01.02"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "infant formula, 3 months, fortified"
+
+#infant formula, 6 months, fortified
+
+id3 <- "23991.01.03"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "infant formula, 6 months, fortified"
 
 ########## Roots and Tubers (RT) ##############
 
@@ -1740,6 +1938,11 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "cocoyam, yellow, fresh, raw"
 dictionary.df[n1,13] <- "xanthosoma sagittifolium"
 
+
+
+## 
+
+dictionary.df$FoodName_2 <- str_squish(dictionary.df$FoodName_2)
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
