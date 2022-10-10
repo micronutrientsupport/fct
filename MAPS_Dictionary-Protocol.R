@@ -569,6 +569,22 @@ dictionary.df[n1,9] <- "millet, pearl, flour, raw"
 dictionary.df[n1,12] <- "also called bulrush millet"
 dictionary.df[n1,13] <- "pennisetum glaucum"
 
+#Rice, brown, raw
+
+id2 <- "23162"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_2 %in% id2)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0(id2, ".01")
+dictionary.df[n1,8] <- NA
+dictionary.df[n1,9] <- "rice, brown, raw"
+dictionary.df[n1,12] <- NA
+dictionary.df[n1,13] <- "oryza sativa"
+
 #├ New item (ID_3) ----
 
 #Adding description
@@ -686,6 +702,21 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "dough, fried"
 dictionary.df[n1,10] <- "mandazi"
 dictionary.df[n1,11] <- "TZFCT, KENFCT"
+
+#rice, brown, boiled
+
+id3 <- "23162.01"
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- paste0( str_extract(id3, 
+                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+dictionary.df[n1,9] <- "rice, brown, boiled"
 
 
 ### Animal products (AP) ----
@@ -1238,6 +1269,33 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "peanut butter"
 dictionary.df[n1,13] <- "arachis hypogaea"
 
+#├ New item (ID_3) ----
+
+# Soya milk
+
+#Manual inputs:
+id2 <- "141"
+desc_new <- "soybeans, milk, fresh, raw"
+fex2_new <- NA
+scien_new <- NA
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-paste0( str_extract(id3, 
+                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- which(dictionary.df$ID_3 %in% id3)
+
+dictionary.df[n1,] <- dictionary.df[n2,]
+
+dictionary.df[n1,7] <- ide3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
+
 
 ### Fruits and Vegetables (FV) ----
 
@@ -1706,12 +1764,26 @@ dictionary.df[n1,13] <- "cucurbita pepo var. Cylindrica"
 
 ########## Other foods (OT) ##############
 
-#Correcting codes
+#Correcting food description by codes
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "1460.01"] <- "coconut, mature, fresh, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23670.01.01"] <- "sweets, including chewing gum"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23511.02.01"] <- "sugar, from unrefined sugar cane"
 dictionary.df$Description2[dictionary.df$ID_3 == "23511.02.01"] <- "jaggery, panela, raw sugar"
 dictionary.df$Desc1.ref2[dictionary.df$ID_3 == "23511.02.01"] <- "https://doi.org/10.1016/j.foodchem.2017.01.134"
+
+#Correcting food item classification: 1- food item code, 2- sub-classification
+subset(dictionary.df, ID_3 == "F1232.07", select = c(1:6))
+subset(dictionary.df, ID_2 == "F1232", select = c(1:6))
+unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
+#Amend yeast (1699.04) --> F1232.06
+dictionary.df$ID_3[dictionary.df$ID_3 == "1699.04"] <-  "F1232.06"
+dictionary.df[which(dictionary.df$ID_3 == "F1232.06"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
+#Amend baking powder (1699.05) --> F1232.07
+dictionary.df$ID_3[dictionary.df$ID_3 == "1699.05"] <- "F1232.07"
+dictionary.df[which(dictionary.df$ID_3 == "F1232.07"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
+#Amend tabasco sauce (1699.06)  --> F1232.08
+dictionary.df$ID_3[dictionary.df$ID_3 == "1699.06"] <- "F1232.08"
+dictionary.df[which(dictionary.df$ID_3 == "F1232.08"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
 
 
 #├ New category from ID_2 ----
@@ -1939,92 +2011,14 @@ dictionary.df[n1,9] <- "cocoyam, yellow, fresh, raw"
 dictionary.df[n1,13] <- "xanthosoma sagittifolium"
 
 
-
-## 
+# Final Formatting ----
 
 dictionary.df$FoodName_2 <- str_squish(dictionary.df$FoodName_2)
 
-#Run this to over-write any new upgrades in adding new food dictionary codes
-#in dictionary folder
+dictionary.df <- dictionary.df %>% arrange(.)
 
 
-#IMPORTANT: to keep all folder updated run this code!!
-#Saving Food-Dictionary into all r-project that use it
 
-#here we are checking where the previous version was stored:
-#
-rproject.path <- "C:/Users/LuciaSegoviaDeLaRevi/OneDrive - London School of Hygiene and Tropical Medicine/MAPS/02_working-files/r-project"
+#Save an R object - Running MAPS_dict_QC.R
 
-#knowing all the MAPS_Dictionary-Protocol.R
-
-x  <- list.files(rproject.path, 
-           pattern = "MAPS_Dictionary-Protocol.R",
-           recursive = TRUE)
-#
-#
-#
-## find the files that you want
-#dictionary.files <- list.files(rproject.path, 
-#                               pattern = "MAPS_Dictionary_v2.5.csv",
-#                               recursive = TRUE) 
-#
-## copy the files to the new folder
-#file.copy("MAPS_Dictionary-Protocol.R", file.path(rproject.path,
-#                                                  x[2]), overwrite = TRUE)
-#
-##a loop to check that paths are created
-#for(i in 1:length(x)){
-#  
-#  file.copy("MAPS_Dictionary-Protocol.R", file.path(rproject.path,
-#            x[i]))
-#  print(i)
-#  
-#}
-#
-##Storing the files paths for the latest version
-#dictionary.files <- list.files(rproject.path, 
-#                               pattern = "MAPS_Dictionary_v2.5.csv",
-#                               recursive = TRUE) 
-#
-##a loop to check that paths are created
-#for(i in 1:length(dictionary.files)){
-#
-#file.path(rproject.path,
-#          str_replace(dictionary.files[i],
-#          "MAPS_Dictionary_v2.5.csv", "MAPS_Dictionary_v2.6.csv"))
-#print(i)
-#
-#}
-#
-#
-##The loop that actually create the new file in each folder. 
-#
-#for(i in 1:length(dictionary.files)){
-#
-#  dictionary.df %>% 
-#  write.csv(file.path(rproject.path,
-#                str_replace(dictionary.files[i],
-#          "MAPS_Dictionary_v2.5.csv", "MAPS_Dictionary_v2.6.csv")),
-#   row.names = F)
-#
-#  print(i)
-#}
-#
-#
-##IMPORTANT: This file needs to be updated in Teams!!
-##This will only be necessary when a new release is made. 
-#
-##Saving a copy of the master file for MAPS
-#
-#dictionary.df  %>% filter(str_detect(ID_3, "\\b")) %>% 
-#  select(ID_0:FoodName_1, ID_3, FoodName_3) %>% 
-#  rename(
-#    food_group_id = "ID_0",
-#    food_group_name = "FoodName_0",
-#    food_subgroup_id = "ID_1",
-#    food_subgroup_name = "FoodName_1",
-#    food_genus_id = "ID_3",
-#    food_genus_name = "FoodName_3") %>% 
-#  write.csv(here::here('output',
-#                       'MAPS_Dictionary_master-file_v2.6.csv'), row.names = F)
-#
+saveRDS(dictionary.df, file = here::here("inter-output", "dictionary.df.rds"))
