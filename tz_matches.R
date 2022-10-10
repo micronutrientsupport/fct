@@ -3,29 +3,11 @@ source("kenfct.R")
 source("wafct.R")
 
 
-
-
-#Amend yeast (1699.04) --> F1232.06
-#Amend baking powder (1699.05) --> F1232.07
-#Amend tabasco sauce (1699.06)  --> F1232.08
-#Add - 141 - soya milk
-#Add - F0875 - meatballs, beef 
-#Add - 23162 - rice, brown, raw
-#Add - 23162 - rice, brown, boiled
-#Add - 23161.01 - rice, parboiled, imported, raw
-#Add - 23161.01 - rice, parboiled, imported, boiled
-#Add - 23161.02 - rice, parboiled, local, raw
-#Add - 23161.02 - rice, parboiled, local, boiled
-#Add - F0020 - bread, sweet, wheat flour, refined
-#Add - 1290.9 - radish, fresh, raw
-#Add - 1251 - carrot, fresh, raw
-#Add - 1251 - turnip, fresh, raw
-
 #Codes to be added
 paste0("22270.0", seq(1, 4, by = 1))
 
 subset(dictionary.df, 
-      str_detect(FoodName_2, "preserve") 
+      str_detect(FoodName_3, "biscuit") 
       #&
       #str_detect(FoodName_2, "milk")
       )
@@ -33,7 +15,7 @@ subset(dictionary.df,
 subset(dictionary.df, 
        str_detect(scientific_name, "scomberomorus"))
 
-subset(dictionary.df, ID_2 == "F1232")
+subset(dictionary.df, ID_2 == "23162")
 subset(dictionary.df, ID_3 == "1529.02")
 subset(dictionary.df, ID_1 == "2625")
 distinct(subset(dictionary.df, ID_1 == "2625", select = c(ID_2, FoodName_2)))

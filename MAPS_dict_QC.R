@@ -22,14 +22,22 @@ dict.df %>%
   group_by(ID_1, FoodName_1, ID_2, FoodName_2) %>%  distinct(ID_2, FoodName_2) %>% count() %>% 
   arrange(desc(n))
 
-subset(dict.df, ID_2 == "23530")
+subset(dict.df, ID_2 == "21700.02")
 
 #Checking categories (ID_3) by ID_2
 dict.df %>% 
   group_by(ID_2, FoodName_2, ID_3, FoodName_3) %>%  distinct(ID_3, FoodName_3) %>% count() %>% 
   arrange(desc(n))
 
-subset(dict.df, ID_2 == "23530")
+#ID_3 & FoodName_3 must be unique
+sum(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
+sum(duplicated(dict.df$FoodName_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
+x <- which(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
+
+n1 <- dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""][x]
+
+subset(dict.df, ID_3 %in% n1)
+subset(dict.df, ID_3 == "23110.02")
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
@@ -44,7 +52,7 @@ rproject.path <- str_remove(getwd(), "\\/[:alpha:]{1,}$")
 
 #knowing all the MAPS_Dictionary-Protocol.R
 
-x  <- list.files(rproject.path, 
+list.files(rproject.path, 
                  pattern = "MAPS_Dictionary-Protocol.R",
                  recursive = TRUE)
 #
