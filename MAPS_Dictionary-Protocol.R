@@ -171,9 +171,31 @@ library(fuzzyjoin)
 
 #save as output a list of genus_id and genus_name available
 
+#Adding a new item for ihs5
+#mucuna == 837 == 1701.4 == velvet bean, dried, raw 
+
+#dictionary.df <- dictionary.df %>% add_row(
+#  ID_0 = "PB",
+#  FoodName_0 = "Pulses and Beans", 
+#  ID_1 = 2546,
+#  FoodName_1 = "beans and products", 
+#  ID_2 = "1701", 
+#  FoodName_2 =  "beans, dry",
+#  ID_3 = "1701.04",
+#  FE2_3 = NA,
+#  FoodName_3 = "velvet bean, dried, raw") 
+
+#dictionary %>% 
+#write.csv(here::here('MAPS_Dictionary_v2.5.csv'), row.names = F)
+
+#dictionary %>% select(ID_3, FoodName_3) %>% filter(str_detect(ID_3, "\\b")) %>% 
+# rename(food_genus_id = "ID_3",
+#       food_genus_name = "FoodName_3") %>% 
+# write.csv(here::here('output', 'MAPS_Dictionary_v2.5.csv'), row.names = F)
+
+
 dictionary.df <- read.csv(here::here("metadata", "MAPS_Dictionary_v2.6.csv")) %>% 
   select(-starts_with("X"))
-
 
 dictionary.df$scientific_name <- NA
 
@@ -183,28 +205,6 @@ colnames(dictionary.df)
 #here we are solving it
 
 dictionary.df$ID_3[dictionary.df$FoodName_3 == "cake, banana"] <- "F0022.07"
-
-#Adding a new item for ihs5
-#mucuna == 837 == 1701.4 == velvet bean, dried, raw 
-
-dictionary.df <- dictionary.df %>% add_row(
-  ID_0 = "PB",
-  FoodName_0 = "Pulses and Beans", 
-  ID_1 = 2546,
-  FoodName_1 = "beans and products", 
-  ID_2 = "1701", 
-  FoodName_2 =  "beans, dry",
-  ID_3 = "1701.04",
-  FE2_3 = NA,
-  FoodName_3 = "velvet bean, dried, raw") 
-
-#dictionary %>% 
-#write.csv(here::here('MAPS_Dictionary_v2.5.csv'), row.names = F)
-
-#dictionary %>% select(ID_3, FoodName_3) %>% filter(str_detect(ID_3, "\\b")) %>% 
-# rename(food_genus_id = "ID_3",
-#       food_genus_name = "FoodName_3") %>% 
-# write.csv(here::here('output', 'MAPS_Dictionary_v2.5.csv'), row.names = F)
 
 
 #---tracking-issue-2
@@ -236,36 +236,37 @@ dictionary.df <-  dictionary.df %>% mutate(ID_2 = case_when(
 #FBSH
 #2562 == 1491.02.01 (palm kernel, raw) New
 
-dictionary.df <- dictionary.df %>% add_row(
-  ID_0 = "OT",
-  FoodName_0 = "Other foods", 
-  ID_1 = 2558,
-  FoodName_1 = "rape and mustardseed and products", 
-  ID_2 = "1442", 
-  FoodName_2 =  "mustard seed",
-  ID_3 = "1442.01",
-  FE2_3 = "A015S#F28.A07KG$F28.A07HS",
-  FoodName_3 = "mustard seed, dried, raw") %>% 
-  add_row(
-    ID_0 = "OT",
-    FoodName_0 = "Other foods", 
-    ID_1 = 2659,
-    FoodName_1 = "alcohol, non-food and products", 
-    ID_2 = "24110", 
-    FoodName_2 =  "undenatured ethyl alcohol of an alcoholic strength by volume of 80% vol or higher",
-    ID_3 = "24110.01",
-    FE2_3 = NA,
-    FoodName_3 = "alcohol, 80perc") %>% 
-  add_row(
-    ID_0 = "OT",
-    FoodName_0 = "Other foods", 
-    ID_1 = 2562,
-    FoodName_1 = "palm kernels and products", 
-    ID_2 = "1491.02", 
-    FoodName_2 = "palm kernels [only calories]",
-    ID_3 = "1491.02.01",
-    FE2_3 = "A0DAJ#F28.A07HS",
-    FoodName_3 = " palm kernel, raw") %>% 
+dictionary.df <- dictionary.df %>% 
+  # add_row(
+  # ID_0 = "OT",
+  # FoodName_0 = "Other foods", 
+  # ID_1 = 2558,
+  # FoodName_1 = "rape and mustardseed and products", 
+  # ID_2 = "1442", 
+  # FoodName_2 =  "mustard seed",
+  # ID_3 = "1442.01",
+  # FE2_3 = "A015S#F28.A07KG$F28.A07HS",
+  # FoodName_3 = "mustard seed, dried, raw") %>% 
+ # add_row(
+ #   ID_0 = "OT",
+ #   FoodName_0 = "Other foods", 
+ #   ID_1 = 2659,
+ #   FoodName_1 = "alcohol, non-food and products", 
+ #   ID_2 = "24110", 
+ #   FoodName_2 =  "undenatured ethyl alcohol of an alcoholic strength by volume of 80% vol or higher",
+ #   ID_3 = "24110.01",
+ #   FE2_3 = NA,
+ #   FoodName_3 = "alcohol, 80perc") %>% 
+ # add_row(
+ #   ID_0 = "OT",
+ #   FoodName_0 = "Other foods", 
+ #   ID_1 = 2562,
+ #   FoodName_1 = "palm kernels and products", 
+ #   ID_2 = "1491.02", 
+ #   FoodName_2 = "palm kernels [only calories]",
+ #   ID_3 = "1491.02.01",
+ #   FE2_3 = "A0DAJ#F28.A07HS",
+ #   FoodName_3 = " palm kernel, raw") %>% 
   add_row(
     ID_0 = "FV",
     FoodName_0 = "Fruits and Vegetable", 
@@ -1716,7 +1717,7 @@ scien_new <- "basella alba"
 #(optional)
 desc2 <- "also called Vine (African) spinach"
 ref2 <-  "KE18, and https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/nderema/#:~:text=Nderema%2C%20also%20known%20as%20vine,green%20or%20brownish%2Dpurple%20stems."
-#Auto inputs:
+
 #Auto inputs:
 id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
 id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
@@ -1754,30 +1755,57 @@ dictionary.df[n1,13] <- "gynandropsis gynandra"
 
 # Black Nightshade
 
+#Manual inputs:
+id2 <- "1290.9"
+desc_new <- "black nightshade, leaves, fresh, raw"
+fex2_new <- NA
+scien_new <- "solanum scabrum"
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+
 n1 <- dim(dictionary.df)[1]+1
 
-n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
 
 dictionary.df[n1,] <- dictionary.df[n2,]
 
-dictionary.df[n1,7] <- "1290.9.06"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "black nightshade, leaves, fresh, raw"
-dictionary.df[n1,13] <- "solanum scabrum"
-
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
 
 #Native eggplant
 
+#Manual inputs:
+id2 <- "1290.9"
+desc_new <- "native eggplant, raw"
+fex2_new <- NA
+scien_new <- "solanum macrocarpon"
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+
 n1 <- dim(dictionary.df)[1]+1
 
-n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
 
 dictionary.df[n1,] <- dictionary.df[n2,]
 
-dictionary.df[n1,7] <- "1290.9.05"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "native eggplant, raw"
-dictionary.df[n1,13] <- "solanum macrocarpon"
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
 
 #Capsicum, red
 
@@ -1875,15 +1903,33 @@ dictionary.df[n1,13] <- "passiflora edulis"
 
 #Sweet potato leaves
 
+#Manual inputs:
+id2 <- "1290.9"
+desc_new <- "sweet potato leaves, fresh, raw"
+fex2_new <- NA
+scien_new <- NA
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 str_replace(id3, "[[:alnum:]]{1,3}$",
+                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                     width=2, flag=0)[2]))
+
 n1 <- dim(dictionary.df)[1]+1
 
-n2 <- which(dictionary.df$ID_3 == "1290.9.01")
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
 
+#New entry - generation:
 dictionary.df[n1,] <- dictionary.df[n2,]
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
 
-dictionary.df[n1,7] <- "1290.9.02"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "sweet potato leaves, fresh, raw"
 
 #Coriander leaves
 #Note that in KE18 the food group is "condiments", also in FAO-SUA there is a 
@@ -1964,9 +2010,9 @@ scien_new <- "daucus carota"
 #Auto inputs:
 id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
 id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 paste0( str_extract(id3, 
-                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+                 str_replace(id3, "[[:alnum:]]{1,3}$",
+                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                     width=2, flag=0)[2]))
 
 n1 <- dim(dictionary.df)[1]+1
 
@@ -2130,19 +2176,31 @@ for(i in 1:length(foods)){
 
 #candies, hard 
 
-id3 <- "23670.01.01"
+#Manual inputs:
+id2 <- "23670.01"
+desc_new <- "candies, hard"
+fex2_new <- NA
+scien_new <- NA
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
 
 n1 <- dim(dictionary.df)[1]+1
 
-n2 <- which(dictionary.df$ID_3 %in% id3)
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
 
+#New entry - generation:
 dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- paste0( str_extract(id3, 
-                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
-dictionary.df[n1,9] <- "candies, hard"
-
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
 
 #Tea with milk
 
@@ -2279,6 +2337,5 @@ dictionary.df <- dictionary.df %>% arrange(.)
 
 
 #Save an R object - Running MAPS_dict_QC.R
-
 saveRDS(dictionary.df, file = here::here("inter-output", "dictionary.df.rds"))
-source("maps-dict-git.sh")
+

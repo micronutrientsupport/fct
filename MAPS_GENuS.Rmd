@@ -1,16 +1,18 @@
 ---
-title: "Food-Dictionary"
-author: "Segovia D L Revilla, Lucia"
+title: "MAPS Food Dictionary: User Guidelines"
+author: "Segovia de la Revilla, Lucia"
 date: "28/06/2021"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ## Introduction
 
-In this document the creation and use of the MAPS-Food-Dictionary (also referred as Food GENuS code) is detailed. 
+In this document the creation and use of the MAPS-Food-Dictionary (`MAPS_Dictionary-Protocol.R`) (also referred as Food GENuS code) is detailed. 
 
 A list of datasets that uses/ are connected by the Genus code:
 
@@ -20,6 +22,19 @@ A list of datasets that uses/ are connected by the Genus code:
 -MAPS_hces_ihs4
 -MAPS_hces_ihs5
 
+## Food Dictionary data structure
+
+[complete with information on ID_0 to ID_3, and rationale]
+
+
+**Food Names 2**
+
+[Elaborate this]
+We realized that there are two group ids (ID_2) that are identical. Those ids were derived from SUA for crops and livestock and from FAO-Fishstat for fish and seafood. Thus, this conflict arouse. As a solution, we are going to add a line of code that changes the id values for fish. - FIXED
+
+## Data sources
+
+Here's a brief description of the data sources where the MAPS Food Dictionary can be found in MAPS tool. 
 
 ## Food Composition Data
 
@@ -124,18 +139,54 @@ We create a template to be attached to the FCT, so we can supply a GENuS code fo
 
 ```
 
+# User manual:
+
+## Adding new items and codes
+
+Below is one of the examples of the code used (and depricated now) that was used to generate sequential numbering for the items in the dictionary. 
+
+```{r new codes, echo=FALSE}
+
+#id3_new 
+
+ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+
+```
+
 
 ## Development issues that should be tackled 
 
-1) When updating the `food_genus_code` how to update it in a way that all the dataset that are affected are correctly and timely updated, so no dataset that depends on the Genus is left behind. 
+#### Sharing updates
 
-2) We realized that there are who group ids (ID_2) that are identical. Those ids were derived from SUA for crops and livestock and from FAO-Fishstat for fish and seafood. Thus, this conflict arouse. As a solution, we are going to add a line of code that changes the id values for fish. - FIXED
+1) Keeping folders, files, and dependencies up-to-date, in a systematic, reproducible and efficient way. Including:-->#TO-BE-DONE
 
-3) Updating all r-projects/ folders that uses the dictionary. We wrote a piece of code that find the Dictionary_vx.x (latest version) and save a copy of the new version in the same location. 
+1.1) When updating the `food_genus_code` how to update it in a way that all the datasets that are affected are correctly and timely updated, so no dataset that depends on the Genus is left behind. 
 
-4) In every folder that the Food Dictionary is used to find always the most updated/recent version to be loaded. 
+1.2) Updating all r-projects/ folders that uses the dictionary. We wrote a piece of code that find the Dictionary_vx.x (latest version) and save a copy of the new version in the same location. Still thinking on improvements to this solution. I.e., implementing a QC before saving, including git saving && committing. 
 
 
+1.3) In every folder that the Food Dictionary is used to find always the most updated/recent version to be loaded. 
+
+#### Food groups and categories
+
+##### Issues
+
+) Food categories (ID_1) that may be missclassified: 2775|aquatic plants are currently under "Fruits and Vegetables". However, according to FAOSTAT, they are under "Aquatic foods" and/or "Animal product". An option for the future would be to listed under "OT", or to generate a new food category for fisheries and aquatic products. 
+
+##### Potential new categories (ID_0)
+
+
+) Fats and oils (FO): Particularly oils, are currently under "Other foods". However, it may be relevant to generate a specific category for the future. For example, this will be interesting as oils are frequently used as fortificants. 
+
+) Aquatic Products (AQ) (or fish and aquatic product (FA))
+
+##### Compatibility with other food groups and categories
+
+1) FoodEx2
+2) FAO GIFT
 
 ```{r tracking-issue-2, echo=FALSE}
 
