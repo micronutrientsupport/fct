@@ -51,7 +51,7 @@ dim(kenfct)
 ken_names <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'ENERC1', 'WATER', 
               'PROTCNT', 'FAT',  'CHOAVLDF', 'FIBTG', 'ASH', 
               'CA', 'FE', 'MG', 'P', 'K', 'NA.', 'ZN', 'SE',
-              'VITA_RAE', 'VITA', 'RETOL', 'CARBEQ', 
+              'VITA_RAE', 'VITA', 'RETOL', 'CARTBEQ', 
               'THIA', 'RIBF', 'NIA', 'FOLDFE', 'FOLFD',
               'VITB12', 'VITC', 'CHOLE', 'OXALAC', 'PHYTCPPD', 'IP3', 'IP4',
               'IP5', 'IP6','FASAT', "FAMS","FAPU", 'FCT')
@@ -257,7 +257,7 @@ ken_genus <- tribble(
  "5012", "1319.01", "m", 
  "7019", "21115.01", "m",
  "10003", "1460.02", "m",
-  "9011", "34550.02", "m", 
+  "9011", "21700.02.02", "m", 
  "9001", "F1243.02", "m",
  "5028", "1342.01.01", "m",
  "4014", "1235.04", "m", 
@@ -338,6 +338,8 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.02"
 ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
 #Fixing beef to acc. for fat content variability
 ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.01.02"
+#Amend baking powder (1699.05) --> F1232.07
+ken_genus$ID_3[ken_genus$ref_fctcode == "13002"] <-  "F1232.07"
 
 #Fixing samosa dictionary code
 ken_genus$ID_3[ken_genus$ref_fctcode == "15025"] <-  "F0022.06"
@@ -428,8 +430,26 @@ MAPS_ken %>% head()
 
 MAPS_ken %>% filter(str_detect(original_food_name, "lea")) %>% select(1:3) %>% knitr::kable()
 MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
-MAPS_ken %>% filter(original_food_id == "5024") %>% glimpse()
-MAPS_ken %>% filter(food_genus_id == "23170.03.01")
+MAPS_ken %>% filter(original_food_id == "9011") %>% glimpse()
+MAPS_ken %>% filter(food_genus_id == "23110.02")
+
+#Checking for duplicated items
+dim(MAPS_ken)
+which(duplicated(MAPS_ken))
+
+MAPS_ken[which(duplicated(MAPS_ken)),]
+subset(MAPS_ken, original_food_id == "1025")
+
+#Checking duplicates in dictionary codes
+sum(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
+x <- which(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
+
+n1 <- MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"][x]
+subset(MAPS_ken, food_genus_id == "118.01")
+
+#Checking that all dictionary codes have been matched to an entry in the dictionary
+
+subset(MAPS_ken, !is.na(food_genus_id) & is.na(food_genus_description))
 
 
 #MAPS_ken %>% readr::write_excel_csv(., 

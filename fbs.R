@@ -64,3 +64,14 @@ fbs %>% select(1,4:5) %>%  distinct() %>%
 readr::write_excel_csv2(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.0.csv"))
 readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.0.csv"))
 
+
+fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.0.csv")) 
+
+fbs %>% select(1,4:5) %>%  distinct() %>% 
+  left_join(., dictionary.df, by = c("food_genus_id" = "ID_3")) %>% 
+  filter(is.na(FoodName_3)) %>% distinct()
+
+fbs %>% select(1,4:5) %>% filter(!is.na(food_genus_id)) %>% distinct() %>% 
+  left_join(., MAPS_ken) %>% 
+  filter(is.na(original_food_id)) %>% distinct()
+
