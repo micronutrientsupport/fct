@@ -17,9 +17,11 @@
 #f <- "http://www.nutritionhealth.or.ke/wp-content/uploads/Downloads/Kenya%20Food%20Composition%20Tables%20Excel%20files%202018.xlsx"
 
 #download.file(f,"./data/MOH-KENFCT_2018.xlsx",
- #             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
-  #            mode="wb")
+#             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+#            mode="wb")
 #
+
+#Documentation is in fct_cleaning.Rmd.
 
 ##1) LOADING PACKAGES, DICTIONARY,AND KENYA FCT 
 
@@ -225,7 +227,7 @@ ken_genus <- tribble(
   "10009", "142.01", "l",
   "13006", "1652.01", "m", 
   "13007", "1652.02", "m", 
-  "7009", "21121.01.01", "h", 
+  "7009", "21121.03", "h", 
   "8010", "1501.05", "m",
   "1007", "F0020.01", "m",
   "6008", "22241.02.01", "h", 
@@ -286,7 +288,7 @@ ken_genus <- tribble(
  "15003", "F0022.04", "m", 
  "15025", "F0022.07", "m",
  "7001" , "21111.01.03", "h",
- "7002" , "21111.01.01", "h",
+ "7002" , "21111.02.01", "l", #All other are w/o bones, we assumed the same 
  "4003",  "1290.9.06", "h",
  "4029", "1290.9.07", "h",
  "4038", "1290.9.08", "h",
@@ -301,7 +303,20 @@ ken_genus <- tribble(
  "6013", "22270.05", "h",
  "1038", "23120.06.01", "h", 
  "1040", "23120.06.02", "h",
- "8035", "1533.02", "h" )
+ "8035", "1533.02", "h", 
+ "11002", "1802.02", "h",
+ "3005", "1701.05", "h", 
+ "10008", "1372.01", "l", 
+ "10002", "1460.01", "h", 
+ "9007", "21641.01.01", "m",
+ "5002", "1341.02", "h",
+ "50012", "1341.03", "h", 
+ "5007", "1314.01", "h", 
+ "5008", "1314.02", "h", 
+ "9003", "1523.01", "l", #no fish specified, we assumed cod bc it's the most common
+ "1044", "23110.01", "m"
+ 
+ )
 
 
 dictionary.df %>% filter(ID_3 == "1702.01")
@@ -340,9 +355,13 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
 ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.01.02"
 #Amend baking powder (1699.05) --> F1232.07
 ken_genus$ID_3[ken_genus$ref_fctcode == "13002"] <-  "F1232.07"
-
 #Fixing samosa dictionary code
 ken_genus$ID_3[ken_genus$ref_fctcode == "15025"] <-  "F0022.06"
+#Millet, bulrush == Pearl millet (see docu)
+ken_genus$ID_3[ken_genus$ref_fctcode == "1025"]  <- "118.03"
+#Cabbage white updated dict code
+ken_genus$ID_3[ken_genus$ref_fctcode == "4007"]  <- "1212.03"
+
 
 kenfct <- kenfct %>% 
   left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
@@ -353,19 +372,20 @@ dim(kenfct)
 #Checking dictionary/ fct ids availability 
 x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
 
-subset(kenfct, code == "15025", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "6007", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "21151.02")
-subset(dictionary.df, ID_2 == "21184.01")
-subset(dictionary.df, ID_1 == "1807")
+dictionary.df %>% filter(ID_3 == "1527.01")
+subset(dictionary.df, ID_2 == "1341")
+subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(kenfct, str_detect(fooditem, "Chicken"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(kenfct, str_detect(scientific_name, "Basella"), 
+subset(kenfct, str_detect(fooditem, "Sugar"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
+subset(kenfct, str_detect(scientific_name, "clarias"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(dictionary.df, str_detect(FoodName_2, "broc"))
+
 
 
 #Rename variables according to MAPS-standards
@@ -445,7 +465,7 @@ sum(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
 x <- which(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
 
 n1 <- MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"][x]
-subset(MAPS_ken, food_genus_id == "118.01")
+subset(MAPS_ken, food_genus_id == "118.02")
 
 #Checking that all dictionary codes have been matched to an entry in the dictionary
 

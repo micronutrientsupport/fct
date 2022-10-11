@@ -211,6 +211,17 @@ ISSUE with Dictionary --> SUA and Fish share the same code!!
 
 # Adding values
 
+
+# Generic food composition values
+
+118.01 - millet, dried, raw (average millet)
+1701.01 - beans, dried, raw (should be an average of beans (i.e., generic food item))
+1212.01 - cabbage, head, fresh, raw (average of cabbages)
+1341.01 - apple, raw 
+21121.01 - chicken meat, fresh, raw
+21151.01 - beef offal, fresh, raw
+
+
 ## Milk and products (dairy)
 ##NOTES:
 ##Any "whole fat would be under raw milk
