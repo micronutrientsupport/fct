@@ -464,15 +464,14 @@ subset(MAPS_ken, original_food_id == "1025")
 sum(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
 x <- which(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
 
-n1 <- MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"][x]
+((MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"][x]))
 subset(MAPS_ken, food_genus_id == "118.02")
 
 #Checking that all dictionary codes have been matched to an entry in the dictionary
 
 subset(MAPS_ken, !is.na(food_genus_id) & is.na(food_genus_description))
 
-
-#MAPS_ken %>% readr::write_excel_csv(., 
- #                     here::here('output', 
-  #                                'MAPS_KENFCT_v1.4.csv'))#that f(x) is to 
+#Saving file into csv to be used in MAPS tool
+#MAPS_ken %>% readr::write_excel_csv(., here::here('output', 
+ #                                 'MAPS_KENFCT_v1.5.csv'))
                           
