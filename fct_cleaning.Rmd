@@ -124,6 +124,32 @@ We do not want to loose information but also we want to use the highest quality 
 
 In the version 01, brackets have been removed w/ accounting for the quality (see above). It has been done using a function (no_brackets). To see how it has been developed check (fct_loops.R)
 
+NOTE: Added from another file (FCT_CleaningSOP, created on 8/4/2020) 
+NEED CHECKING!
+
+We started with West Africa FCT, the data set is provided in excel with XX sheet. Corresponding to metadata and variables description, FCT (short and long version), FCT statistics, recipe calculation, etc. This FCT follows the FAO guidelines for FCT compilation. 
+
+We need to import the FCT food item list sheet (long version) which is located in the sheet 5. Then, some cleaning and renaming of variables was needed. 
+
+DISCUSSION POINT: Variables names. Are we going to follow FAO standards??
+
+Yes, we will use INFOODS tagnames as standard names
+
+To make the code consistent for all the datasets. I will recode the name of the food items in English as 'fooditem'. If there is another language available, the code will be 'fooditem' and the language code (upper-case) i.e. 'fooditemFR'. This is important because if we use 'name' is a very generic variable name, and it could cause confusion and bugs in our code. 
+
+
+The next step would be to gather the table back, to separate units from the components and to match the components. Particularly for those of interest for MAPS. 
+
+Additionally, some other general information can be collected from the datasets themselves, such as food categories, number of food items, components included and so forth. 
+
+This part is carried out after the section b, because it is going to be done in parallel with fct cleaning
+
+For extracting component list (names), we need to create a list. Then, we can count (lenght) the amount of food categories by unlisting. 
+
+NOTE: I am not replacing the food categories for WAFCT because when I pulled manually I only extracted the English names, and I attached the food group number (code).
+ 
+--TILL HERE--
+
 ###Food groups
 
 A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for sub-setting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
@@ -512,7 +538,7 @@ GMBFCT <- GMBFCT %>%
 ```
 
 
-####5) Kenya FCT
+#### 5) Kenya FCT
 
 UPDATE: We have counted the number of distinct food items (acc. to unique codes) and there is a mismatch between the number of items reported in the pdf (651) and those find it in the excel file (658).
 
@@ -539,8 +565,64 @@ KENFCT2 - We have incorporated tagnames as per in the dataset (with no modificat
 
 UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the original FCT dataset. We also added the ref (biblioID) and the scientificName from a different sheet in the FCT.
 
+**List of Unavailable foods (from FBS)**:
 
-####6) Lesotho FCT
+Refined wheat flour
+Barley
+Rye
+Oats, rolled
+Fonio
+Olives
+Linseed
+Cotton seed oil
+Palm kernel oil 
+Palm oil
+Coconut oil
+Sesame oil
+Rice bran oil
+Vegetable, oil
+Grapefruit
+Tea beverage
+Tumeric
+Beer
+Maize beer
+Sorghum beer
+Gin
+Cream 22120.01 --> cream 22120.02
+Pork lard
+Fish body oil
+Catfish
+Grouper (demersal)
+Trout (freshwater)
+Haddock, smoked (demersal)
+Tinned sardines
+Crab
+Squid
+Oyster
+Frog
+Algae
+Infant formula
+Water bottle
+Deer meat
+Palm kernel
+Tea leaves
+Jaggery/ sugar from unrefined sugar cane
+Alcohol, 80perc
+
+###### MAPS Food dictionary
+
+*- Cereals*:
+Millet, bulrush == Pearl millet
+https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/bulrush-millet/
+
+*- Meats*:
+Beef meat are all specified w/o bones, except the lean (7002). The edible portion in medium fat (7004) and lean (7002) is the same (0.9), which made us assumed to be w/o bones. However, we gave "low confidence" as no information was provided. 
+
+*- Fats & Oils*:
+
+Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). Howver, we assigned a "low confidence". 
+
+#### 6) Lesotho FCT
 
 4) Energy is only reported in kJ. New variable need to be created, for ENERC1.
 

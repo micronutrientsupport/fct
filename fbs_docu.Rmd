@@ -1,0 +1,55 @@
+---
+title: "MAPS - Food Balance Sheet documentation"
+author: "Lucia Segovia de la Revilla"
+date: "Last compiled on `r format(Sys.time(), '%d %B, %Y')`"
+
+output: html_document
+---
+
+# Food Balance Sheet
+
+## Introduction
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source(here::here("fbs.R"))
+
+```
+
+## Food composition data
+
+1) Regional African FCT (Joy et al., 2014). Mainly minerals
+2) Kenya FCT (FAO/Government of Kenya, 2018). It has matches for all food dictionary codes by `r count(distinct(fbs %>% select(1,4:5) %>% distinct() %>% 
+  left_join(., MAPS_ken) %>% filter(is.na(original_food_id))))`
+3) UK FCT
+
+## Data issues
+
+**Wrong coding**
+
+1) Marine fish, other was wrongly coded to 2763, which is pelagic fish.
+
+2764 = Marine Fish, Other
+2763 = Pelagic Fish
+
+**Items hardly consumed**
+
+1) 2562 - palm kernels (1491.02.01): the mean value of consumption is zero `r mean(fbs$amount_consumed_in_g[fbs$food_genus_id=="1491.02.01"])`. It is hardly reported in any FCT, as it is not consumed but used to produce oil and other products. 
+
+
+```{r cars}
+summary(cars)
+```
+
+
+
+
+  
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

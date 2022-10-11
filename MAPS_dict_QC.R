@@ -11,7 +11,7 @@ id0 <- unique(dict.df$ID_0)
 dict.df %>% filter(ID_0 == id0[7]) %>% 
   group_by(ID_1, FoodName_1) %>%  distinct(ID_1, FoodName_1) %>% knitr::kable()
 
-subset(dict.df, ID_1 == "2543")
+subset(dict.df, ID_1 == "2562")
 
 #Checking categories (ID_2) by ID_1, ID_0
 id1 <- unique(dict.df$ID_1[dict.df$ID_0 == id0[3]])
@@ -22,7 +22,7 @@ dict.df %>%
   group_by(ID_1, FoodName_1, ID_2, FoodName_2) %>%  distinct(ID_2, FoodName_2) %>% count() %>% 
   arrange(desc(n))
 
-subset(dict.df, ID_2 == "21700.02")
+subset(dict.df, ID_2 == "23110")
 
 #Checking categories (ID_3) by ID_2
 dict.df %>% 
@@ -37,7 +37,7 @@ x <- which(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
 n1 <- dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""][x]
 
 subset(dict.df, ID_3 %in% n1)
-subset(dict.df, ID_3 == "23110.02")
+subset(dict.df, ID_3 == "23161.01.01")
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder

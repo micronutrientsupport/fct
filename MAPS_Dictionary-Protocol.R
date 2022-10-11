@@ -284,8 +284,8 @@ dictionary.df <- dictionary.df %>%
 #we will use local rice whenever possible 
 #default rice white == "23161.02.01"
 
-dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.01.01"] <- "rice grain, imported, white, raw"
-dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, local, white, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.01.01"] <- "rice grain, imported, white, dried, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, local, white, dried, raw"
 
 #Found a issue with some ID_0 classification
 #Need to change them to oil and seeds. 
@@ -843,6 +843,12 @@ dictionary.df[n1,13] <- scien_new
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "F1061"
 dictionary.df$FoodName_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "poultry meat preparations"
 dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"
+#Amend chicken stew (21121.03)  --> F1061.01
+dictionary.df$ID_3[dictionary.df$ID_3 == "21121.03"] <- "F1061.01"
+dictionary.df[which(dictionary.df$ID_3 == "F1061.01"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1061", select = c(1:6)))
+
+
+
 #beef prep.
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "beef, fresh, grilled"] <- "F0875"
 dictionary.df$ID_3[dictionary.df$FoodName_3 == "beef, fresh, grilled"]  <- "F0875.01"
@@ -1051,8 +1057,9 @@ dictionary.df[n1,8] <- NA
 dictionary.df[n1,9] <- "sardines, fresh, grilled"
 dictionary.df[n1,10] <- "ISSCAAP Code:35; Taxonomic Code:12105012XX; Inter-Agency3-Alpha Code:SIX"
 dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
-dictionary.df[n1,12] <- "10.48580/dfpk-37v"
+dictionary.df[n1,12] <- NA
 dictionary.df[n1,13] <- "sardinella spp."
+dictionary.df[n1,12] <- "10.48580/dfpk-37v"
 
 # Nile perc, dried
 
@@ -1257,7 +1264,7 @@ which(dictionary.df$ID_3 == "21121.01")
 
 dictionary.df[643,] <- dictionary.df[440,]
 
-dictionary.df[643,7] <- "21121.01.01"
+dictionary.df[643,7] <- "21121.03"
 dictionary.df[643,8] <- NA
 dictionary.df[643,9] <- "chicken meat, fresh, meat, skin, without bones, raw"
 
@@ -1444,16 +1451,48 @@ dictionary.df[n1,8] <- fex2_new
 dictionary.df[n1,9] <- desc_new
 dictionary.df[n1,13] <- scien_new
 
+#Add 1701 lima beans, dried, raw
+#Manual inputs:
+id2 <- "1701"
+desc_new <- "lima beans, dried, raw"
+fex2_new <- NA
+scien_new <- "phaseolus lunatus"
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 str_replace(id3, "[[:alnum:]]{1,3}$",
+                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                     width=2, flag=0)[2]))
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
+
+#New entry - generation:
+dictionary.df[n1,] <- dictionary.df[n2,]
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
+
 
 ### Fruits and Vegetables (FV) ----
 
 #Leaves can be fresh or dried. 
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.01"] <- "spinach, fresh, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "1215.02"] <- "amaranth leaves, fresh, raw"
-
-#Exist another code for onions
-#01253.01 - Onions, shallots, green
-
+#Cabbage, head (generic item .01), change from 1212.03.
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1212.01"] <- "cabbages, head, fresh, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1212.03"] <- "cabbages, white, fresh, raw"
+#Adding scientfic name 
+dictionary.df$scientific_name[dictionary.df$ID_3 %in% c("1212.01",
+                                                        "1212.03")] <- "brassica oleracea var. capitata"
+#Adding info to FoodName_3 & scientific name of dates
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1314.01"] <- "dates, dried, raw"
+dictionary.df$scientific_name[dictionary.df$ID_3 == "1314.01"] <- "phoenix dactylifera"
 
 #├ New category from ID_2 ----
 
@@ -2057,6 +2096,90 @@ dictionary.df[n1,8] <- fex2_new
 dictionary.df[n1,9] <- desc_new
 dictionary.df[n1,13] <- scien_new
 
+# Add - 1341 Apple, red, raw
+
+#Manual inputs:
+id2 <- "1341"
+desc_new <- "apple, red, raw"
+fex2_new <- NA
+scien_new <- "malus domesticus"
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
+
+#New entry - generation:
+dictionary.df[n1,] <- dictionary.df[n2,]
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
+
+# Add - 1341 Apple, green, raw
+
+#Manual inputs:
+id2 <- "1341"
+desc_new <- "apple, green, raw"
+fex2_new <- NA
+scien_new <- "malus domesticus"
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
+
+#New entry - generation:
+dictionary.df[n1,] <- dictionary.df[n2,]
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
+
+# Add - 1314 dates, fresh,raw
+
+#Manual inputs:
+id2 <- "1314"
+desc_new <- "dates, fresh, raw"
+fex2_new <- NA
+scien_new <- "phoenix dactylifera"
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 paste0( str_extract(id3, 
+                                     "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
+                         as.numeric(str_extract(id3, "[[:digit:]]$"))+1))
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
+
+#New entry - generation:
+dictionary.df[n1,] <- dictionary.df[n2,]
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
+
 ########## Other foods (OT) ##############
 subset(dictionary.df, ID_1 == "2659")
 
@@ -2290,6 +2413,34 @@ dictionary.df[n1,9] <- "infant formula, 6 months, fortified"
 #Manual inputs:
 id2 <- "21700.02"
 desc_new <- "shortening"
+fex2_new <- NA
+scien_new <- NA
+
+#Auto inputs:
+id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                 str_replace(id3, "[[:alnum:]]{1,3}$",
+                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                     width=2, flag=0)[2]))
+
+n1 <- dim(dictionary.df)[1]+1
+
+n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+             which(dictionary.df$ID_3 %in% id3))
+
+#New entry - generation:
+dictionary.df[n1,] <- dictionary.df[n2,]
+#New entry - population:
+dictionary.df[n1,7] <- id3_new
+dictionary.df[n1,8] <- fex2_new
+dictionary.df[n1,9] <- desc_new
+dictionary.df[n1,13] <- scien_new
+
+
+#Add - 1802 - sugar cane, juice, raw
+#Manual inputs:
+id2 <- "1802"
+desc_new <- "sugar cane, juice, raw"
 fex2_new <- NA
 scien_new <- NA
 

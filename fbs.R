@@ -71,7 +71,43 @@ fbs %>% select(1,4:5) %>%  distinct() %>%
   left_join(., dictionary.df, by = c("food_genus_id" = "ID_3")) %>% 
   filter(is.na(FoodName_3)) %>% distinct()
 
-fbs %>% select(1,4:5) %>% filter(!is.na(food_genus_id)) %>% distinct() %>% 
-  left_join(., MAPS_ken) %>% 
-  filter(is.na(original_food_id)) %>% distinct()
+#Added missing food dictionary code for "palm kernel"
+fbs$food_genus_id[fbs$original_id == "2562"] <- "1491.02.01"
+fbs$food_genus_confidence[fbs$original_id == "2562"] 
+#Changed rice, imported for rice, local 23161.02.01
+fbs$food_genus_id[fbs$food_genus_id == "23161.01.01"] <- "23161.02.01"
+#Changed sugar cane to sugar cane, juice
+fbs$food_genus_id[fbs$food_genus_id == "1802.01"] <- "1802.02"
+#Changed sugar from beet and fructose to sugar
+fbs$food_genus_id[fbs$food_genus_id == "1801.01"] <- "23520.01"
+fbs$food_genus_id[fbs$food_genus_id == "23210.01.01"] <- "23520.01"
+#Changing wine rose to red wine
+fbs$food_genus_id[fbs$food_genus_id == "24212.02.03"] <- "24212.02.02"
+#palm kernel (1491.02.01) - it won't be matched, but the amount consumed is zero
+#see documentation
+mean(fbs$amount_consumed_in_g[fbs$food_genus_id=="1491.02.01"])
+#Correcting original_id marine fish, other 2763
+#2764 = Marine Fish, Other #2763 = Pelagic Fish
+fbs$original_id[fbs$original_name == "marine fish, other"] <- "2764"
 
+
+subset(fbs, food_genus_id == "1532.01")
+subset(fbs, original_id == "2763",
+       select = c(original_name, food_genus_id)) %>% distinct()
+
+subset(fbs, original_name == "marine fish, other",
+       select = c(original_name, original_id, food_genus_id)) %>% distinct()
+
+#Checking duplicated
+fbs %>% select(1,4:5) %>% distinct() %>% 
+  left_join(., MAPS_ken) %>% 
+  filter(is.na(original_food_id)) %>%
+  distinct() %>% count(food_genus_id) %>% arrange(desc(n))
+
+#Checking fbs w/o a match in KE18
+fbs %>% select(1,4:5) %>% distinct() %>% 
+  left_join(., MAPS_ken) %>% 
+  filter(is.na(original_food_id)) %>%
+  distinct() %>% pull(food_genus_id)
+
+#Next is 51
