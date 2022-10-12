@@ -177,11 +177,11 @@ kenfct %>%
 
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
 
-var.name <- read.csv(here::here("fct-variable-names.csv")) %>% 
+var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
   select(Column.Name) %>% pull()
 
 
-# Fixing Spelling and typos
+#Fixing spelling and typos in original KE18 file
 
 #Scientific names "issues"
 #Eggplant (4017) scientific name is "Solalum melongena", instead of 
@@ -432,7 +432,7 @@ rename(
   folate_in_mcg = "FOLFD",
   vitaminb12_in_mcg = "VITB12",
   vitaminc_in_mg = "VITC",
-  phyticacid_in_mg = "PHYTCPPD") %>% 
+  phytate_in_mg = "PHYTCPPD") %>% 
   mutate(
   nitrogen_in_g = "NA", 
   cu_in_mg = "NA",
@@ -472,6 +472,6 @@ subset(MAPS_ken, food_genus_id == "118.02")
 subset(MAPS_ken, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
-#MAPS_ken %>% readr::write_excel_csv(., here::here('output', 
- #                                 'MAPS_KENFCT_v1.5.csv'))
+#readr::write_excel_csv(MAPS_ken, here::here('output', 
+ #                                 'MAPS_KENFCT_v1.6.csv'))
                           
