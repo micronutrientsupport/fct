@@ -44,6 +44,7 @@ New_Dict_Entry <- function(dictionary, ID_2, FoodName_3, scientific_name, FoodEx
   copied_row$Desc1.ref2 <- Desc1.ref2
   
   new_dictionary <- rbind(dictionary, copied_row)
-  
+  new_dictionary <- new_dictionary[order(new_dictionary$ID_1),]
+
   return(new_dictionary)
 }
