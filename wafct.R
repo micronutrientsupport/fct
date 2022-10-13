@@ -341,9 +341,6 @@ wafct <- wafct %>%
   left_join(., wafct.genus, by = c("code" = "ref_fctcode"))
 
 # Checking dictionary codes
-subset(dictionary.df, ID_3 %in% ID_3missing, 
-       select = c(ID_3, FoodName_3))
-
 wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "13_023")
 wafct %>% filter(code == "03_022") %>% glimpse()

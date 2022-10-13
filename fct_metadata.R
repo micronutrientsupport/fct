@@ -175,6 +175,13 @@ y <-   geonetwork %>% mutate_at("Edition", as.character) %>%
          
 
 
+## - Variable names in MAPS FCT - ####
+    
+var.name <- read.csv(here::here("fct-variable-names.csv"))
+names(var.name)
 
-      
+var.name$Column.Name[var.name$Column.Name == "phyticacid_in_mg"] <- "phytate_in_mg"
+var.name$Description[var.name$Column.Name == "phyticacid_in_mg"] <-  "The phytate content of this food item, in milligrams per 100g"
+
+write.csv(var.name, here::here("metadata", "fct-variable-names.csv"), row.names = F)
     

@@ -1,5 +1,5 @@
 ---
-title: "fct_cleaning_protocol"
+title: "Documentation of cleaning and processing of the FCTs in MAPS tool"
 author: "LuciaSegovia"
 creation date: "08/12/2020"
 updated version date: "06/11/2020"
@@ -59,7 +59,7 @@ Also, it would allow us to run quality check such as, recalculation of variables
 
       SOP =  [WATER + PROTCNT + FAT + CHOAVLDF + FIBFG + ALC + ASH] 
       
-##UPDATE:
+## UPDATE:
 
 We have a new set of variables that are going to be standardized across all FCT for MAPS. Hence, they are included in the scripts and updated in the data set.
 
@@ -69,11 +69,11 @@ Column.Name	| Description | FAO_INFOODS.tagname |
 -|-|-
 cu_in_mg|	The Copper content of this food item, in milligrams per 100g| CU |
 
-####Standtadization of variables using FAO/INFOODS tagname
+#### Standtadization of variables using FAO/INFOODS tagname
 
 As mentioned earlier, the first step is the standardization of variable names. The names used are detailed in the cookbook. In summary, food items names will be code as 'fooditem', food item code will be 'code', food categories or food groups will be 'foodgroup' and food components will be name using the FAO/INFOODS tagnames. Additionally, food groups will be standardized using FoodEx2 classification system and name 'foodgroup_FoodEx2'.
 
-####Standtadization of values reported
+#### Standtadization of values reported
 
 [TO BE DONE]
 
@@ -95,7 +95,12 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 
 
 
-####1) West Africa FCT
+#### 1) West Africa FCT
+
+**Version log**
+
+V.1.6 updated on 2021/10/13 - Changed phytic acid to phytate, added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
+
 
 Since WAFCT is very recent and it has been done according to FAO/INFOODS tagname, we do not need to standardize much of the variables. Only for code, fooditem, fooditemFR, scientificName, and ref.
 
@@ -144,7 +149,7 @@ Additionally, some other general information can be collected from the datasets 
 
 This part is carried out after the section b, because it is going to be done in parallel with fct cleaning
 
-For extracting component list (names), we need to create a list. Then, we can count (lenght) the amount of food categories by unlisting. 
+For extracting component list (names), we need to create a list. Then, we can count (length) the amount of food categories by unlisting. 
 
 NOTE: I am not replacing the food categories for WAFCT because when I pulled manually I only extracted the English names, and I attached the food group number (code).
  
@@ -163,112 +168,68 @@ Ash value (g/100 g EP)> (CA (mg) + FE (mg) + MG (mg)+ P (mg) + K (mg) + NA (mg) 
 When CL is not reported it can be calculated as (`NA`*2.5). Minerals reported in mcg (i.e. selenium or iodine) are not considered due to the insignificant contribution.
 
 Sum of proximate is included in the original table. There is no need to re-calculated here. It would be re-calculated for quality checks. 
+
+**List of Unavailable foods (from FBS)**:
+
+Local rice
+Barley
+Rye
+Millet (generic)
+finger millet
+sugar, from unrefined sugar cane
+peas, dried, raw
+peanuts, unshelled, dried, raw
+sunflower seeds, dried
+olives, preserved
+linseeds
+rape seed oil
+sesame seed oil
+rice bran, oil
+cabbages, head, fresh, raw
+cabbages, chinese, raw
+cocoa powder
+tea leaves
+peppers, dried, raw
+cloves
+turmeric roots
+wine, white
+wine, red
+Gin
+Deer meat
+beef offals
+pork fat
+Cream (Generic)
+water, drinking, bottled
+Frog meat
+Algae/seaweed
+Squid
+haddock, smoked
+trout, rainbow, fresh, raw
+cod, liver oil
+cod, body, oil
+oysters, fresh, raw
+Infant formula --> Not used bc fortified
+mustard seed, dried, raw
+alcohol, 80perc
+`sugar cane juice
+
+###### MAPS Food dictionary
+
+*- Cereals*:
+
+Rice, white, raw (01_037) was assigned to imported rice (23161.01.01), mainly because it is for the whole region hence we assumed that it would be an average for all countries. However, because we are not 100% sure, we have assigned confidence low.  (**TO BE REVIEW**).
+
 ###Next steps:
 
 1) Deal with *tr*: there are some values that are coded as *trace* however, when we are converting the values into numbers those are converted to `NA` as it was done wit the []. Hence, we should convert those values coded as `tr` into `0`. 
 
 
- 
-```{r WAFCT standard variables}
+#### 2) Malawi FCT
 
-##View WAFCT structure
+**Version log**
 
-readxl::read_excel(here::here('data', 
-                              '2019_WAFCT.xlsx'), sheet = 5) %>% head()
+V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate & loading table from csv instead of pdf (see new folder MW19).
 
-
-##Loading WAFCT, skip 2 first rows to use tagnames for components
-
-WAFCT <- readxl::read_excel(here::here( 'data', 
-                                       '2019_WAFCT.xlsx'), sheet = 5, skip = 2) %>%
-  mutate(FCT = 'WAFCT') %>% glimpse()
-
-
-#rename variables according to our standards
-
-WAFCT <- WAFCT %>% rename(code = '...1', 
-                          fooditem = '...2', 
-                          fooditemFR = '...3',
-                          scientificName = '...4',
-                          ref = '...5' ,
-                          ENERC2 = 'ENERC...9', 
-                          ENERC1 = 'ENERC...10') 
-
-
-#creating variable 'foodgroups'
-
-#Extracting variables names only in English
-
-fgwa <- WAFCT %>% filter(is.na(fooditem), !is.na(code)) %>% pull(code) %>%
-  stringr::str_split_fixed( '/', n = 2) %>% as_tibble() %>% pull(V1)
-
-
-WAFCT <- WAFCT %>% 
-  mutate(foodgroup = ifelse(grepl("01_", code), fgwa[1],
-                            ifelse(grepl("02_", code), fgwa[2],
-                                   ifelse(grepl("03_", code), fgwa[3], 
-                                          ifelse(grepl("04_", code), fgwa[4], 
-                                                 ifelse(grepl("05_", code), fgwa[5],
-                                                        ifelse(grepl("06_", code), fgwa[6],
-                                                               ifelse(grepl("07_", code),  fgwa[7],
-                                                                      ifelse(grepl("08_", code), fgwa[8],
-                                                                             ifelse(grepl("09_", code), fgwa[9], 
-                                                                                    ifelse(grepl("10_", code), fgwa[10], 
-                                                                                           ifelse(grepl("11_", code), fgwa[11],
-                                                                                                  ifelse(grepl("12_", code),  fgwa[12],     
-                                                                                                         ifelse(grepl("13_", code), fgwa[13],
-                                                                                                                ifelse(grepl("14_", code), fgwa[14],
-                                                                                                                       'NA'))))))))))))))) %>% 
-  filter(!is.na(fooditem))
-
-#Extracting variables calculated with different method and reported as using []
-
-
-#This keeps [] 
-
-#WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, "\\[.*?\\]"))
-
-
-#This keeps only numbers
-
-WAFCT <- WAFCT %>% mutate(FIBC = str_extract(FIBTG, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(FATCE = str_extract(FAT, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(TOCPHA = str_extract(VITE, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(FOLSUM = str_extract(FOL, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(PHYTCPPD_I = str_extract(PHYTCPP, '(?<=\\[).*?(?=\\])'))
-
-#Reordering variables
-
-WAFCT <- WAFCT %>% dplyr::relocate(foodgroup, .after = ref) %>%
-  dplyr::relocate(FCT, .before = code)
-
-#WE don't need this bit anymore
-#WAFCT <- WAFCT[,c(64, 1:4, 65, 5:69)]
-
-
-#Converting into numeric numeric variables  
-
-WAFCT<- WAFCT %>% mutate_at(vars(8:69), funs(as.numeric)) 
-
-#Oils in this FCT has value NA, according to FAO/INFOODS Ash can be calculated as sum of minerals:
-
-WAFCT %>% filter(is.na(ASH))
-
-WAFCT<- WAFCT %>% rowwise %>% mutate( CL_cal = `NA`* 2.5)
-                  
-WAFCT<- WAFCT %>% mutate(               
-                 ASH_cal = ifelse(is.na(ASH), TRUE, FALSE),
-                  ASH = ifelse(is.na(ASH), 
-                   reduce(select(., 'CA', 'FE',  'CL_cal',
-                                                        'MG',  'P', 'K', 'NA', 'ZN',
-                                                        'CU')/1000, `+`), ASH))
-
-summary(WAFCT$SOP)
-
-
-```
-
-####2) Malawi FCT
 
 ###Standtadization of values reported
 
@@ -540,12 +501,41 @@ GMBFCT <- GMBFCT %>%
 
 #### 5) Kenya FCT
 
+**Version log**
+
+V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate.
+V.1.5 updated on 2021/10/11 - Added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
+
+#### Data cleaning
+
+**Initial checks**
+
 UPDATE: We have counted the number of distinct food items (acc. to unique codes) and there is a mismatch between the number of items reported in the pdf (651) and those find it in the excel file (658).
 
+Within this FCT there are a set of components with tagnames (majority of items not relevants for the project and with high amount of missing values) and other without. To facilitate the standardization of relevant component, we have cut the table in two. 
 
-Within this FCT there are a set of components with tagnames (majority of items not relevants for the project and with high amount of missing values) and other without. To facilitate the standardization of relevant component, we have cut the table in two
+KENFCT1 - We have review and update tagnames and we have cut the rows until 1242 to be consistent with the number of food items reported. The two extra-rows removed contains information on FOLAC for some food items and an the following statement '**values between [ ] were borrowed from an average of blood from other animals'.
 
-KENFCT1 - We have review and update tagnames and we have cut the rows until 1242 to be consistent with the number of food items reported. The two extra-rows removed contains information on FOLAC for some food items and an the following statement '**values between [ ] were borrowed from an average of blood from other animals'. Then tagnames were standardized following the standard names as described above and on FCT_QA, some decision point are described below: 
+##### Food names and description
+
+There were several typos and other small issues with the names and descriptions that are commonly used to identify food items. When possible, we corrected them in our file, so the output file would be different from the original one. 
+
+**1) Scientific names**
+
+- Eggplant (4017) scientific name is "Solalum melongena", instead of "Solanum melongena".
+
+- The scientific name of Coriander, leaves, fresh, raw (13011) was incorrect, hence we changed to "Coriandrum sativum"
+
+- The scientific name of coconut in 3 entries ("10002", "10003", "10004") were incorrect and we modified to "Cocos nucifera". 
+
+**2) Typos and misspellings**
+
+- There is a typo in "Roti" which was spelled with two "t"s. We re-named to "Roti (Indian Chapati)". 
+
+
+##### Food components and other variables
+
+Then tagnames were standardized following the standard names as described above and on FCT_QA, some decision point are described below: 
 
 22) Retinol (mcg): RETOL (Retinol, Unit: mcg)
 
@@ -565,6 +555,8 @@ KENFCT2 - We have incorporated tagnames as per in the dataset (with no modificat
 
 UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the original FCT dataset. We also added the ref (biblioID) and the scientificName from a different sheet in the FCT.
 
+
+
 **List of Unavailable foods (from FBS)**:
 
 Refined wheat flour
@@ -573,7 +565,7 @@ Rye
 Oats, rolled
 Fonio
 Olives
-Linseed
+Linseed / flaxseed
 Cotton seed oil
 Palm kernel oil 
 Palm oil
@@ -588,7 +580,7 @@ Beer
 Maize beer
 Sorghum beer
 Gin
-Cream 22120.01 --> cream 22120.02
+Cream 22120.01 --> cream 22120.02?
 Pork lard
 Fish body oil
 Catfish
@@ -624,91 +616,22 @@ Fish liver oil (9003) did not specified the fish type, hence we assumed cod live
 
 #### 6) Lesotho FCT
 
-4) Energy is only reported in kJ. New variable need to be created, for ENERC1.
+**Version log**
+
+V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
+V.1.3 updated on 2021/10/1 - Replace Trace to zero and removed (*) using new function
+
+
+##### Food components and other variables
+
+Energy is only reported in kJ. Hence, Energy (kcal) (`ENERC1`) was calculated, as well as Sum of proximate (`SOP`). It was not done using thefunction but it could be applied in the future. 
 
 We need to clean the table from missing values that were originated by the format of the table (double-spaces)
 
 NOTE: I need to update the loop for foodgroup variable. None of the loops that I tried worked so far...
 
-```{r LSOFCT tagname }
-
-#View FCT structure
-#Creating a variable for the names of the data-set 
-# it is composed by 2 columns on the FCT_QA dataset
-#Column 6 == Year
-#Column 2 == Short_name
-#Just need to input the number of the row (1-13)
-
-x <- 6
-
-
-readxl::read_excel(here::here(  'data', 
-                                paste(paste(FCT_QA[x,6],
-                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 6) %>%
-  head()
-
-#Customized saving FCT
-
-LSOFCT <- readxl::read_excel(here::here(  'data', 
-                                           paste(paste(FCT_QA[x,6],
-                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                              sheet = 6) %>% mutate(FCT = 'LSOFCT') %>%  select(2:41) %>% glimpse()
-
-FCT6_tag <- c('code', 'fooditem', 'EDIBLE', 'ENERC2', 'WATER', 
-               'CHOAVLDF', 'NT', 'PROTCNT', 'PROPLA', 'PROANI' , 'FIBTG', 'ASH', 'FAT',
-              'CHOLE', 'FASAT', 'FAMS', 'FAPU', 'STARCH', 'SUGAR',
-              'CA', 'FE', 'MG', 'P', 'K', 'NA', 'ZN','CU','SE', 'MN', 
-              'VITA',  'CARBEQ', 'VITD', 'VITE', 
-              'THIA', 'RIBF', 'NIA', 'VITB6'  ,'FOL', 'VITC', 'FCT')
-
-LSOFCT <- LSOFCT %>% rename_all( ~ FCT6_tag) 
-
-#creating variable 'foodgroups'
-
-#Extracting variables names only in English
-
-fglso <- LSOFCT %>% filter(is.na(code), !is.na(fooditem)) %>% pull(fooditem) %>%
-  stringr::str_split_fixed( ' ', n = 2) %>% as_tibble()
-
-nolso <- fglso %>%  pull(V1)
-
-fglso <- fglso %>%  pull(V2)
-
-
-LSOFCT <- LSOFCT %>% 
-  mutate(foodgroup = ifelse(grepl(nolso[1], code), fglso[1],
-                            ifelse(grepl(nolso[2], code), fglso[2],
-                                   ifelse(grepl(nolso[3], code), fglso[3],
-                                    ifelse(grepl(nolso[4], code), fglso[4], 
-                                  ifelse(grepl(nolso[5], code), fglso[5], 
-                                ifelse(grepl(nolso[6], code), fglso[6], 
-                                 ifelse(grepl(nolso[7], code), fglso[7],
-                                ifelse(grepl(nolso[8], code), fglso[8], 
-                                ifelse(grepl(nolso[9], code), fglso[9],
-                                  ifelse(grepl(nolso[10], code), fglso[10], 
-                                ifelse(grepl(nolso[11], code), fglso[11],
-                                ifelse(grepl(nolso[12], code), fglso[12], 
-                                ifelse(grepl(nolso[13], code), fglso[13], 
-                                ifelse(grepl(nolso[14], code), fglso[14],
-                                ifelse(grepl(nolso[15], code), fglso[15],
-                              ifelse(grepl(nolso[16], code), fglso[16],
-                                  ifelse(grepl(nolso[17], code), fglso[17],  
-                                       ifelse(grepl(nolso[18], code), fglso[18],
-                                      ifelse(grepl(nolso[19], code), fglso[19],
-                                          ifelse(grepl(nolso[20], code), fglso[20], 
-                                                           'NA')))))))))))))))))))))%>% 
-                                               filter(!is.na(code))
-
-LSOFCT <- LSOFCT %>%   mutate_at(vars(3:39), funs(as.numeric)) 
-
-
-LSOFCT <- LSOFCT %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
-
-summary(LSOFCT$SOP)
-
-```
+There were trace values that were converted to zero, there were (*) values (e.g, in `EDIBLE`) which were removed, although it would good to check the meaning.
+In addition, there were ("[]") which were also removed, and would need to be checked as well. 
 
 
 ####7) Mozambique FCT
@@ -1025,7 +948,11 @@ summary(uPulses$SOP)
 
 ```
 
-####14) regional fct
+#### 14) regional fct - Need some work!
+
+**Version log**
+
+V.1.9 updated on 2021/10/13 - Changed phytic acid to phytate.
 
 This data is coming from Joy et al. (2014) study. We have reformatted and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
 
@@ -1047,7 +974,74 @@ We have prepared a list of updates that could benefit the use of the regional fc
 
 4- The "middle region" food composition table is a exact copy of the "western region" fct, hence when possible and available data for that region should be generated. 
 
+**List of Unavailable foods (from FBS)**:
+marine mammals
+imported rice
+beetroots
+sugar cane
+fructose, powder
+wine rose
 
+#### 15) CoFID fct (UK FCT)
+
+**Version log**
+
+V.1.0 generated on 2021/10/12
+V.1.1 updated on 2021/10/13 - Changed "N" to zero using the same function as for "Tr".
+
+#### Data cleaning
+
+##### Food components and other variables
+
+Folate is expressed as: Folate (FOLT) Values are expressed as total folates measured after deconjugation of the polyglutamyl forms, and it was reported in mcg. 
+
+According to the documentation, there are value recorded as "Tr" and as "N". 
+
+- "A trace value for a nutrient is represented by Tr".
+- "Where a nutrient is present in significant quantities, but there is no reliable information on the amount, the value is represented by N."
+
+Public Health England, 2021. McCance and Widdowson’s The Composition of Foods Integrated Dataset 2021. User guide. 
+
+
+**List of Unavailable foods (from FBS)**:
+Rye grain
+Fonio
+Linseed / flaxseed
+palm kernel oil
+Rice oil / rice bran, oil
+Turmeric root
+beer, maize grain
+gin
+cream (Average)
+Pork lard / lard
+Cod body oil
+groupers, white, fresh, raw
+crab raw
+Frog, raw
+Infant formula
+Water bottle
+Millet (generic)
+Sorghum beer
+Deer meat
+Beef offal, raw
+palm kernel
+Sugar cane
+
+###### MAPS Food dictionary
+
+
+**Aquatic products**
+Nori (13-340) were matched to Red algae (1594.01) in the food dictionary. Nori are a form of red algae. However it was reported as dried, which is the most common form. But, it should be specified in the food dictionary. 
+https://en.wikipedia.org/wiki/Red_algae. 
+
+**Other food**
+We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should be reviewed in the future. 
+
+## MAPS formatting
+
+Final steps are common to all the FCTs, which is renaming the variables according to MAPS standards and descriptions. These are stored in the metadata folder in the file "fct-variable-names.csv". 
+
+A change have been made (2022-10-12), so the variable phyticacid_in_mg would be called phytate_in_mg. 
 
 ## Conclusion
 

@@ -1,7 +1,7 @@
 
 library(tidyverse)
 library(fuzzyjoin)
-source("dictionary.R")
+source("MAPS_Dictionary-Protocol.R")
 ####================== LOADING DATASET =============================####
 
 #Joy et al. regional FCT as per his Suppl. mat. table 2
@@ -26,7 +26,7 @@ fct.t <- read.csv(here::here('metadata',
 ######-----------------------VARIABLE STANDARDIZATION---------------------########
 
 #Variable names for data standardization
-variables <- read.csv(here::here( "fct-variable-names.csv"))
+variables <- read.csv(here::here("metadata", "fct-variable-names.csv"))
 
 #getting the names of all the standard variables names, to filter them afterward
 var.name <- variables %>% select(Column.Name) %>% pull
@@ -155,8 +155,8 @@ dictionary %>% filter(str_detect(FoodName_3, "milk")) %>%
 #
 #
 
-fct.genus <-  read.csv(here::here("data",
-                          "MAPS_regional-SSA-fct_v1.6.csv"))
+#fct.genus <-  read.csv(here::here("data",
+ #                         "MAPS_regional-SSA-fct_v1.6.csv"))
 
 #Loading the fct to "create" a middle region fct data copied from west
 #Africa, this should be reviewed in the near future.
@@ -188,7 +188,7 @@ fct.genus <- fct.genus %>% filter(region == "W") %>%
     cu_in_mg = "cu_mg",
     i_in_mcg = "i_mg",
     se_in_mcg = "se_mg",
-    phyticacid_in_mg = "phytate_mg",
+    phytate_in_mg = "phytate_mg",
     food_genus_id = "ID_3",
     food_genus_description = "FoodName_3",
     food_group = "FoodName_0",
@@ -211,7 +211,7 @@ fct.genus <- fct.genus %>% mutate(food_genus_confidence = case_when(
   food_genus_id == "1701.02"  ~ "m ", #common beans = beans and products
   TRUE ~ food_genus_confidence))
 
-#fct.genus$food_group[fct.genus$food_genus_id == "23511.02.01"] <- "Other foods"
+fct.genus$food_group[fct.genus$food_genus_id == "23511.02.01"] <- "Other foods"
 
 fct.genus %>% distinct( food_genus_id, original_food_name, region) %>% 
   filter(food_genus_id == "1323.01")
@@ -219,10 +219,15 @@ fct.genus %>% distinct( food_genus_id, original_food_name, region) %>%
 fct.genus %>% filter(food_genus_confidence != "l") %>% 
   filter(food_genus_id == "1323.01")
 
-fct.genus %>% filter(filter %in% c(food_genus_id == "1323.01" & food_genus_confidence != "l"))
+#fct.genus %>% filter(filter %in% c(food_genus_id == "1323.01" & food_genus_confidence != "l"))
 
+names(fct.genus)
 #Saving four independent regional FCT
 #KEEP working on this script
+
+
+read.csv(here::here("output", "MAPS_Western-Africa_v1.9.csv")) %>% 
+  filter(is.na(food_group))
 
 #need to save them!!
 
@@ -235,7 +240,7 @@ allNames <- c("Eastern", "Middle", "Southern", "Western")
 
 
       for(i in 1:4){
-  saveName = paste0("MAPS_", allNames[i] , "-Africa_v1.8.csv")
+  saveName = paste0("output/MAPS_", allNames[i] , "-Africa_v1.9.csv")
   readr::write_excel_csv(splitregion[[i]], file = saveName)
   }
 
@@ -254,3 +259,7 @@ read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv")) %>%
 read.csv(here::here("data", "MAPS_Western-Africa_v1.6.csv")) %>%
   anti_join(., read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv")) %>%
               select(food_genus_id) %>% unique() %>% filter(!is.na(food_genus_id)))
+
+read.csv(here::here("output", "MAPS_Western-Africa_v1.8.csv")) %>%
+  anti_join(., fbs, by = c("food_genus_id")) %>%
+              select(food_genus_id) %>% unique() %>% filter(!is.na(food_genus_id))

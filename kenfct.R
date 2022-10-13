@@ -26,7 +26,7 @@
 ##1) LOADING PACKAGES, DICTIONARY,AND KENYA FCT 
 
 library(tidyverse)
-source("dictionary.R")
+source("MAPS_Dictionary-Protocol.R")
 
 #Check all the sheet in the spreadsheet
 readxl::excel_sheets(here::here('data', "MOH-KENFCT_2018.xlsx"))
@@ -173,7 +173,7 @@ kenfct %>%
 #      mutate(FOLAC = (FOLAC-FOLFD)/1.7)
 ###############################################################################   
 
-##3) MAPS type format
+##3) MAPS type format ----
 
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
 
