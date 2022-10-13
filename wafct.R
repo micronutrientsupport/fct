@@ -137,19 +137,20 @@ wafct <- wafct %>% dplyr::relocate(foodgroup, .after = ref) %>%
   dplyr::relocate(FCT, .before = code) 
 
 
-#Converting into numeric numeric variables  
+# Converting into numeric numeric variables  
 
 wafct <- wafct %>% mutate_at(vars(`EDIBLE1`:`PHYTCPPD_PHYTCPPI`), as.numeric)
 
 wafct %>% head()
 
-##3) MAPS type format
+##3) MAPS type format ----
 
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
 
-variables <- read.csv(here::here( "fct-variable-names.csv"))
+var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
+  select(Column.Name) %>% pull()
 
-source("dictionary.R")
+source(here::here("MAPS_Dictionary-Protocol.R"))
 
 
 
@@ -189,12 +190,12 @@ wa_genus <- tribble(
   "01_081", "23120.03.02", "l",
   "02_045", "1313.01", "l",
   "02_009", "1510.01", "h",
-  "01_037",  "23161.01.01", "h",
+  "01_037",  "23161.01.01", "l", # rice, white, imported check!
   "01_039",  "114.01", "m",
   "02_049",  "1530.02", "h",
   "02_022",  "1530.01", "h",
   "02_014", "1530.04", "h",
-  "03_004", "1706.02", "m",
+  "03_004", "1706.01", "h",
   "06_027", "142.02", "m",
   "03_032", "1707.01", "h",
   "03_008", "141.01", "h",
@@ -209,7 +210,7 @@ wa_genus <- tribble(
   "07_072", "21115.01", "m",
   "07_006", "21113.02.01", "m",
   "07_007", "21114.01", "h",
-  "04_005", "1212.01", "h",
+  "04_005", "1212.03", "h",
   "04_053", "1214.04", "m",
   "04_017", "1239.01.01", "h",
   "04_018", "1253.02.01", "h", 
@@ -234,7 +235,48 @@ wa_genus <- tribble(
  "09_018", "1503.06", "h",
  "09_060", "1503.07", "h",
  "09_032", "1503.02", "h",
- "09_041", "1503.08", "h"
+ "09_041", "1503.08", "h",
+ "01_074", "111.01", "h", 
+ "01_082", "23110.01", "h", 
+ "01_079", "23120.01.01", "h",
+ "01_001",  "1193.03", "h", 
+ "02_019", "1540.01", "l", 
+ "13_001", "2910.01", "h",
+ "03_030", "1704.01", "h", 
+ "06_001", "1372.01", "m", 
+ "06_010", "21421.01", "h", 
+ "06_002", "1460.01", "h",
+ "06_015", "1444.01", "m", 
+ "11_009", "2161.01", "m", 
+ "11_003", "2162.01", "m", 
+ "11_016", "21631.01.01", "m", 
+ "11_012", "21691.14.01", "m", 
+ "11_002", "2166.01", "m", 
+ "11_014", "2167.01", "m", 
+ "11_013", "21691.02.01", "m", 
+ "11_010", "34550.01", "m", 
+ "05_016", "1323.01", "h", 
+ "05_014", "1322.01", "h", 
+ "05_035", "1321.02", "l",
+ "05_031", "1314.01", "h", 
+ "05_051", "1330.01", "h", 
+ "12_005", "23912.02.01", "h", 
+ "12_008", "23914.01", "h", 
+ "13_014", "1651.01", "m", #Should specified dried 
+ "04_046", "1652.01", "l", #should specidied is "chilli"
+ "12_004", "24310.04.01", "h",
+ "07_009", "21111.02.01", "m", #assumed w/o bones bc EP was 1
+ "07_001", "21151.02", "h", 
+ "11_015", "22241.02.01", "h", 
+ "09_055", "1553.01", "l", 
+ "09_006", "1514.01", "h", 
+ "09_018", "1501.02", "m", 
+"09_003",  "1527.01", "l", #need to check w/ specie
+ "09_037", "1532.01", "l", #need specify in oil
+ "06_029", "1491.02.01", "l", 
+
+ 
+ 
  
   )
 
@@ -282,12 +324,13 @@ subset(wafct.genus, ref_fctcode == "13_023")
 
 #Checking the items of the list above
 
-dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01", 
-                                     "F0022.02", "1701.03", "141.02", 
-                                     "142.02", "142.05", "21111.01.01",
-                                     "21170.01.03", "1212.02", "1214.03", 
-                                     "1270.01", "1341.01", "1316.01", 
-                                     "21700.02.01", "1802.01","2899.01.01"))
+dictionary.df %>% 
+  filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01", 
+                       "F0022.02", "1701.03", "141.02", 
+                       "142.02", "142.05", "21111.01.01",
+                       "21170.01.03", "1212.02", "1214.03", 
+                       "1270.01", "1341.01", "1316.01", 
+                       "21700.02.01", "1802.01","2899.01.01"))
 
 
 #wa_genus <- wa_genus %>% left_join(., dictionary.df)
@@ -297,7 +340,9 @@ dictionary.df %>% filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01",
 wafct <- wafct %>%
   left_join(., wafct.genus, by = c("code" = "ref_fctcode"))
 
-# Checking dicttionary codes
+# Checking dictionary codes
+subset(dictionary.df, ID_3 %in% ID_3missing, 
+       select = c(ID_3, FoodName_3))
 
 wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "13_023")
@@ -306,27 +351,30 @@ wafct %>% filter(code == "03_022") %>% glimpse()
 #Checking code availability 
 x <- wafct %>% filter(code %in% c("01_047", "01_046"))
 
-subset(wafct, code == "09_043", select = fooditem) 
-subset(wafct, code == "09_041", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "03_004", select = fooditem) 
+subset(wafct, code == "12_001", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "F0623.02")
-subset(dictionary.df, ID_2 == "23110")
-subset(dictionary.df, ID_1 == "2536")
+dictionary.df %>% filter(ID_3 == "1527.01")
+subset(dictionary.df, ID_2 == "142")
+subset(dictionary.df, ID_1 == "2552")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(wafct, str_detect(fooditem, "chapa"), 
+
+
+subset(wafct, str_detect(fooditem, "sugar|Sugar"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(wafct, str_detect(foodgroup, "Fish"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(wafct, str_detect(scientific_name, "Oreochromis spp"), 
+subset(wafct, str_detect(fooditem, "pork|Pork") & 
+         str_detect(fooditem, "fat"), 
+       select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
+subset(wafct, str_detect(scientific_name, "Pennisetum"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
 
 
 #Rename variables according to MAPS-standards
 
-  MAPS_wafct<- wafct %>%
+MAPS_output <- wafct %>%
     left_join(.,dictionary.df %>% 
                 select(ID_3, FoodName_3, 
                        FoodName_0, FoodName_1) %>%
@@ -378,23 +426,31 @@ subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
   vitaminc_in_mg = "VITC",
   vitamind_in_mcg = "VITD",
   vitamine_in_mg = "VITE", 
-  phyticacid_in_mg = "PHYTCPP") %>% 
+  phytate_in_mg = "PHYTCPP") %>% 
     select(var.name)
 
 
-MAPS_wafct %>% filter(!is.na(food_genus_id), is.na(food_subgroup))  
+MAPS_output %>% filter(!is.na(food_genus_id), is.na(food_subgroup))  
 
 #Looking up foods in the fct
 
-MAPS_wafct %>% filter(str_detect(original_food_name, "Plant")) %>% select(1:3) %>% knitr::kable()
-MAPS_wafct %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
-MAPS_wafct %>% filter(original_food_id == "02_042") %>% glimpse()
-MAPS_wafct %>% filter(food_genus_id == "1699.08")
+MAPS_output %>% filter(str_detect(original_food_name, "Plant")) %>% select(1:3) %>% knitr::kable()
+MAPS_output %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
+MAPS_output %>% filter(original_food_id == "02_042") %>% glimpse()
+MAPS_output %>% filter(food_genus_id == "1699.08")
   
-#Saving FCT output into a csv file
-#  
-# MAPS_wafct  %>% 
-#   readr::write_excel_csv(., 
-#       here::here('output', 'MAPS_WAFCT_v1.5.csv')) #that f(x) is to 
+
+#Checking for duplicated items
+dim(MAPS_output)
+which(duplicated(MAPS_output))
+
+#Checking duplicates in dictionary codes
+sum(duplicated(MAPS_output$food_genus_id[!is.na(MAPS_output$food_genus_id)]))
+
+#Checking that all dictionary codes have been matched to an entry in the dictionary
+subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
+
+#Saving file into csv to be used in MAPS tool
+readr::write_excel_csv(MAPS_output, here::here('output', 'MAPS_WAFCT_v1.6.csv')) #that f(x) is to 
 #         #deal w/ special characters 
 #  
