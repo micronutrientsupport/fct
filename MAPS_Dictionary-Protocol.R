@@ -529,6 +529,8 @@ dictionary.df <- dictionary.df %>%
 
 #Fixing ID_1 codes 
 dictionary.df$ID_1[dictionary.df$ID_1 == "2806"] <- "2805"
+#Improving FoodName_3 desciption
+dictionary.df$ID_1[dictionary.df$ID_3 == "23140.05.01"] <- "barley, pearl, grain, dried, raw"
 
 
 #├ New category from ID_2 ----
@@ -2509,6 +2511,11 @@ dictionary.df[n1,13] <- "xanthosoma sagittifolium"
 # Final Formatting ----
 
 dictionary.df$FoodName_2 <- str_squish(dictionary.df$FoodName_2)
+
+dictionary.df[, c("FoodName_1", "FoodName_2", "FoodName_3",
+              "scientific_name")] <- apply(dictionary.df[, 
+                                    c("FoodName_1", "FoodName_2", "FoodName_3",
+                                      "scientific_name")], 2, tolower) 
 
 dictionary.df <- dictionary.df %>% arrange(.)
 

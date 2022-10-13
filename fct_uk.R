@@ -164,7 +164,7 @@ subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
 readr::write_excel_csv(MAPS_output, here::here('output', 
-                                 'MAPS_UKFCT_v1.0.csv'))
+                                 'MAPS_UKFCT_v1.1.csv'))
 
 
  

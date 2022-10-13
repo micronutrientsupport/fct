@@ -1,13 +1,13 @@
 
 library(tidyverse)
-
+source(here::here("functions.R"))
 ###-------------------------LOADING DATA
 
 #FCT_QA SPREADSHEAT
 
 FCT_QA <- readxl::read_excel(here::here('data', 'FCT_QA.xlsx'), sheet = 2)
 
-variables <- read.csv(here::here( "fct-variable-names.csv"))
+variables <- read.csv(here::here("metadata", "fct-variable-names.csv"))
 
 ######-----------------------VARIABLE STANDARDIZATION---------------------########
 
@@ -106,13 +106,6 @@ a <- WAFCT %>% mutate(low_quality_FE = case_when(
   str_detect(FE, '\\[.*?\\]') == TRUE ~ 'yes', 
   TRUE ~ 'no')) 
   
-#The following f(x) removes []
-
-no_brackets <- function(i){
-  case_when(
-    str_detect(i, '\\[.*?\\]') == TRUE ~ str_extract(i, '(?<=\\[).*?(?=\\])'), 
-    TRUE ~ i)
-}
   
 WAFCT <- WAFCT %>% mutate_if(is.character, no_brackets)
 
@@ -776,6 +769,11 @@ LSOFCT <- LSOFCT %>%
                                                            'NA')))))))))))))))))))))%>% 
                                                filter(!is.na(code))
 
+# Replacing trace values to zero
+LSOFCT[, c(3:39)] <- apply(LSOFCT[, c(3:39)],2, TraceToZero)
+# Removing * values
+LSOFCT[, c(3:39)] <- apply(LSOFCT[, c(3:39)],2, RemoveStar)
+
 LSOFCT <- LSOFCT %>%  mutate_if(is.character, no_brackets) %>% 
   mutate_at(vars(3:39), funs(as.numeric)) 
 
@@ -788,8 +786,6 @@ LSOFCT <- LSOFCT %>%
 LSOFCT <- LSOFCT %>% rowwise %>%  mutate(ENERC1 = sum(c(
                                   (PROTCNT*4) , (FAT*9), (CHOAVLDF*4),(FIBTG *2))))
 
-
-#write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCT.csv'))
 
 #Adding the reference (biblioID) to the main KENFCT
 
@@ -838,28 +834,47 @@ LSOFCT<- LSOFCT %>% rename(
   niacin_in_mg = "NIA", 
   vitaminb6_in_mg = "VITB6",
   folate_in_mcg = "FOL",
-  vitaminc_in_mg = "VITC") %>% left_join(., var.dat) %>% select(var.name)
+  vitaminc_in_mg = "VITC") %>% 
+  mutate_all(., as.character) %>% 
+  left_join(., var.dat %>% mutate_all(., as.character)) %>% 
+  select(var.name)
 
-write.csv(LSOFCT,  here::here('data', 'MAPS_LSOFCTv.1.0.csv'))
+#Checking for duplicated items
+dim(LSOFCT)
+which(duplicated(LSOFCT))
 
 
 ##3) Adding GENuS code (1)
 #and adjusting FCT formatting to MAPS standards
 
-LSOFCT <- read.csv(here::here('data', 'MAPS_LSOFCTv.1.0.csv'), 
-                   fileEncoding = 'UTF-8-BOM')
+#LSOFCT <- read.csv(here::here('data', 'MAPS_LSOFCTv.1.0.csv'), 
+ #                  fileEncoding = 'UTF-8-BOM')
 
 lso.genus <- read.csv(here::here('metadata', 'MAPS_LSOFCT_standard-list.csv'))
 
-LSOFCT %>% left_join(., lso.genus, by = c("original_food_id" = "ref_fctcode")) %>% 
+MAPS_output <- LSOFCT %>% mutate_at("original_food_id", as.integer) %>% 
+  left_join(., lso.genus, by = c("original_food_id" = "ref_fctcode")) %>% 
   mutate(
     food_genus_id = ID_3,
     food_genus_description = FoodName_3,
     food_group = FoodName_0,
     food_subgroup = FoodName_1, 
     food_genus_confidence = fe2_confidence) %>% 
-  select(original_food_id:phyticacid_in_mg) %>% 
-  write.csv(here::here('output', 'MAPS_LSOFCT_v1.1.csv'), row.names = FALSE)
+  select(original_food_id:phytate_in_mg) 
+  
+#Checking for duplicated items
+dim(MAPS_output)
+which(duplicated(MAPS_output))
+
+#Checking duplicates in dictionary codes
+sum(duplicated(MAPS_output$food_genus_id[!is.na(MAPS_output$food_genus_id)]))
+
+#Checking that all dictionary codes have been matched to an entry in the dictionary
+subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
+
+#Saving file into csv to be used in MAPS tool
+readr::write_excel_csv(MAPS_output,
+                       here::here('output', 'MAPS_LSOFCT_v1.3.csv'))
 
 ##################------8) Nigeria FCT----#####################
 

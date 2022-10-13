@@ -1,8 +1,7 @@
 
 
 library(tidyverse)
-
-library(tidyverse)
+source(here::here("kenfct.R"))
 
 
 
@@ -91,7 +90,8 @@ mean(fbs$amount_consumed_in_g[fbs$food_genus_id=="1491.02.01"])
 fbs$original_id[fbs$original_name == "marine fish, other"] <- "2764"
 
 
-subset(fbs, food_genus_id == "1532.01")
+
+subset(fbs, food_genus_id == "2413.01")
 subset(fbs, original_id == "2763",
        select = c(original_name, food_genus_id)) %>% distinct()
 
@@ -110,4 +110,10 @@ fbs %>% select(1,4:5) %>% distinct() %>%
   filter(is.na(original_food_id)) %>%
   distinct() %>% pull(food_genus_id)
 
-#Next is 51
+#Checking fbs w/o a match in WA19
+fbs %>% select(1,4:5) %>% distinct() %>% 
+  left_join(., MAPS_wafct) %>% 
+  filter(is.na(original_food_id)) %>%
+  distinct() %>% pull(food_genus_id)
+
+readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.1.csv"))
