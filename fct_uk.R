@@ -66,6 +66,11 @@ genus <- read.csv(here::here("inter-output", "ukfct_matches.csv")) %>%
 (dupli <- genus %>%  count(ref_fctcode) %>% 
     filter(n>1) %>% pull(ref_fctcode))
 
+genus %>% mutate(fct = "UK21")  %>% 
+  bind_rows(., read.csv(here::here("metadata", "dict_fct_compilation_v1.csv")) %>%
+              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+        write.csv(., here::here("metadata", "dict_fct_compilation_v1.csv"), row.names = F)
+
 #Adding food dictionary codes to FCT
 
 output_table <- output_table %>% 

@@ -117,3 +117,12 @@ fbs %>% select(1,4:5) %>% distinct() %>%
   distinct() %>% pull(food_genus_id)
 
 readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.1.csv"))
+
+fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.0.csv")) 
+
+
+names(fbs)
+
+subset(fbs, str_detect(original_name, "apples and products"), 
+       select = c(original_name, food_genus_id)) %>% distinct()
+       

@@ -337,6 +337,9 @@ ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>%
 (dupli <- ken_genus %>%  count(ref_fctcode) %>% 
   filter(n>1) %>% pull(ref_fctcode))
 
+ken_genus %>% mutate(fct = "KE18") %>% 
+  write.csv(., here::here("metadata", "dict_fct_compilation_v1.csv"), row.names = F)
+
 ##Find a way to stop it running if dupli == TRUE
 x <- if(length(dupli) == 0){NA}else{length(dupli)} 
 #x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
