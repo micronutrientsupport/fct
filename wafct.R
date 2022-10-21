@@ -335,6 +335,11 @@ dictionary.df %>%
 
 #wa_genus <- wa_genus %>% left_join(., dictionary.df)
 
+wafct.genus %>% mutate(fct = "WA19")  %>% 
+  bind_rows(., read.csv(here::here("metadata", "dict_fct_compilation_v1.csv")) %>%
+              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+  write.csv(., here::here("metadata", "dict_fct_compilation_v1.csv"), row.names = F)
+
 #Adding dictionary code
 
 wafct <- wafct %>%
@@ -448,6 +453,6 @@ sum(duplicated(MAPS_output$food_genus_id[!is.na(MAPS_output$food_genus_id)]))
 subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
-readr::write_excel_csv(MAPS_output, here::here('output', 'MAPS_WAFCT_v1.6.csv')) #that f(x) is to 
+#readr::write_excel_csv(MAPS_output, here::here('output', 'MAPS_WAFCT_v1.6.csv')) #that f(x) is to 
 #         #deal w/ special characters 
 #  
