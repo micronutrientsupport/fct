@@ -43,7 +43,7 @@ vignettes/*.pdf
 data/
 metadata/
 output/
-*/
+inter-output/
 
 #Images and document
 
