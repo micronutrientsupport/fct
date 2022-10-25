@@ -231,7 +231,7 @@ Rice, white, raw (01_037) was assigned to imported rice (23161.01.01), mainly be
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate & loading table from csv instead of pdf (see new folder MW19).
 
 
-###Standtadization of values reported
+### Standtadization of values reported
 
 For Malawi dataset all the variables names need to be converted manually because in this FCT component names are not standardized using tagnames or other method. To rename all the component in a standardized way three parameters needs to be taken into account:
 
@@ -503,8 +503,17 @@ GMBFCT <- GMBFCT %>%
 
 **Version log**
 
+V.1.7 updated on 2021/10/25 - Removed duplicated items introduced by biblioID merging and removing the dictionary code for baking powder. 
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate.
 V.1.5 updated on 2021/10/11 - Added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
+ 
+#### Importing raw data
+
+The KE18 raw file was an excel file downloaded from the Kenyan Ministry of Health [here](http://www.nutritionhealth.or.ke/wp-content/uploads/Downloads/Kenya%20Food%20Composition%20Tables%20Excel%20files%202018.xlsx). 
+
+It consisted in a number of sheet, the ones used in this document were: sheet 4, which contained the food composition table, and sheet 7, which contained the scientific names and the source of the food components (references). 
+
+The table with the scientific names and bibliography has two duplicated items (code 1025, 4018). 
 
 #### Data cleaning
 
@@ -555,6 +564,11 @@ KENFCT2 - We have incorporated tagnames as per in the dataset (with no modificat
 
 UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the original FCT dataset. We also added the ref (biblioID) and the scientificName from a different sheet in the FCT.
 
+###### Quality Checks
+
+**Food items to be avoided**
+
+The food item "13002 - Baking powder, dry powder" has quite extreme Ca (and other minerals) values. In addition, it has a very high standard deviation. It was not an analytical value and all the sources of the nutrient values were from abroad (see `r kenfct$biblio_id[kenfct$code == "13002"]`). Furthermore, even being used in small amounts, it was the main driver of Ca consumption in IHS4 and IHS5. Hence, we advise not using this item, and hence removing the dictionary code from it. 
 
 
 **List of Unavailable foods (from FBS)**:
@@ -612,7 +626,7 @@ Beef meat are all specified w/o bones, except the lean (7002). The edible portio
 
 *- Fats & Oils*:
 
-Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). Howver, we assigned a "low confidence". 
+Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). However, we assigned a "low confidence". 
 
 #### 6) Lesotho FCT
 

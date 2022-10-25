@@ -14,7 +14,7 @@ source(here::here("MAPS_Dictionary-Protocol.R"))
 #Checking dictionary codes
 dictionary.df %>% filter(ID_3 == "01520.01.03")
 
-mwi_clean %>% filter(code == "MW01_0041")
+mwi_clean %>% filter(code == "MW01_0031")
 
 #Adding GENuS code
 
@@ -48,7 +48,7 @@ mwi_genus <- tribble(
 "MW02_0017" ,  "1707.01", "h",
 "MW02_0019" ,  "141.01", "h",
 "MW03_0006" ,  "21111.01.01", "h",
-"MW03_0010" ,  "21121.03", "h",
+"MW03_0010" ,  "F1061.01", "l",
 "MW03_0011" ,  "21121.01", "h",
 "MW03_0013" ,  "231.02", "h",
 "MW03_0015" ,  "231.01", "h",
@@ -78,7 +78,8 @@ mwi_genus <- tribble(
 "MW05_0021" ,  "1318.01", "h",
 "MW06_0001" ,  "21700.02.01", "h",
 "MW08_0007" ,  "1802.01", "h",
-"MW08_0008" ,  "2899.01.01", "h")
+"MW08_0008" ,  "2899.01.01", "h",
+"MW01_0031", "F1232.05", "l")
 
 mwi_genus <-  mwi_genus %>% left_join(., dictionary.df)
 
