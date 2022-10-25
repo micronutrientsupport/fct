@@ -23,7 +23,7 @@
 
 #Documentation is in fct_cleaning.Rmd.
 
-##1) LOADING PACKAGES, DICTIONARY,AND KENYA FCT 
+## 1) LOADING PACKAGES, DICTIONARY, AND KENYA FCT -----
 
 library(tidyverse)
 source("MAPS_Dictionary-Protocol.R")
@@ -45,7 +45,7 @@ kenfct <- readxl::read_excel(here::here('data', "MOH-KENFCT_2018.xlsx"),
 
 dim(kenfct)
 
-##2) TIDYING KENYA FCT 
+## 2) TIDYING KENYA FCT ----
 
 #Rename variables acc. to tagnames (FAO/INFOODS)
 #We are not renaming Fatty acids nor AAs
@@ -92,8 +92,9 @@ kenfct <- kenfct %>% mutate(foodgroup = case_when(
 #                                                                             #    
 ###############################################################################
 
+# Dealing with special characters
 
-#Creating a dataset w/ the values that were of low quality [],  
+# METADATA: Creating a dataset w/ the values that were of low quality [],  
 #trace, fortified w/ folic acid or normal
 
 ken_meta_quality <- kenfct %>% 
@@ -125,15 +126,21 @@ kenfct <- kenfct %>%
 #NOTE: tr will be found in non-numeric variables (i.e., fooditem)
 kenfct %>% str_which(.,"tr|[tr]|[*]|\\[.*?\\]")
 
+dim(kenfct)
 
 #Adding the reference (biblioID) and Scientific name to kenfct
-
-kenfct <- kenfct %>% left_join(., readxl::read_excel(here::here('data', "MOH-KENFCT_2018.xlsx"), 
+#There are two duplicated irems in the biblio file (code #1025, 4018).
+kenfct <- kenfct %>% left_join(., 
+              unique(readxl::read_excel(here::here('data',
+                                          "MOH-KENFCT_2018.xlsx"), 
                    sheet = 7, skip = 2) %>%
                   janitor::clean_names() %>% 
-                  select(2, 4,5) %>% 
+                  select(2, 4,5)) %>% 
                   mutate_at("code_kfct18", as.character),
                   by = c("code" = "code_kfct18")) 
+
+#Checking for duplicated
+dim(kenfct)
 
   
 #Reordering variables and converting nutrient variables into numeric
@@ -314,7 +321,8 @@ ken_genus <- tribble(
  "5007", "1314.01", "h", 
  "5008", "1314.02", "h", 
  "9003", "1523.01", "l", #no fish specified, we assumed cod bc it's the most common
- "1044", "23110.01", "m"
+ "1044", "23110.01", "m", 
+ "13003", "F1232.09", "h"
  
  )
 
@@ -337,9 +345,6 @@ ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>%
 (dupli <- ken_genus %>%  count(ref_fctcode) %>% 
   filter(n>1) %>% pull(ref_fctcode))
 
-ken_genus %>% mutate(fct = "KE18") %>% 
-  write.csv(., here::here("metadata", "dict_fct_compilation_v1.csv"), row.names = F)
-
 ##Find a way to stop it running if dupli == TRUE
 x <- if(length(dupli) == 0){NA}else{length(dupli)} 
 #x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
@@ -356,8 +361,8 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.02"
 ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
 #Fixing beef to acc. for fat content variability
 ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.01.02"
-#Amend baking powder (1699.05) --> F1232.07
-ken_genus$ID_3[ken_genus$ref_fctcode == "13002"] <-  "F1232.07"
+#Amend baking powder (1699.05) --> F1232.07 - Removing the code very high Ca (see documentation)
+ken_genus$ID_3[ken_genus$ref_fctcode == "13002"] <-  NA #"F1232.07"
 #Fixing samosa dictionary code
 ken_genus$ID_3[ken_genus$ref_fctcode == "15025"] <-  "F0022.06"
 #Millet, bulrush == Pearl millet (see docu)
@@ -365,6 +370,12 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "1025"]  <- "118.03"
 #Cabbage white updated dict code
 ken_genus$ID_3[ken_genus$ref_fctcode == "4007"]  <- "1212.03"
 
+#Updating the dictionary compilation for further use (to update versions)
+#v <- 1
+ken_genus %>% mutate(fct = "KE18") %>% 
+  write.csv(., here::here("metadata",
+                          paste0("dict_fct_compilation_v",v, ".csv")), 
+                          row.names = F)
 
 kenfct <- kenfct %>% 
   left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
@@ -372,22 +383,22 @@ kenfct <- kenfct %>%
 
 dim(kenfct)
 
-#Checking dictionary/ fct ids availability 
+#Checking dictionary/ fct ids availability ----
 x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
 
 subset(kenfct, code == "6007", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "1527.01")
-subset(dictionary.df, ID_2 == "1341")
-subset(dictionary.df, ID_1 == "2782")
+dictionary.df %>% filter(ID_3 == "21121.03")
+subset(dictionary.df, ID_2 == "F1734")
+subset(dictionary.df, ID_1 == "199")
 subset(dictionary.df, ID_0 == "PB")
 
 subset(kenfct, str_detect(fooditem, "Sugar"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
 subset(kenfct, str_detect(scientific_name, "clarias"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "broc"))
+subset(dictionary.df, str_detect(FoodName_3, "amaranth"))
 
 
 

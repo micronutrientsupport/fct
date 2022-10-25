@@ -26,7 +26,7 @@ Below are the comments to be solved:
  1) 118 - 'MAIZE UFA RAW MADEYA (bran flour - unprocessed), code 118, is missing. --> Fixed
  2) 412 - Tinned vegetables (specify) change to Tinned beans. = Tinned, beans (MW02_0003) --> Fixed
  3) 106 - rice was duplicated --> Fixed. 
- 4) 829 - restaurant meals ---> Nsima (MW01_0031) - check min values for this recipe, chicken (MW03_0010), rape leaves, boiled (MW04_0020*Retention factor) --> Fixed but w/o retention factors
+ 4) 829 - restaurant meals ---> Nsima (MW01_0031 - F1232.05) - check min values for this recipe, chicken (MW03_0010 - F1061.01), rape leaves, boiled (MW04_0020*Retention factor), change to amaranth leaves, boiled (MW04_0010 - ) --> Fixed but w/o retention factors
  5) 816 - Change compo to candies
  6) 708 - Add infant formula data
  
@@ -38,7 +38,7 @@ Below are the comments to be solved:
  7) 204 - OFSP
  8) 203 - WFSP
  
-Changed value of VITA_RAE of (831) white bolied sweet potato to match raw white sweet potato adjusted w/ retention factor. We did not do a water adjustement because the water content difference in water was <10%, hence according to FAO/ INFOODS Guidelines there is no need to water adjust 
+Changed value of VITA_RAE of (831) white boiled sweet potato to match raw white sweet potato adjusted w/ retention factor. We did not do a water adjustement because the water content difference in water was <10%, hence according to FAO/ INFOODS Guidelines there is no need to water adjust 
 [2.213000*(100-76.00/100-77.28)]
  
 Make a note to fix all recipes in MAFOODS.
@@ -141,10 +141,5 @@ Items that food item in the fct_ihs5 doesn't match to the genus code
 Items that doesn't match and/or are redundant
 - 21119.01.01 - MAFOODS - MW03_0067 - rabbit meat --> should be mice, otherwise remove.
 - 23161.01.01 - Rice, imported. 
+- F1232.08 - Baking soda --> Substitution of baking powder (and yeast)
 
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

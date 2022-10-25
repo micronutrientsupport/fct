@@ -14,6 +14,11 @@ c("food_genus_description"    , "food_group"               ,  "food_subgroup" ,
 
 
 ihs5 <- read.csv("ihs5-fct_v1.1.csv")
+
+names(ihs5)
+
+subset(ihs5, ihs5_foodid == "812")
+
 #mucuna - WAFCT - 03_059 and Joy et al., 
 #unprocess -
 
@@ -81,12 +86,13 @@ ihs5 <- read.csv("ihs5-fct_v1.1.csv")
 #6   23991.01.02   16
 #7   39120.04.01  807
    
+
+## Loading data
    
-   ## loading data
+ihs5 <- read.csv("ihs5-fct_v1.2.csv") %>% select(-X)
    
-   ihs5 <- read.csv("ihs5-fct_v1.2.csv") %>% select(-X)
-   
-   source("dictionary.R")
+source("MAPS_Dictionary-Protocol.R")
+
    
 #---ihs5-quality-check
    
@@ -97,13 +103,29 @@ ihs5 <- read.csv("ihs5-fct_v1.1.csv")
    
 #Fixing samosa vs banana cake id typo issue (see MAPS_Dictionary-Protocol update v2.5)
 ihs5$food_genus_id[ihs5$ihs5_foodid == "836" & ihs5$food_genus_id == "F0022.06"] <- "F0022.07"
- 
+
+# Changing 812 Yeast, baking powder, bicarbonate of soda to the correct code
+# And removing yeast from the matches (it's was the same item (duplication))
+ihs5$food_genus_id[ihs5$ihs5_foodid == "812"] <- "F1232.09"
+ihs5 <- subset(ihs5, FoodName_3 != "yeast, baking")
+# Fixing hot sauce code
+ihs5$food_genus_id[ihs5$ihs5_foodid == "814"] <- "F1232.08"
+
+#Changing values of meal eaten out & meat vendor
+subset(ihs5, ihs5_foodid %in% c("829", "825"))
+#Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
+#TODO: Generate a recipe c(F1061.01,F1232.05 )
+ihs5$food_genus_id[ihs5$ihs5_foodid == "829"] <- "F1061.01"
+
+dim(ihs5)
 #checking that all the ihs5 food items matches make sense  
 ihs5_genus <- ihs5 %>% select(starts_with("ihs5"), food_genus_id) %>% 
  left_join(., dictionary.df %>% select(ID_3, FoodName_3), by = c("food_genus_id" = "ID_3")) %>% 
  arrange(ihs5_foodid)
-   
-   
+
+# Checking for duplicates   
+dim(ihs5_genus)
+
 #Checked one by one all the matches and noted down the combination of codes that
 #did not make sense for further checking
 
@@ -121,6 +143,11 @@ ihs5_genus <- ihs5_genus %>%
      filter(!(ihs5_foodid %in% c("816", "832" , "836", "106", "510") &
                 food_genus_id %in% c("F0666.01", "1530.07", "F0022.06",
                                      "23161.01.01", "21119.01.01")))
+
+subset(ihs5_genus, ihs5_foodid == "812")
+
+# Items without matches
+subset(ihs5_genus, is.na(FoodName_3))
 
 #Adding 
 #118 - MAIZE UFA RAW MADEYA (bran flour - unprocessed)
