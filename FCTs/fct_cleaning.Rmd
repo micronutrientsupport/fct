@@ -228,6 +228,7 @@ Rice, white, raw (01_037) was assigned to imported rice (23161.01.01), mainly be
 
 **Version log**
 
+V.1.7. updated on 2021/10/25 - Temporary input table from excel (unknown origin), and fixed some dictionary codes (e.g., chicken stew)
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate & loading table from csv instead of pdf (see new folder MW19).
 
 

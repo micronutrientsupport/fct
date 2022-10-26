@@ -3,7 +3,9 @@
 ##) MAPS type format ------
 ##TO-DO: review data conversion from pdf to excel
 #Loading data
-mwi_clean <- read.csv(here::here("inter-output", "2019_MAFOODS_with-corrections.csv"))
+#mwi_clean <- read.csv(here::here("inter-output", "2019_MAFOODS_with-corrections.csv"))
+mwi_clean <- read.csv(here::here("data", "MAPS_MAFOODS_v1.2.csv"))
+sum(duplicated(mwi_clean))
 
 #Loading formatting data
 var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
@@ -83,6 +85,12 @@ mwi_genus <- tribble(
 
 mwi_genus <-  mwi_genus %>% left_join(., dictionary.df)
 
+sum(duplicated(mwi_genus))
+
+#Checking codes
+names(mwi_genus)
+subset(mwi_genus, is.na(FoodName_3))
+
 #Adding genus variables and 
 #Rename variables according to MAPS-standards
 
@@ -148,14 +156,14 @@ sum(duplicated(MAPS_output$food_genus_id[!is.na(MAPS_output$food_genus_id)]))
 #Checking that all dictionary codes have been matched to an entry in the dictionary
 subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
-subset(MAPS_output, food_genus_id == "1341.01")
-, 
-       select = vitaminb12_in_mcg)
+subset(MAPS_output, food_genus_id == "F1061.01")
+subset(dictionary.df, ID_3 == "F1061.01")
+
 
 #Saving file into csv to be used in MAPS tool
-
-#readr::write_excel_csv(MAPS_output,
- #        here::here('output', 'MAPS_MAFOODS_v1.6.csv'))
+#v <- 7
+readr::write_excel_csv(MAPS_output,
+       here::here('output',paste0('MAPS_MAFOODS_v1.', v, '.csv')))
 
 
 ###========================= END =============================###

@@ -25,7 +25,7 @@ t <-  "https://dl.tufts.edu/downloads/g158bw806?filename=d217r336d.pdf"
 
 #Identifying the area of the food compo tables in the pdf file 
 
-#f <- locate_areas(t, pages = c(21,56))
+f <- locate_areas(t, pages = c(60))
 
 #Extracting fct from all pages in the pdf
 
@@ -54,58 +54,31 @@ mwi_table[34] <- extract_tables(t,                    #Getting page 56
                                 ), 
                                 guess = FALSE)
 
-#
-#mwi_table <- extract_tables(t,
-#                            output = "data.frame",
-#                            pages = c(21:27, #6
-#                                      36:37, #1 each one is a food group
-#                                      41:47, #6 in MAFOODS
-#                                      53:55, #2
-#                                      56,    #this is vege, but smaller table
-#                                      60:62,#2
-#                                      65,   #1
-#                                      67:75, #8
-#                                      78), #1
-#                            area = list(
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(73, 38, 388, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800),
-#                              c(56, 38, 544, 800)
-#                            ), 
-#                            guess = FALSE)
-#
 
-#Checking the structure 
+#Checking the structure
 
-mwi_table[[2]]
+dim(mwi_table[[3]])
+
+mwi_table[[15]]
+mwi_table[[1]]
+
+lengths(mwi_table)
+
+x <- as.data.frame(lapply(mwi_table, count)) 
 
 #from a list to a data.frame
 
 mwi_table_clean <- reduce(mwi_table, bind_rows) %>% select(1:16)
 
+subset(mwi_table_clean, str_detect(Code, "MW05_0011"))
+mwi_table_clean[893:(893+4),]
+mwi_table_clean[941:(941+4),]
+
+subset(mwi_table_clean[, 4:ncol(mwi_table_clean)], str_detect(Energy, ""))
+str_extract(mwi_table_clean[, 4], "[:graph:]+")
+mwi_table_clean[grep( "[:print:]", mwi_table_clean[, 4]), 4]
+mwi_table_clean[str_which(mwi_table_clean[, 4], "[:graph:]+"), 4]
+mwi_table_clean[str_which(mwi_table_clean[, 5], "[:graph:]+"), 5]
 
 ##2) TIDYING MAFOODS INTO A LONG DATA.FRAME
 
@@ -121,6 +94,12 @@ name2[1:2] <- c("food.group", "food.descr2")
 name4 <- mwi_table[[1]] %>% slice(5)  %>% as.character()
 
 name4[1:2] <- c("X1", "X2")
+
+
+  
+mwi_table_clean[str_which(mwi_table_clean$Code, "MW")+2, "Mois"]
+  
+
 
 #Cleaning steps to have information into one food item per row
 #creating a long data.frame w/ 1 obs. per row
@@ -142,6 +121,12 @@ for(i in 1:4){
   
 }
 
+#Checking
+
+subset(mwi[[1]], Code == "MW05_0001")
+mwi[[3]][189]
+
+
 #renaming columns and selecting those that are not empty
 
 names1 <- mwi[[2]] %>% colnames()
@@ -162,7 +147,11 @@ mwi_clean <- mwi_clean %>% unite(food_item_name, c(food_item_name,food_descr2,
                                                    food_descr3), sep = "") %>% 
   relocate(c(food_group, food_ref), .after = "food_item_name")
 
-mwi_clean %>% head() %>% knitr::kable()
+#Checking tables 
+subset(mwi_clean, str_detect(food_item_name, "Apple"))
+subset(mwi_clean, code == "MW05_0011")
+subset(mwi_clean, code == "MW03_0053")
+subset(mwi_clean, code == "MW03_0051")
 
 write.csv(mwi_clean, here::here("inter-output", "2019_MAFOODS.csv"), row.names = F)
 
