@@ -844,7 +844,7 @@ dictionary.df[n1,13] <- scien_new
 #Chicken prep.
 dictionary.df$ID_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "F1061"
 dictionary.df$FoodName_2[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"] <- "poultry meat preparations"
-dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.01"
+dictionary.df$ID_3[dictionary.df$FoodName_3 == "chicken meat, fresh, deep-fried"]  <- "F1061.02"
 #Amend chicken stew (21121.03)  --> F1061.01
 dictionary.df$ID_3[dictionary.df$ID_3 == "21121.03"] <- "F1061.01"
 dictionary.df[which(dictionary.df$ID_3 == "F1061.01"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1061", select = c(1:6)))

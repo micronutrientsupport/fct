@@ -297,6 +297,8 @@ MAFOODS <- MAFOODS %>% filter(ref != "10") %>%
 
 MAFOODS <- read.csv(here::here("data", "MAPS_MAFOODS_v1.2.csv"))
 
+subset(MAFOODS, code == "MW05_0011")
+
 #Rename variables according to MAPS-standards
 
 MAFOODS<- MAFOODS %>% rename(
