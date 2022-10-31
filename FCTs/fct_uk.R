@@ -37,7 +37,7 @@ genus <- tribble(
  "17-686", "34550.01", "m", 
  "14-384", "1321.02", "m", 
  "14-319", "1341.01", "m", 
- "17-165", "23914.01", "m", 
+ "17-165", "23914.01", "m", # Black tea average
  "17-749", "24310.01.01", "m", 
  "18-488", "21121.01", "h", 
  "18-600",  "21521.01", "l", 
@@ -46,7 +46,11 @@ genus <- tribble(
  "13-340", "1594.01", "l", # nori, dried TBC
  "16-492", "1518.01", "m", 
  "13-582", "1212.01", "h",
- "17-170", "1620.01", "l") # tea leaves infusion
+ "17-170", "1620.01", "l",  # tea leaves infusion
+  "17-171", "23914.04", "h", 
+ "17-172", "23914.05", "h"
+ 
+  )
 
 #Combining codes from fuzzy matcher and manually added
 
@@ -85,7 +89,7 @@ dim(output_table)
 subset(output_table, fdc_id == "13-145", select = c(food_desc, ID_3)) 
 subset(output_table, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "24110.01")
+dictionary.df %>% filter(ID_3 == "23914.05")
 subset(dictionary.df, ID_2 == "1341")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
