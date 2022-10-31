@@ -274,9 +274,18 @@ wa_genus <- tribble(
 "09_003",  "1527.01", "l", #need to check w/ specie
  "09_037", "1532.01", "l", #need specify in oil
  "06_029", "1491.02.01", "l", 
-
- 
- 
+ "01_163", "23120.01.02", "l", 
+"04_002", "21393.9.01", "h",
+"04_081", "21393.9.02", "h",
+"04_031", "21393.9.03", "h",
+"04_014", "21393.9.04", "h",
+"04_075", "21393.9.05", "h",
+"04_077", "21393.9.06", "h",
+"04_044", "21393.9.07", "h",
+"04_055", "21393.9.08", "h",
+"04_071", "21393.9.09", "h",
+"04_062", "21393.9.10", "h",
+"04_083", "21393.9.11", "h"
  
   )
 
@@ -353,15 +362,30 @@ wafct %>% filter(code == "03_022") %>% glimpse()
 #Checking code availability 
 x <- wafct %>% filter(code %in% c("01_047", "01_046"))
 
+subset(wafct, code %in%c(
+"04_002",
+"04_081",
+"04_031",
+"04_014",
+"04_075",
+"04_077",
+"04_044",
+"04_055",
+"04_071",
+"04_062",
+"04_083"),select = c(fooditem, ID_3, scientific_name))
+
 subset(wafct, code == "03_004", select = fooditem) 
-subset(wafct, code == "12_001", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "01_163", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "142.01") 
 
 dictionary.df %>% filter(ID_3 == "1527.01")
-subset(dictionary.df, ID_2 == "142")
-subset(dictionary.df, ID_1 == "2552")
+subset(dictionary.df, ID_2 == "21393.9")
+subset(dictionary.df, ID_1 == "2605")
 subset(dictionary.df, ID_0 == "PB")
 
+distinct(subset(dictionary.df,
+            ID_1 == "2605", select = FoodName_2))
 
 
 subset(wafct, str_detect(fooditem, "sugar|Sugar"), 
@@ -371,7 +395,7 @@ subset(wafct, str_detect(fooditem, "pork|Pork") &
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Pennisetum"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "pelagic"))
+subset(dictionary.df, str_detect(FoodName_2, "onion"))
 
 
 #Rename variables according to MAPS-standards
@@ -453,6 +477,8 @@ sum(duplicated(MAPS_output$food_genus_id[!is.na(MAPS_output$food_genus_id)]))
 subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
-#readr::write_excel_csv(MAPS_output, here::here('output', 'MAPS_WAFCT_v1.6.csv')) #that f(x) is to 
-#         #deal w/ special characters 
-#  
+#v <- 6
+readr::write_excel_csv(MAPS_output,
+                      here::here('output',
+                          paste0('MAPS_WAFCT_v1.", v ".csv')) #that f(x) is to deal w/ special characters 
+       

@@ -322,8 +322,13 @@ ken_genus <- tribble(
  "5008", "1314.02", "h", 
  "9003", "1523.01", "l", #no fish specified, we assumed cod bc it's the most common
  "1044", "23110.01", "m", 
- "13003", "F1232.09", "h"
- 
+ "13003", "F1232.09", "h",
+ "3008", "1709.9.02", "h" , 
+ "3017", "1709.9.03", "h" ,
+ "4025", "21397.01.01", "h",
+ "4002", "1235.03", "h",
+ "4024", "21393.01.01", "h", 
+ "1001", "1199.9.02", "h"
  )
 
 
@@ -386,19 +391,21 @@ dim(kenfct)
 #Checking dictionary/ fct ids availability ----
 x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
 
-subset(kenfct, code == "6007", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code %in% c("7008"), select = c(code, fooditem, ID_3, scientific_name))
+
+subset(kenfct, code == "4024", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "21121.03")
-subset(dictionary.df, ID_2 == "F1734")
-subset(dictionary.df, ID_1 == "199")
-subset(dictionary.df, ID_0 == "PB")
+dictionary.df %>% filter(ID_3 == "21393.01")
+subset(dictionary.df, ID_2 == "1199.9")
+subset(dictionary.df, ID_1 == "2734")
+distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, str_detect(fooditem, "Sugar"), 
+subset(kenfct, str_detect(fooditem, "Radi"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
 subset(kenfct, str_detect(scientific_name, "clarias"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_3, "amaranth"))
+subset(dictionary.df, str_detect(FoodName_1, "cereals, other"))
 
 
 
