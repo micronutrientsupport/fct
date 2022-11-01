@@ -328,11 +328,24 @@ ken_genus <- tribble(
  "4025", "21397.01.01", "h",
  "4002", "1235.03", "h",
  "4024", "21393.01.01", "h", 
- "1001", "1199.9.02", "h"
+ "1001", "1199.9.02", "h",
+ "7008",  "21122.01", "h", 
+ "7026", "21170.01.03", "h",
+ "1012", "F0022.09", "h", 
+ "1013", "F0022.10", "h", 
+ "1014", "F0022.11", "h", 
+ "1015", "F0022.12", "h",
+ "1016" ,"F0022.13", "h",
+ "5013", "21439.02.01", "h", 
+ "5016", "21439.04.01", "h", 
+ "5026", "21439.9.03", "h", 
+ "5035", "21439.01", "h",
+ "5018", "1349.2.01", "h",
+ "5039", "21346.02", "h"
  )
 
 
-dictionary.df %>% filter(ID_3 == "1702.01")
+dictionary.df %>% filter(ID_3 == "F1232.09")
 
 ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
   filter(!FCT.code %in% c("7009", "10010")) %>% #removing chicken - wrong code (21121.02) and macadamia wrong confidence
@@ -377,10 +390,10 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "4007"]  <- "1212.03"
 
 #Updating the dictionary compilation for further use (to update versions)
 #v <- 1
-ken_genus %>% mutate(fct = "KE18") %>% 
-  write.csv(., here::here("metadata",
-                          paste0("dict_fct_compilation_v",v, ".csv")), 
-                          row.names = F)
+#ken_genus %>% mutate(fct = "KE18") %>% 
+# write.csv(., here::here("metadata",
+#                        paste0("dict_fct_compilation_v",v, ".csv")), 
+#                       row.names = F)
 
 kenfct <- kenfct %>% 
   left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
@@ -391,21 +404,25 @@ dim(kenfct)
 #Checking dictionary/ fct ids availability ----
 x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
 
-subset(kenfct, code %in% c("7008"), select = c(code, fooditem, ID_3, scientific_name))
+subset(kenfct, code %in% c("5018", "5039"
+                          ), select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "4024", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "142.01") 
+subset(kenfct, code == "5018", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "22110.02.01") 
 
-dictionary.df %>% filter(ID_3 == "21393.01")
-subset(dictionary.df, ID_2 == "1199.9")
-subset(dictionary.df, ID_1 == "2734")
+
+dictionary.df %>% filter(ID_3 == "22110.02.01")
+subset(dictionary.df, ID_2 == "1349.2")
+subset(dictionary.df, ID_2 %in% c("1349.2", "1346"
+                                  ))
+subset(dictionary.df, ID_1 == "1346")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
 subset(kenfct, str_detect(fooditem, "Radi"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
 subset(kenfct, str_detect(scientific_name, "clarias"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_1, "cereals, other"))
+subset(dictionary.df, str_detect(FoodName_2, "plum"))
 
 
 
@@ -494,5 +511,5 @@ subset(MAPS_ken, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
 #readr::write_excel_csv(MAPS_ken, here::here('output', 
- #                                 'MAPS_KENFCT_v1.6.csv'))
+ #                                 'MAPS_KENFCT_v1.7.csv'))
                           
