@@ -632,9 +632,9 @@ Fish liver oil (9003) did not specified the fish type, hence we assumed cod live
 #### 6) Lesotho FCT
 
 **Version log**
-
-V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
+V.1.4 updated on 2021/11/01 - Created a stand-alone script and added dictionary to auto-generate the food groups. 
 V.1.3 updated on 2021/10/1 - Replace Trace to zero and removed (*) using new function
+V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
 
 
 ##### Food components and other variables
@@ -967,6 +967,7 @@ summary(uPulses$SOP)
 
 **Version log**
 
+V.2.0 updated on 2021/11/01 - Bug fixed: Updated script to the most updated dictionary version.
 V.1.9 updated on 2021/10/13 - Changed phytic acid to phytate.
 
 This data is coming from Joy et al. (2014) study. We have reformatted and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 

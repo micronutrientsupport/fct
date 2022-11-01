@@ -7,12 +7,15 @@ library(tidyverse)
 fbs <- read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv")) %>% 
   dplyr::select(-c(food_genus_confidence, X)) 
 
-region <- "Western"
+region <- "Eastern"
+v <- "2.0"
 
-fct <- read.csv(here::here("output", paste0("MAPS_", region, "-Africa_v1.8.csv"))) %>% 
+fct <- read.csv(here::here("output", paste0("MAPS_", region, "-Africa_v", v, ".csv"))) %>% 
   dplyr::select(-food_genus_confidence) %>% distinct() 
 
-
+#Testing food groups
+fct %>% filter(str_detect(original_food_name, "Sesa"))
+MAPS_output %>% filter(str_detect(original_food_name, "Corn"))
 
 
 fct %>% 
