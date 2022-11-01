@@ -460,7 +460,7 @@ MAPS_output %>% filter(!is.na(food_genus_id), is.na(food_subgroup))
 
 #Looking up foods in the fct
 
-MAPS_output %>% filter(str_detect(original_food_name, "Plant")) %>% select(1:3) %>% knitr::kable()
+MAPS_output %>% filter(str_detect(original_food_name, "Corn")) %>% select(1:3) %>% knitr::kable()
 MAPS_output %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
 MAPS_output %>% filter(original_food_id == "02_042") %>% glimpse()
 MAPS_output %>% filter(food_genus_id == "1699.08")

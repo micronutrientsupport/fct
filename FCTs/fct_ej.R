@@ -1,17 +1,23 @@
 
+
+####================== LOADING  =============================####
+
+# Libraries
 library(tidyverse)
 library(fuzzyjoin)
-####================== LOADING DATASET =============================####
 
+# Dictionary created and updated for the project
+#contains the genus code
+source("MAPS_Dictionary-Protocol.R")
+
+#Data
 #Joy et al. regional FCT as per his Suppl. mat. table 2
 
 fct <- readxl::read_xlsx(here::here("data", 'ppl12144-sup-0002-tables2.xlsx'), 
                          sheet = "S Table 2", skip = 2) %>% select(1:8) %>% 
   janitor::clean_names()
 
-#Data dictionary created and updated for the project
-#contains the genus code
-source("MAPS_Dictionary-Protocol.R")
+
 
 #Data on the fbs-fct from Joy et al. that was coded *manually* with
 #the genus code
@@ -140,7 +146,7 @@ fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>%
 fct.genus %>% filter(str_detect(FoodName_3, "egg")) %>%
   pull(ID_3, FoodName_1)
 
-dictionary %>% filter(str_detect(FoodName_3, "milk")) %>% 
+dictionary.df %>% filter(str_detect(FoodName_3, "milk")) %>% 
   pull(FE2_3, FoodName_3)
 
 #saving the original regional-fct with genus codes
