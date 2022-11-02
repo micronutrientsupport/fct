@@ -285,7 +285,17 @@ wa_genus <- tribble(
 "04_055", "21393.9.08", "h",
 "04_071", "21393.9.09", "h",
 "04_062", "21393.9.10", "h",
-"04_083", "21393.9.11", "h"
+"04_083", "21393.9.11", "h",
+"09_057", "1555.01", "h",
+"07_019", "21155.03", "h",
+"07_021", "21155.04", "h", 
+"07_053", "21155.01", "h", 
+"07_051", "21155.02", "h", 
+"07_039", "21160.01.01", "h",
+"07_041", "21160.01.02", "h",
+"07_017", "21182.01", "h", 
+"07_027", "21183.01", "h",
+"07_044", "21170.92.04", "h"
  
   )
 
@@ -303,7 +313,7 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) 
 wafct.genus %>%  count(ref_fctcode) %>% 
   filter(n>1) 
 
-subset(wafct.genus, ref_fctcode == "13_023")
+subset(wafct.genus, ref_fctcode == "07_044")
 
 #List of non-available items compared w/ mwi_genus
 
@@ -344,10 +354,13 @@ dictionary.df %>%
 
 #wa_genus <- wa_genus %>% left_join(., dictionary.df)
 
-wafct.genus %>% mutate(fct = "WA19")  %>% 
-  bind_rows(., read.csv(here::here("metadata", "dict_fct_compilation_v1.csv")) %>%
-              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
-  write.csv(., here::here("metadata", "dict_fct_compilation_v1.csv"), row.names = F)
+#Updating the dictionary compilation -----
+#file <- list.files(here::here("metadata") , "dict_fct_compilation_v")[1]
+#
+#wafct.genus %>% mutate(fct = "WA19")  %>% 
+#  bind_rows(., read.csv(here::here("metadata", file)) %>%
+#              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+#  write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding dictionary code
 
@@ -363,25 +376,18 @@ wafct %>% filter(code == "03_022") %>% glimpse()
 x <- wafct %>% filter(code %in% c("01_047", "01_046"))
 
 subset(wafct, code %in%c(
-"04_002",
-"04_081",
-"04_031",
-"04_014",
-"04_075",
-"04_077",
-"04_044",
-"04_055",
-"04_071",
-"04_062",
-"04_083"),select = c(fooditem, ID_3, scientific_name))
+"07_017",
+"07_027"
+),
+select = c(fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "03_004", select = fooditem) 
-subset(wafct, code == "01_163", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "07_044", select = fooditem) 
+subset(wafct, code == "07_044", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "142.01") 
 
-dictionary.df %>% filter(ID_3 == "1527.01")
-subset(dictionary.df, ID_2 == "21393.9")
-subset(dictionary.df, ID_1 == "2605")
+dictionary.df %>% filter(ID_3 == "1555.01")
+subset(dictionary.df, ID_2 == "21170.92")
+subset(dictionary.df, ID_1 == "2736")
 subset(dictionary.df, ID_0 == "PB")
 
 distinct(subset(dictionary.df,
@@ -395,7 +401,7 @@ subset(wafct, str_detect(fooditem, "pork|Pork") &
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Pennisetum"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "onion"))
+subset(dictionary.df, str_detect(FoodName_2, "dried"))
 
 
 #Rename variables according to MAPS-standards
@@ -478,7 +484,7 @@ subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
 #v <- 6
-readr::write_excel_csv(MAPS_output,
-                      here::here('output',
-                          paste0('MAPS_WAFCT_v1.", v ".csv')) #that f(x) is to deal w/ special characters 
-       
+#readr::write_excel_csv(MAPS_output,
+#                      here::here('output',
+#                          paste0('MAPS_WAFCT_v1.", v ".csv')) #that f(x) is to deal w/ special characters 
+#       
