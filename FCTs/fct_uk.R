@@ -25,32 +25,33 @@ names(dictionary.df)
 
 genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
- "11-886", "23110.02", "m", 
- "11-002" ,  "23140.05.01", "h", 
- "11-788",  "23140.07.01", "l", 
- "13-086", "1701.02", "l", 
- "14-340", "F0262.01", "l",
- "17-034", "2168.01", "h", 
+  "11-886", "23110.02", "m", 
+  "11-002" ,  "23140.05.01", "h", 
+  "11-788",  "23140.07.01", "l", 
+  "13-086", "1701.02", "l", 
+  "14-340", "F0262.01", "l",
+  "17-034", "2168.01", "h", 
   "17-039",  "2165.01", "h", 
- "17-031", "2166.01", "h", 
- "17-043", "21691.07.01", "m",
- "17-686", "34550.01", "m", 
- "14-384", "1321.02", "m", 
- "14-319", "1341.01", "m", 
- "17-165", "23914.01", "m", # Black tea average
- "17-749", "24310.01.01", "m", 
- "18-488", "21121.01", "h", 
- "18-600",  "21521.01", "l", 
- "16-007",  "1501.02", "m", 
- "16-439", "1532.01", "l",
- "13-340", "1594.01", "l", # nori, dried TBC
- "16-492", "1518.01", "m", 
- "13-582", "1212.01", "h",
- "17-170", "1620.01", "l",  # tea leaves infusion
+  "17-031", "2166.01", "h", 
+  "17-043", "21691.07.01", "m",
+  "17-686", "34550.01", "m", 
+  "14-384", "1321.02", "m", 
+  "14-319", "1341.01", "m", 
+  "17-165", "23914.01", "m", # Black tea average
+  "17-749", "24310.01.01", "m", 
+  "18-488", "21121.01", "h", 
+  "18-600",  "21521.01", "l", 
+  "16-007",  "1501.02", "m", 
+  "16-439", "1532.01", "l",
+  "13-340", "1594.01", "l", # nori, dried TBC
+  "16-492", "1518.01", "m", 
+  "13-582", "1212.01", "h",
+  "17-170", "1620.01", "l",  # tea leaves infusion
   "17-171", "23914.04", "h", 
- "17-172", "23914.05", "h"
- 
-  )
+  "17-172", "23914.05", "h",
+  "14-125", "1329.01", "h", 
+  
+)
 
 #Combining codes from fuzzy matcher and manually added
 
@@ -61,7 +62,7 @@ genus <- read.csv(here::here("inter-output", "ukfct_matches.csv")) %>%
     Confidence == "medium" ~ "m", 
     Confidence == "low" ~ "l", 
     TRUE ~ Confidence)) %>% select(-Confidence) %>%
- # mutate_at("FCT.code", as.character) %>% 
+  # mutate_at("FCT.code", as.character) %>% 
   rename(ref_fctcode = "fdc_id") %>% 
   bind_rows(genus) %>% distinct()
 
@@ -70,10 +71,12 @@ genus <- read.csv(here::here("inter-output", "ukfct_matches.csv")) %>%
 (dupli <- genus %>%  count(ref_fctcode) %>% 
     filter(n>1) %>% pull(ref_fctcode))
 
+#Updating the dictionary compilation -----
+file <- list.files(here::here("metadata") , "dict_fct_compilation_v")[1]
 genus %>% mutate(fct = "UK21")  %>% 
-  bind_rows(., read.csv(here::here("metadata", "dict_fct_compilation_v1.csv")) %>%
+  bind_rows(., read.csv(here::here("metadata", file)) %>%
               mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
-        write.csv(., here::here("metadata", "dict_fct_compilation_v1.csv"), row.names = F)
+  write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding food dictionary codes to FCT
 
@@ -173,15 +176,15 @@ subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
 #Saving file into csv to be used in MAPS tool
 readr::write_excel_csv(MAPS_output, here::here('output', 
-                                 'MAPS_UKFCT_v1.1.csv'))
+                                               'MAPS_UKFCT_v1.1.csv'))
 
 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
 
