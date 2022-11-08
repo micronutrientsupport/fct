@@ -156,7 +156,7 @@ sum(duplicated(MAPS_output$food_genus_id[!is.na(MAPS_output$food_genus_id)]))
 #Checking that all dictionary codes have been matched to an entry in the dictionary
 subset(MAPS_output, !is.na(food_genus_id) & is.na(food_genus_description))
 
-subset(MAPS_output, food_genus_id == "F1061.01")
+subset(MAPS_output, food_genus_id == "23511.02.01")
 subset(dictionary.df, ID_3 == "F1061.01")
 
 

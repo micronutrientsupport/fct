@@ -295,9 +295,13 @@ wa_genus <- tribble(
 "07_041", "21160.01.02", "h",
 "07_017", "21182.01", "h", 
 "07_027", "21183.01", "h",
-"07_044", "21170.92.04", "h"
- 
-  )
+"07_044", "21170.92.04", "h",
+"13_008", "F1232.11", "h", 
+"03_154", "F1232.15", "h", 
+ "04_0162", "1290.9.12", "h",
+ "05_011", "1359.9.03", "h",
+"10_016",  "22221.01.01", "h"
+)
 
 # Checking for dictionary duplicates -----
 
@@ -312,8 +316,8 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) 
 
 wafct.genus %>%  count(ref_fctcode) %>% 
   filter(n>1) 
-
-subset(wafct.genus, ref_fctcode == "07_044")
+                          
+subset(wafct.genus, ref_fctcode == "05_011")
 
 #List of non-available items compared w/ mwi_genus
 
@@ -369,7 +373,7 @@ wafct <- wafct %>%
 
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "F0623.02")
-wafct.genus %>% filter(ref_fctcode == "13_023")
+wafct.genus %>% filter(ref_fctcode == "05_011")
 wafct %>% filter(code == "03_022") %>% glimpse()
 
 #Checking code availability 
@@ -381,12 +385,12 @@ subset(wafct, code %in%c(
 ),
 select = c(fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "07_044", select = fooditem) 
-subset(wafct, code == "07_044", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "03_154", select = fooditem) 
+subset(wafct, code == "10_016", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "142.01") 
 
 dictionary.df %>% filter(ID_3 == "1555.01")
-subset(dictionary.df, ID_2 == "21170.92")
+subset(dictionary.df, ID_2 == "22221.01")
 subset(dictionary.df, ID_1 == "2736")
 subset(dictionary.df, ID_0 == "PB")
 
@@ -399,9 +403,9 @@ subset(wafct, str_detect(fooditem, "sugar|Sugar"),
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
-subset(wafct, str_detect(scientific_name, "Pennisetum"), 
+subset(wafct, str_detect(scientific_name, "Eugenia"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "dried"))
+subset(dictionary.df, str_detect(FoodName_3, "milk"))
 
 
 #Rename variables according to MAPS-standards
@@ -469,7 +473,7 @@ MAPS_output %>% filter(!is.na(food_genus_id), is.na(food_subgroup))
 MAPS_output %>% filter(str_detect(original_food_name, "Corn")) %>% select(1:3) %>% knitr::kable()
 MAPS_output %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
 MAPS_output %>% filter(original_food_id == "02_042") %>% glimpse()
-MAPS_output %>% filter(food_genus_id == "1699.08")
+MAPS_output %>% filter(food_genus_id == "1491.02.01")
   
 
 #Checking for duplicated items
