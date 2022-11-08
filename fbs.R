@@ -1,7 +1,7 @@
 
 
 library(tidyverse)
-source(here::here("kenfct.R"))
+source(here::here("FCTs", "kenfct.R"))
 #source("MAPS_Dictionary-Protocol.R")
 
 
@@ -77,9 +77,10 @@ fbs$food_genus_confidence[fbs$original_id == "2562"]
 fbs$food_genus_id[fbs$food_genus_id == "23161.01.01"] <- "23161.02.01"
 #Changed sugar cane to sugar cane, juice
 fbs$food_genus_id[fbs$food_genus_id == "1802.01"] <- "1802.02"
-#Changed sugar from beet and fructose to sugar
+#Changed sugar from beet and fructose, and sugar non-centrifugal to sugar
 fbs$food_genus_id[fbs$food_genus_id == "1801.01"] <- "23520.01"
 fbs$food_genus_id[fbs$food_genus_id == "23210.01.01"] <- "23520.01"
+fbs$food_genus_id[fbs$food_genus_id == "23511.02.01"] <- "23520.01"
 #Changing wine rose to red wine
 fbs$food_genus_id[fbs$food_genus_id == "24212.02.03"] <- "24212.02.02"
 #palm kernel (1491.02.01) - it won't be matched, but the amount consumed is zero
@@ -90,8 +91,7 @@ mean(fbs$amount_consumed_in_g[fbs$food_genus_id=="1491.02.01"])
 fbs$original_id[fbs$original_name == "marine fish, other"] <- "2764"
 
 
-
-subset(fbs, food_genus_id == "2413.01")
+subset(fbs, food_genus_id == "23520.01")
 subset(fbs, original_id == "2763",
        select = c(original_name, food_genus_id)) %>% distinct()
 
@@ -117,8 +117,6 @@ fbs %>% select(1,4:5) %>% distinct() %>%
   distinct() %>% pull(food_genus_id)
 
 readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.1.csv"))
-
-fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.0.csv")) 
 
 
 names(fbs)

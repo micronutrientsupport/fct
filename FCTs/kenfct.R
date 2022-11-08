@@ -372,10 +372,16 @@ ken_genus <- tribble(
  "8041",  "2533.07", "h", 
  "8042",  "2533.08", "h", 
  "15063", "F1232.10", "h", 
+ "4035",  "1234.03", "h", 
+ "2015",  "1530.01", "m", 
+ "5020", "1316.05", "h", 
+ "7014", "21116.02", "h",
+ "1037", "114.02", "h"
+ 
  )
 
 
-dictionary.df %>% filter(ID_3 == "1533.02")
+dictionary.df %>% filter(ID_3 == "23511.02.01")
 
 ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
   filter(!FCT.code %in% c("7009", "10010")) %>% #removing chicken - wrong code (21121.02) and macadamia wrong confidence
@@ -417,6 +423,19 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "15025"] <-  "F0022.06"
 ken_genus$ID_3[ken_genus$ref_fctcode == "1025"]  <- "118.03"
 #Cabbage white updated dict code
 ken_genus$ID_3[ken_genus$ref_fctcode == "4007"]  <- "1212.03"
+#Tomato, red updated dict code
+ken_genus$ID_3[ken_genus$ref_fctcode == "4036"]  <- "1234.02"
+#Sweet potato, brown skin updated dict code
+ken_genus$ID_3[ken_genus$ref_fctcode == "2013"]  <- "1530.08"
+#Mango ripe updated dict code
+ken_genus$ID_3[ken_genus$ref_fctcode == "5019"]  <- "1316.04"
+#Goat medium fat updated dict code & confidence
+ken_genus$ID_3[ken_genus$ref_fctcode == "7016"]  <- "21116.03"
+ken_genus$confidence[ken_genus$ref_fctcode == "7016"]  <- "h"
+#Sorghum, grain, white updated dict code & confidence
+ken_genus$ID_3[ken_genus$ref_fctcode == "1039"]  <- "114.03"
+ken_genus$confidence[ken_genus$ref_fctcode == "1039"]  <- "h"
+
 
 #Updating the dictionary compilation -----
 # for further use (to update versions)
@@ -435,35 +454,27 @@ dim(kenfct)
 #Checking dictionary/ fct ids availability ----
 x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
 
-subset(kenfct, code %in% c("8034",
-                           "8035",
-                           "8036",
-                           "8040",
-                           "8041",
-                           "8042"
- 
-                          ), select = c(code, fooditem, ID_3, scientific_name))
+subset(kenfct, code %in% c("1037", "1039"), select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "7021", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "22110.02.01") 
+subset(kenfct, code == "5006", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "1491.02.01") 
 
-
-dictionary.df %>% filter(ID_3 == "22110.02.01")
-subset(dictionary.df, ID_2 == "1329")
+dictionary.df %>% filter(ID_3 == "21346.02")
+subset(dictionary.df, ID_2 == "F1232")
 subset(dictionary.df, ID_2 %in% c("1520",
                                   "1507",
                                  # "15071",
                                   "1557",
                                   "1533"
                                       ))
-subset(dictionary.df, ID_1 == "2734")
+subset(dictionary.df, ID_1 == "2899")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
 subset(kenfct, str_detect(fooditem, "Sauce|sauce"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
-subset(kenfct, str_detect(scientific_name, "clarias"), 
+subset(kenfct, str_detect(scientific_name, "Eugenia"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_3, "kum"))
+subset(dictionary.df, str_detect(FoodName_3, "seaso"))
 
 
 

@@ -50,7 +50,10 @@ genus <- tribble(
   "17-171", "23914.04", "h", 
   "17-172", "23914.05", "h",
   "14-125", "1329.01", "h", 
-  
+  "17-515", "F1232.11", "h" ,
+  "17-726", "F1232.12", "h",
+  "17-727", "F1232.13", "h", 
+  "17-672", "24490.03", "h", 
 )
 
 #Combining codes from fuzzy matcher and manually added
@@ -89,15 +92,15 @@ dim(output_table)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(output_table, fdc_id == "13-145", select = c(food_desc, ID_3)) 
-subset(output_table, ID_3 == "142.01") 
+subset(output_table, fdc_id == "17-672", select = c(food_desc, ID_3)) 
+subset(output_table, ID_3 == "2351F.01") 
 
 dictionary.df %>% filter(ID_3 == "23914.05")
-subset(dictionary.df, ID_2 == "1341")
+subset(dictionary.df, ID_2 == "24490")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 
-subset(output_table, str_detect(food_desc, "Alcohol|alcohol"), 
+subset(output_table, str_detect(food_desc, "Sugar"), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 
 subset(output_table, str_detect(food_desc, " haddock|Haddock") &

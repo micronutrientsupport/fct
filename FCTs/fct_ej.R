@@ -217,7 +217,7 @@ fct.genus <- fct.genus %>% mutate(food_genus_confidence = case_when(
 fct.genus$food_group[fct.genus$food_genus_id == "23511.02.01"] <- "Other foods"
 
 fct.genus %>% distinct( food_genus_id, original_food_name, region) %>% 
-  filter(food_genus_id == "1323.01")
+  filter(food_genus_id == "23511.02.01")
 
 fct.genus %>% filter(food_genus_confidence != "l") %>% 
   filter(food_genus_id == "1323.01")
