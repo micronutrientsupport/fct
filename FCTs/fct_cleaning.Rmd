@@ -217,7 +217,9 @@ alcohol, 80perc
 
 *- Cereals*:
 
-Rice, white, raw (01_037) was assigned to imported rice (23161.01.01), mainly because it is for the whole region hence we assumed that it would be an average for all countries. However, because we are not 100% sure, we have assigned confidence low.  (**TO BE REVIEW**).
+Rice, white, raw (01_037) was assigned to imported rice (23161.01.02), mainly because it is for the whole region hence we assumed that it would be an average for all countries. However, because we are not 100% sure, we have assigned confidence low.  (**TO BE REVIEW**). We used parboiled because the "white rice" was assigned to the "polished" it was decided based on the fibre content. 
+rice, white, polished (fibre = 1.9g/100g) == rice, white 
+rice, white (fibre = 3.6g/100g) == rice, parboiled
 
 ###Next steps:
 
@@ -542,10 +544,15 @@ There were several typos and other small issues with the names and descriptions 
 
 - There is a typo in "Roti" which was spelled with two "t"s. We re-named to "Roti (Indian Chapati)". 
 
+**3) Incomplete information or description**
+
+Salt, ionised KE18(13027), is reported as fortified with I, however, KE18 is not reporting I content in foods. 
 
 ##### Food components and other variables
 
 Then tagnames were standardized following the standard names as described above and on FCT_QA, some decision point are described below: 
+
+ ) Edible portion coefficient: EDIBLE (fraction, no units). According to the FCT documentation description, the edible account for total food as purchased. For instance, edible portion of cod fillet is 0.26, as it is from whole fish to fillet. 
 
 22) Retinol (mcg): RETOL (Retinol, Unit: mcg)
 

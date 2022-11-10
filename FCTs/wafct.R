@@ -190,7 +190,7 @@ wa_genus <- tribble(
   "01_081", "23120.03.02", "l",
   "02_045", "1313.01", "l",
   "02_009", "1510.01", "h",
-  "01_037",  "23161.01.01", "l", # rice, white, imported check!
+  "01_037",  "23161.01.02", "l", # rice, white, imported, polished see docu!
   "01_039",  "114.01", "m",
   "02_049",  "1530.02", "h",
   "02_022",  "1530.01", "h",
@@ -300,7 +300,34 @@ wa_genus <- tribble(
 "03_154", "F1232.15", "h", 
  "04_0162", "1290.9.12", "h",
  "05_011", "1359.9.03", "h",
-"10_016",  "22221.01.01", "h"
+"10_016",  "22221.01.01", "h", 
+"01_034", "23162.03", "h", 
+"01_065", "23162.04", "h", 
+"01_067", "23161.01.04", "h",
+"01_036", "23161.01.01", "l",
+"01_045" , "F0022.09", "h", 
+"01_187",  "F0020.07", "l",
+"01_189" , "F0022.14", "h", 
+"04_012",  "1233.01", "h" ,
+"04_074",  "1290.9.09", "h",
+"03_005" , "1706.03", "h",
+"03_027",  "1706.03", "h",
+"03_006",  "1706.03", "h",
+"02_041",  "23170.01.02", "h", 
+"02_040",  "23170.01.03", "h",
+"07_014",  "21111.02.03", "m",
+ "07_002", "21111.02.02", "m", 
+"02_084",  "1313.03", "h", 
+"01_041",  "114.02", "h", 
+"01_040",  "114.03", "h", 
+"01_099",  "F1232.16", "m", 
+"13_006", "1652.02", "m",
+ "12_020", "24310.01.02", "h",
+"01_182", "23140.03.01", "m", 
+"10_018", "2293.01", "h", 
+"10_003", "2292.01", "h", 
+"10_023", "2291.01", "h"
+
 )
 
 # Checking for dictionary duplicates -----
@@ -379,33 +406,31 @@ wafct %>% filter(code == "03_022") %>% glimpse()
 #Checking code availability 
 x <- wafct %>% filter(code %in% c("01_047", "01_046"))
 
-subset(wafct, code %in%c(
-"07_017",
-"07_027"
-),
-select = c(fooditem, ID_3, scientific_name))
+subset(wafct, code %in% c("10_029", "10_018", 
+                          "10_003", "10_023"), 
+       select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "03_154", select = fooditem) 
-subset(wafct, code == "10_016", select = c(fooditem, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "142.01") 
+subset(wafct, code == "01_182", select = fooditem) 
+subset(wafct, code == "13_014", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "F0020.07") 
 
-dictionary.df %>% filter(ID_3 == "1555.01")
-subset(dictionary.df, ID_2 == "22221.01")
-subset(dictionary.df, ID_1 == "2736")
-subset(dictionary.df, ID_0 == "PB")
+dictionary.df %>% filter(ID_3 %in% c("24310.01.01", "23161.02.01"))
+subset(dictionary.df, ID_2 == "1540")
+subset(dictionary.df, ID_1 == "2532")
+subset(dictionary.df, ID_0 == "RT")
 
 distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, str_detect(fooditem, "sugar|Sugar"), 
+subset(wafct, str_detect(fooditem, "Cassava"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Eugenia"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_3, "milk"))
+subset(dictionary.df, str_detect(FoodName_2, "sheep"))
 
 
 #Rename variables according to MAPS-standards

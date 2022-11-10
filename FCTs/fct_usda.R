@@ -41,6 +41,7 @@ genus <- tribble(
   "5335",  "F1061.03", "h",
   "9312",  "1319.03", "h", 
   "9145" , "1319.04", "h", 
+  "25050", "01520.01.04", "m", 
   )
   
   
@@ -48,6 +49,7 @@ genus <- tribble(
   
   #Checking dictionary/ fct ids availability 
   subset(output_table, fdc_id == "17-060", select = c(food_desc, ID_3)) 
+  subset(output_table, fdc_id %in% c("14037" ,"14050", "14532", "14533", "14550", "14551") , select = c(food_desc, ID_3)) 
   subset(output_table, ID_3 == "2351F.01") 
   
   dictionary.df %>% filter(ID_3 == "23914.05")
