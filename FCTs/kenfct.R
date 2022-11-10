@@ -452,9 +452,9 @@ kenfct <- kenfct %>%
 dim(kenfct)
 
 #Checking dictionary/ fct ids availability ----
-x <- kenfct %>% filter(code %in% c("7001", "7002", "7004"))
+kenfct %>% filter(code %in% c("1012", "1013", "1014", "1015", "1016"))
 
-subset(kenfct, code %in% c("1037", "1039"), select = c(code, fooditem, ID_3, scientific_name))
+subset(kenfct, code %in% c("1012", "1013", "1014", "1015", "1016"), select = c(code, fooditem, ID_3, scientific_name))
 
 subset(kenfct, code == "5006", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1491.02.01") 
