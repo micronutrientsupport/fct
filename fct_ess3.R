@@ -51,7 +51,7 @@ read.csv(here::here("data", "sect5a_hh_w3.csv")) %>%
 
 #Reading from the Dictionary
 
-source("dictionary.R")
+source("MAPS_Dictionary-Protocol.R")
 
 dictionary <- dictionary.df %>%
   rename(fooditem = FoodName_3) 
@@ -77,8 +77,7 @@ fuzzy_output %>%
 
 ess3_food_st <- tribble(
   ~ref_foodid, ~ref_fooditem,   ~ID_3, ~confidence,
-   
-  
+ 
   "1", "Teff",  "1199.9.01", "h", 
   "2", "Wheat", "111.01", "l", 
   #"2", "Wheat", "111.02", "l", 

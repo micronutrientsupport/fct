@@ -16,20 +16,34 @@
 ###############################################################################
 
 
-library(tidyverse)
+#Loading data and library needed
+
+#Loading the standardised FCT
+output_table <- read.csv(here::here("inter-output", "UK21_FCT_FAO_Tags.csv"))
+#Loading the food dictionary
+source(here::here("MAPS_Dictionary-Protocol.R"))
+#Loading functions
+source(here::here("functions.R"))
+#Loading formatting data
+var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
+  select(Column.Name) %>% pull()
+
+
+names(output_table)
+names(dictionary.df)
 
 
 usdafct <- as_tibble(NA)
 
-usdafct <- usdafct %>% mutate(code = "174815", 
-fooditem = "Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 80 proof", 
-WATER = 66.6, 							
-ENERC1 = 231,
-VITA_RAE = 0,
-FE = 0.04,
-ZN =	0.04,
-comment = "VITA_RAE was assumed") %>% 
-  select(-value)
+#usdafct <- usdafct %>% mutate(code = "174815", 
+#fooditem = "Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 80 proof", 
+#WATER = 66.6, 							
+#ENERC1 = 231,
+#VITA_RAE = 0,
+#FE = 0.04,
+#ZN =	0.04,
+#comment = "VITA_RAE was assumed") %>% 
+#  select(-value)
 
 
 

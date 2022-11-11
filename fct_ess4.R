@@ -18,9 +18,7 @@
 
 
 
-#0) Loading r packages
-
-library(tidyverse)
+#0) Loading previous survey matches
 
 source("fct_ess3.R")
 
@@ -102,7 +100,8 @@ ess4_food_list %>% left_join(., ess4_food) %>% filter(!is.na(ID_3)) %>%
 ess4_food_list %>% filter( !str_detect(ref_fooditem, "Other")) %>%  distinct(ref_foodid)
 
 
-ess4_food_list <- ess4_food_list %>% left_join(., ess4_food) %>% filter(!is.na(ID_3)) %>% 
+ess4_food_list <- ess4_food_list %>% left_join(., ess4_food) %>% 
+  filter(!is.na(ID_3)) %>% 
    filter( !str_detect(ref_fooditem, "Other")) %>% 
    rename(ref_foodid_ess3 = "ref_foodid", 
           ref_foodid = "fcode") %>% 
@@ -132,7 +131,7 @@ ess4_ken <- ess4_food_list %>% filter(!is.na(ID_3)) %>%
    left_join(., MAPS_ken, by = c("ID_3" = "food_genus_id")) %>% 
    filter(!is.na(energy_in_kcal)) %>% 
    select(1:2,4, original_food_id, original_food_name, fct_name, moisture_in_g,
-          energy_in_kcal,vitamina_in_rae_in_mcg, zn_in_mg) 
+          energy_in_kcal,vitamina_in_rae_in_mcg, zn_in_mg) # Selecting nutrient from KE18
 
 dictionary.df %>% filter(ID_3 == "1441.01")
 
