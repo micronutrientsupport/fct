@@ -26,9 +26,28 @@ genus <- tribble(
 )
 
 
+#Updating the dictionary compilation -----
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
+             decreasing = T)[2]
+genus %>% mutate(fct = "JA15")  %>% 
+  bind_rows(., read.csv(here::here("metadata", file)) %>%
+              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+  write.csv(., here::here("metadata", file), row.names = F)
+
+#Adding food dictionary codes to FCT ----
+
+output_table <- output_table %>% mutate_at("fdc_id", as.character) %>% 
+  left_join(., genus, by = c("fdc_id" = "ref_fctcode")) %>% 
+  relocate(ID_3, .after = food_desc)
+
+dim(output_table)
+names(output_table)
+
+## CHECK: Adding new food dictionary code ----
+
 #Checking dictionary/ fct ids availability 
 subset(output_table, fdc_id == "13-881", select = c(food_desc, ID_3)) 
 subset(output_table, fdc_id %in% c("2022", 
                                    "2023",
-                                   "2025"), select = c(food_desc, scientfic_name)) 
+                                   "2025"), select = c(food_desc)) 
 subset(output_table, ID_3 == "2351F.01") 

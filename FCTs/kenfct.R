@@ -376,7 +376,13 @@ ken_genus <- tribble(
  "2015",  "1530.01", "m", 
  "5020", "1316.05", "h", 
  "7014", "21116.02", "h",
- "1037", "114.02", "h"
+ "1037", "114.02", "h", 
+ "1011", "F0022.01", "m", 
+ "4023", "1270.01", "h", 
+ "7017", "21170.01.02", "h", 
+ "10012", "21495.02.01", "h", 
+ "8004", "1501.10", "h"
+ 
  
  )
 
@@ -438,12 +444,12 @@ ken_genus$confidence[ken_genus$ref_fctcode == "1039"]  <- "h"
 
 
 #Updating the dictionary compilation -----
-# for further use (to update versions)
-#v <- 1.1
-#ken_genus %>% mutate(fct = "KE18") %>% 
-# write.csv(., here::here("metadata",
-#                        paste0("dict_fct_compilation_v",v, ".csv")), 
-#                       row.names = F)
+#for further use (to update versions)
+v <- 1.2
+ken_genus %>% mutate(fct = "KE18") %>% 
+ write.csv(., here::here("metadata",
+                        paste0("dict_fct_compilation_v",v, ".csv")), 
+                    row.names = F)
 
 kenfct <- kenfct %>% 
   left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
@@ -454,13 +460,13 @@ dim(kenfct)
 #Checking dictionary/ fct ids availability ----
 kenfct %>% filter(code %in% c("1012", "1013", "1014", "1015", "1016"))
 
-subset(kenfct, code %in% c("1012", "1013", "1014", "1015", "1016"), select = c(code, fooditem, ID_3, scientific_name))
+subset(kenfct, code %in% c("1025", "1027"), select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "5006", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "1491.02.01") 
+subset(kenfct, code == "8004", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "1701.01") 
 
-dictionary.df %>% filter(ID_3 == "21346.02")
-subset(dictionary.df, ID_2 == "F1232")
+dictionary.df %>% filter(ID_3 == "23120.05.01")
+subset(dictionary.df, ID_2 == "1501")
 subset(dictionary.df, ID_2 %in% c("1520",
                                   "1507",
                                  # "15071",
@@ -470,11 +476,11 @@ subset(dictionary.df, ID_2 %in% c("1520",
 subset(dictionary.df, ID_1 == "2899")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, str_detect(fooditem, "Sauce|sauce"), 
+subset(kenfct, str_detect(fooditem, "sauce|Sauce"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
-subset(kenfct, str_detect(scientific_name, "Eugenia"), 
+subset(kenfct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_3, "seaso"))
+subset(dictionary.df, str_detect(FoodName_3, "Chilli|chilli"))
 
 
 

@@ -60,7 +60,9 @@ genus <- tribble(
   "11-824", "23999.02.01", "m", 
   "17-645", "23999.02.02", "m", 
   "17-642", "23999.02.03", "m",
-  "13-881", 
+  "13-293", "1270.02", "h", 
+  "16-279", "1520.07", "m", 
+ # "13-881", 
 )
 
 #Combining codes from fuzzy matcher and manually added
@@ -82,13 +84,14 @@ genus <- read.csv(here::here("inter-output", "ukfct_matches.csv")) %>%
     filter(n>1) %>% pull(ref_fctcode))
 
 #Updating the dictionary compilation -----
-file <- list.files(here::here("metadata") , "dict_fct_compilation_v")[1]
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
+             decreasing = T)[2]
 genus %>% mutate(fct = "UK21")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
               mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
-#Adding food dictionary codes to FCT
+#Adding food dictionary codes to FCT ----
 
 output_table <- output_table %>% 
   left_join(., genus, by = c("fdc_id" = "ref_fctcode")) %>% 
@@ -112,7 +115,7 @@ subset(dictionary.df, ID_0 == "PB")
 subset(output_table, str_detect(food_desc, "Sugar"), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 
-subset(output_table, str_detect(food_desc, " haddock|Haddock") &
+subset(output_table, str_detect(food_desc, "oyster") &
          str_detect(food_desc, "raw"), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 

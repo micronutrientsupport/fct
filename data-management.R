@@ -9,7 +9,9 @@ source(here::here("path.R"))
 saveRDS(dictionary.df, file = paste0(path, "/data/dictionary.df.rds"))
 
 #Saving dictionary-to-FCTs-matches
-file <- list.files(here::here("metadata") , "dict_fct_compilation_v")[1]
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
+             decreasing = T)[2]
+
 write.csv(read.csv(here::here("metadata", file)),
           paste0(path, "/data/",file), row.names = F)
         

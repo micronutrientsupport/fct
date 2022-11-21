@@ -326,8 +326,40 @@ wa_genus <- tribble(
 "01_182", "23140.03.01", "m", 
 "10_018", "2293.01", "h", 
 "10_003", "2292.01", "h", 
-"10_023", "2291.01", "h"
-
+"10_023", "2291.01", "h",
+"09_001", "1527.03", "h",
+"01_100",  "F1232.17", "h",
+"01_168",  "F1232.05", "m", 
+"02_039", "23170.01.04", "h",
+"02_005", "1591.01", "h", 
+"02_043", "1591.02", "h", 
+"04_008", "1219.01.01", "h", 
+"05_012", "1359.9.01", "h", 
+"04_001", "1359.9.02", "h",
+"12_009", "23912.02.02", "m", 
+"13_017", "F1232.06", "h", 
+"14_033", "F1232.18", "h", 
+"14_034", "F1232.19", "h", 
+"06_039", "1449.9.02", "h",
+"06_013", "1449.01.01", "h", 
+"01_046", "F0020.01", "m",
+"11_011", "22241.01.02", "h", 
+"11_001", "22241.01.01", "m", #Assumed standard is unsalted
+"10_015", "22222.01.01", "h", 
+"04_082", "1657.01", "h", 
+"04_023", "1215.02", "h", 
+"04_004", "1239.01.02", "h", 
+"09_002", "1529.01", "h", 
+"09_049", "1529.05", "h", 
+"09_050", "1529.06", "h", 
+"09_071", "1533.09", "h", 
+"09_014", "1533.10", "h", 
+"09_074", "1533.11", "h",
+"07_066", "21170.92.06", "h",
+"07_067", "21170.92.05", "h",
+"02_093", "F1232.20", "m", 
+"02_091", "F1232.21", "m",
+"02_092" ,"F1232.22", "m",
 )
 
 # Checking for dictionary duplicates -----
@@ -386,12 +418,13 @@ dictionary.df %>%
 #wa_genus <- wa_genus %>% left_join(., dictionary.df)
 
 #Updating the dictionary compilation -----
-#file <- list.files(here::here("metadata") , "dict_fct_compilation_v")[1]
-#
-#wafct.genus %>% mutate(fct = "WA19")  %>% 
-#  bind_rows(., read.csv(here::here("metadata", file)) %>%
-#              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
-#  write.csv(., here::here("metadata", file), row.names = F)
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
+             decreasing = T)[2]
+
+wafct.genus %>% mutate(fct = "WA19")  %>% 
+  bind_rows(., read.csv(here::here("metadata", file)) %>%
+              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+  write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding dictionary code
 
@@ -401,37 +434,37 @@ wafct <- wafct %>%
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "05_011")
-wafct %>% filter(code == "03_022") %>% glimpse()
+wafct %>% filter(code == "07_027") %>% glimpse()
 
 #Checking code availability 
-x <- wafct %>% filter(code %in% c("01_047", "01_046"))
+wafct %>% filter(code %in% c("01_047", "01_046")) %>% View()
 
-subset(wafct, code %in% c("10_029", "10_018", 
-                          "10_003", "10_023"), 
+subset(wafct, code %in% c( "02_093",
+                           "02_091",
+                           "02_092" ), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "01_182", select = fooditem) 
-subset(wafct, code == "13_014", select = c(fooditem, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "F0020.07") 
+subset(wafct, code == "01_047", select = fooditem) 
+subset(wafct, code == "07_027", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "F0020.01") 
 
-dictionary.df %>% filter(ID_3 %in% c("24310.01.01", "23161.02.01"))
-subset(dictionary.df, ID_2 == "1540")
+dictionary.df %>% filter(ID_3 %in% c("22241.01"))
+subset(dictionary.df, ID_2 == "1520")
 subset(dictionary.df, ID_1 == "2532")
-subset(dictionary.df, ID_0 == "RT")
+subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, str_detect(fooditem, "Cassava"), 
+subset(wafct, str_detect(fooditem, "Butter|butter"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
-subset(wafct, str_detect(scientific_name, "Eugenia"), 
+subset(wafct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "sheep"))
-
+subset(dictionary.df, str_detect(FoodName_2, "food"))
 
 #Rename variables according to MAPS-standards
 
