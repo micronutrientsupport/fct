@@ -360,6 +360,15 @@ wa_genus <- tribble(
 "02_093", "F1232.20", "m", 
 "02_091", "F1232.21", "m",
 "02_092" ,"F1232.22", "m",
+"09_038", "1516.01", "h",
+"09_052", "1516.02", "h",
+"09_084", "1520.08", "h",
+"09_040", "1520.09", "h",
+"09_047", "1520.10", "h",
+"04_040", "1214.01", "h", 
+"09_058", "1553.02", "m", 
+"05_054", "1319.05", "h", 
+"05_050", "1319.06", "h"
 )
 
 # Checking for dictionary duplicates -----
@@ -439,17 +448,15 @@ wafct %>% filter(code == "07_027") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(code %in% c("01_047", "01_046")) %>% View()
 
-subset(wafct, code %in% c( "02_093",
-                           "02_091",
-                           "02_092" ), 
+subset(wafct, code %in% c("01_057", "01_058", "01_081", "01_004", "01_094"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "01_047", select = fooditem) 
-subset(wafct, code == "07_027", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "04_005", select = fooditem) 
+subset(wafct, code == "05_050", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "F0020.01") 
 
 dictionary.df %>% filter(ID_3 %in% c("22241.01"))
-subset(dictionary.df, ID_2 == "1520")
+subset(dictionary.df, ID_2 == "1319")
 subset(dictionary.df, ID_1 == "2532")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -457,14 +464,14 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, str_detect(fooditem, "Butter|butter"), 
+subset(wafct, str_detect(fooditem, "Cabbage"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "food"))
+subset(dictionary.df, str_detect(FoodName_2, "cabb"))
 
 #Rename variables according to MAPS-standards
 

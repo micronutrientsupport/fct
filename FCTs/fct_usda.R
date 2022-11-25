@@ -78,7 +78,10 @@ genus <- tribble(
   "14177", "22290.07", "h", 
   "14182", "22290.08", "h", 
   "14318", "22290.09", "h", 
-  "43369", "22290.10", "h"
+  "43369", "22290.10", "h", 
+  "15020", "1514.03", "h",
+  "16006", "F1232.23", "m",
+  "13353", "F1232.24", "m"
   )
   
 #Updating the dictionary compilation -----
@@ -101,9 +104,9 @@ names(output_table)
   ## CHECK: Adding new food dictionary code ----
   
   #Checking dictionary/ fct ids availability 
-  subset(output_table, fdc_id == "4025", select = c(fdc_id, food_desc, ID_3)) 
-  subset(output_table, fdc_id %in% c("14054", "14083", "14177", "14181", "14182", "14318", "43369")
- , select = c(fdc_id, food_desc, ID_3)) 
+  subset(output_table, fdc_id == "16006", select = c(fdc_id, food_desc, ID_3)) 
+  subset(output_table, fdc_id %in% c("7045",  "7046",  "7090",  "7906",  "7908",  "7909", "13353",  "43131"),
+  select = c(fdc_id, food_desc, ID_3)) 
   subset(output_table, ID_3 == "2351F.01") 
   
   subset(output_table, str_detect(food_desc, "Tea") #&
@@ -112,8 +115,8 @@ names(output_table)
          select = c(fdc_id, food_desc, ID_3, WATERg))
   
   dictionary.df %>% filter(ID_3 == "142.05")
-  subset(dictionary.df, ID_2 == "22290")
+  subset(dictionary.df, ID_2 == "F1232")
   subset(dictionary.df, ID_1 == "2782")
   subset(dictionary.df, ID_0 == "PB")
-  subset(dictionary.df, str_detect(FoodName_3, "milk"))
+  subset(dictionary.df, str_detect(FoodName_2, "bean"))
   

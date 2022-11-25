@@ -381,7 +381,8 @@ ken_genus <- tribble(
  "4023", "1270.01", "h", 
  "7017", "21170.01.02", "h", 
  "10012", "21495.02.01", "h", 
- "8004", "1501.10", "h"
+ "8004", "1501.10", "h",
+ "8023", "1507.05", "h"
  
  
  )
@@ -462,11 +463,11 @@ kenfct %>% filter(code %in% c("1012", "1013", "1014", "1015", "1016"))
 
 subset(kenfct, code %in% c("1025", "1027"), select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "8004", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "8023", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1701.01") 
 
 dictionary.df %>% filter(ID_3 == "23120.05.01")
-subset(dictionary.df, ID_2 == "1501")
+subset(dictionary.df, ID_2 == "1507")
 subset(dictionary.df, ID_2 %in% c("1520",
                                   "1507",
                                  # "15071",
