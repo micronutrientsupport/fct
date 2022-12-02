@@ -368,7 +368,11 @@ wa_genus <- tribble(
 "04_040", "1214.01", "h", 
 "09_058", "1553.02", "m", 
 "05_054", "1319.05", "h", 
-"05_050", "1319.06", "h"
+"05_050", "1319.06", "h",
+"06_026", "21495.02.01", "h", 
+"06_018", "1379.02", "h",
+"01_052", "23710.02", "h",
+"04_066", "21399.01.02", "h"
 )
 
 # Checking for dictionary duplicates -----
@@ -452,11 +456,11 @@ subset(wafct, code %in% c("01_057", "01_058", "01_081", "01_004", "01_094"),
        select = c(code, fooditem, ID_3, scientific_name))
 
 subset(wafct, code == "04_005", select = fooditem) 
-subset(wafct, code == "05_050", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "01_169", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "F0020.01") 
 
 dictionary.df %>% filter(ID_3 %in% c("22241.01"))
-subset(dictionary.df, ID_2 == "1319")
+subset(dictionary.df, ID_2 == "21399.01")
 subset(dictionary.df, ID_1 == "2532")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -464,14 +468,14 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, str_detect(fooditem, "Cabbage"), 
+subset(wafct, str_detect(fooditem, "cous|Cous"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "cabb"))
+subset(dictionary.df, str_detect(FoodName_2, "tomato"))
 
 #Rename variables according to MAPS-standards
 
