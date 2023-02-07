@@ -8,7 +8,7 @@
 #
 ################################################################################
 
-##0) DOWNLOADING WEST-AFRICA FCT FROM FAO/INFOODS 
+# 0) DOWNLOADING WEST-AFRICA FCT FROM FAO/INFOODS 
 #
 # Only need to do it the first time!
 # 
@@ -19,7 +19,7 @@
 #               mode="wb")
 # 
 
-#0) Loading r packages
+# 0) Loading r packages
 
 library(tidyverse)
 
@@ -459,11 +459,11 @@ subset(wafct, code %in% c("09_007", "09_001", "09_002", "09_015",
        select = c(code, fooditem, ID_3, scientific_name))
 
 subset(wafct, code == "01_035", select = fooditem) 
-subset(wafct, code == "01_169", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "04_065", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "F0020.01") 
 
 dictionary.df %>% filter(ID_3 %in% c("22241.01"))
-subset(dictionary.df, ID_2 == "21399.01")
+subset(dictionary.df, ID_2 == "21321")
 subset(dictionary.df, ID_1 == "2532")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -471,14 +471,17 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, str_detect(fooditem, "brown"), 
+subset(wafct, grepl("juice", fooditem, ignore.case = TRUE), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_2, "tomato"))
+
+subset(dictionary.df,
+       grepl("juice", FoodName_2, ignore.case = TRUE) &
+         grepl("tomato", FoodName_2, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards
 

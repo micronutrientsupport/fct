@@ -19,6 +19,7 @@ saveRDS(dictionary.df, file = paste0(path[i], "/data/dictionary.df.rds"))
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
              decreasing = T)[2]
 
+for(i in 1:length(path)) {
 write.csv(read.csv(here::here("metadata", file)),
-          paste0(path, "/data/",file), row.names = F)
-        
+          paste0(path[i], "/data/",file), row.names = F)
+}
