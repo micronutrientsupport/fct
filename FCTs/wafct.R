@@ -373,7 +373,9 @@ wa_genus <- tribble(
 "06_018", "1379.02", "h",
 "01_052", "23710.02", "h",
 "04_066", "21399.01.02", "h", 
-"01_035", "23162.02", "h"
+"01_035", "23162.02", "h", 
+"01_073",  "39120.01.01", "h",
+"07_023", "21184.01.02", "h"
 )
 
 # Checking for dictionary duplicates -----
@@ -458,30 +460,30 @@ subset(wafct, code %in% c("09_007", "09_001", "09_002", "09_015",
                           "09_004", "09_041", "09_005"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "01_035", select = fooditem) 
-subset(wafct, code == "04_065", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "01_017", select = fooditem) 
+subset(wafct, code == "07_023", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "F0020.01") 
 
 dictionary.df %>% filter(ID_3 %in% c("22241.01"))
-subset(dictionary.df, ID_2 == "21321")
-subset(dictionary.df, ID_1 == "2532")
+subset(dictionary.df, ID_2 == "21184.01")
+subset(dictionary.df, ID_1 == "2731")
 subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("juice", fooditem, ignore.case = TRUE), 
+subset(wafct, grepl("mince|ground", fooditem, ignore.case = TRUE), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(wafct, str_detect(fooditem, "pork|Pork") & 
-         str_detect(fooditem, "fat"), 
+subset(wafct, str_detect(fooditem, "mince|ground") & 
+         str_detect(fooditem, "Beef"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
 subset(dictionary.df,
-       grepl("juice", FoodName_2, ignore.case = TRUE) &
-         grepl("tomato", FoodName_2, ignore.case = TRUE))
+       grepl("beef", FoodName_2, ignore.case = TRUE) &
+         grepl("", FoodName_2, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards
 
