@@ -65,6 +65,8 @@ genus <- tribble(
   "13-607", "21329.01", "h",
   "13-382", "21321.01", "h",
   "19-649", "21181.01", "m",
+  "17-784", "F0623.04", "h", 
+  "17-343", "F0623.05", "h"
  # "13-881", 
 )
 
@@ -111,7 +113,7 @@ subset(output_table, fdc_id %in% c("11-824", "17-645",
 subset(output_table, ID_3 == "2351F.01") 
 
 dictionary.df %>% filter(ID_3 == "23914.05")
-subset(dictionary.df, ID_2 == "1651")
+subset(dictionary.df, ID_2 == "F0623")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 
@@ -120,12 +122,12 @@ subset(output_table,
       grepl("^13", fdc_id), 
         select = c(fdc_id, food_desc, ID_3, WATERg))
 
-subset(output_table, grepl("bacon", food_desc, ignore.case = TRUE) &
-       grepl("raw", food_desc, ignore.case = TRUE), 
+subset(output_table, grepl("chutney", food_desc, ignore.case = TRUE) &
+       grepl("", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 
 subset(dictionary.df, 
-       grepl("bacon", FoodName_2, ignore.case = TRUE) &
+       grepl("fruit", FoodName_2, ignore.case = TRUE) &
          grepl("",  FoodName_3, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards
