@@ -382,13 +382,19 @@ ken_genus <- tribble(
  "7017", "21170.01.02", "h", 
  "10012", "21495.02.01", "h", 
  "8004", "1501.10", "h",
- "8023", "1507.05", "h"
- 
- 
+ "8022", "1507.05", "h",
+ "1006", "F0020.07", "h",
+ "1060", "23161.02.03", "h", 
+ "5029", "21491.01", "m", 
+ "10007", "21422.01", "h", 
+ "10011", "1375.01", "m", # Check EP (as in this fct is shelled)
+ "6015", "22222.02.01", "h", 
+ "6016", "22222.01.01", "h", 
  )
 
 
-dictionary.df %>% filter(ID_3 == "23511.02.01")
+
+dictionary.df %>% filter(ID_2 == "113")
 
 ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
   filter(!FCT.code %in% c("7009", "10010")) %>% #removing chicken - wrong code (21121.02) and macadamia wrong confidence
@@ -459,29 +465,34 @@ kenfct <- kenfct %>%
 dim(kenfct)
 
 #Checking dictionary/ fct ids availability ----
-kenfct %>% filter(code %in% c("1012", "1013", "1014", "1015", "1016"))
 
-subset(kenfct, code %in% c("1025", "1027"), select = c(code, fooditem, ID_3, scientific_name))
+kenfct %>% filter(code %in% c("6015", "6016")) %>% pull(fooditem)
 
-subset(kenfct, code == "8023", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code %in% c("8005", "8009", "8010"), 
+       select = c(code, fooditem, ID_3, scientific_name))
+
+subset(kenfct, code == "10011", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1701.01") 
 
-dictionary.df %>% filter(ID_3 == "23120.05.01")
-subset(dictionary.df, ID_2 == "1507")
+dictionary.df %>% filter(ID_3 == "1507.05")
+subset(dictionary.df, ID_2 == "22222.01")
 subset(dictionary.df, ID_2 %in% c("1520",
                                   "1507",
                                  # "15071",
                                   "1557",
                                   "1533"
                                       ))
-subset(dictionary.df, ID_1 == "2899")
+subset(dictionary.df, ID_1 == "2848")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, str_detect(fooditem, "sauce|Sauce"), 
+subset(kenfct, grepl("coffee", fooditem, ignore.case = TRUE) &
+         grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, ID_3, foodgroup, scientific_name, WATER))
+
 subset(kenfct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, str_detect(FoodName_3, "Chilli|chilli"))
+subset(dictionary.df, grepl("formula", FoodName_3, ignore.case = T) &
+              grepl("", FoodName_2, ignore.case = T))
 
 
 
@@ -548,7 +559,7 @@ MAPS_ken %>% head()
 MAPS_ken %>% filter(str_detect(original_food_name, "lea")) %>% select(1:3) %>% knitr::kable()
 MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
 MAPS_ken %>% filter(original_food_id == "9011") %>% glimpse()
-MAPS_ken %>% filter(food_genus_id == "23110.02")
+MAPS_ken %>% filter(food_genus_id == "F0020.07")
 
 #Checking for duplicated items
 dim(MAPS_ken)

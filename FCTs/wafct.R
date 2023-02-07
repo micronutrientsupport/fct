@@ -306,7 +306,7 @@ wa_genus <- tribble(
 "01_067", "23161.01.04", "h",
 "01_036", "23161.01.01", "l",
 "01_045" , "F0022.09", "h", 
-"01_187",  "F0020.07", "l",
+#"01_187",  "F0020.07", "l", # This is cake not sweet bread (can use value from KE18)
 "01_189" , "F0022.14", "h", 
 "04_012",  "1233.01", "h" ,
 "04_074",  "1290.9.09", "h",
@@ -372,7 +372,8 @@ wa_genus <- tribble(
 "06_026", "21495.02.01", "h", 
 "06_018", "1379.02", "h",
 "01_052", "23710.02", "h",
-"04_066", "21399.01.02", "h"
+"04_066", "21399.01.02", "h", 
+"01_035", "23162.02", "h"
 )
 
 # Checking for dictionary duplicates -----
@@ -452,10 +453,12 @@ wafct %>% filter(code == "07_027") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(code %in% c("01_047", "01_046")) %>% View()
 
-subset(wafct, code %in% c("01_057", "01_058", "01_081", "01_004", "01_094"), 
+subset(wafct, code %in% c("09_007", "09_001", "09_002", "09_015",
+                          "09_018", "09_003", "09_060", "09_032",
+                          "09_004", "09_041", "09_005"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "04_005", select = fooditem) 
+subset(wafct, code == "01_035", select = fooditem) 
 subset(wafct, code == "01_169", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "F0020.01") 
 
@@ -468,7 +471,7 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, str_detect(fooditem, "cous|Cous"), 
+subset(wafct, str_detect(fooditem, "brown"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 subset(wafct, str_detect(fooditem, "pork|Pork") & 
          str_detect(fooditem, "fat"), 
@@ -542,7 +545,7 @@ MAPS_output %>% filter(!is.na(food_genus_id), is.na(food_subgroup))
 MAPS_output %>% filter(str_detect(original_food_name, "Corn")) %>% select(1:3) %>% knitr::kable()
 MAPS_output %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
 MAPS_output %>% filter(original_food_id == "02_042") %>% glimpse()
-MAPS_output %>% filter(food_genus_id == "1491.02.01")
+MAPS_output %>% filter(food_genus_id == "F0020.07")
   
 
 #Checking for duplicated items
