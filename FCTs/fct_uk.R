@@ -66,8 +66,10 @@ genus <- tribble(
   "13-382", "21321.01", "h",
   "19-649", "21181.01", "m",
   "17-784", "F0623.04", "h", 
-  "17-343", "F0623.05", "h"
+  "17-343", "F0623.05", "h",
  # "13-881", 
+ "12-535", "22290.02", "h",
+ "12-326", "22290.03", "h"
 )
 
 #Combining codes from fuzzy matcher and manually added
@@ -108,8 +110,7 @@ dim(output_table)
 
 #Checking dictionary/ fct ids availability 
 subset(output_table, fdc_id == "13-881", select = c(food_desc, ID_3)) 
-subset(output_table, fdc_id %in% c("11-824", "17-645",
-                                   "17-642"), select = c(food_desc, ID_3)) 
+subset(output_table, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
 subset(output_table, ID_3 == "2351F.01") 
 
 dictionary.df %>% filter(ID_3 == "23914.05")

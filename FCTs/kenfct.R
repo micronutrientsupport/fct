@@ -396,7 +396,8 @@ ken_genus <- tribble(
  "14001", "21170.92.07", "h",
  "14002", "21170.92.08", "h",
  "14004", "21170.92.09", "h",
- "1029", "39120.06.01", "h"
+ "1029", "39120.06.01", "h",
+ "15134" ,  "F0875.02", "h",
  )
 
 
@@ -478,13 +479,13 @@ kenfct %>% filter(code %in% c("6003",
 "6005",
 "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, code %in% c("14001", "14002", "14004"), 
+subset(kenfct, code %in% c("8006", "14002", "14004"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "1029", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "1701.01") 
+subset(kenfct, code == "15134", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "F0875.02") 
 
-dictionary.df %>% filter(ID_3 == "1507.05")
+dictionary.df %>% filter(ID_3 %in% c("22290.02", "22290.03"))
 subset(dictionary.df, ID_2 == "39120.06")
 subset(dictionary.df, ID_2 %in% c("1520",
                                   "1507",
@@ -495,7 +496,7 @@ subset(dictionary.df, ID_2 %in% c("1520",
 subset(dictionary.df, ID_1 == "2516")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("beef", fooditem, ignore.case = TRUE) &
+subset(kenfct, grepl("meat ball", fooditem, ignore.case = TRUE) &
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
 

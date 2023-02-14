@@ -465,7 +465,7 @@ subset(wafct, code == "07_023", select = c(fooditem, ID_3, scientific_name))
 subset(wafct, ID_3 == "F0020.01") 
 
 dictionary.df %>% filter(ID_3 %in% c("22241.01"))
-subset(dictionary.df, ID_2 == "21184.01")
+subset(dictionary.df, ID_2 == "1533")
 subset(dictionary.df, ID_1 == "2731")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -473,8 +473,9 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("mince|ground", fooditem, ignore.case = TRUE), 
+subset(wafct, grepl("mack", fooditem, ignore.case = TRUE), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+
 subset(wafct, str_detect(fooditem, "mince|ground") & 
          str_detect(fooditem, "Beef"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
