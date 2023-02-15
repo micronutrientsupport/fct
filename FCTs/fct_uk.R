@@ -69,7 +69,8 @@ genus <- tribble(
   "17-343", "F0623.05", "h",
  # "13-881", 
  "12-535", "22290.02", "h",
- "12-326", "22290.03", "h"
+ "12-326", "22290.03", "h",
+ "17-647", "23670.01.01", "h"
 )
 
 #Combining codes from fuzzy matcher and manually added
@@ -109,26 +110,26 @@ dim(output_table)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(output_table, fdc_id == "13-881", select = c(food_desc, ID_3)) 
+subset(output_table, fdc_id == "17-647", select = c(food_desc, ID_3)) 
 subset(output_table, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
-subset(output_table, ID_3 == "2351F.01") 
+subset(output_table, ID_3 == "23670.01.01") 
 
-dictionary.df %>% filter(ID_3 == "23914.05")
-subset(dictionary.df, ID_2 == "F0623")
+dictionary.df %>% filter(ID_3 == "23670.01.01")
+subset(dictionary.df, ID_2 == "23520")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 
 subset(output_table, 
-       grepl("juice", food_desc, ignore.case = TRUE)&
-      grepl("^13", fdc_id), 
+       grepl("sugar", food_desc, ignore.case = TRUE)&
+      grepl("^17", fdc_id), 
         select = c(fdc_id, food_desc, ID_3, WATERg))
 
-subset(output_table, grepl("chutney", food_desc, ignore.case = TRUE) &
+subset(output_table, grepl("panel", food_desc, ignore.case = TRUE) &
        grepl("", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 
 subset(dictionary.df, 
-       grepl("fruit", FoodName_2, ignore.case = TRUE) &
+       grepl("sugar", FoodName_2, ignore.case = TRUE) &
          grepl("",  FoodName_3, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards

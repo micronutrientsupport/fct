@@ -104,13 +104,13 @@ names(output_table)
   ## CHECK: Adding new food dictionary code ----
   
   #Checking dictionary/ fct ids availability 
-  subset(output_table, fdc_id == "16006", select = c(fdc_id, food_desc, ID_3)) 
+  subset(output_table, fdc_id == "13033", select = c(fdc_id, food_desc, ID_3)) 
   subset(output_table, fdc_id %in% c("7045",  "7046",  "7090",  "7906",  "7908",  "7909", "13353",  "43131"),
   select = c(fdc_id, food_desc, ID_3)) 
-  subset(output_table, ID_3 == "2351F.01") 
+  subset(output_table, ID_3 == "23511.02.01") 
   
-  subset(output_table, str_detect(food_desc, "Tea") #&
-         #  str_detect(food_desc, "milk")
+  subset(output_table, grepl("pane", food_desc, ignore.case = TRUE) &
+           grepl("", food_desc, ignore.case = TRUE)
          , 
          select = c(fdc_id, food_desc, ID_3, WATERg))
   

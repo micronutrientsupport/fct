@@ -179,7 +179,7 @@ wa_genus <- tribble(
   "07_063", "F1172.01", "m",
   "12_002",  "24310.02.01", "h", 
   "01_043", "23110.02", "h", 
-  "12_012" , "21435.01.01", "m",
+  "12_012" , "21439.9.01", "m",
   "02_003", "01520.01.02", "m",
   "02_001", "01520.01.01", "m",
   "02_015", "1550.01", "h",
@@ -375,7 +375,12 @@ wa_genus <- tribble(
 "04_066", "21399.01.02", "h", 
 "01_035", "23162.02", "h", 
 "01_073",  "39120.01.01", "h",
-"07_023", "21184.01.02", "h"
+"07_023", "21184.01.02", "h",
+"10_012", "23991.01.04", "h", 
+"10_011",  "23991.01.03", "h",
+"13_024", "F1232.03", "h", 
+"12_025", "141.03", "h", 
+"12_013", "21439.9.02", "h"
 )
 
 # Checking for dictionary duplicates -----
@@ -453,18 +458,16 @@ wafct.genus %>% filter(ref_fctcode == "05_011")
 wafct %>% filter(code == "07_027") %>% glimpse()
 
 #Checking code availability 
-wafct %>% filter(code %in% c("01_047", "01_046")) %>% View()
+wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
 
-subset(wafct, code %in% c("09_007", "09_001", "09_002", "09_015",
-                          "09_018", "09_003", "09_060", "09_032",
-                          "09_004", "09_041", "09_005"), 
+subset(wafct, code %in% c("12_012", "12_013"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "01_017", select = fooditem) 
+subset(wafct, code == "13_024", select = fooditem) 
 subset(wafct, code == "07_023", select = c(fooditem, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "F0020.01") 
+subset(wafct, ID_3 == "141.03") 
 
-dictionary.df %>% filter(ID_3 %in% c("22241.01"))
+dictionary.df %>% filter(ID_3 %in% c("21435.01.01"))
 subset(dictionary.df, ID_2 == "1533")
 subset(dictionary.df, ID_1 == "2731")
 subset(dictionary.df, ID_0 == "AP")
@@ -473,8 +476,9 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("mack", fooditem, ignore.case = TRUE), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+subset(wafct, grepl("chick", fooditem, ignore.case = TRUE) &
+         grepl("", fooditem, ignore.case = TRUE),
+       select = c(code, fooditem, scientific_name, WATER))
 
 subset(wafct, str_detect(fooditem, "mince|ground") & 
          str_detect(fooditem, "Beef"), 

@@ -188,6 +188,7 @@ ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
 1) FoodEx2
 2) FAO GIFT
 
+
 ```{r tracking-issue-2, echo=FALSE}
 
 
@@ -225,3 +226,9 @@ ISSUE with Dictionary --> SUA and Fish share the same code!!
 ## Milk and products (dairy)
 ##NOTES:
 ##Any "whole fat would be under raw milk
+
+# Change log
+
+2023/02/15: 
+- Changed "Vegetable fat" from ID_2 (F1243) to ID_2 (34550) because the former was referring to animal fats, while the latter refers to any modified oils, and can include animal and/or vegetable, as per the description: "animal or vegetable fats and oils and their fractions, chemically modified, except those hydrogenated, inter-esterified, re-esterified or elaidinized; inedible mixtures or preparations of animal or vegetable fats or oils."
+  

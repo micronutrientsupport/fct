@@ -398,6 +398,13 @@ ken_genus <- tribble(
  "14004", "21170.92.09", "h",
  "1029", "39120.06.01", "h",
  "15134" ,  "F0875.02", "h",
+ "6020",  "22290.04", "m", 
+ "6021",  "22290.05", "m",
+ "5038", "1221.01", "m", 
+ "4015", "1290.9.05", "h",
+ "3015", "1242.01", "h", 
+ "3012",  "1241.9.01", "h", 
+ "13033", "F1232.02", "l" 
  )
 
 
@@ -479,31 +486,31 @@ kenfct %>% filter(code %in% c("6003",
 "6005",
 "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, code %in% c("8006", "14002", "14004"), 
+subset(kenfct, code %in% c("13033"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "15134", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "F0875.02") 
+subset(kenfct, code == "2007", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "F1232.02") 
 
-dictionary.df %>% filter(ID_3 %in% c("22290.02", "22290.03"))
-subset(dictionary.df, ID_2 == "39120.06")
+dictionary.df %>% filter(ID_3 %in% c("F1232.02"))
+subset(dictionary.df, ID_2 == "1221")
 subset(dictionary.df, ID_2 %in% c("1520",
                                   "1507",
                                  # "15071",
                                   "1557",
                                   "1533"
                                       ))
-subset(dictionary.df, ID_1 == "2516")
+subset(dictionary.df, ID_1 == "2737")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("meat ball", fooditem, ignore.case = TRUE) &
-         grepl("", fooditem, ignore.case = TRUE),
+subset(kenfct, grepl("chick", fooditem, ignore.case = TRUE) &
+         grepl("pea", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
 
 subset(kenfct, str_detect(scientific_name, "pilosa"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, grepl("oat", FoodName_3, ignore.case = T) &
-              grepl("", FoodName_2, ignore.case = T))
+subset(dictionary.df, grepl("sugar", FoodName_3, ignore.case = T) &
+              grepl("cane", FoodName_2, ignore.case = T))
 
 
 
