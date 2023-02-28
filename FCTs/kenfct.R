@@ -200,6 +200,9 @@ kenfct$scientific_name[kenfct$code == "13011"] <- "Coriandrum sativum"
 #The scientific namr of coconut (3 entries) is wrong
 kenfct$scientific_name[kenfct$code %in% c("10002", "10003", "10004")] <- "Cocos nucifera"
 
+# Adding NA 
+kenfct$scientific_name[kenfct$code == "5030"] <- "Ananas comosus"
+
 #There is a typo in "Roti"
 kenfct$fooditem[kenfct$code == "15003"] <- "Roti (Indian Chapati)"
 
@@ -267,7 +270,7 @@ ken_genus <- tribble(
  "7019", "21115.01", "m",
  "10003", "1460.02", "m",
   "9011", "21700.02.02", "m", 
- "9001", "F1243.02", "m",
+ "9001", "F1243.01", "m",
  "5028", "1342.01.01", "m",
  "4014", "1235.04", "m", 
  "4037", "21399.02.01", "m", 
@@ -276,7 +279,7 @@ ken_genus <- tribble(
  "6019", "22110.02.01", "h",
  "5025", "1319.02", "h",
  "8011", "1553.02", "h",
- "5031", "21346.01", "h",
+ "5031", "1346.01", "h",
  "4021", "1254.01", "h", 
  "4012", "1213.01", "m", 
  "5027", "1345.01", "m",
@@ -339,9 +342,9 @@ ken_genus <- tribble(
  "5013", "21439.02.01", "h", 
  "5016", "21439.04.01", "h", 
  "5026", "21439.9.03", "h", 
- "5035", "21439.01", "h",
+ "5035", "21439.01.01", "h",
  "5018", "1349.2.01", "h",
- "5039", "21346.02", "h",
+ "5039", "1346.02", "h",
  "7015", "21156.01", "h",
  "7018", "21155.01", "h",
  "5005", "21419.99.01", "h", 
@@ -367,10 +370,10 @@ ken_genus <- tribble(
  "8031", "1557.01", "h", 
  "8033", "1557.02", "h", 
  "8034", "1533.04" , "h",
- "8036",  "2533.05", "h", 
- "8040",  "2533.06", "h", 
- "8041",  "2533.07", "h", 
- "8042",  "2533.08", "h", 
+ "8036",  "1533.05", "h", 
+ "8040",  "1533.06", "h", 
+ "8041",  "1533.07", "h", 
+ "8042",  "1533.08", "h", 
  "15063", "F1232.10", "h", 
  "4035",  "1234.03", "h", 
  "2015",  "1530.01", "m", 
@@ -404,7 +407,18 @@ ken_genus <- tribble(
  "4015", "1290.9.05", "h",
  "3015", "1242.01", "h", 
  "3012",  "1241.9.01", "h", 
- "13033", "F1232.02", "l" 
+ "13033", "F1232.16", "m" , 
+ "1033", "23161.02.02", "h",
+ "1003", "F0022.15", "h",
+ "5001", "1341.03", "m",
+ "5006", "1319.05", "m", 
+ "5009", "1359.9.04", "h",
+ "5011", "1316.02", "m",
+ "5021", "1359.9.05", "h",
+ "5032", "1359.9.06", "h", 
+ "5033", "1353.01.01", "h",
+ "5037" , "1359.9.07", "h"
+ 
  )
 
 
@@ -486,32 +500,32 @@ kenfct %>% filter(code %in% c("6003",
 "6005",
 "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, code %in% c("13033"), 
+subset(kenfct, code %in% c("1003"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
 subset(kenfct, code == "2007", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "F1232.02") 
 
-dictionary.df %>% filter(ID_3 %in% c("F1232.02"))
-subset(dictionary.df, ID_2 == "1221")
-subset(dictionary.df, ID_2 %in% c("1520",
-                                  "1507",
-                                 # "15071",
-                                  "1557",
-                                  "1533"
+dictionary.df %>% filter(ID_3 %in% c("21439.01"))
+subset(dictionary.df, ID_2 == "F1232")
+subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
 subset(dictionary.df, ID_1 == "2737")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("chick", fooditem, ignore.case = TRUE) &
-         grepl("pea", fooditem, ignore.case = TRUE),
+subset(kenfct, grepl("soup", fooditem, ignore.case = TRUE) &
+         grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
-
-subset(kenfct, str_detect(scientific_name, "pilosa"), 
+subset(kenfct, str_detect(code, "^5"), 
+       select = c(code, fooditem, ID_3, foodgroup, scientific_name)) %>% View()
+subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
-subset(dictionary.df, grepl("sugar", FoodName_3, ignore.case = T) &
-              grepl("cane", FoodName_2, ignore.case = T))
 
+subset(dictionary.df, grepl("tomato", FoodName_3, ignore.case = T) &
+              grepl("", FoodName_2, ignore.case = T))
+
+subset(dictionary.df, grepl("Punica", scientific_name, ignore.case = T) &
+         grepl("", FoodName_2, ignore.case = T))
 
 
 #Rename variables according to MAPS-standards

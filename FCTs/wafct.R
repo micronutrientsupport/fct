@@ -380,7 +380,8 @@ wa_genus <- tribble(
 "10_011",  "23991.01.03", "h",
 "13_024", "F1232.03", "h", 
 "12_025", "141.03", "h", 
-"12_013", "21439.9.02", "h"
+"12_013", "21439.9.02", "h", 
+"09_025", "1533.03", "h", 
 )
 
 # Checking for dictionary duplicates -----
@@ -455,20 +456,20 @@ wafct <- wafct %>%
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "05_011")
-wafct %>% filter(code == "07_027") %>% glimpse()
+wafct %>% filter(code == "01_034") %>% glimpse()
 
 #Checking code availability 
 wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
 
-subset(wafct, code %in% c("12_012", "12_013"), 
+subset(wafct, code %in% c("09_024", "09_025", "09_069" ), 
        select = c(code, fooditem, ID_3, scientific_name))
 
 subset(wafct, code == "13_024", select = fooditem) 
-subset(wafct, code == "07_023", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "09_025", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "141.03") 
 
-dictionary.df %>% filter(ID_3 %in% c("21435.01.01"))
-subset(dictionary.df, ID_2 == "1533")
+dictionary.df %>% filter(ID_3 %in% c("1346.01"))
+subset(dictionary.df, ID_2 == "1359.9")
 subset(dictionary.df, ID_1 == "2731")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -476,18 +477,18 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("chick", fooditem, ignore.case = TRUE) &
+subset(wafct, grepl("paw", fooditem, ignore.case = TRUE) &
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
 
 subset(wafct, str_detect(fooditem, "mince|ground") & 
          str_detect(fooditem, "Beef"), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
-subset(wafct, str_detect(scientific_name, "pilosa"), 
+subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
 subset(dictionary.df,
-       grepl("beef", FoodName_2, ignore.case = TRUE) &
+       grepl("apple", FoodName_3, ignore.case = TRUE) &
          grepl("", FoodName_2, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards

@@ -69,7 +69,7 @@ Column.Name	| Description | FAO_INFOODS.tagname |
 -|-|-
 cu_in_mg|	The Copper content of this food item, in milligrams per 100g| CU |
 
-#### Standtadization of variables using FAO/INFOODS tagname
+#### Standtadisation of variables using FAO/INFOODS tagname
 
 As mentioned earlier, the first step is the standardization of variable names. The names used are detailed in the cookbook. In summary, food items names will be code as 'fooditem', food item code will be 'code', food categories or food groups will be 'foodgroup' and food components will be name using the FAO/INFOODS tagnames. Additionally, food groups will be standardized using FoodEx2 classification system and name 'foodgroup_FoodEx2'.
 
@@ -82,7 +82,7 @@ within this step, we aim to remove different formats that may make data unavaila
 We will remove special characters and/or add a new variable to identify those values. 
 We have identify a package that can be use to clean very untidy data. The tidyxl package (https://cran.r-project.org/web/packages/tidyxl/vignettes/tidyxl.html)can be used to identify different font, colour and other formatting implemented in the spreadsheet (i.e. excel). 
 
-####Identify potential errors in the data 
+#### Identify potential errors in the data 
 
 After the data is cleaned, we need to run some descriptive and summary test to identify outliers. We can use the min and max values described in the data dictionary as reference. 
 
@@ -539,6 +539,8 @@ There were several typos and other small issues with the names and descriptions 
 - The scientific name of Coriander, leaves, fresh, raw (13011) was incorrect, hence we changed to "Coriandrum sativum"
 
 - The scientific name of coconut in 3 entries ("10002", "10003", "10004") were incorrect and we modified to "Cocos nucifera". 
+
+- The scientific name of pineapple (*Ananas comosus*) is missing ("5030"). 
 
 **2) Typos and misspellings**
 
