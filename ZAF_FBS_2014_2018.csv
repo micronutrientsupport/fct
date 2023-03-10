@@ -1,0 +1,90 @@
+"","food_genus_id","food_genus_confidence","country_id","original_id","original_name","data_source_id","mean_supply"
+"1","112.01","l","ZAF",2514,"maize and products","FBS",277.67
+"2","24310.01.01","l","ZAF",2656,"beer","FBS",156.61
+"3","111.01","l","ZAF",2511,"wheat and products","FBS",149.11
+"4","2211.01","l","ZAF",2848,"milk - excluding butter","FBS",132.7
+"5","21121.01","l","ZAF",2734,"poultry meat","FBS",102.33
+"6","1510.01","l","ZAF",2531,"potatoes and products","FBS",85.99
+"7","23520.01","l","ZAF",2542,"sugar (raw equivalent)","FBS",84.92
+"8","23120.01.01","l","ZAF",2805,"rice and products","FBS",66.29
+"9","1212.02","l","ZAF",2605,"vegetables, other","FBS",60.55
+"10","21111.02.01","l","ZAF",2731,"bovine meat","FBS",48.67
+"11","23210.01.01","l","ZAF",2543,"sweeteners, other","FBS",33.53
+"12","1234.01","l","ZAF",2601,"tomatoes and products","FBS",27.1
+"13","1253.02.01","l","ZAF",2602,"onions","FBS",26.34
+"14","1312.01","l","ZAF",2615,"bananas","FBS",20.92
+"15","24212.02.02","l","ZAF",2655,"wine","FBS",20.72
+"16","21151.01","l","ZAF",2736,"offals, edible","FBS",17.5
+"17","231.01","l","ZAF",2744,"eggs","FBS",16.94
+"18","2413.01","l","ZAF",2658,"beverages, alcoholic","FBS",15.24
+"19","21631.01.01","l","ZAF",2573,"sunflowerseed oil","FBS",14.29
+"20","1323.01","l","ZAF",2611,"oranges, mandarines","FBS",13.55
+"21","1316.01","l","ZAF",2625,"fruits, other","FBS",13.24
+"22","2161.01","l","ZAF",2571,"soyabean oil","FBS",12.44
+"23","21113.02.01","l","ZAF",2733,"pigmeat","FBS",12.35
+"24","21116.01","l","ZAF",2732,"mutton & goat meat","FBS",8.85
+"25","1527.01","l","ZAF",2763,"pelagic fish","FBS",8.33
+"26","1532.01","l","ZAF",2763,"pelagic fish","FBS",8.33
+"27","1518.01","l","ZAF",2762,"demersal fish","FBS",7.34
+"28","1341.01","l","ZAF",2617,"apples and products","FBS",7.03
+"29","141.01","l","ZAF",2555,"soyabeans","FBS",6.64
+"30","1330.01","l","ZAF",2620,"grapes and products (excl wine)","FBS",4.97
+"31","1321.02","l","ZAF",2613,"grapefruit and products","FBS",4.21
+"32","21691.02.01","l","ZAF",2582,"maize germ oil","FBS",4.07
+"33","1701.02","l","ZAF",2546,"beans","FBS",3.91
+"34","23140.07.01","l","ZAF",2516,"oats","FBS",3.22
+"35","23912.02.01","l","ZAF",2630,"coffee and products","FBS",2.81
+"36","1530.01","l","ZAF",2533,"sweet potatoes","FBS",2.66
+"37","2165.01","l","ZAF",2577,"palm oil","FBS",2.62
+"38","142.01","l","ZAF",2556,"groundnuts","FBS",2.61
+"39","21170.92.01","l","ZAF",2735,"meat, other","FBS",2.21
+"40","1318.01","l","ZAF",2618,"pineapples and products","FBS",2.18
+"41","1193.03","l","ZAF",2520,"cereals, other","FBS",2.08
+"42","114.01","l","ZAF",2518,"sorghum and products","FBS",1.7
+"43","1313.01","l","ZAF",2616,"plantains","FBS",1.4
+"44","23914.01","l","ZAF",2635,"tea (including mate)","FBS",1.09
+"45","1652.01","l","ZAF",2641,"pimento","FBS",1.05
+"46","21691.14.01","l","ZAF",2576,"palmkernel oil","FBS",0.8
+"47","1553.01","l","ZAF",2765,"crustaceans","FBS",0.79
+"48","1704.01","l","ZAF",2549,"pulses, other and products","FBS",0.78
+"49","22241.02.01","l","ZAF",2740,"butter, ghee","FBS",0.78
+"50","1501.01","l","ZAF",2761,"freshwater fish","FBS",0.59
+"51","1705.01","l","ZAF",2547,"peas","FBS",0.56
+"52","1323.01","l","ZAF",2611,"citrus, other","FBS",0.47
+"53","1372.01","l","ZAF",2551,"nuts and products","FBS",0.35
+"54","1699.01","l","ZAF",2645,"spices, other","FBS",0.35
+"55","21521.01","l","ZAF",2737,"fats, animals, raw","FBS",0.33
+"56","1570.01","l","ZAF",2766,"cephalopods","FBS",0.31
+"57","1562.01","l","ZAF",2767,"molluscs, other","FBS",0.3
+"58","1460.01","l","ZAF",2560,"coconuts - incl copra","FBS",0.28
+"59","2167.01","l","ZAF",2580,"olive oil","FBS",0.25
+"60","1527.01","l","ZAF",2763,"marine fish, other","FBS",0.24
+"61","1532.01","l","ZAF",2763,"marine fish, other","FBS",0.24
+"62","23140.05.01","l","ZAF",2513,"barley and products","FBS",0.24
+"63","118.01","l","ZAF",2517,"millet and products","FBS",0.22
+"64","2166.01","l","ZAF",2578,"coconut oil","FBS",0.21
+"65","1322.01","l","ZAF",2612,"lemons, limes and products","FBS",0.18
+"66","2910.01","l","ZAF",2745,"honey","FBS",0.16
+"67","22120.01","l","ZAF",2743,"cream","FBS",0.11
+"68","116.01","l","ZAF",2515,"rye and products","FBS",0.08
+"69","2168.01","l","ZAF",2575,"cottonseed oil","FBS",0.08
+"70","34550.01","l","ZAF",2586,"oilcrops oil, other","FBS",0.07
+"71","F0262.01","l","ZAF",2563,"olives (including preserved)","FBS",0.07
+"72","2162.01","l","ZAF",2572,"groundnut oil","FBS",0.06
+"73","1656.01","l","ZAF",2642,"cloves","FBS",0.03
+"74","1314.01","l","ZAF",2619,"dates","FBS",0.02
+"75","21691.07.01","l","ZAF",2579,"sesameseed oil","FBS",0.02
+"76","1587.01","l","ZAF",2769,"aquatic animals, others","FBS",0.01
+"77","01520.01.01","l","ZAF",2532,"cassava and products","FBS",0
+"78","1441.01","l","ZAF",2570,"oilcrops, other","FBS",0
+"79","1442.01","l","ZAF",2558,"rape and mustardseed","FBS",0
+"80","1522.01","l","ZAF",2781,"fish, body oil","FBS",0
+"81","1523.01","l","ZAF",2782,"fish, liver oil","FBS",0
+"82","1540.01","l","ZAF",2535,"yams","FBS",0
+"83","1550.01","l","ZAF",2534,"roots, other","FBS",0
+"84","1594.01","l","ZAF",2775,"aquatic plants","FBS",0
+"85","1651.01","l","ZAF",2640,"pepper","FBS",0
+"86","23991.01.02","l","ZAF",2680,"infant food","FBS",0
+"87","24310.04.01","l","ZAF",2657,"beverages, fermented","FBS",0
+"88","2899.01.01","l","ZAF",2899,"miscellaneous","FBS",0
+"89","F0665.01","l","ZAF",2633,"cocoa beans and products","FBS",0

@@ -232,7 +232,7 @@ ken_genus <- tribble(
   "1045", "111.01", "m", 
   "3001", "1701.05", "m", 
   "3010", "1703.01", "m",
-  "13023", "1253.02.01", "l", 
+ "13023", "1253.02.03", "h",
   "2009", "1510.01", "m", 
   "10009", "142.01", "l",
   "13006", "1652.01", "m", 
@@ -417,8 +417,12 @@ ken_genus <- tribble(
  "5021", "1359.9.05", "h",
  "5032", "1359.9.06", "h", 
  "5033", "1353.01.01", "h",
- "5037" , "1359.9.07", "h"
- 
+ "5037" , "1359.9.07", "h", 
+ "13020", "1699.11", "h", 
+ "4006", "1212.05", "h", 
+ "2012", "1290.9.11", "m", 
+ "2010" ,"1290.9.13", "h", 
+ "2011", "1290.9.14", "h"
  )
 
 
@@ -500,20 +504,20 @@ kenfct %>% filter(code %in% c("6003",
 "6005",
 "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, code %in% c("1003"), 
+subset(kenfct, code %in% c("13023"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "2007", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "4006", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "F1232.02") 
 
 dictionary.df %>% filter(ID_3 %in% c("21439.01"))
-subset(dictionary.df, ID_2 == "F1232")
+subset(dictionary.df, ID_2 == "1290.9")
 subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
-subset(dictionary.df, ID_1 == "2737")
+subset(dictionary.df, ID_1 == "2602")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("soup", fooditem, ignore.case = TRUE) &
+subset(kenfct, grepl("radi", fooditem, ignore.case = TRUE) &
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
 subset(kenfct, str_detect(code, "^5"), 
@@ -521,10 +525,10 @@ subset(kenfct, str_detect(code, "^5"),
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
-subset(dictionary.df, grepl("tomato", FoodName_3, ignore.case = T) &
+subset(dictionary.df, grepl("radi", FoodName_3, ignore.case = T) &
               grepl("", FoodName_2, ignore.case = T))
 
-subset(dictionary.df, grepl("Punica", scientific_name, ignore.case = T) &
+subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
 
 

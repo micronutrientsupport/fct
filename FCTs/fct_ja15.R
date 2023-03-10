@@ -23,7 +23,7 @@ genus <- tribble(
 "2023", "1540.03", "h", 
 "2025", "1540.04", "h", 
 "10117", "1516.03", "m", 
-"10118", "1520.11", "m"
+"10118", "1520.11", "m", 
 
 )
 
@@ -48,9 +48,9 @@ names(output_table)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(output_table, fdc_id == "10118", select = c(food_desc, ID_3)) 
+subset(output_table, fdc_id == "1220", select = c(food_desc)) 
 subset(output_table, fdc_id %in% c("2022", 
                                    "2023",
                                    "2025"), select = c(food_desc)) 
 subset(output_table, ID_3 == "2351F.01") 
-subset(dictionary.df, ID_2 == "1520")
+subset(dictionary.df, ID_2 == "1531")

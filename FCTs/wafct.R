@@ -199,7 +199,7 @@ wa_genus <- tribble(
   "06_027", "142.02", "m",
   "03_032", "1707.01", "h",
   "03_008", "141.01", "h",
-  "07_103", "21121.03", "m",
+  "07_003", "21121.03", "m",
   "07_030", "21121.01", "m",
   "08_002", "231.02", "h",
   "08_001", "231.01", "h",
@@ -382,6 +382,9 @@ wa_genus <- tribble(
 "12_025", "141.03", "h", 
 "12_013", "21439.9.02", "h", 
 "09_025", "1533.03", "h", 
+"10_025", "22230.01.02", "h", 
+"10_026", "22230.02.01", "h",
+"02_021", "1520.02.02", "h", 
 )
 
 # Checking for dictionary duplicates -----
@@ -456,7 +459,7 @@ wafct <- wafct %>%
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "F0623.02")
 wafct.genus %>% filter(ref_fctcode == "05_011")
-wafct %>% filter(code == "01_034") %>% glimpse()
+wafct %>% filter(code == "02_021") %>% glimpse()
 
 #Checking code availability 
 wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
@@ -464,13 +467,13 @@ wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
 subset(wafct, code %in% c("09_024", "09_025", "09_069" ), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "13_024", select = fooditem) 
-subset(wafct, code == "09_025", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "02_021", select = fooditem) 
+subset(wafct, code == "02_021", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "141.03") 
 
 dictionary.df %>% filter(ID_3 %in% c("1346.01"))
-subset(dictionary.df, ID_2 == "1359.9")
-subset(dictionary.df, ID_1 == "2731")
+subset(dictionary.df, ID_2 == "1520.02")
+subset(dictionary.df, ID_1 == "2645")
 subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
@@ -488,7 +491,7 @@ subset(wafct, str_detect(scientific_name, "Scomberomorus"),
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
 subset(dictionary.df,
-       grepl("apple", FoodName_3, ignore.case = TRUE) &
+       grepl("spice", FoodName_2, ignore.case = TRUE) &
          grepl("", FoodName_2, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards
