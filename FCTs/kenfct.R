@@ -486,10 +486,10 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "2007"]  <- "1520.01.01"
 
 #Updating the dictionary compilation -----
 #for further use (to update versions)
-v <- 1.2
+v <- "1.2.1"
 ken_genus %>% mutate(fct = "KE18") %>% 
  write.csv(., here::here("metadata",
-                        paste0("dict_fct_compilation_v",v, ".csv")), 
+                        paste0("dict_fct_compilation_v.",v, ".csv")), 
                     row.names = F)
 
 kenfct <- kenfct %>% 

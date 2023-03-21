@@ -29,8 +29,8 @@ genus <- tribble(
 
 
 #Updating the dictionary compilation -----
-file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
-             decreasing = T)[2]
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
 genus %>% mutate(fct = "JA15")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
               mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 

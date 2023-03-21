@@ -86,14 +86,18 @@ genus <- read.csv(here::here("inter-output", "ukfct_matches.csv")) %>%
   rename(ref_fctcode = "fdc_id") %>% 
   bind_rows(genus) %>% distinct()
 
+#Cassava updating dict code
+genus$ID_3[genus$ID_3 == "01520.01.01"]  <- "1520.01.01"
+
 #Checking for duplicates
 
 (dupli <- genus %>%  count(ref_fctcode) %>% 
     filter(n>1) %>% pull(ref_fctcode))
 
 #Updating the dictionary compilation -----
-file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
-             decreasing = T)[2]
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
+
 genus %>% mutate(fct = "UK21")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
               mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 

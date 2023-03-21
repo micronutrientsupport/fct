@@ -24,8 +24,8 @@ source(here::here("FCTs", fct[1]))
 eval(parse(text = paste0("source('FCTs/", fct, "')")))
   
 #Saving dictionary-to-FCTs-matches
-file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
-             decreasing = T)[2]
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
 
 for(i in 1:length(path)) {
 write.csv(read.csv(here::here("metadata", file)),

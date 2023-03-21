@@ -443,8 +443,8 @@ dictionary.df %>%
 #wa_genus <- wa_genus %>% left_join(., dictionary.df)
 
 #Updating the dictionary compilation -----
-file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v"),
-             decreasing = T)[2]
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
 
 wafct.genus %>% mutate(fct = "WA19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
