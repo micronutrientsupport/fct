@@ -14,7 +14,7 @@ var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>%
 source(here::here("MAPS_Dictionary-Protocol.R"))
 
 #Checking dictionary codes
-dictionary.df %>% filter(ID_3 == "01520.01.03")
+dictionary.df %>% filter(ID_3 == "1520.01.03")
 
 mwi_clean %>% filter(code == "MW01_0031")
 
@@ -22,8 +22,8 @@ mwi_clean %>% filter(code == "MW01_0031")
 
 mwi_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
-"MW01_0010" ,  "01520.01.02", "h",
-"MW01_0011" ,  "01520.01.01", "h",
+"MW01_0010" ,  "1520.01.02", "h",
+"MW01_0011" ,  "1520.01.01", "h",
 "MW01_0013" ,  "1550.01", "h",
 "MW01_0014" ,  "F0022.04", "h",
 "MW01_0016" ,  "118.02", "h",

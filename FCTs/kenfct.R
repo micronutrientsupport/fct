@@ -481,7 +481,8 @@ ken_genus$confidence[ken_genus$ref_fctcode == "7016"]  <- "h"
 #Sorghum, grain, white updated dict code & confidence
 ken_genus$ID_3[ken_genus$ref_fctcode == "1039"]  <- "114.03"
 ken_genus$confidence[ken_genus$ref_fctcode == "1039"]  <- "h"
-
+#Cassava updating dict code
+ken_genus$ID_3[ken_genus$ref_fctcode == "2007"]  <- "1520.01.01"
 
 #Updating the dictionary compilation -----
 #for further use (to update versions)
@@ -499,8 +500,8 @@ dim(kenfct)
 
 #Checking dictionary/ fct ids availability ----
 
-kenfct %>% filter(code %in% c("6003",
-"6004",
+kenfct %>% filter(code %in% c("6017",
+"6018",
 "6005",
 "6006")) %>% .[, c(3:4)]
 
@@ -509,6 +510,7 @@ subset(kenfct, code %in% c("13023"),
 
 subset(kenfct, code == "4006", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "F1232.02") 
+subset(kenfct, str_detect(ID_3, "01520")) 
 
 dictionary.df %>% filter(ID_3 %in% c("21439.01"))
 subset(dictionary.df, ID_2 == "1290.9")

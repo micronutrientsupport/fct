@@ -180,8 +180,8 @@ wa_genus <- tribble(
   "12_002",  "24310.02.01", "h", 
   "01_043", "23110.02", "h", 
   "12_012" , "21439.9.01", "m",
-  "02_003", "01520.01.02", "m",
-  "02_001", "01520.01.01", "m",
+  "02_003", "1520.01.02", "m",
+  "02_001", "1520.01.01", "m",
   "02_015", "1550.01", "h",
   "02_081", "1510.02", "m",
   "01_004", "112.01", "m",
@@ -470,6 +470,7 @@ subset(wafct, code %in% c("09_024", "09_025", "09_069" ),
 subset(wafct, code == "02_021", select = fooditem) 
 subset(wafct, code == "02_021", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "141.03") 
+subset(wafct, str_detect(ID_3, "01520"))
 
 dictionary.df %>% filter(ID_3 %in% c("1346.01"))
 subset(dictionary.df, ID_2 == "1520.02")

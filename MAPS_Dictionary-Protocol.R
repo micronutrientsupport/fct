@@ -1,6 +1,4 @@
 
-#install.packages("fuzzyjoin")
-
 library(tidyverse)
 library(fuzzyjoin)
 
@@ -128,78 +126,20 @@ library(fuzzyjoin)
 
 ####-----New Dictionary codes --------#####
 
-
-#Fixing names and/ typos
-# 
-# dictionary <- dictionary %>% mutate(FoodName_3 = case_when(
-#   ID_3 == "22211.01" ~ "milk, cow, full-fat, powder, unfortified", 
-#   ID_3 == "24490.02" ~ "sugar sweetened beverage, cola",
-#   TRUE ~ FoodName_3))
-#
-
-#Adding new genus to the dictionary for infant formulae
-#and changing to lower case variable FoodName_1
-
-#dictionary <- dictionary %>% add_row(
-#   ID_0 = "OT",
-#   FoodName_0 = "Other foods", 
-#   ID_1 = 2680,
-#   FoodName_1 = "Infant food and products", 
-#   ID_2 = "23991.01", 
-#   FoodName_2 =  "infant food",
-#   ID_3 = "23991.01.02",
-#   FE2_3 = "A03QA#F04.A02PR",
-#   FoodName_3 = "infant formula, milk-based, casein, powder") %>% 
-#   mutate_at("FoodName_1", str_to_lower)
-
-
-# dictionary <- dictionary %>% add_row(
-#   ID_0 = "FV",
-#   FoodName_0 = "Fruits and Vegetables", 
-#   ID_1 = 2617,
-#   FoodName_1 = "apples and products", 
-#   ID_2 = "21435.01", 
-#   FoodName_2 =  "apple juice",
-#   ID_3 = "21435.01.01",
-#   FE2_3 = "A039M#F08.A032J",
-#   FoodName_3 = "apple, juice, sweetened") 
-
-#write dictionary with new genus
-
-#write.csv(dictionary, here::here("MAPS_Dictionary_v2.3.csv"))
-########===========END=============##### 
-
-#save as output a list of genus_id and genus_name available
-
-#Adding a new item for ihs5
-#mucuna == 837 == 1701.4 == velvet bean, dried, raw 
-
-#dictionary.df <- dictionary.df %>% add_row(
-#  ID_0 = "PB",
-#  FoodName_0 = "Pulses and Beans", 
-#  ID_1 = 2546,
-#  FoodName_1 = "beans and products", 
-#  ID_2 = "1701", 
-#  FoodName_2 =  "beans, dry",
-#  ID_3 = "1701.04",
-#  FE2_3 = NA,
-#  FoodName_3 = "velvet bean, dried, raw") 
-
-#dictionary %>% 
-#write.csv(here::here('MAPS_Dictionary_v2.5.csv'), row.names = F)
-
-#dictionary %>% select(ID_3, FoodName_3) %>% filter(str_detect(ID_3, "\\b")) %>% 
-# rename(food_genus_id = "ID_3",
-#       food_genus_name = "FoodName_3") %>% 
-# write.csv(here::here('output', 'MAPS_Dictionary_v2.5.csv'), row.names = F)
-
-
 dictionary.df <- read.csv(here::here("metadata", "MAPS_Dictionary_v2.6.csv")) %>% 
   select(-starts_with("X"))
 
 dictionary.df$scientific_name <- NA
 
 colnames(dictionary.df)
+
+dictionary.df %>% filter(str_detect(ID_3, "01520"))
+
+#data corrections for dictionary.df, dict.comp and TZ_data . Seems like there were some spelling mistakes that lead to broken matches.
+#dictionary.df <- dictionary.df %>% drop_na(ID_0) # not needed, but maybe a good idea - quite a few all NA rows?
+dictionary.df$ID_3[dictionary.df$ID_3 == "01520.01.01"] <- "1520.01.01"
+dictionary.df$ID_3[dictionary.df$ID_3 == "01520.01.02"] <- "1520.01.02"
+dictionary.df$ID_3[dictionary.df$ID_3 == "01520.01.03"] <- "1520.01.03"
 
 #It was a typo that duplicated two contiguous food items,
 #here we are solving it

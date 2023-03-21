@@ -55,7 +55,7 @@ genus <- tribble(
   "5335",  "F1061.03", "h",
   "9312",  "1319.03", "h", 
   "9145" , "1319.04", "h", 
-  "25050", "01520.01.04", "m", 
+  "25050", "1520.01.04", "m", 
   "14555", "2899.01.01", "m",
   "20005", "23140.05.01", "h",
   "15175", "1570.01", "h",
@@ -118,12 +118,15 @@ names(output_table)
   
   #Checking dictionary/ fct ids availability 
   subset(output_table, fdc_id == "11670", select = c(fdc_id, food_desc, WATERg)) 
-  subset(output_table, fdc_id %in% c("7045",  "7046",  "7090",  "7906",  "7908",  "7909", "13353",  "43131"),
+  subset(output_table, fdc_id %in% c("3929", "3938"),
   select = c(fdc_id, food_desc, ID_3)) 
   subset(output_table, ID_3 == "1652.01") 
   
-  subset(output_table, grepl("paw", food_desc, ignore.case = TRUE) &
-           grepl("", food_desc, ignore.case = TRUE)
+  subset(output_table, grepl("infant", food_desc, ignore.case = TRUE) &
+           grepl("formu", food_desc, ignore.case = TRUE) &
+           #!grepl("with", food_desc, ignore.case = TRUE) &
+           grepl("Nes", food_desc, ignore.case = TRUE) &
+           WATERg  <60
          , 
          select = c(fdc_id, food_desc, ID_3, WATERg, scientific_name))
   
