@@ -385,7 +385,7 @@ wa_genus <- tribble(
 "10_025", "22230.01.02", "h", 
 "10_026", "22230.02.01", "h",
 "02_021", "1520.02.02", "h", 
-)
+ "12_014", "21439.9.12", "h")
 
 # Checking for dictionary duplicates -----
 
@@ -485,8 +485,8 @@ subset(wafct, grepl("paw", fooditem, ignore.case = TRUE) &
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
 
-subset(wafct, str_detect(fooditem, "mince|ground") & 
-         str_detect(fooditem, "Beef"), 
+subset(wafct, str_detect(fooditem, "Nectar") & 
+         str_detect(fooditem, ""), 
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))

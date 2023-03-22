@@ -5911,7 +5911,7 @@ dictionary.df[n1,13] <- scien_new
 id2 <- "1329"
 desc_new <- "kumquats, fresh, raw"
 fex2_new <- NA
-scien_new <- "citrus japonica"
+scien_new <- "citrus japonica or fortunella spp."
 taxo <- NA
 ref1 <- NA
 other_name <- NA
@@ -6278,13 +6278,15 @@ for(i in 1:length(food_desc)){
 ## ├├  Juice of fruits n.e.c. (21439.9) -----
 
 food_desc <-  c("lollies, made with fruit juice", 
-                "Beverages, cranberry-apple juice drink, bottled", 
-                "Beverages, cranberry-apricot juice drink, bottled", 
-                "Beverages, cranberry-grape juice drink, bottled", 
-                "Beverages, grape juice drink, canned", 
-                 "Beverages, orange and apricot juice drink, canned", 
-                "Beverages, pineapple and grapefruit juice drink, canned", 
-                "Beverages, pineapple and orange juice drink, canned")
+                "cranberry apple, juice, bottled", 
+                "cranberry apricot juice, bottled", 
+                "cranberry grape juice, bottled", 
+                "grape juice, canned", 
+                 "orange apricot juice, canned", 
+                "pineapple grapefruit juice, canned", 
+                "pineapple orange juice, canned",
+                "mango, nectar, canned"
+                )
 
 other_name <- c(NA)
 scientific_name <- c(NA)
@@ -7555,7 +7557,8 @@ dictionary.df[n1,13] <- scien_new
 #  
 food_desc <- c( "chocolate almond milk, beverages",                  
                   "chocolate syrup, beverage", 
-                "baking chocolate, unsweetened, squares") 
+                "baking chocolate, unsweetened, squares", 
+                "candies, chocolate covered, caramel with nuts") 
 
 for(i in 1:length(food_desc)){
  
