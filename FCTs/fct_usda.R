@@ -101,7 +101,9 @@ genus <- tribble(
   "43031", "F0666.05", "m", 
   "4058", "21691.07.01", "m",
   "11886", "21321.01", "m",
-  "11655", "21329.01", "h"
+  "11655", "21329.01", "h", 
+  "11170", "21399.03.01", "h", 
+  "19162", "23670.01.01", "m"
   )
   
 #Updating the dictionary compilation -----
@@ -126,11 +128,11 @@ names(output_table)
   
   #Checking dictionary/ fct ids availability 
   subset(output_table, fdc_id == "11886", select = c(fdc_id, food_desc, WATERg)) 
-  subset(output_table, fdc_id %in% c("11886", "11655"),
+  subset(output_table, fdc_id %in% c("19162"),
   select = c(fdc_id, food_desc, ID_3)) 
   subset(output_table, ID_3 == "21691.07.01") 
   
-  subset(output_table, grepl("juice", food_desc, ignore.case = TRUE) &
+  subset(output_table, grepl("brine", food_desc, ignore.case = TRUE) &
            grepl("", food_desc, ignore.case = TRUE) &
            #!grepl("with", food_desc, ignore.case = TRUE) &
            grepl("^11", fdc_id, ignore.case = TRUE) 
@@ -138,9 +140,9 @@ names(output_table)
          select = c(fdc_id, food_desc, ID_3, WATERg, scientific_name))
   
   dictionary.df %>% filter(ID_3%in%c("21321.01", "21329.01"))
-  subset(dictionary.df, ID_2 == "21439.9")
+  subset(dictionary.df, ID_2 == "23991.02")
   subset(dictionary.df, ID_1 == "2541")
-  subset(dictionary.df, ID_0 == "PB")
-  subset(dictionary.df, grepl("juice", FoodName_3, ignore.case = TRUE))
+  subset(dictionary.df, ID_0 == "FV")
+  subset(dictionary.df, grepl("sweet", FoodName_3, ignore.case = TRUE))
   subset(dictionary.df, grepl("sugar", Description1, ignore.case = TRUE))
   
