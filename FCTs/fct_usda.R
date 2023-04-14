@@ -19,7 +19,8 @@
 #Loading data and library needed
 
 #Loading the standardised FCT
-output_table <- read.csv(here::here("inter-output", "US19_FCT_FAO_Tags.csv"))
+output_table <- read.csv(here::here("inter-output", "US19_FCT_FAO_Tags.csv"),
+                         encoding = "latin1") 
 #Loading the food dictionary
 source(here::here("MAPS_Dictionary-Protocol.R"))
 #Loading functions

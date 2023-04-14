@@ -227,7 +227,7 @@ wa_genus <- tribble(
   "01_101",  "23140.07.01", "m", 
    "04_011", "1699.08", "m", 
   "04_003", "1241.9.02", "h",
-  "09_004", "1527.02", "h",
+  "09_004", "1529.02", "h",
   "02_002", "1520.02.01", "h",
  "09_053", "1505.00.01", "l",
  "09_007", "1503.04", "h", 
@@ -296,7 +296,7 @@ wa_genus <- tribble(
 "07_017", "21182.01", "h", 
 "07_027", "21183.01", "h",
 "07_044", "21170.92.04", "h",
-"13_008", "F1232.11", "h", 
+"13_008", "F1232.17", "h", 
 "03_154", "F1232.15", "h", 
  "04_0162", "1290.9.12", "h",
  "05_011", "1359.9.03", "h",
@@ -327,7 +327,7 @@ wa_genus <- tribble(
 "10_018", "2293.01", "h", 
 "10_003", "2292.01", "h", 
 "10_023", "2291.01", "h",
-"09_001", "1527.03", "h",
+"09_001", "1529.03", "h",
 "01_100",  "F1232.17", "h",
 "01_168",  "F1232.05", "m", 
 "02_039", "23170.01.04", "h",
@@ -335,7 +335,8 @@ wa_genus <- tribble(
 "02_043", "1591.02", "h", 
 "04_008", "1219.01.01", "h", 
 "05_012", "1359.9.01", "h", 
-"04_001", "1359.9.02", "h",
+"05_004", "1359.9.02", "h",
+"04_001", "21393.9.01", "h",
 "12_009", "23912.02.02", "m", 
 "13_017", "F1232.06", "h", 
 "14_033", "F1232.18", "h", 
@@ -390,7 +391,8 @@ wa_genus <- tribble(
 "10_028", "22251.01.05", "h", 
 "10_008", "22251.01.06", "h", 
 "10_007", "22254.01", "h", 
-"10_027", "22251.01.07", "h")
+"10_027", "22251.01.07", "h",
+"09_005", "1529.04", "h")
 
 # Checking for dictionary duplicates -----
 
@@ -472,8 +474,8 @@ wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
 subset(wafct, code %in% c("09_024", "09_025", "09_069" ), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "02_021", select = fooditem) 
-subset(wafct, code == "02_021", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "09_004", select = fooditem) 
+subset(wafct, code == "09_004", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "141.03") 
 subset(wafct, str_detect(ID_3, "01520"))
 
@@ -490,8 +492,8 @@ subset(wafct, grepl("paw", fooditem, ignore.case = TRUE) &
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER))
 
-subset(wafct, str_detect(fooditem, "Cheese") & 
-         str_detect(fooditem, ""), 
+subset(wafct, str_detect(fooditem, "Tuna") & 
+         grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))

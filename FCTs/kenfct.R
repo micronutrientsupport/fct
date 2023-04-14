@@ -297,7 +297,7 @@ ken_genus <- tribble(
  "15130" ,"F0020.05", "h",
  "15003", "F0022.04", "m", 
  "15025", "F0022.07", "m",
- "7001" , "21111.01.03", "h",
+ "7001" , "21111.02.03", "h",
  "7002" , "21111.02.01", "l", #All other are w/o bones, we assumed the same 
  "4003",  "1290.9.06", "h",
  "4029", "1290.9.07", "h",
@@ -344,7 +344,7 @@ ken_genus <- tribble(
  "5026", "21439.9.03", "h", 
  "5035", "21439.01.01", "h",
  "5018", "1349.2.01", "h",
- "5039", "1346.02", "h",
+ "5039", "1319.04", "h",
  "7015", "21156.01", "h",
  "7018", "21155.01", "h",
  "5005", "21419.99.01", "h", 
@@ -460,7 +460,7 @@ ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.02"
 #23161.02 (whether imported or produced), hence we are changing
 ken_genus$ID_3[ken_genus$ref_fctcode == "1034"] <-  "23161.02.01"
 #Fixing beef to acc. for fat content variability
-ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.01.02"
+ken_genus$ID_3[ken_genus$ref_fctcode == "7004"] <-  "21111.02.02"
 #Amend baking powder (1699.05) --> F1232.07 - Removing the code very high Ca (see documentation)
 ken_genus$ID_3[ken_genus$ref_fctcode == "13002"] <-  NA #"F1232.07"
 #Fixing samosa dictionary code

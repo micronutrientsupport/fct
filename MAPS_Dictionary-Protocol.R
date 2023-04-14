@@ -8268,10 +8268,12 @@ dictionary.df[n1,13] <- scien_new
 
 dictionary.df$FoodName_2 <- str_squish(dictionary.df$FoodName_2)
 
-dictionary.df[, c("FoodName_1", "FoodName_2", "FoodName_3",
-              "scientific_name")] <- apply(dictionary.df[, 
-                                    c("FoodName_1", "FoodName_2", "FoodName_3",
-                                      "scientific_name")], 2, tolower) 
+dictionary.df <- dictionary.df %>% mutate(across(c("FoodName_1", "FoodName_2", "FoodName_3",
+                                  "scientific_name"), str_squish))
+
+#dictionary.df[, c("FoodName_1", "FoodName_2", "FoodName_3",
+#              "scientific_name")] <- apply(dictionary.df[, c("FoodName_1", "FoodName_2", "FoodName_3",
+#                                      "scientific_name")], 2, tolower) 
 
 dictionary.df <- dictionary.df %>% arrange(.)
 
