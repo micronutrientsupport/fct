@@ -4,7 +4,8 @@
 #Loading the standardised FCT
 output_table <- read.csv(here::here("inter-output", "UK21_FCT_FAO_Tags.csv"))
 #Loading the food dictionary
-source(here::here("MAPS_Dictionary-Protocol.R"))
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
 #Loading functions
 source(here::here("functions.R"))
 #Loading formatting data

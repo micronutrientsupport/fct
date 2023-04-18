@@ -23,6 +23,10 @@
 
 library(tidyverse)
 
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+
 ##1) LOADING WEST-AFRICA FCT 
 
 #Check all the sheet in the spreadsheet
@@ -149,9 +153,6 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
 
 var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
   select(Column.Name) %>% pull()
-
-source(here::here("MAPS_Dictionary-Protocol.R"))
-
 
 
 #check 24490 in dictionary
@@ -392,7 +393,18 @@ wa_genus <- tribble(
 "10_008", "22251.01.06", "h", 
 "10_007", "22254.01", "h", 
 "10_027", "22251.01.07", "h",
-"09_005", "1529.04", "h")
+"09_005", "1529.04", "h", 
+"09_110", "1532.02", "h", 
+"09_111", "1532.03", "h", 
+"08_009", "232.01", "h", 
+"08_008", "232.02", "h", 
+"08_006", "232.03", "h", 
+"08_007", "232.04", "h", 
+"05_033", "21419.02.01", "h", 
+"05_029", "1324.03", "h", 
+"01_002", "1193.01", "h", 
+ "01_050", "1193.04", "h", # used white bc it's same specie (scientific name)
+)
 
 # Checking for dictionary duplicates -----
 
@@ -464,7 +476,7 @@ wafct <- wafct %>%
   left_join(., wafct.genus, by = c("code" = "ref_fctcode"))
 
 # Checking dictionary codes
-wafct.genus %>% filter(ID_3 == "F0623.02")
+wafct.genus %>% filter(ID_3 == "")
 wafct.genus %>% filter(ref_fctcode == "05_011")
 wafct %>% filter(code == "02_021") %>% glimpse()
 
@@ -475,12 +487,12 @@ subset(wafct, code %in% c("09_024", "09_025", "09_069" ),
        select = c(code, fooditem, ID_3, scientific_name))
 
 subset(wafct, code == "09_004", select = fooditem) 
-subset(wafct, code == "09_004", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, code == "01_050", select = c(fooditem, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "141.03") 
 subset(wafct, str_detect(ID_3, "01520"))
 
-dictionary.df %>% filter(ID_3 %in% c("1346.01"))
-subset(dictionary.df, ID_2 == "22251.01")
+dictionary.df %>% filter(ID_3 %in% c("1193.03"))
+subset(dictionary.df, ID_2 == "F1243")
 subset(dictionary.df, ID_1 == "2645")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -488,18 +500,19 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("paw", fooditem, ignore.case = TRUE) &
-         grepl("", fooditem, ignore.case = TRUE),
-       select = c(code, fooditem, scientific_name, WATER))
+subset(wafct, grepl("fonio", fooditem, ignore.case = TRUE) &
+         grepl("grains", fooditem, ignore.case = TRUE) 
+       ,
+       select = c(code, fooditem, scientific_name, WATER, ID_3))
 
-subset(wafct, str_detect(fooditem, "Tuna") & 
+subset(wafct, str_detect(fooditem, "Egg") & 
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
 subset(dictionary.df,
-       grepl("cheese", FoodName_2, ignore.case = TRUE) &
+       grepl("fig", FoodName_2, ignore.case = TRUE) &
          grepl("", FoodName_2, ignore.case = TRUE))
 
 #Rename variables according to MAPS-standards

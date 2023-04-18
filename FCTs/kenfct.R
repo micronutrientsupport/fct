@@ -26,7 +26,10 @@
 ## 1) LOADING PACKAGES, DICTIONARY, AND KENYA FCT -----
 
 library(tidyverse)
-source("MAPS_Dictionary-Protocol.R")
+
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
 
 #Check all the sheet in the spreadsheet
 readxl::excel_sheets(here::here('data', "MOH-KENFCT_2018.xlsx"))
@@ -238,7 +241,7 @@ ken_genus <- tribble(
   "13006", "1652.01", "m", 
   "13007", "1652.02", "m", 
   "7009", "21121.03", "h", 
-  "8010", "1501.05", "m",
+  "8010", "1503.03", "h",
   "1007", "F0020.01", "m",
   "6008", "22241.02.01", "h", 
    "1034" ,  "23161.01.01", "m",
@@ -422,7 +425,11 @@ ken_genus <- tribble(
  "4006", "1212.05", "h", 
  "2012", "1290.9.11", "m", 
  "2010" ,"1290.9.13", "h", 
- "2011", "1290.9.14", "h"
+ "2011", "1290.9.14", "h", 
+ "1022",  "23120.03.01", "m",#No info on fermentation
+ "8005", "1503.01", "h", 
+ "8013", "1514.02", "h",
+ "8008", "1505.08", "h"
  )
 
 
@@ -508,27 +515,27 @@ kenfct %>% filter(code %in% c("6017",
 subset(kenfct, code %in% c("13023"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "4006", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "8008", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "F1232.02") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("21439.01"))
+dictionary.df %>% filter(ID_3 %in% c("1503.03"))
 subset(dictionary.df, ID_2 == "1290.9")
 subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
 subset(dictionary.df, ID_1 == "2602")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("radi", fooditem, ignore.case = TRUE) &
-         grepl("", fooditem, ignore.case = TRUE),
-       select = c(code, fooditem, scientific_name, WATER))
+subset(kenfct, grepl("maize", fooditem, ignore.case = TRUE) &
+         grepl("flour", fooditem, ignore.case = TRUE),
+       select = c(code, fooditem, scientific_name, WATER, ID_3))
 subset(kenfct, str_detect(code, "^5"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name)) %>% View()
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
-subset(dictionary.df, grepl("radi", FoodName_3, ignore.case = T) &
-              grepl("", FoodName_2, ignore.case = T))
+subset(dictionary.df, grepl("maize", FoodName_3, ignore.case = T) &
+              grepl("flour", FoodName_2, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))

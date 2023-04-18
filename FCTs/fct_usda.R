@@ -22,8 +22,11 @@
 output_table <- read.csv(here::here("inter-output", "US19_FCT_FAO_Tags.csv"),
                          encoding = "latin1") 
 #Loading the food dictionary
-source(here::here("MAPS_Dictionary-Protocol.R"))
-#Loading functions
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+          
+
+   #Loading functions
 source(here::here("functions.R"))
 #Loading formatting data
 var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
@@ -104,7 +107,16 @@ genus <- tribble(
   "11886", "21321.01", "m",
   "11655", "21329.01", "h", 
   "11170", "21399.03.01", "h", 
-  "19162", "23670.01.01", "m"
+  "19162", "23670.01.01", "m", 
+  "20028", "F1232.31", "h",
+  "9032", "21419.01.01", "h", 
+  "9094", "21419.02.01", "h", 
+  "9291", "21412.01", "h", 
+  "20004", "115.01", "h", 
+  "19400", "F0623.06", "h", 
+  "16090", "142.04", "h",
+  "3184", "23991.01.05", "h", 
+  "3216", "23991.01.06", "h"
   )
   
 #Updating the dictionary compilation -----
@@ -129,9 +141,9 @@ names(output_table)
   
   #Checking dictionary/ fct ids availability 
   subset(output_table, fdc_id == "11886", select = c(fdc_id, food_desc, WATERg)) 
-  subset(output_table, fdc_id %in% c("19162"),
+  subset(output_table, fdc_id %in% c("19400"),
   select = c(fdc_id, food_desc, ID_3)) 
-  subset(output_table, ID_3 == "21691.07.01") 
+  subset(output_table, ID_3 == "23140.05.01") 
   
   subset(output_table, grepl("brine", food_desc, ignore.case = TRUE) &
            grepl("", food_desc, ignore.case = TRUE) &
@@ -140,10 +152,10 @@ names(output_table)
          , 
          select = c(fdc_id, food_desc, ID_3, WATERg, scientific_name))
   
-  dictionary.df %>% filter(ID_3%in%c("21321.01", "21329.01"))
-  subset(dictionary.df, ID_2 == "23991.02")
-  subset(dictionary.df, ID_1 == "2541")
+  dictionary.df %>% filter(ID_3%in%c("23140.05.01", "21329.01"))
+  subset(dictionary.df, ID_2 == "23991.01")
+  subset(dictionary.df, ID_1 == "2513")
   subset(dictionary.df, ID_0 == "FV")
-  subset(dictionary.df, grepl("sweet", FoodName_3, ignore.case = TRUE))
+  subset(dictionary.df, grepl("banana", FoodName_3, ignore.case = TRUE))
   subset(dictionary.df, grepl("sugar", Description1, ignore.case = TRUE))
   

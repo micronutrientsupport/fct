@@ -465,7 +465,7 @@ dictionary.df$ID_2[dictionary.df$ID_2 == "23121.01"] <- "23120.01"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23140.05.01"] <- "barley, pearl, grain, dried, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "114.01"] <- "sorghum grain, average, dried, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "114.01"] <- "sorghum grain, average, dried, raw"
-dictionary.df$FoodName_3[dictionary.df$ID_3 == "1193.03"] <- "fonio grain, white, refined, dried, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "1193.04"] <- "fonio grain, white, refined, dried, raw"
 #Adding other names
 dictionary.df$Description2[dictionary.df$ID_3 == "23161.01.01"] <- "rice grain, white, polished, dried, raw"
 dictionary.df$Description2[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, white, polished, dried, raw"
@@ -1490,43 +1490,69 @@ dictionary.df[n1,9] <- "milk, cow, skimmed, raw"
 dictionary.df[n1,13] <- "bos taurus"
 
 
-##├├  Fish -----
+##  Fish -----
 
-# Pelagic fish fillet
+##├├ Pelagic fish, fillet, fresh, raw (1529) ----
 
 fish_name <- tolower(c("Barracudas nei", "Seerfishes nei", "Sardinellas nei",
-                       "True tunas nei"))
+                       "True tunas nei", 
+                       "atlantic horse mackerel",
+                       "common dolphinfish", "european anchovy"))
 
-isscaap <- c( "37", "36", "35", "36")
+scientific_name <- tolower(c("Sphyraena spp.", "Scomberomorus spp.", 
+                             "Sardinella spp." , "Thunnus spp.", 
+                           "trachurus trachurus",
+                           "coryphaena hippurus", "engraulis encrasicolus"))
 
-taxo <- c("17710001XX", "17501015XX", "12105012XX", "17501026XX")
+other_name <- c("Barracuda", "Mackerel", "Sardines, 
+                Dagaa", "Tuna", NA, "mahi mahi (WA19)", "anchovy" )
 
-alpha <- c("BAR", "KGX", "SIX", "TUS")
 
-other_name <- c("Barracuda", "Mackerel", "Sardines, Dagaa", "Tuna" )
+isscaap <- c( "37", "36", "35", "36", "37", "37", NA)
 
-fish_scientific <- tolower(c("Sphyraena spp.", "Scomberomorus spp.", 
-                             "Sardinella spp." , "Thunnus spp."))
+taxo <- c("17710001XX", "17501015XX", "12105012XX",
+          "17501026XX", NA, NA)
 
+alpha <- c("BAR", "KGX", "SIX", "TUS", NA, NA, NA)
+
+fex2_new <- c(rep(NA, 7))
+
+#Manual inputs:
+id2 <- "1529"
+ref1 <-  "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
+
+
+#Auto inputs:
 for(i in 1:length(fish_name)){
   
-  id2 <- "1529"
+  desc_new <- paste0(fish_name[i], ", fillet, fresh, raw") 
   
-  n1 <- dim(dictionary.df)[1]+i
   
-  n2 <- which(dictionary.df$ID_2 %in% id2)
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
   
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
   dictionary.df[n1,] <- dictionary.df[n2,]
-  
-  dictionary.df[n1,7] <- paste0(id2, ".0", i)
-  dictionary.df[n1,8] <- NA
-  dictionary.df[n1,9] <- paste0(fish_name[i], ", fillet, fresh, raw")
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- desc_new
   dictionary.df[n1,10] <- paste0("ISSCAAP Code: ", isscaap[i],"; Taxonomic Code: ", taxo[i], "; Inter-Agency3-Alpha Code: ", alpha[i])
-  dictionary.df[n1,11] <- "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/08). (2022)"
-  dictionary.df[n1,12] <- paste0("also called ", other_name[i])
-  dictionary.df[n1,13] <- fish_scientific[i]
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- ref2
   
 }
+
 
 
 #Fish loop 
@@ -2734,49 +2760,6 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 dictionary.df[n1,14] <- ref2
 
-# 1529 - pelagic fish, fillet, fresh, raw   
-fish_name <-  c("atlantic horse mackerel",
-                "common dolphinfish")
-scientific_name <-  c("trachurus trachurus",
-                       "coryphaena hippurus")
-other_name <-  c(NA, "mahi mahi (WA19")
-
-for(i in 1:length(fish_name)){
-#Manual inputs:
-id2 <- "1529"
-desc_new <- paste0(fish_name[i], ", fillet, fresh, raw") 
-fex2_new <- NA
-taxon <- "ISSCAAP Code:37; Taxonomic Code:NA; Inter-Agency3-Alpha Code:NA"
-ref1 <-  "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
-scien_new <- scientific_name[i]
-other_name <- other_name[i]
-ref2 <- NA
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxon
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-dictionary.df[n1,14] <- ref2
-
-}
 
 
 # 1533 - pelagic fish, fillet, grilled 
@@ -6309,7 +6292,7 @@ fex2_new <- NA
 scien_new <- "syzygium cumini"
 taxo <- "545XT"
 ref1 <- "https://www.checklistbank.org/dataset/9842/taxon/545XT"
-other_name <- "jambolan, black plum, zambarau (KE18), malabar plum (used for s. cumini and s.jambos)
+other_name <- "jambolan, black plum, zambarau (KE18), malabar plum (used for s. cumini and s.jambos)"
 
 
 #Auto inputs:
@@ -7310,39 +7293,55 @@ dictionary.df[n1,9] <- "coconut, inmature, fresh, raw"
 dictionary.df[n1,13] <- "cocos nucifera"
 
 
-#infant formula, 3 months, fortified
+## ├├ Infant food (23991.01) -----
 
-id3 <- "23991.01.02"
+food_desc <- c("infant formula, 3 months, fortified", 
+               "infant formula, 6 months, fortified", 
+               "infant food, whole wheat, with apples, fortified, dried",
+               "infant food, wheat, biscuits")
 
-n1 <- dim(dictionary.df)[1]+1
+scientific_name <- c(rep(NA, 4))
 
-n2 <- which(dictionary.df$ID_3 %in% id3)
+other_name <- c(rep(NA, 2), 
+                "baby food, whole wheat, with apples, fortified, dried",
+                "baby food, GERBER, GRADUATES Lil Biscuits Vanilla Wheat (US19)")
 
-dictionary.df[n1,] <- dictionary.df[n2,]
+fex2_new <- c(rep(NA, 4)) 
 
+#Manual inputs:
+id2 <- "23991.01"
+desc1 <-  c("Preparations for infant consumption, usually containing some non-cereal ingredient (Unofficial definition)")
+ref1 <-  c(NA)
 
-dictionary.df[n1,7] <- paste0( str_extract(id3, 
-                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "infant formula, 3 months, fortified"
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
 
-#infant formula, 6 months, fortified
-
-id3 <- "23991.01.03"
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-
-dictionary.df[n1,7] <- paste0( str_extract(id3, 
-                                           "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                               as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "infant formula, 6 months, fortified"
 
 #Add - 21700.02 - shortening
 #Manual inputs:

@@ -5,7 +5,8 @@
 #Loading the standardised FCT
 output_table <- read.csv(here::here("inter-output", "JA15_FCT_FAO_Tags.csv"))
 #Loading the food dictionary
-source(here::here("MAPS_Dictionary-Protocol.R"))
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
 #Loading functions
 source(here::here("functions.R"))
 #Loading formatting data
@@ -24,6 +25,7 @@ genus <- tribble(
 "2025", "1540.04", "h", 
 "10117", "1516.03", "m", 
 "10118", "1520.11", "m", 
+"10161", "1531.01", "h"
 
 )
 
@@ -48,7 +50,7 @@ names(output_table)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(output_table, fdc_id == "1220", select = c(food_desc)) 
+subset(output_table, fdc_id == "10161", select = c(food_desc)) 
 subset(output_table, fdc_id %in% c("2022", 
                                    "2023",
                                    "2025"), select = c(food_desc)) 

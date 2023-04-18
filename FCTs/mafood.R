@@ -11,7 +11,8 @@ sum(duplicated(mwi_clean))
 var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
   select(Column.Name) %>% pull()
 #Loading the food dictionary
-source(here::here("MAPS_Dictionary-Protocol.R"))
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
 
 #Checking dictionary codes
 dictionary.df %>% filter(ID_3 == "1520.01.03")
