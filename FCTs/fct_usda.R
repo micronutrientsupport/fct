@@ -116,7 +116,8 @@ genus <- tribble(
   "19400", "F0623.06", "h", 
   "16090", "142.04", "h",
   "3184", "23991.01.05", "h", 
-  "3216", "23991.01.06", "h"
+  "3216", "23991.01.06", "h", 
+  "16138", "F1232.32", "m"
   )
   
 #Updating the dictionary compilation -----
@@ -153,7 +154,7 @@ names(output_table)
          select = c(fdc_id, food_desc, ID_3, WATERg, scientific_name))
   
   dictionary.df %>% filter(ID_3%in%c("23140.05.01", "21329.01"))
-  subset(dictionary.df, ID_2 == "23991.01")
+  subset(dictionary.df, ID_2 == "F1232")
   subset(dictionary.df, ID_1 == "2513")
   subset(dictionary.df, ID_0 == "FV")
   subset(dictionary.df, grepl("banana", FoodName_3, ignore.case = TRUE))

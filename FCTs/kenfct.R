@@ -200,8 +200,11 @@ var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>%
 #The scientific name of Coriander, leaves, fresh, raw is wrong!
 kenfct$scientific_name[kenfct$code == "13011"] <- "Coriandrum sativum"
 
-#The scientific namr of coconut (3 entries) is wrong
+#The scientific name of coconut (3 entries) is wrong
 kenfct$scientific_name[kenfct$code %in% c("10002", "10003", "10004")] <- "Cocos nucifera"
+
+#The scientific name of Arrowroot, peeled, raw is wrong!
+kenfct$scientific_name[kenfct$code == "2002"] <- "Maranta arundinacea"
 
 # Adding NA 
 kenfct$scientific_name[kenfct$code == "5030"] <- "Ananas comosus"
@@ -254,7 +257,7 @@ ken_genus <- tribble(
    "13019", "1252.01", "m", 
   "5024", "1317.01", "m", 
   "4011", "1251.01", "m", 
-  "2005", "1290.9.01", "m",
+  "2005", "1801.01", "m",
  "8002", "1505.07", "h",
  "4034", "1290.9.02", "m", 
  "2004", "1313.01", "m", 
@@ -263,7 +266,7 @@ ken_genus <- tribble(
  "1051", "1290.01.03", "m", 
  "13024", "1253.01.01", "h",
  "6007", "22120.02", "h",
- "13011", "1290.9.03", "h", 
+ "13011", "1654.01", "h", 
  "7020", "21113.02.01", "h", #assumed w/o bones bc EP = 1
   "15125", "F0022.08", "h", 
  "13015", "1699.10", "h", 
@@ -429,7 +432,13 @@ ken_genus <- tribble(
  "1022",  "23120.03.01", "m",#No info on fermentation
  "8005", "1503.01", "h", 
  "8013", "1514.02", "h",
- "8008", "1505.08", "h"
+ "8008", "1505.08", "h", 
+ "2002", "1599.1.02", "h",
+ "4017", "1233.01", "h", 
+ "4018", "21393.9.05", "h", 
+ "4027", "1235.01", "h", 
+ "4031", "1290.9.13", "h", 
+ "4033", "1290.9.14", "h"
  )
 
 
@@ -515,27 +524,28 @@ kenfct %>% filter(code %in% c("6017",
 subset(kenfct, code %in% c("13023"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "8008", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "2002", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "F1232.02") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("1503.03"))
+dictionary.df %>% filter(ID_3 %in% c("1533.05"))
 subset(dictionary.df, ID_2 == "1290.9")
 subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
-subset(dictionary.df, ID_1 == "2602")
+subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("maize", fooditem, ignore.case = TRUE) &
-         grepl("flour", fooditem, ignore.case = TRUE),
+subset(kenfct, grepl("beet", fooditem, ignore.case = TRUE) &
+         grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER, ID_3))
-subset(kenfct, str_detect(code, "^5"), 
+subset(kenfct, str_detect(code, "^4") &
+         grepl("raw", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, ID_3, foodgroup, scientific_name)) %>% View()
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
-subset(dictionary.df, grepl("maize", FoodName_3, ignore.case = T) &
-              grepl("flour", FoodName_2, ignore.case = T))
+subset(dictionary.df, grepl("beet", FoodName_3, ignore.case = T) &
+              grepl("", FoodName_2, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
