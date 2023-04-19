@@ -326,7 +326,6 @@ ken_genus <- tribble(
  "10002", "1460.01", "h", 
  "9007", "21641.01.01", "m",
  "5002", "1341.02", "h",
- "5001", "1341.03", "h", 
  "5007", "1314.01", "h", 
  "5008", "1314.02", "h", 
  "9003", "1523.01", "l", #no fish specified, we assumed cod bc it's the most common
@@ -416,7 +415,7 @@ ken_genus <- tribble(
  "13033", "F1232.16", "m" , 
  "1033", "23161.02.02", "h",
  "1003", "F0022.15", "h",
- "5001", "1341.03", "m",
+ "5001", "1341.03", "h",   
  "5006", "1319.05", "m", 
  "5009", "1359.9.04", "h",
  "5011", "1316.02", "m",
@@ -426,9 +425,9 @@ ken_genus <- tribble(
  "5037" , "1359.9.07", "h", 
  "13020", "1699.11", "h", 
  "4006", "1212.05", "h", 
- "2012", "1290.9.11", "m", 
- "2010" ,"1290.9.13", "h", 
- "2011", "1290.9.14", "h", 
+ "2012", "1290.9.09", "m", 
+ "2010" ,"1290.9.11", "h", 
+ "2011", "1290.9.12", "h", 
  "1022",  "23120.03.01", "m",#No info on fermentation
  "8005", "1503.01", "h", 
  "8013", "1514.02", "h",
@@ -524,11 +523,11 @@ kenfct %>% filter(code %in% c("6017",
 subset(kenfct, code %in% c("13023"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "50012", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "5001", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1501.02") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("1533.05"))
+dictionary.df %>% filter(ID_3 %in% c("1341.03"))
 subset(dictionary.df, ID_2 == "1501")
 subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
@@ -544,7 +543,7 @@ subset(kenfct, str_detect(code, "^4") &
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
-subset(dictionary.df, grepl("jack", FoodName_3, ignore.case = T) &
+subset(dictionary.df, grepl("apple", FoodName_3, ignore.case = T) &
               grepl("", FoodName_2, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
@@ -614,21 +613,21 @@ MAPS_ken %>% head()
 MAPS_ken %>% filter(str_detect(original_food_name, "lea")) %>% select(1:3) %>% knitr::kable()
 MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% knitr::kable()
 MAPS_ken %>% filter(original_food_id == "9011") %>% glimpse()
-MAPS_ken %>% filter(food_genus_id == "F0020.07")
+MAPS_ken %>% filter(food_genus_id == "1290.9.13")
 
 #Checking for duplicated items
 dim(MAPS_ken)
 which(duplicated(MAPS_ken))
 
 MAPS_ken[which(duplicated(MAPS_ken)),]
-subset(MAPS_ken, original_food_id == "1025")
+subset(MAPS_ken, original_food_id == "2010")
 
 #Checking duplicates in dictionary codes
 sum(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
 x <- which(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
 
 ((MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"][x]))
-subset(MAPS_ken, food_genus_id == "118.02")
+subset(MAPS_ken, food_genus_id == "1290.9.14")
 
 #Checking that all dictionary codes have been matched to an entry in the dictionary
 
