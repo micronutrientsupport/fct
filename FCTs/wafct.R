@@ -271,7 +271,7 @@ wa_genus <- tribble(
  "11_015", "22241.02.01", "h", 
  "09_055", "1553.01", "l", 
  "09_006", "1514.01", "h", 
- "09_018", "1501.02", "m", 
+# "09_018", "1501.02", "m",  #dupli - it used the fillet (as described)
 "09_003",  "1527.01", "l", #need to check w/ specie
  "09_037", "1532.01", "l", #need specify in oil
  "06_029", "1491.02.01", "l", 
@@ -403,7 +403,7 @@ wa_genus <- tribble(
 "05_033", "21419.02.01", "h", 
 "05_029", "1324.03", "h", 
 "01_002", "1193.01", "h", 
- "01_050", "1193.04", "h", # used white bc it's same specie (scientific name)
+ "01_050", "1193.04", "h" # used white bc it's same specie (scientific name)
 )
 
 # Checking for dictionary duplicates -----
@@ -420,7 +420,7 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) 
 wafct.genus %>%  count(ref_fctcode) %>% 
   filter(n>1) 
                           
-subset(wafct.genus, ref_fctcode == "05_011")
+subset(wafct.genus, ref_fctcode == "09_018")
 
 #List of non-available items compared w/ mwi_genus
 
@@ -451,12 +451,7 @@ subset(wafct.genus, ref_fctcode == "05_011")
 #Checking the items of the list above
 
 dictionary.df %>% 
-  filter(ID_3 %in% c("F0022.04", "118.02", "23120.03.01", 
-                       "F0022.02", "1701.03", "141.02", 
-                       "142.02", "142.05", "21111.01.01",
-                       "21170.01.03", "1212.02", "1214.03", 
-                       "1270.01", "1341.01", "1316.01", 
-                       "21700.02.01", "1802.01","2899.01.01"))
+  filter(ID_3 %in% c("1503.06"))
 
 
 #wa_genus <- wa_genus %>% left_join(., dictionary.df)
@@ -500,12 +495,12 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("fonio", fooditem, ignore.case = TRUE) &
+subset(wafct, grepl("sesam", fooditem, ignore.case = TRUE) &
          grepl("grains", fooditem, ignore.case = TRUE) 
        ,
        select = c(code, fooditem, scientific_name, WATER, ID_3))
 
-subset(wafct, str_detect(fooditem, "Egg") & 
+subset(wafct, str_detect(fooditem, "trout|Trout") & 
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 

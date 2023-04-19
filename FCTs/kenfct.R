@@ -326,7 +326,7 @@ ken_genus <- tribble(
  "10002", "1460.01", "h", 
  "9007", "21641.01.01", "m",
  "5002", "1341.02", "h",
- "50012", "1341.03", "h", 
+ "5001", "1341.03", "h", 
  "5007", "1314.01", "h", 
  "5008", "1314.02", "h", 
  "9003", "1523.01", "l", #no fish specified, we assumed cod bc it's the most common
@@ -524,18 +524,18 @@ kenfct %>% filter(code %in% c("6017",
 subset(kenfct, code %in% c("13023"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "2002", select = c(fooditem, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "F1232.02") 
+subset(kenfct, code == "50012", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "1501.02") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
 dictionary.df %>% filter(ID_3 %in% c("1533.05"))
-subset(dictionary.df, ID_2 == "1290.9")
+subset(dictionary.df, ID_2 == "1501")
 subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("beet", fooditem, ignore.case = TRUE) &
+subset(kenfct, grepl("", fooditem, ignore.case = TRUE) &
          grepl("", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER, ID_3))
 subset(kenfct, str_detect(code, "^4") &
@@ -544,7 +544,7 @@ subset(kenfct, str_detect(code, "^4") &
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
-subset(dictionary.df, grepl("beet", FoodName_3, ignore.case = T) &
+subset(dictionary.df, grepl("jack", FoodName_3, ignore.case = T) &
               grepl("", FoodName_2, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &

@@ -1498,7 +1498,7 @@ fex2_new <- c(rep(NA, 7))
 #Manual inputs:
 id2 <- "1529"
 ref1 <-  "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
-
+ref2 <- NA
 
 #Auto inputs:
 for(i in 1:length(fish_name)){
@@ -6942,18 +6942,11 @@ dictionary.df$Description2[dictionary.df$ID_3 == "23511.02.01"] <- "jaggery, pan
 dictionary.df$Desc1.ref2[dictionary.df$ID_3 == "23511.02.01"] <- "https://doi.org/10.1016/j.foodchem.2017.01.134"
 
 #Correcting food item classification: 1- food item code, 2- sub-classification
-subset(dictionary.df, ID_3 == "F1232.07", select = c(1:6))
-subset(dictionary.df, ID_2 == "F1232", select = c(1:6))
-unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
-#Amend yeast (1699.04) --> F1232.06
-dictionary.df$ID_3[dictionary.df$ID_3 == "1699.04"] <-  "F1232.06"
-dictionary.df[which(dictionary.df$ID_3 == "F1232.06"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
-#Amend baking powder (1699.05) --> F1232.07
-dictionary.df$ID_3[dictionary.df$ID_3 == "1699.05"] <- "F1232.07"
-dictionary.df[which(dictionary.df$ID_3 == "F1232.07"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
-#Amend tabasco sauce (1699.06)  --> F1232.08
-dictionary.df$ID_3[dictionary.df$ID_3 == "1699.06"] <- "F1232.08"
-dictionary.df[which(dictionary.df$ID_3 == "F1232.08"), c(1:6)] <- unique(subset(dictionary.df, ID_2 == "F1232", select = c(1:6)))
+subset(dictionary.df, ID_3 == "1699.05")
+##Removing:: Amend yeast (1699.04) --> F1232.06
+##Amend baking powder (1699.05) --> F1232.07
+dictionary.df <- subset(dictionary.df, !ID_3 %in% c("1699.04", "1699.05"))
+##Amend tabasco sauce (1699.06)  --> F1232.08 (Not updated)
 
 
 #├ New category from ID_2 ----
@@ -7054,6 +7047,7 @@ for(i in 1:length(food_desc)){
 ## ├├  Food preparations (incl. sauces) (F1232) -----
 
 food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge", 
+                "yeast, baking", "baking powder", 
                 "baking soda, powder", "groundnut sauce", 
                 "soup, tomato, condensed, canned", 
                 "stock cube, beef", "stock cube, chicken", 
@@ -7068,10 +7062,10 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "baked beans", "luncheon beef",
                 "couscous, wheat", "falafel")
 
-scientific_name <- c(rep(NA,14), "zea mays", rep(NA, 7), "triticum durum",
+scientific_name <- c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
                      NA)
 
-other_name <- c(NA, NA, NA, NA, NA, "bicarbonate of soda", NA, NA, 
+other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA, 
                 "beef seasoning cube", "chicken seasoning cube", 
                 "vegetable seasoning cube", "low Na seasoning cube" ,
                 "boussan touba (Burkina Faso) (WA19), beans akara (Sierra Leone)", 
@@ -7081,7 +7075,11 @@ other_name <- c(NA, NA, NA, NA, NA, "bicarbonate of soda", NA, NA,
                 rep("Banakou né (Burkina Faso) (WA19), Yebbe (Sierra Leone)", 3), 
                 rep(NA, 4))
 
-fex2_new <- c(NA)
+fex2_new <- c(rep(NA, 5), "A049A#F02.A06CK$F01.A066J$F27.A049A", 
+              "A048Q#F02.A06CG", 
+              rep(NA, 19))
+
+# Fixed input
 id2 <- "F1232"
 desc1 <-  "Including both crop and livestock products. Inter alia: homogenized composite food preparations; soups and broths; ketchup and other sauces; mixed condiments and seasonings; vinegar and substitutes; yeast and baking powders; stuffed pasta, whether or not cooked; couscous; and protein concentrates. Include inter alia: turtle eggs and birds' nests. (Unofficial definition)"
 ref1 <-  c(NA)
@@ -7107,7 +7105,7 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,] <- dictionary.df[n2,]
   #New entry - population:
   dictionary.df[n1,7] <- id3_new
-  dictionary.df[n1,8] <- fex2_new
+  dictionary.df[n1,8] <- fex2_new[i]
   dictionary.df[n1,9] <- food_desc[i]
   dictionary.df[n1,10] <- desc1
   dictionary.df[n1,11] <- ref1[i]

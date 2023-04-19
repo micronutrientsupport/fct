@@ -123,4 +123,20 @@ names(fbs)
 
 subset(fbs, str_detect(original_name, "apples and products"), 
        select = c(original_name, food_genus_id)) %>% distinct()
-       
+
+
+# Amending dict codes: typos
+fbs$food_genus_id[fbs$food_genus_id == "01520.01.01"] <- "1520.01.01"
+# Amending dict codes: cabbages, raw to cabbage, white
+fbs$food_genus_id[fbs$food_genus_id == "1212.01"] <- "1212.03"
+#trout to tilapia
+fbs$food_genus_id[fbs$food_genus_id == "1501.01"] <- "1503.01"
+#beef offals to liver
+fbs$food_genus_id[fbs$food_genus_id == "21151.01"] <- "21151.02"
+#pig fat to lard
+fbs$food_genus_id[fbs$food_genus_id == "21521.01"]  <- "F1243.01"
+
+
+
+#Bug fixed    
+readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv"))
