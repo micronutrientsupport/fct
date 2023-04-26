@@ -47,6 +47,7 @@ output/
 inter-output/
 *.csv
 *.xlsx
+*.accdb
 
 #Images and document
 
