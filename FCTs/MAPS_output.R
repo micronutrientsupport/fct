@@ -19,8 +19,9 @@ MAPS_output <- fct %>%
 
 
 
-### Other scripts
+### Other scripts 
   
+#KE18
 MAPS_ken <- kenfct %>% 
   left_join(.,dictionary.df %>% 
               select(ID_3, FoodName_3, 
@@ -76,9 +77,7 @@ MAPS_ken <- kenfct %>%
     vitamine_in_mg = "NA",
     folicacid_in_mcg = "NA") %>% select(var.name)
 
-
-# Rename variables according to MAPS-standards
-
+#WA19
 MAPS_output <- fct %>%
   left_join(.,dictionary.df %>% 
               select(ID_3, FoodName_3, 
@@ -133,6 +132,62 @@ MAPS_output <- fct %>%
     vitamine_in_mg = "VITE", 
     phytate_in_mg = "PHYTCPP") %>% 
   select(var.name)
+
+#UK21
+
+%>% 
+  mutate_at(c("RETOLmcg", "CARTBEQmcg"), as.numeric) %>% 
+  VITA_RAEmcg_std_creator() %>% 
+  rename(
+    original_food_id = "fdc_id",
+    original_food_name = "food_desc",
+    food_genus_id = "ID_3",
+    food_genus_description = "FoodName_3",
+    food_group = "FoodName_0",
+    food_subgroup = "FoodName_1", 
+    food_genus_confidence = "confidence",
+    fct_name = "source_fct",
+    data_reference_original_id = "nutrient_data_source",
+    moisture_in_g = "WATERg",
+    energy_in_kcal = "ENERCkcal",
+    energy_in_kj = "ENERCkJ",
+    totalprotein_in_g = "PROCNTg",
+    nitrogen_in_g = "NTg", 
+    totalfats_in_g = "FAT_g",
+    saturatedfa_in_g = "FASATg", 
+    monounsaturatedfa_in_g = "FAMSg", 
+    polyunsaturatedfa_in_g = "FAPUg", 
+    cholesterol_in_mg = "CHOLmg",
+    carbohydrates_in_g = "CHOAVLg", 
+    fibre_in_g = "FIBTGg", 
+    ca_in_mg = "CAmg", 
+    fe_in_mg = "FEmg",
+    mg_in_mg = "MGmg",
+    p_in_mg = "Pmg",
+    k_in_mg = "Kmg",
+    na_in_mg = "NAmg", 
+    zn_in_mg = "ZNmg",
+    se_in_mcg = "SEmcg",
+    i_in_mcg = "IDmcg",
+    cu_in_mg = "CUmg",
+    mn_in_mcg = "MNmg",
+    vitamina_in_rae_in_mcg = "VITA_RAEmcg_std", #Re-calculated
+    thiamin_in_mg = "THIAmg",
+    riboflavin_in_mg = "RIBFmg", 
+    niacin_in_mg = "NIAmg", 
+    folate_in_mcg = "FOLmcg", # This should be reviewed
+    vitaminb12_in_mcg = "VITB12mcg",
+    vitaminc_in_mg = "VITCmg",
+    phytate_in_mg = "Total.PHYTO", 
+    vitaminb6_in_mg = "VITB6_mg",
+    pantothenate_in_mg = "PANTACmg",
+    biotin_in_mcg = "BIOTmcg",
+    vitamind_in_mcg = "VITDmcg",
+    vitamine_in_mg = "VITEmg") %>% 
+  mutate(
+    folicacid_in_mcg = "NA", 
+    ash_in_g = "NA") %>% select(var.name)
+
 
 
 # Testing values

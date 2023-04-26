@@ -99,6 +99,7 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 
 **Version log**
 
+V.2.0.0 updated on 2023/04/26 - Important changes in dictionary codes, bug fixed on values that were reported with brackets.
 V.1.6 updated on 2021/10/13 - Changed phytic acid to phytate, added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
 
 ID:WA19
@@ -124,6 +125,15 @@ UPDATE: Add rename to Energy variables following the standard that it is set bel
  +ENERC1 = ENERC...10 = Energy in kcal; 
  +ENERC2 = ENERC...10 = Energy in kJ).
  
+### 2. Harmonising the data
+
+#### 2.2. Special characters
+
+Currently, we are, when possible, adding values within the bracket to a new column, or updating an existing if it was empty. Then, we are keeping the values in the table in the same column, this is to help with minimising the missing values when doing food matching. 
+
+#TBD: Adding that information to the metadata "comment" column. 
+
+- Below is point the history of thoughts around it. 
 
 There is an issue with values that are between [ ], when converting the variable into numeric those values are coerced as NA. There are two types of data between brackets: 1) Data that has been calculated using a different method or that report a different type of data (i.e. FIBTG vs FIBC). 2) Data that is of low quality. This is the case for minerals. 
 
@@ -1022,14 +1032,25 @@ sugar cane
 fructose, powder
 wine rose
 
-#### 15) CoFID fct (UK FCT) -----------
+## 15) UK FCT (CoFID FCT) -----------
 
 **Version log**
 
 V.1.0 generated on 2021/10/12
 V.1.1 updated on 2021/10/13 - Changed "N" to zero using the same function as for "Tr".
 
+ID: UK21
+
+### 1. Obtaining the data
+
+The data can be obtained from the UK website [here]().
+
+All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]()
+
 #### Data cleaning
+
+
+
 
 ##### Food components and other variables
 
@@ -1077,13 +1098,32 @@ https://en.wikipedia.org/wiki/Red_algae.
 **Other food**
 We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should be reviewed in the future. 
 
-#### 16) Japan FCT (2015)
+## 16) Japan FCT (2015)
+
+**Version log**
+
 
 ID: JA15
 
+### 1. Obtaining the data
 
+The data can be obtained from the UK website [here]().
+
+All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]().
+
+## 17) US FCT (2019)
 
 **Version log**
+
+
+ID: US19
+
+### 1. Obtaining the data
+
+The data can be obtained from the US FoodCentral website [here]().
+
+All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]().
+
 
 ## MAPS formatting
 

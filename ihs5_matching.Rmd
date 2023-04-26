@@ -143,3 +143,27 @@ Items that doesn't match and/or are redundant
 - 23161.01.01 - Rice, imported. 
 - F1232.08 - Baking soda --> Substitution of baking powder (and yeast)
 
+#### List of non-available items in WA19 compared w/ mwi_genus
+
+F0022.04 = scones 
+118.02 - only pearl millet
+23120.03.01 = maize, flour, white, unrefined, non-fermented, raw
+F0022.02 = dough, sweet, fried?
+Check type of plantain
+Check type of sorghum
+1701.03
+141.02
+Check peanuts - all shelled
+142.02 - check shelled?
+142.05 - check shelled?
+21111.01.01 - check it said w/ bones
+21170.01.03
+1212.02
+Check leaves - fresh or dried??
+1214.03
+1270.01
+(1341.01) - apple here is w/ skin
+(1316.01) - check mangoes here conservative pale flesh
+21700.02.01 - margarine only fortified
+1802.01
+2899.01.01

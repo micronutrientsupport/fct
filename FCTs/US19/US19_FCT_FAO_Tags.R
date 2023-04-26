@@ -6,7 +6,7 @@ source(here::here("functions.R"))
 # Data Import ----
 
 #legacy_database <- odbcConnectAccess2007("../../FAO/UoN-FAO/US19/SR-Leg_DB/SR_Legacy.accdb") #provides a link to the access database. Due to the database being too big to store on git, different locations have been used depending on who is running the code
-legacy_database <- odbcConnectAccess2007(here::here("US19", "SR-LEG_DB", "SR_Legacy.accdb")) #alternate database location
+legacy_database <- odbcConnectAccess2007(here::here("FCTs", "US19", "SR-LEG_DB", "SR_Legacy.accdb")) #alternate database location
 
 
 legacy_database_tables <- sqlTables(legacy_database) #Creates a list of the tables in the database
@@ -167,8 +167,8 @@ Output_table <- Composite_Table %>%
   mutate( TRPmg =  TRPg*1000, #convert TRP from g to mg
           comment = NA) %>%   
   CARTBEQmcg_std_creator() %>%
-  #  rename(CARTBEQmcg = "CARTBEQmcg_std") %>%   #Changing name of re-calculated variable for making VITA f(x) to work)
-  VITAmcg_std_creator() %>%   #Re-calcuating VITAmcg
+  rename(CARTBEQmcg = "CARTBEQmcg_std") %>%   #Changing name of re-calculated variable for making VITA f(x) to work)
+  VITAmcg_std_creator() %>%   #Re-calculating VITAmcg
   relocate(food_group, .after = food_desc) %>% #Some columns are relocated for easier reading
   relocate(source_fct, .after = food_group) %>%
   relocate(nutrient_data_source, .after = source_fct) %>%
@@ -200,5 +200,5 @@ glimpse(Output_table)
 
 # Data Output ----
 
-write.csv(Output_table, file = here::here("Output", "US19_FCT_FAO_Tags.csv"), row.names = FALSE)  #Saves the newly-created data table to the Output folder 
+write.csv(Output_table, file = here::here("FCTs", "US19_FCT_FAO_Tags.csv"), row.names = FALSE)  #Saves the newly-created data table to the Output folder 
 rm(list = ls())  #Removes all the environment variables - tidies up RStudio 

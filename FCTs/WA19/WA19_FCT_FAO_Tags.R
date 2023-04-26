@@ -14,7 +14,7 @@ library(tidyverse)
 
 # Data Import ----
 
-wafct <- readxl::read_excel(here::here('WA19', 'INFOODS-WAFCT_2019.xlsx'), sheet = 5) %>%  #Reads the excel document and assigns the relevant sheet to an R data frame
+wafct <- readxl::read_excel(here::here("FCTs", 'WA19', 'INFOODS-WAFCT_2019.xlsx'), sheet = 5) %>%  #Reads the excel document and assigns the relevant sheet to an R data frame
   mutate(source_fct = 'WA19')  #Creates the source_fct column and fills it with "WA19_FCT"
 
 
@@ -88,17 +88,14 @@ wa_meta_quality <- wafct %>% mutate_at(wa_nut,  ~case_when(
 #and reported as using [] and removing them from the original variable
 
 wafct <- wafct %>% 
-  mutate(FATCEg = str_extract(FATg, '(?<=\\[).*?(?=\\])')) %>% #Creating calculated values from the lower quality method and removing the original values from the original variable
-  mutate(FIBCg = str_extract(FIBTGg, '(?<=\\[).*?(?=\\])')) %>% #e.g. this creates the FIBCg value from the FIBTGg value
-  mutate(CARTBmcg = str_extract(CARTBEQmcg, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(TOCPHAmg = str_extract(VITEmg, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(NIAmg = str_extract(NIAEQmg, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(FOLSUMmcg = str_extract(FOLmcg, '(?<=\\[).*?(?=\\])')) %>%
-  mutate(PHYTCPPD_PHYTCPPImg = str_extract(PHYTCPPmg, '(?<=\\[).*?(?=\\])')) %>% 
-  mutate_at(c("FATg", "FIBTGg", "CARTBEQmcg", 
-              "VITEmg", "NIAEQmg", "FOLmcg", "PHYTCPPmg"),
-            ~ifelse(str_detect(. , '\\[.*?\\]') == TRUE, NA, #This removes the square brackets entries from the original column
-                    .))
+  mutate(FATCEg = str_extract(FATg, '(?<=\\[).*?(?=\\])'),  #Creating calculated values from the lower quality method and removing the original values from the original variable
+         FIBCg =  str_extract(FIBTGg, '(?<=\\[).*?(?=\\])'), #e.g. this creates the FIBCg value from the FIBTGg value
+         CARTBmcg = ifelse(is.na(CARTBmcg), str_extract(CARTBEQmcg, '(?<=\\[).*?(?=\\])'), CARTBmcg), 
+         TOCPHAmg = ifelse(is.na(TOCPHAmg),str_extract(VITEmg, '(?<=\\[).*?(?=\\])'), TOCPHAmg ),
+         NIAmg = ifelse(is.na(NIAmg), str_extract(NIAEQmg, '(?<=\\[).*?(?=\\])'), NIAmg), 
+         FOLSUMmcg = str_extract(FOLmcg, '(?<=\\[).*?(?=\\])'), 
+         PHYTCPPD_PHYTCPPImg = str_extract(PHYTCPPmg, '(?<=\\[).*?(?=\\])'))
+
 
 
 #The following f(x) removes [] and changing tr w/ 0
@@ -131,7 +128,7 @@ glimpse(wafct)
 
 # Data Output ----
 
-write.csv(wafct, file = here::here("Output", "WA19_FCT_FAO_Tags.csv"), 
+write.csv(wafct, file = here::here("FCTs", "WA19_FCT_FAO_Tags.csv"), 
           row.names = FALSE) #Saves the newly-created data table to the Output folder
 
 #Run this to clean the environment
