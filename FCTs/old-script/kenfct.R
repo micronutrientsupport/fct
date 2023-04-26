@@ -1,11 +1,11 @@
 
 ################################################################################
-#
-#                          
-#           Kenya Food Composition Table (KENFCT, 2018)
-#
-#
-#
+#                                                                              #
+#                                                                              #                          
+#           Kenya Food Composition Table (KENFCT, 2018)                        #
+#                                                                              #
+#                                                                              #
+#                                                                              #
 ################################################################################
 
 
@@ -47,6 +47,8 @@ kenfct <- readxl::read_excel(here::here('data', "MOH-KENFCT_2018.xlsx"),
   glimpse()
 
 dim(kenfct)
+
+
 
 ## 2) TIDYING KENYA FCT ----
 
@@ -183,7 +185,8 @@ kenfct %>%
 #      mutate(FOLAC = (FOLAC-FOLFD)/1.7)
 ###############################################################################   
 
-##3) MAPS type format ----
+## 3) MAPS type format ----
+
 
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv'))
 
@@ -211,6 +214,8 @@ kenfct$scientific_name[kenfct$code == "5030"] <- "Ananas comosus"
 
 #There is a typo in "Roti"
 kenfct$fooditem[kenfct$code == "15003"] <- "Roti (Indian Chapati)"
+
+
 
 ## Adding Dictionary codes (GENuS) code 
 
@@ -412,7 +417,7 @@ ken_genus <- tribble(
  "4015", "1290.9.05", "h",
  "3015", "1242.01", "h", 
  "3012",  "1241.9.01", "h", 
- "13033", "F1232.16", "m" , 
+ "13033", "F1232.10", "m" , 
  "1033", "23161.02.02", "h",
  "1003", "F0022.15", "h",
  "5001", "1341.03", "h",   
@@ -437,12 +442,12 @@ ken_genus <- tribble(
  "4018", "21393.9.05", "h", 
  "4027", "1235.01", "h", 
  "4031", "1290.9.13", "h", 
- "4033", "1290.9.14", "h"
+ "4033", "1290.9.14", "h",
+ "15129", "23161.02.05", "h",
+ "1059" , "23161.02.07", "h", 
+ "15074", "23161.02.06", "h"
  )
 
-
-
-dictionary.df %>% filter(ID_2 == "113")
 
 ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
   filter(!FCT.code %in% c("7009", "10010")) %>% #removing chicken - wrong code (21121.02) and macadamia wrong confidence
@@ -467,7 +472,6 @@ x <- if(length(dupli) == 0){NA}else{length(dupli)}
 if(!(is.na(x)))stop("duplicated code")
 
 ken_genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
-kenfct %>% filter(code %in% dupli) %>% arrange(desc(code)) %>% select(code, fooditem)
 
 #Fixing horse bean to broad bean code (but they are all fava vicia)
 ken_genus$ID_3[ken_genus$ref_fctcode == "3001"] <-  "1702.02"
@@ -507,35 +511,43 @@ ken_genus %>% mutate(fct = "KE18") %>%
                         paste0("dict_fct_compilation_v.",v, ".csv")), 
                     row.names = F)
 
+
+
+kenfct <- read.csv(file = here::here("FCTs", "KE18_FCT_FAO_Tags.csv"))
+head(kenfct)
+names(kenfct)
+kenfct %>% filter(fdc_id %in% dupli) %>% arrange(desc(fdc_id)) %>% select(fdc_id, food_desc)
+
+# Joinin with the  ke18
 kenfct <- kenfct %>% 
-  left_join(., ken_genus, by = c("code" = "ref_fctcode")) %>% 
-  relocate(ID_3, .after = fooditem)
+  left_join(., ken_genus, by = c("fdc_id" = "ref_fctcode")) %>% 
+  relocate(ID_3, .after = food_desc)
 
 dim(kenfct)
 
-#Checking dictionary/ fct ids availability ----
+# Checking dictionary/ fct ids availability ----
 
 kenfct %>% filter(code %in% c("6017",
 "6018",
 "6005",
 "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, code %in% c("13023"), 
+subset(kenfct, code %in% c("13033"), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(kenfct, code == "5001", select = c(fooditem, ID_3, scientific_name)) 
+subset(kenfct, code == "1059", select = c(fooditem, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1501.02") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
 dictionary.df %>% filter(ID_3 %in% c("1341.03"))
-subset(dictionary.df, ID_2 == "1501")
+subset(dictionary.df, ID_2 == "23161.02")
 subset(dictionary.df, ID_2 %in% c("1379.02"
                                       ))
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("", fooditem, ignore.case = TRUE) &
-         grepl("", fooditem, ignore.case = TRUE),
+subset(kenfct, grepl("rice", fooditem, ignore.case = TRUE) &
+         grepl("boil", fooditem, ignore.case = TRUE),
        select = c(code, fooditem, scientific_name, WATER, ID_3))
 subset(kenfct, str_detect(code, "^4") &
          grepl("raw", fooditem, ignore.case = TRUE),
@@ -543,8 +555,8 @@ subset(kenfct, str_detect(code, "^4") &
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(code, fooditem, ID_3, foodgroup, scientific_name))
 
-subset(dictionary.df, grepl("apple", FoodName_3, ignore.case = T) &
-              grepl("", FoodName_2, ignore.case = T))
+subset(dictionary.df, grepl("rice", FoodName_3, ignore.case = T) &
+              grepl("boil", FoodName_3, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
@@ -615,7 +627,8 @@ MAPS_ken %>% filter(str_detect(original_food_id, "120")) %>% select(1:2) %>% kni
 MAPS_ken %>% filter(original_food_id == "9011") %>% glimpse()
 MAPS_ken %>% filter(food_genus_id == "1290.9.13")
 
-#Checking for duplicated items
+# Checking for duplicated items
+
 dim(MAPS_ken)
 which(duplicated(MAPS_ken))
 

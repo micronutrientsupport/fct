@@ -95,11 +95,27 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 
 
 
-#### 1) West Africa FCT
+## 1) Western Africa FCT (2019)
 
 **Version log**
 
 V.1.6 updated on 2021/10/13 - Changed phytic acid to phytate, added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
+
+ID:WA19
+
+### 1. Obtaining the data
+
+It can be downloaded from [here](http://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx), using the following piece of code. Depending on the system, you need to use "curl" for OS X / Linux, "wininet" for Windows.
+
+```{r eval = FALSE}
+
+file <- "http://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx"
+
+download.file(file, "./FCTs/WA19/INFOODS-WAFCT_2019.xlsx",
+               method="wininet", 
+               mode="wb")
+
+```
 
 
 Since WAFCT is very recent and it has been done according to FAO/INFOODS tagname, we do not need to standardize much of the variables. Only for code, fooditem, fooditemFR, scientificName, and ref.
@@ -580,7 +596,6 @@ UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the
 
 The food item "13002 - Baking powder, dry powder" has quite extreme Ca (and other minerals) values. In addition, it has a very high standard deviation. It was not an analytical value and all the sources of the nutrient values were from abroad (see `r kenfct$biblio_id[kenfct$code == "13002"]`). Furthermore, even being used in small amounts, it was the main driver of Ca consumption in IHS4 and IHS5. Hence, we advise not using this item, and hence removing the dictionary code from it. 
 
-
 **List of Unavailable foods (from FBS)**:
 
 Refined wheat flour
@@ -1007,7 +1022,7 @@ sugar cane
 fructose, powder
 wine rose
 
-#### 15) CoFID fct (UK FCT)
+#### 15) CoFID fct (UK FCT) -----------
 
 **Version log**
 
@@ -1061,6 +1076,14 @@ https://en.wikipedia.org/wiki/Red_algae.
 
 **Other food**
 We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should be reviewed in the future. 
+
+#### 16) Japan FCT (2015)
+
+ID: JA15
+
+
+
+**Version log**
 
 ## MAPS formatting
 

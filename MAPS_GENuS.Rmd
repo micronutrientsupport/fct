@@ -228,6 +228,11 @@ ISSUE with Dictionary --> SUA and Fish share the same code!!
 ##Any "whole fat would be under raw milk
 
 # Change log
+2023/04/25
+
+-changes "rice grain, local, red" from 23161.01 to 23161.02.
+
+
 2023/04/18
 -changed "1290.9.03", coriander leaves, fresh, raw to anise, "1654.01",  anise, badian, coriander, cumin, caraway, fennel and juniper berries, raw. 
 

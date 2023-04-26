@@ -275,16 +275,7 @@ dictionary.df$FoodName_0[dictionary.df$ID_2 == "21435.01"]
 
 #Adding new entries from Ethiopia HCES - ess3
 
-dictionary.df <- dictionary.df %>% add_row(
-  ID_0 = "CE",
-  FoodName_0 = "Cereals", 
-  ID_1 = 2520,
-  FoodName_1 = "cereals, other and products", 
-  ID_2 = "1199.9", 
-  FoodName_2 =  "other cereals n.e.c.",
-  ID_3 = "1199.9.01",
-  FE2_3 = "",
-  FoodName_3 = "teff grain, dried, unrefined, raw") %>% 
+dictionary.df <- dictionary.df %>%
   add_row(
     ID_0 = "CE",
     FoodName_0 = "Cereals", 
@@ -631,101 +622,108 @@ dictionary.df[n1,7] <- paste0( str_extract(id3,
                                as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
 dictionary.df[n1,9] <- "rice, brown, boiled"
 
-#Add - 23161.01 - rice, parboiled, imported, raw
-#Manual inputs:
+## ├├  rice, milled (husked) (23161.01) -----
+
+food_desc <-  c("rice, parboiled, imported, raw",
+                "rice, parboiled, imported, boiled",
+                "rice, white, imported, steamed")
+
+other_name <- c(rep(NA, 3))
+
+scientific_name <- c(rep("oryza sativa", 3))
+
+taxon <- c(NA)
+fex2_new <- c(NA)
+
+# One input
 id2 <- "23161.01"
-desc_new <- "rice, parboiled, imported, raw"
-fex2_new <- NA
-scien_new <- NA
+desc1 <-  c("Rice, Milled (Husked): White rice milled from imported husked rice. Includes semi-milled, whole-milled and parboiled rice.")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+taxon_ref <- c(NA)
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-paste0( str_extract(id3, 
-                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
 
-n1 <- dim(dictionary.df)[1]+1
+## ├├  rice, milled (23161.02) -----
 
-n2 <- which(dictionary.df$ID_3 %in% id3)
+food_desc <-  c("rice grain, parboiled, local, dried, raw",
+                "rice grain, parboiled, local, dried, boiled",
+                "rice grain, red native, milled, local, dried, raw", 
+                "rice grain, white, local, steamed", 
+                "rice grain, white, local, boiled", 
+                "rice grain, white, polished, local, dried, boiled")
 
-dictionary.df[n1,] <- dictionary.df[n2,]
+other_name <- c(rep(NA, 2), "African rice, milled",
+                rep(NA, 3))
 
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
+scientific_name <- c(rep("oryza sativa", 2), 
+                     "oryza glaberrima", 
+                     rep("oryza sativa", 3))
 
-#Add - 23161.01 - rice, parboiled, imported, boiled
-#Manual inputs:
-id2 <- "23161.01"
-desc_new <- "rice, parboiled, imported, boiled"
-fex2_new <- NA
-scien_new <- NA
+taxon <- c(NA)
+fex2_new <- c(NA)
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-paste0( str_extract(id3, 
-                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
-
-#Add - 23161.02 - rice, parboiled, local, raw
-#Manual inputs:
+# One input
 id2 <- "23161.02"
-desc_new <- "rice, parboiled, local, raw"
-fex2_new <- NA
-scien_new <- NA
+desc1 <-  c("Rice, Milled: White rice milled from locally grown paddy. Includes semi-milled, whole-milled and parboiled rice.")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+taxon_ref <- c(NA)
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-paste0( str_extract(id3, 
-                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
 
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
-
-#Add - 23161.02 - rice, parboiled, local, boiled
-#Manual inputs:
-id2 <- "23161.02"
-desc_new <- "rice, parboiled, local, boiled"
-fex2_new <- NA
-scien_new <- NA
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-paste0( str_extract(id3, 
-                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
 
 #Add - F0020 - bread, sweet, wheat flour, refined
 #Manual inputs:
@@ -775,29 +773,55 @@ dictionary.df[n1,8] <- fex2_new
 dictionary.df[n1,9] <- desc_new
 dictionary.df[n1,13] <- scien_new
 
-#Add - 1199.9 - amaranth, grain, dried, raw
-#Manual inputs:
+
+## ├├  other cereals n.e.c. (1199.9) -----
+
+food_desc <-  c("teff grain, dried, unrefined, raw",
+                "amaranth, grain, dried, raw" )
+
+other_name <- c(rep(NA, 2))
+
+scientific_name <- c("eragrostis tef", 
+                     "amaranthus spp.")
+
+taxon <- c(NA)
+fex2_new <- c(NA)
+
+# One input
 id2 <- "1199.9"
-desc_new <- "amaranth, grain, dried, raw"
-fex2_new <- NA
-scien_new <- "amaranthus spp"
+desc1 <-  c("This subclass includes among all: Chenopodium pallidicaule (canagua or coaihua), Amaranthus caudatus (quihuicha or Inca wheat), Coix lacryma-jobi (adlay or Job's tears), Zizania aquatica (wild rice) and other cereal crops and hybrid grains that are not identified separately because of their minor relevance at the international level. (Unofficial definition)")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+taxon_ref <- c(NA)
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-n1 <- dim(dictionary.df)[1]+1
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
 
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
 
 #Add - F0022 - cake, plain butter
 #Manual inputs:
@@ -1045,35 +1069,6 @@ desc_new <- "rice grain, red native, brown, dried, raw"
 fex2_new <- NA
 scien_new <- "oryza glaberrima"
 other_name <- "African rice, hulled"
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-
-# 23161.01 - Rice, red native, milled, raw 
-#Manual inputs:
-id2 <- "23161.01"
-desc_new <- "rice grain, local, red native, milled, dried, raw"
-fex2_new <- NA
-scien_new <- "oryza glaberrima"
-other_name <- "African rice, milled"
 
 #Auto inputs:
 id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
@@ -6644,7 +6639,7 @@ food_desc <-  c("kale, leaves, fresh, raw",
                 "cabbage, red, fresh, raw",
                 "kale, acephala,leaves, fresh, raw")
 
-other_name <- c(rep(NA, 2), "Kenyan lale (sukuma wiki in swahili) (KE18)")
+other_name <- c(rep(NA, 2), "Kenyan kale (sukuma wiki in swahili) (KE18)")
 
 scientific_name <- c("brassica oleracea var. capitata", 
                      NA, 
@@ -6687,55 +6682,7 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,15] <- taxon_ref
 }
 
-## ├├  cabbages (1212) -----
 
-food_desc <-  c("kale, leaves, fresh, raw", 
-                "cabbage, red, fresh, raw",
-                "kale, acephala,leaves, fresh, raw")
-
-other_name <- c(rep(NA, 2), "Kenyan lale (sukuma wiki in swahili) (KE18)")
-
-scientific_name <- c("brassica oleracea var. capitata", 
-                     NA, 
-                     "brassica oleracea var. acephala")
-taxon <- c(NA)
-
-# One input
-fex2_new <- c(NA)
-id2 <- "1212"
-desc1 <-  c("Cabbages This subclass is defined through the following headings/subheadings of the HS 2007: 0704.20, .90.")
-ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
-taxon_ref <- c(NA)
-
-# Function: 
-for(i in 1:length(food_desc)){
-  
-  id2 <- id2
-  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                   str_replace(id3, "[[:alnum:]]{1,3}$",
-                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                       width=2, flag=0)[2]))
-  
-  n1 <- dim(dictionary.df)[1]+1
-  
-  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-               which(dictionary.df$ID_3 %in% id3))
-  
-  #New entry - generation:
-  dictionary.df[n1,] <- dictionary.df[n2,]
-  #New entry - population:
-  dictionary.df[n1,7] <- id3_new
-  dictionary.df[n1,8] <- fex2_new
-  dictionary.df[n1,9] <- food_desc[i]
-  dictionary.df[n1,10] <- desc1
-  dictionary.df[n1,11] <- ref1
-  dictionary.df[n1,12] <- other_name[i]
-  dictionary.df[n1,13] <- scientific_name[i]
-  dictionary.df[n1,14] <- taxon[i]
-  dictionary.df[n1,15] <- taxon_ref
-}
-# 
 ## ├├  sweet corn, prepared or preserved (21399.03) -----
 
 food_desc <-  c("corn, sweet, in brine, canned")

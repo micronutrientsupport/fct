@@ -1,11 +1,17 @@
 
-
+library(dplyr)
 
 
 # Loading the data
 
 fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.csv")) 
 fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) 
+
+MAPS_dict_fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) %>% 
+  select(original_id, food_genus_id, food_genus_confidence, country_id) %>% distinct()
+
+saveRDS(MAPS_dict_fbs, here::here("inter-output", "MAPS_dict_fbs_v2.1.1.rds"))
+
 source("MAPS_Dictionary-Protocol.R")
 source(here::here("FCTs", "kenfct.R"))
 source(here::here("FCTs", "wafct.R"))
@@ -25,6 +31,11 @@ all_variables <- names(fbs)[c(1:5,7)]
 
 country_fbs <- subset(fbs, country_id %in% country) %>% group_by(across(all_variables)) %>% 
   summarise(mean_supply = round(mean(amount_consumed_in_g), 2)) %>% arrange(desc(mean_supply))
+
+
+subset(country_fbs, grepl("bovi|offa|poult|pig|goat", original_name,  ignore.case = TRUE))
+
+subset(country_fbs, original_id %in% c("2731", "947", "867"))
 
 #write.csv(country_fbs, paste0(country, "_FBS_2014_2018.csv"))
 
@@ -61,6 +72,7 @@ ken$vitamine_in_mg <- as.numeric(ken$vitamine_in_mg)
 
 ken %>% rbind(., wa) %>% 
   mutate(
-  VitA = (mean_supply*vitamina_in_rae_in_mcg)/100) %>% 
+  VitA = (mean_supply*vitamina_in_rae_in_mcg)/100) %>% View()
+
   group_by(country_id) %>% 
   summarise(vita_mean = sum(VitA))

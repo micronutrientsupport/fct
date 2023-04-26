@@ -132,7 +132,7 @@ fbs$food_genus_id[fbs$food_genus_id == "1212.01"] <- "1212.03"
 #trout to tilapia
 fbs$food_genus_id[fbs$food_genus_id == "1501.01"] <- "1503.01"
 #beef offals to liver
-fbs$food_genus_id[fbs$food_genus_id == "21151.01"] <- "21151.02"
+# fbs$food_genus_id[fbs$food_genus_id == "21151.01"] <- "21151.02"
 #pig fat to lard
 fbs$food_genus_id[fbs$food_genus_id == "21521.01"]  <- "F1243.01"
 

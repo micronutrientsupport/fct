@@ -297,7 +297,7 @@ wa_genus <- tribble(
 "07_017", "21182.01", "h", 
 "07_027", "21183.01", "h",
 "07_044", "21170.92.04", "h",
-"13_008", "F1232.17", "h", 
+"13_008", "F1232.11", "h", 
 "03_154", "F1232.15", "h", 
  "04_0162", "1290.9.12", "h",
  "05_011", "1359.9.03", "h",
@@ -481,9 +481,9 @@ wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
 subset(wafct, code %in% c("09_024", "09_025", "09_069" ), 
        select = c(code, fooditem, ID_3, scientific_name))
 
-subset(wafct, code == "09_004", select = fooditem) 
+subset(wafct, code == "01_099", select = fooditem) 
 subset(wafct, code == "09_001", select = c(fooditem, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "141.03") 
+subset(wafct, ID_3 == "1290.9.12") 
 subset(wafct, str_detect(ID_3, "01520"))
 
 dictionary.df %>% filter(ID_3 %in% c("1529.03", "1527.03"))
@@ -495,8 +495,8 @@ distinct(subset(dictionary.df,
             ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("sesam", fooditem, ignore.case = TRUE) &
-         grepl("grains", fooditem, ignore.case = TRUE) 
+subset(wafct, grepl("radi", fooditem, ignore.case = TRUE) &
+         grepl("", fooditem, ignore.case = TRUE) 
        ,
        select = c(code, fooditem, scientific_name, WATER, ID_3))
 
@@ -510,7 +510,7 @@ subset(dictionary.df,
        grepl("fig", FoodName_2, ignore.case = TRUE) &
          grepl("", FoodName_2, ignore.case = TRUE))
 
-#Rename variables according to MAPS-standards
+# Rename variables according to MAPS-standards
 
 MAPS_output <- wafct %>%
     left_join(.,dictionary.df %>% 

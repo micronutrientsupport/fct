@@ -89,6 +89,8 @@ genus <- read.csv(here::here("inter-output", "ukfct_matches.csv")) %>%
 
 #Cassava updating dict code
 genus$ID_3[genus$ID_3 == "01520.01.01"]  <- "1520.01.01"
+# Coriander leaves updating code
+genus$ID_3[genus$ID_3 == "1290.9.03"] <- "1654.01"
 
 #Checking for duplicates
 
@@ -115,12 +117,12 @@ dim(output_table)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(output_table, fdc_id == "17-647", select = c(food_desc, ID_3)) 
+subset(output_table, fdc_id == "13-888", select = c(food_desc, ID_3)) 
 subset(output_table, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
 subset(output_table, ID_3 == "23670.01.01") 
 
 dictionary.df %>% filter(ID_3 == "23670.01.01")
-subset(dictionary.df, ID_2 == "23520")
+subset(dictionary.df, ID_2 == "1290.9")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 

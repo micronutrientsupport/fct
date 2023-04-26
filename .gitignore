@@ -45,6 +45,8 @@ data/
 metadata/
 output/
 inter-output/
+*.csv
+*.xlsx
 
 #Images and document
 
