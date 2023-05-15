@@ -7007,10 +7007,13 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "cassava and ripe plantain, mashed, cooked", 
                 "yam and cassava, mashed, cooked", 
                 "baked beans", "luncheon beef",
-                "couscous, wheat", "falafel")
+                "couscous, wheat", "falafel", 
+                "pasta, macaroni, refined, dried, boiled",
+                "pasta, spaghetti, refined, dried, boiled", 
+                "beans, shellie, canned")
 
 scientific_name <- c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
-                     NA)
+                     rep(NA,4))
 
 other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA, 
                 "beef seasoning cube", "chicken seasoning cube", 
@@ -7020,11 +7023,11 @@ other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA,
                 "ogi (WA19), pap (Sierra Leone)", 
                 rep("recipe from Burkina Faso in WA19", 2), 
                 rep("Banakou né (Burkina Faso) (WA19), Yebbe (Sierra Leone)", 3), 
-                rep(NA, 4))
+                rep(NA, 5))
 
 fex2_new <- c(rep(NA, 5), "A049A#F02.A06CK$F01.A066J$F27.A049A", 
               "A048Q#F02.A06CG", 
-              rep(NA, 19))
+              rep(NA, 22))
 
 # Fixed input
 id2 <- "F1232"

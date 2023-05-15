@@ -1,6 +1,6 @@
 ---
 title: "Documentation of cleaning and processing of the FCTs in MAPS tool"
-author: "LuciaSegovia"
+author: "Lucia Segovia de la Revilla"
 creation date: "08/12/2020"
 updated version date: "06/11/2020"
 version: "0.1"
@@ -19,6 +19,12 @@ knitr::opts_chunk$set(echo = TRUE,warning=FALSE, message=FALSE)
 library(tidyverse)
 
 ```
+
+# Introduction
+
+Most of the FCTs used here were freely available in the [FAO/INFOODS website](https://www.fao.org/infoods/infoods/tables-and-databases/en/), and particuarly under [FAO/INFOODS:Africa](https://www.fao.org/infoods/infoods/tables-and-databases/africa/en/). 
+
+
 
 First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spreadsheet is where all the information about each FCT is collated 
 
@@ -604,7 +610,7 @@ UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the
 
 **Food items to be avoided**
 
-The food item "13002 - Baking powder, dry powder" has quite extreme Ca (and other minerals) values. In addition, it has a very high standard deviation. It was not an analytical value and all the sources of the nutrient values were from abroad (see `r kenfct$biblio_id[kenfct$code == "13002"]`). Furthermore, even being used in small amounts, it was the main driver of Ca consumption in IHS4 and IHS5. Hence, we advise not using this item, and hence removing the dictionary code from it. 
+The food item "13002 - Baking powder, dry powder" has quite extreme Ca (and other minerals) values. In addition, it has a very high standard deviation. It was not an analytical value and all the sources of the nutrient values were from abroad (see `r kenfct$biblio_id[kenfct$code == "13002"]`). Furthermore, even being used in small amounts, it was the main driver of Ca consumption in IHS4 and IHS5. Hence, we are not using this item, and hence removing the dictionary code from it. However, the value is plausible for that kind of product as it can contain calcium carbonate. 
 
 **List of Unavailable foods (from FBS)**:
 
@@ -663,13 +669,19 @@ Beef meat are all specified w/o bones, except the lean (7002). The edible portio
 
 Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). However, we assigned a "low confidence". 
 
-#### 6) Lesotho FCT
+## 6) Lesotho FCT
+
+ID:LS06
 
 **Version log**
+V.1.4.1 updated on 2023/05/15 - Changing the unit of cholesterol (CHOLE) from g to the standard unit mg. NB. it's a minor update because (CHOLE)is not reported in MAPS tool. 
 V.1.4 updated on 2021/11/01 - Created a stand-alone script and added dictionary to auto-generate the food groups. 
 V.1.3 updated on 2021/10/1 - Replace Trace to zero and removed (*) using new function
 V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
 
+### 1. Obtaining the data (Data Access)
+
+The excel file used in this repository can be downloaded [here](https://www.fao.org/fileadmin/templates/food_composition/documents/LesFCT_final_copyrevised1.xlsm)
 
 ##### Food components and other variables
 

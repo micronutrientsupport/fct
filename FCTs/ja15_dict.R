@@ -25,14 +25,13 @@ genus <- tribble(
 
 )
 
-
 #Updating the dictionary compilation -----
-file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
-             decreasing = T)[1]
+#for further use (to update versions) - first by alphabetic order
+v <- "1.3.0"
 genus %>% mutate(fct = "JA15")  %>% 
-  bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
-  write.csv(., here::here("metadata", file), row.names = F)
+  write.csv(., here::here("metadata",
+                          paste0("dict_fct_compilation_v.",v, ".csv")), 
+            row.names = F)
 
 #Adding food dictionary codes to FCT ----
 

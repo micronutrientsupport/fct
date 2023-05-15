@@ -288,21 +288,21 @@ wafct.genus %>% mutate(fct = "WA19")  %>%
 #Adding dictionary code
 
 wafct <- wafct %>%
-  left_join(., wafct.genus, by = c("code" = "ref_fctcode"))
+  left_join(., wafct.genus, by = c("fdc_id" = "ref_fctcode"))
 
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "")
 wafct.genus %>% filter(ref_fctcode == "05_011")
-wafct %>% filter(code == "02_021") %>% glimpse()
+wafct %>% filter(fdc_id == "02_021") %>% glimpse()
 
 #Checking code availability 
-wafct %>% filter(code %in% c("12_012", "12_013")) %>% View()
+wafct %>% filter(fdc_id %in% c("12_012", "12_013")) %>% View()
 
-subset(wafct, code %in% c("09_024", "09_025", "09_069" ), 
-       select = c(code, fooditem, ID_3, scientific_name))
+subset(wafct, fdc_id %in% c("09_024", "09_025", "09_069" ), 
+       select = c(fdc_id, food_desc, ID_3, scientific_name))
 
-subset(wafct, code == "01_099", select = fooditem) 
-subset(wafct, code == "09_001", select = c(fooditem, ID_3, scientific_name)) 
+subset(wafct, fdc_id == "01_099", select = food_desc) 
+subset(wafct, fdc_id == "09_001", select = c(food_desc, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "1290.9.12") 
 subset(wafct, str_detect(ID_3, "01520"))
 
@@ -315,16 +315,16 @@ distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("radi", fooditem, ignore.case = TRUE) &
-         grepl("", fooditem, ignore.case = TRUE) 
+subset(wafct, grepl("radi", food_desc, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE) 
        ,
-       select = c(code, fooditem, scientific_name, WATER, ID_3))
+       select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 
-subset(wafct, str_detect(fooditem, "trout|Trout") & 
-         grepl("", fooditem, ignore.case = TRUE),
-       select = c(code, fooditem, ID_3, EDIBLE1, scientific_name))
+subset(wafct, str_detect(food_desc, "trout|Trout") & 
+         grepl("", food_desc, ignore.case = TRUE),
+       select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
-       select = c(code, fooditem, ID_3, foodgroup, scientific_name))
+       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
        grepl("fig", FoodName_2, ignore.case = TRUE) &

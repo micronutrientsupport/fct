@@ -17,11 +17,13 @@ saveRDS(dictionary.df, file = paste0(path[i], "/data/dictionary.df.rds"))
 
 # Run source() 
 
-fct <- c("kenfct.R", "wafct.R", "fct_uk.R", "fct_usda.R", "fct_ja15.R")
+#fct <- c("ke18_dict.R", "wa19_dict.R", "uk21_dict.R", "us19_dict.R", "ja15_dict.R")
 
-source(here::here("FCTs", fct[1]))
+#source(here::here("FCTs", fct[1]))
 
-eval(parse(text = paste0("source('FCTs/", fct, "')")))
+fcts <- list.files(here::here("FCTs") , "*_dict.R")
+
+eval(parse(text = paste0("source('FCTs/", fcts, "')")))
   
 #Saving dictionary-to-FCTs-matches
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),

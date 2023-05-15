@@ -209,9 +209,13 @@ ISSUE with Dictionary --> SUA and Fish share the same code!!
 4 AP    Animal Products   2763 pelagic fish                1530  pelagic fish, frozen, fillet
 
 
+# To do things:
 
 # Adding values
 
+## Notes:
+
+For some instances, dictionary values were not available and/or compiled (there were there as part of the legacy) maybe removed them in next update. This is because there are food items for which food composition data is not available (e.g., wheat grain refined) or for which one food item is better than a potential value available, e.g., beef meat w/o bones from Western Africa than beef meat w/ bones from USA. 
 
 # Generic food composition values
 

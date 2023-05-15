@@ -1,5 +1,8 @@
 
-# Scritp that format FCTs into MAPS standard name and structure
+# Script that format FCTs into MAPS standard name and structure
+
+# Load libraries
+library(dplyr)
 
 #Loading the food dictionary
 if(sum(ls() == "dictionary.df") == 0) {
@@ -7,6 +10,68 @@ if(sum(ls() == "dictionary.df") == 0) {
 
 var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
   select(Column.Name) %>% pull()
+
+#Load dictionary-to-FCTs-matches (can be found in the fct_dict.R)
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
+
+dict_comp <-read.csv(here::here("metadata", file)) %>% 
+  rename(source_fct = "fct", 
+         fdc_id = "ref_fctcode")
+
+dict_comp %>% count(source_fct) 
+
+#1) Loading all FCDBs into one single database ----
+
+#finding all the cleaned FCTs/FCDBs from the output folder
+list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
+           full.names=TRUE) %>% 
+  map_df(~read_csv(., col_types = cols(.default = "c"), locale = locale(encoding = "Latin1")))  
+
+# Loading all the cleaned FCTs/FCDBs into one single object (data.frame)
+fct_cover <- list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
+  map_df(~read_csv(., col_types = cols(.default = "c"), locale = locale(encoding = "Latin1"))) 
+
+# checking that we have loaded all the FCT/FCDBs (n=5)
+fct_cover %>% distinct(source_fct) 
+colnames(fct_cover)
+
+fct_cover$fdc_id[fct_cover$source_fct == "JA15"] <- gsub("^0", "", fct_cover$fdc_id )
+fct_cover$fdc_id <- str_squish(fct_cover$fdc_id )
+fct_cover$source_fct <- str_squish(fct_cover$source_fct )
+
+# Merging dict codes to fcts codes
+
+fct_cover %>% left_join(., dict_comp) %>% 
+  filter(!is.na(ID_3)) %>% count(source_fct)
+
+fct_cover %>% left_join(., dict_comp) %>% 
+  filter(!is.na(ID_3) & source_fct == "WA19") %>% pull(fdc_id)
+
+fct_dict <- fct_cover %>% left_join(., dict_comp)
+#fct_dict <- merge(fct_cover, dict_comp)
+
+dictionary.df %>% 
+  filter(str_detect(ID_3, "\\b")) %>% 
+  left_join(., fct_dict , by = "ID_3") %>% 
+  filter(is.na(source_fct)) %>% select(FoodName_3, ID_3)
+
+
+subset(fct_dict, grepl("", food_desc, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE) &
+         grepl("refined", food_desc, ignore.case = TRUE),
+       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3))
+
+
+## Checking
+
+# Load SUA data
+
+sua <- read.csv(here::here("inter-output", "MAPS_SUA_v1.0.0.csv"))
+names(sua)
+
+sua %>% left_join(., fct_dict, by = "ID_3") %>% 
+  filter(!is.na(WATERg)) %>% distinct(Item)
 
 
 # Rename variables according to MAPS-standards

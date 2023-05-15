@@ -12,6 +12,7 @@ no_brackets <- function(i){
     str_detect(i, '\\[.*?\\]') == TRUE ~ str_extract(i, '(?<=\\[).*?(?=\\])'), 
     TRUE ~ i)
 }
+
 #Replacing "Tr" to zero
 TraceToZero <- function(x){
   x <- gsub("Trace|trace|Tr|tr|N", "0", x)
