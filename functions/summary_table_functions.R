@@ -4,8 +4,8 @@
 SOP_std_creator <- function(dataset) {
     # Check presence of required columns
     columns <- c(
-        "WATERg", "PROCNTg", "FAT_g_standardised", # Change FAT_g to FAT_g_standardised
-        "CHOAVLg", "FIBTGg", "ALCg", "ASHg_std" # change ASHg to ASHg_std
+        "WATERg", "PROCNTg", "FATg", # Change FAT_g_standardised to FATg
+        "CHOAVLDFg", "FIBTGg", "ALCg", "ASHg" # change ASHg_std to ASHg
     )
     for (column in columns) {
         if (column %in% names(dataset)) {

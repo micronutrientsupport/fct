@@ -674,7 +674,7 @@ Fish liver oil (9003) did not specified the fish type, hence we assumed cod live
 ID:LS06
 
 **Version log**
-V.1.4.1 updated on 2023/05/15 - Changing the unit of cholesterol (CHOLE) from g to the standard unit mg. NB. it's a minor update because (CHOLE)is not reported in MAPS tool. 
+V.1.5.0 updated on 2023/05/16 - Changing the unit of cholesterol (CHOLE) from g to the standard unit mg, and excluding one beer from dict & replacing Enery in kcal wit NA for alcoholic beverages. 
 V.1.4 updated on 2021/11/01 - Created a stand-alone script and added dictionary to auto-generate the food groups. 
 V.1.3 updated on 2021/10/1 - Replace Trace to zero and removed (*) using new function
 V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
@@ -683,7 +683,7 @@ V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
 
 The excel file used in this repository can be downloaded [here](https://www.fao.org/fileadmin/templates/food_composition/documents/LesFCT_final_copyrevised1.xlsm)
 
-##### Food components and other variables
+### Food components and other variables
 
 Energy is only reported in kJ. Hence, Energy (kcal) (`ENERC1`) was calculated, as well as Sum of proximate (`SOP`). It was not done using thefunction but it could be applied in the future. 
 
@@ -693,6 +693,10 @@ NOTE: I need to update the loop for foodgroup variable. None of the loops that I
 
 There were trace values that were converted to zero, there were (*) values (e.g, in `EDIBLE`) which were removed, although it would good to check the meaning.
 In addition, there were ("[]") which were also removed, and would need to be checked as well. 
+
+### Drawbacks and usage warnings
+
+1. This FCT do not report alcohol content in foods yet it has two alcoholic beverages, see food group "BEVERAGES, ALCOHOLIC". We advise to avoid the use of these foods for nutrient assessment. 
 
 
 ####7) Mozambique FCT

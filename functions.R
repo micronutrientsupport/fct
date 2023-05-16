@@ -5,6 +5,8 @@
 source(here::here("functions", "Fuzzy_Matcher.R"))
 #Food component calculators
 source(here::here("functions", "summary_table_functions.R"))
+#Energy calculators
+source(here::here("functions", "Energy_Standardisation.R"))
 #No brackets
 #The following f(x) removes []
 no_brackets <- function(i){

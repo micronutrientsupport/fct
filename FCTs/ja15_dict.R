@@ -25,6 +25,8 @@ genus <- tribble(
 
 )
 
+genus$ID_3 <- as.character(genus$ID_3)
+
 #Updating the dictionary compilation -----
 #for further use (to update versions) - first by alphabetic order
 v <- "1.3.0"

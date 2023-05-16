@@ -44,9 +44,21 @@ lsfct$food_group <- NA
 # Assigning each food item its food group (based on their food id)
 for(i in 1:nrow(fglso)){
   
-  lsfct$food_group <- ifelse(grepl(fglso[i,1], lsfct$fdc_id), fglso[i,2], lsfct$food_group)
+  lsfct$food_group <- ifelse(grepl(paste0("^", fglso[i,1]), lsfct$fdc_id), fglso[i,2], lsfct$food_group)
   
 }
+
+# Checking all food items have a food group
+
+lsfct$food_desc[is.na(lsfct$food_group)]
+lsfct$food_group[is.na(lsfct$food_group)] <- "MEAT, POULTRY, FISH AND THEIR PRODUCTS"
+
+
+# Changing variables class/ object type
+#food group from list to vector
+lsfct$food_group <- unlist(lsfct$food_group)
+# fcd_id from integer to character
+lsfct$fdc_id <- as.character(lsfct$fdc_id)
 
 # Removing empty rows
 
@@ -71,25 +83,43 @@ lsfct[, c(4:40)] <- apply(lsfct[, c(4:40)], 2, as.numeric)
 # Unit conversion Cholesterol (g to mg)
 lsfct$CHOLEmg <- lsfct$CHOLEg/1000
 
+lsfct$food_desc[is.na(lsfct$FIBTGg)]
+
 # Energy in kcal calculation (add function)
-lsfct$ENRCkcal <- 
+lsfct$ENERCkcal_standardised <- ENERCKcal_standardised(lsfct$PROCNTg, 
+                                         lsfct$FATg, 
+                                         lsfct$CHOAVLDFg, 
+                                         !is.na(lsfct$FIBTGg), 
+                                         ALC = 0)
+
+# Removing Energy calculate from two alc. beverages
+lsfct$food_desc[lsfct$food_group == "BEVERAGES, ALCOHOLIC"]
+lsfct %>% filter(food_group == "BEVERAGES, ALCOHOLIC") %>% 
+  select(ENERCkJ, ENERCkcal_standardised)
+lsfct$ENERCkcal_standardised[lsfct$food_group == "BEVERAGES, ALCOHOLIC"] <- NA
   
-# SOP calculation (check function)
-lsfct <- SOP_std_creator(lsfct)
 
 # Adding the reference (source of nutrient) to the main LSOFCT
 
 ref.lso <- readxl::read_excel(here::here('data','2006_LSOFCT.xlsx'), 
                               sheet = 5) %>% 
    select(c(1, 74:77)) %>% 
-  filter(!is.na(code)) %>%
+  filter(!is.na(code) & !is.na(`FCT SOURCE`)) %>%
   rename(fdc_id = "code", nutrient_data_source = "FCT SOURCE") 
 
 lsfct <- lsfct %>% left_join(., ref.lso %>% select(fdc_id, nutrient_data_source)) 
 
+# Re-arranging the columns
+names(lsfct)
+
+lsfct <- lsfct %>% 
+  relocate(., "food_group", .after = "food_desc") %>% 
+  relocate(., "ENERCkcal_standardised", .after = "ENERCkJ") %>% 
+  relocate(., "CHOLEmg", .after = "CHOLEg") 
+
 # Data Output ----
 
-write.csv(Output_table, file = here::here("FCTs", "LS06_FCT_FAO_Tags.csv"), row.names = FALSE) #Saves the newly-cleaned table to the Output folder 
+write.csv(lsfct, here::here("FCTs", "LS06_FCT_FAO_Tags.csv"), row.names = FALSE) #Saves the newly-cleaned table to the Output folder 
 
 #Run this to clean the environment
 rm(list = ls())
