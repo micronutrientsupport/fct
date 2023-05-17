@@ -91,7 +91,7 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 mwi_genus %>% mutate(fct = "MW19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 mwi_genus <-  mwi_genus %>% left_join(., dictionary.df)

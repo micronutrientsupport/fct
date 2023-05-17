@@ -251,8 +251,9 @@ wa_genus <- tribble(
   "05_033", "21419.02.01", "h", 
   "05_029", "1324.03", "h", 
   "01_002", "1193.01", "h", 
-  "01_050", "1193.04", "h" # used white bc it's same specie (scientific name)
-)
+  "01_050", "1193.04", "h", # used white bc it's same specie (scientific name)
+  "10_009", "22120.02", "m", 
+  )
 
 # Checking for dictionary duplicates -----
 
@@ -282,7 +283,7 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 wafct.genus %>% mutate(fct = "WA19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding dictionary code
@@ -307,15 +308,15 @@ subset(wafct, ID_3 == "1290.9.12")
 subset(wafct, str_detect(ID_3, "01520"))
 
 dictionary.df %>% filter(ID_3 %in% c("1529.03", "1527.03"))
-subset(dictionary.df, ID_2 == "1529")
-subset(dictionary.df, ID_1 == "2645")
+subset(dictionary.df, ID_2 == "2735")
+subset(dictionary.df, ID_1 == "2735")
 subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("radi", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("cream", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
@@ -327,5 +328,5 @@ subset(wafct, str_detect(scientific_name, "Scomberomorus"),
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("fig", FoodName_2, ignore.case = TRUE) &
+       grepl("tur", FoodName_2, ignore.case = TRUE) &
          grepl("", FoodName_2, ignore.case = TRUE))

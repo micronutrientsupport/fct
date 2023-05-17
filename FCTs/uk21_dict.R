@@ -92,7 +92,7 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 genus %>% mutate(fct = "UK21")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding food dictionary codes to FCT ----

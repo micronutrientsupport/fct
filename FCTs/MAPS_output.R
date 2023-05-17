@@ -57,10 +57,10 @@ dictionary.df %>%
   filter(is.na(source_fct)) %>% select(FoodName_3, ID_3)
 
 
-subset(fct_dict, grepl("", food_desc, ignore.case = TRUE) &
-         grepl("", food_desc, ignore.case = TRUE) &
-         grepl("refined", food_desc, ignore.case = TRUE),
-       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3))
+subset(fct_dict, grepl("fish", food_desc, ignore.case = TRUE) &
+         grepl("oil", food_desc, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE),
+       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3)) %>% View()
 
 
 ## Checking

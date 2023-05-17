@@ -304,7 +304,7 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 ken_genus %>% mutate(fct = "KE18") %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-            mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+            mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 # Checking dictionary/ fct ids availability ----
@@ -346,7 +346,7 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("bean", food_desc, ignore.case = TRUE) &
+subset(kenfct, grepl("cream", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(kenfct, str_detect(fdc_id, "^4") &

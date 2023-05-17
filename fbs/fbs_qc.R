@@ -4,23 +4,44 @@ library(dplyr)
 
 # Loading the data
 
-fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.csv")) 
-fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) 
+fbs <- read.csv(here::here("inter-output", "MAPS_FBS_2018-2020_v3.0.0.csv")) 
 
-MAPS_dict_fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) %>% 
-  select(original_id, food_genus_id, food_genus_confidence, country_id) %>% distinct()
+#fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) 
 
-saveRDS(MAPS_dict_fbs, here::here("inter-output", "MAPS_dict_fbs_v2.1.1.rds"))
+#MAPS_dict_fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) %>% 
+ # select(original_id, food_genus_id, food_genus_confidence, country_id) %>% distinct()
+
+#saveRDS(MAPS_dict_fbs, here::here("inter-output", "MAPS_dict_fbs_v2.1.1.rds"))
 
 source("MAPS_Dictionary-Protocol.R")
 source(here::here("FCTs", "kenfct.R"))
 source(here::here("FCTs", "wafct.R"))
 
-names(fbs)
+#Load dictionary-to-FCTs-matches (can be found in the fct_dict.R)
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
+
+dict_comp <-read.csv(here::here("metadata", file)) %>% 
+  rename(source_fct = "fct", 
+         fdc_id = "ref_fctcode")
+
+dict_comp %>% count(source_fct) 
+
+names(dict_comp)
 str(fbs)
 
-subset(dictionary.df, ID_2 == "21121")
-subset(dictionary.df, ID_3 == "2899.01.01")
+
+
+## Check FBS dict codes w/ fct value
+
+code <- fbs %>% filter(!is.na(food_genus_id)) %>% 
+  distinct(food_genus_id) %>% left_join(., dict_comp, by = c("food_genus_id" = "ID_3")) %>% 
+  filter(is.na(fdc_id)) %>% .[,1]
+
+subset(dictionary.df, ID_1 == "2781")
+subset(dictionary.df, ID_2 == "22120")
+subset(dictionary.df, ID_3 %in% code) %>% distinct(ID_1)
+
 subset(MAPS_output, food_genus_id == "21691.07.01")
 
 # Checking countries values
@@ -76,3 +97,6 @@ ken %>% rbind(., wa) %>%
 
   group_by(country_id) %>% 
   summarise(vita_mean = sum(VitA))
+  
+  
+  

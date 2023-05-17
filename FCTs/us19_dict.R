@@ -100,7 +100,11 @@ genus <- tribble(
   "19107", "23670.01.03", "h", 
   "19217", "21439.9.04", "l", 
   "19283", "22270.06", "m", 
-  "14021", "24490.03", "m"
+  "14021", "24490.03", "m", 
+  "20062", "116.01", "h",
+  "12220", "1441.01", "h", 
+  "4037", "21691.01.01", "h", 
+  "14037",  "2413.01", "m"
   )
   
 #Updating the dictionary compilation -----
@@ -109,7 +113,7 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 genus %>% mutate(fct = "US19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at("ref_fctcode", as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding food dictionary codes to FCT ----
@@ -124,13 +128,13 @@ names(us19)
   ## CHECK: Adding new food dictionary code ----
   
   #Checking dictionary/ fct ids availability 
-  subset(us19, fdc_id == "20028", select = c(fdc_id, food_desc, WATERg)) 
+  subset(us19, fdc_id == "14037", select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, fdc_id %in% c("19400"),
   select = c(fdc_id, food_desc, ID_3)) 
   subset(us19, ID_3 == "23140.05.01") 
   
-  subset(us19, grepl("baked", food_desc, ignore.case = TRUE) &
-           grepl("beans", food_desc, ignore.case = TRUE) 
+  subset(us19, grepl("cream", food_desc, ignore.case = TRUE) &
+           grepl("", food_desc, ignore.case = TRUE) 
            #!grepl("with", food_desc, ignore.case = TRUE) &
   
          , 
