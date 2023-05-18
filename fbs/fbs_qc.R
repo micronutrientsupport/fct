@@ -4,7 +4,7 @@ library(dplyr)
 
 # Loading the data
 
-fbs <- read.csv(here::here("inter-output", "MAPS_FBS_2018-2020_v3.0.0.csv")) 
+fbs <- read.csv(here::here("inter-output", "MAPS_FBS_2018-2020_v3.0.1.csv")) 
 
 #fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) 
 
@@ -13,9 +13,12 @@ fbs <- read.csv(here::here("inter-output", "MAPS_FBS_2018-2020_v3.0.0.csv"))
 
 #saveRDS(MAPS_dict_fbs, here::here("inter-output", "MAPS_dict_fbs_v2.1.1.rds"))
 
-source("MAPS_Dictionary-Protocol.R")
-source(here::here("FCTs", "kenfct.R"))
-source(here::here("FCTs", "wafct.R"))
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+
+#source(here::here("FCTs", "kenfct.R"))
+#source(here::here("FCTs", "wafct.R"))
 
 #Load dictionary-to-FCTs-matches (can be found in the fct_dict.R)
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
@@ -38,13 +41,13 @@ code <- fbs %>% filter(!is.na(food_genus_id)) %>%
   distinct(food_genus_id) %>% left_join(., dict_comp, by = c("food_genus_id" = "ID_3")) %>% 
   filter(is.na(fdc_id)) %>% .[,1]
 
-subset(dictionary.df, ID_1 == "2781")
-subset(dictionary.df, ID_2 == "22120")
+subset(dictionary.df, ID_1 == "2680")
+subset(dictionary.df, ID_2 == "2680")
 subset(dictionary.df, ID_3 %in% code) %>% distinct(ID_1)
 
 subset(MAPS_output, food_genus_id == "21691.07.01")
 
-# Checking countries values
+# Checking countries values in FBS -----
 unique(fbs$country_id)
 
 country <- "UGA"
@@ -99,4 +102,17 @@ ken %>% rbind(., wa) %>%
   summarise(vita_mean = sum(VitA))
   
   
+  
+
+
+
+## Checking SUA data -----
+  
+  # Load SUA data
+  
+  sua <- read.csv(here::here("inter-output", "MAPS_SUA_v1.0.0.csv"))
+  names(sua)
+  
+  sua %>% left_join(., fct_dict, by = "ID_3") %>% 
+    filter(!is.na(WATERg)) %>% distinct(Item)
   

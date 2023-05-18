@@ -28,7 +28,7 @@ names(lsfct)[c(2:20, 31:40)] <- c("fdc_id", "food_desc", "Edible_factor_in_FCT",
                            "WATERg", "CHOAVLDFg", 'NTg', 'PROCNTg', 'PROPLAg', 'PROANIg' , 
                            'FIBTGg', 'ASHg', 'FATg',
                            'CHOLEg', 'FASATg', 'FAMSg', 'FAPUg', 'STARCHg', 'SUGARg', 
-                           'VITAmg',  'CARBEQmcg', 'VITDmcg', 'VITEmg', 
+                           'VITAmcg',  'CARBEQmcg', 'VITDmcg', 'VITEmg', 
                             'THIAmg', 'RIBFmg', 'NIAmg', 'VITB6_mg'  ,'FOLmcg', 'VITCmg')
 
 

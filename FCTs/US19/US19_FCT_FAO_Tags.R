@@ -90,6 +90,8 @@ names(Composite_Table)[c(100, 101, 139, 140, 160)] <- c("VITE_addedmg",
                                                         "F18D2tg", 
                                                         "F18D2ig", 
                                                         "F18D3ig")
+# Fixing units 
+names(Composite_Table)[names(Composite_Table)=="VITA"] <- "VITA_IU"
 
 # Replacing µg to mcg
 setdiff(names(Composite_Table), gsub("µg", "mcg", names(Composite_Table)))
@@ -208,7 +210,7 @@ Output_table <- Composite_Table %>%
 # Food component transformation 
 ## Unit conversion & recalculation
 
-Output_table %>%
+Output_table <- Output_table %>%
   mutate(comments = NA) %>%   
   CARTBEQmcg_std_creator() %>%
   rename(CARTBEQmcg = "CARTBEQmcg_std") %>%   #Changing name of re-calculated variable for making VITA f(x) to work)
@@ -227,17 +229,17 @@ which(is.na(Output_table$VITAmcg_std) & !is.na(Output_table$VITAmcg_std))
 which(is.na(Output_table$VITAmcg_std))
 
 #Checking where VITAmcg could be re-caluclated form VIT A (IU)
-n <- which(is.na(Output_table$VITAmcg_std) & !is.na(Output_table$`Vitamin A, IU (IU)`))
+n <- which(is.na(Output_table$VITAmcg_std) & !is.na(Output_table$VITA_IU))
 
 #Recalculating - FAO/ INFOODS Guidelines for Converting Units, Denominators and Expressions Version 1.0
 #suggested converting when no other info is available and "assuming" all VITA is retinol.
 #Creating VITAmcg so VITAmcg_std is not over-written by the use of VITAmcg_std_creator() in compilation
 Output_table$VITAmcg <-  NA
-Output_table[n, "VITAmcg"] <- Output_table[n, "Vitamin A, IU (IU)"]*0.3
+Output_table[n, "VITAmcg"] <- Output_table[n, "VITA_IU"]*0.3
 
 #Adding info into comment variable
-Output_table$comment <-  NA
-Output_table[n, "comment"] <- "VITAmcg was recalculated from Vitamin A, IU (IU)*03. See documentation for more information"
+#Output_table$comments <-  NA
+Output_table[n, "comments"] <- "VITAmcg was recalculated from Vitamin A, IU (IU)*03. See documentation for more information"
 
 #Optional - check data before saving
 glimpse(Output_table)
@@ -245,4 +247,4 @@ glimpse(Output_table)
 # Data Output ----
 
 write.csv(Output_table, file = here::here("FCTs", "US19_FCT_FAO_Tags.csv"), row.names = FALSE)  #Saves the newly-created data table to the Output folder 
-rm(list = ls())  #Removes all the environment variables - tidies up RStudio 
+rm(list = ls()) # Removes all the environment variables - tidies up RStudio 

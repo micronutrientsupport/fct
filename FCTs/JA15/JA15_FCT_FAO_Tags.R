@@ -146,6 +146,8 @@ Output_table$source_fct <- "JA15" #creates and populates the "source_fct" column
 Output_table$EDIBLEpc <- (100-as.integer(Output_table$REFUSEpc))/100 #calculates the Edible percentage column (EDIBLEpc)
 Output_table$nutrient_data_source <- "None listed" #creates and populates the data source column
 
+names(Output_table)
+
 Output_table <- Output_table %>%
   relocate(source_fct, .after = `Food Description`) %>% #moves columns to more relevant locations
   relocate(EDIBLEpc, .after = REFUSEpc) %>% 
@@ -159,6 +161,7 @@ Output_table <- Output_table %>%
     PROCNTg = "Protein, calculated from  reference nitrogen_g", 
     CHOCDFg ="Carbohydrate, total, calculated by difference_g",
     FATg = "Lipid_g",
+    Edible_info = "NANA"
   )
 
 

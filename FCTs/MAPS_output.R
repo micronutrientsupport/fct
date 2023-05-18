@@ -3,6 +3,7 @@
 
 # Load libraries
 library(dplyr)
+source("functions.R")
 
 #Loading the food dictionary
 if(sum(ls() == "dictionary.df") == 0) {
@@ -57,155 +58,53 @@ dictionary.df %>%
   filter(is.na(source_fct)) %>% select(FoodName_3, ID_3)
 
 
-subset(fct_dict, grepl("fish", food_desc, ignore.case = TRUE) &
-         grepl("oil", food_desc, ignore.case = TRUE) &
+subset(fct_dict, grepl("baby|infant", food_desc, ignore.case = TRUE) &
+         grepl("food", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
-       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3)) %>% View()
+       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3)) 
+sort(names(fct_dict))
+
+fct_dict %>% filter(!is.na(PHYTCPPDmg)) %>% distinct(source_fct)
+
+fct_dict <- fct_dict %>% 
+  nia_conversion_creator()  %>%  # Standardisation of NIAmg
+ THIAmg_std_creator() %>%  # Standardisation of THIAmg
+  VITB6mg_std_creator()  # Standardisation of VITB6mg
+
+  ## Standardisation: 
 
 
-## Checking
+"FAT_g"                                           
+"FATCEg"                                          
+"FATg"   
 
-# Load SUA data
 
-sua <- read.csv(here::here("inter-output", "MAPS_SUA_v1.0.0.csv"))
-names(sua)
 
-sua %>% left_join(., fct_dict, by = "ID_3") %>% 
-  filter(!is.na(WATERg)) %>% distinct(Item)
+"PHYTCPPD_PHYTCPPImg"                             
+"PHYTCPPDmg"                                      
+"PHYTCPPmg"                                       
+"PHYTmg"                                          
+"PHYTO"                                           
+"Total PHYTO" - UK21
+
+
+
+"TRPg"                                            
+"TRPmg"
+
 
 
 # Rename variables according to MAPS-standards
 
-MAPS_output <- fct %>%
-  left_join(., dictionary.df %>% 
-              select(ID_3, FoodName_3, 
-                     FoodName_0, FoodName_1) %>%
-              filter(str_detect(ID_3, "\\b"))) %>% 
-
-
-
-### Other scripts 
-  
-#KE18
-MAPS_ken <- kenfct %>% 
+  MAPS_output  <- fct_dict %>% 
   left_join(.,dictionary.df %>% 
               select(ID_3, FoodName_3, 
                      FoodName_0, FoodName_1) %>%
               filter(str_detect(ID_3, "\\b"))) %>%   
   rename(
-    original_food_id = "code",
-    original_food_name = "fooditem",
-    food_genus_id = "ID_3",
-    food_genus_description = "FoodName_3",
-    food_group = "FoodName_0",
-    food_subgroup = "FoodName_1", 
-    food_genus_confidence = "confidence",
-    fct_name = "FCT",
-    data_reference_original_id = "biblio_id",
-    moisture_in_g = "WATER",
-    energy_in_kcal = "ENERC1",
-    energy_in_kj = "ENERC2",
-    totalprotein_in_g = "PROTCNT",
-    totalfats_in_g = "FAT",
-    saturatedfa_in_g = "FASAT", 
-    monounsaturatedfa_in_g = "FAMS", 
-    polyunsaturatedfa_in_g = "FAPU", 
-    cholesterol_in_mg = "CHOLE",
-    carbohydrates_in_g = "CHOAVLDF", 
-    fibre_in_g = "FIBTG", 
-    ash_in_g = "ASH",
-    ca_in_mg = "CA", 
-    fe_in_mg = "FE",
-    mg_in_mg = "MG",
-    p_in_mg = "P",
-    k_in_mg = "K",
-    na_in_mg = "NA.", 
-    zn_in_mg = "ZN",
-    se_in_mcg = "SE",
-    vitamina_in_rae_in_mcg = "VITA_RAE", 
-    thiamin_in_mg = "THIA",
-    riboflavin_in_mg = "RIBF", 
-    niacin_in_mg = "NIA", 
-    folate_in_mcg = "FOLFD",
-    vitaminb12_in_mcg = "VITB12",
-    vitaminc_in_mg = "VITC",
-    phytate_in_mg = "PHYTCPPD") %>% 
-  mutate(
-    nitrogen_in_g = "NA", 
-    cu_in_mg = "NA",
-    mn_in_mcg = "NA",
-    i_in_mcg = "NA",
-    vitaminb6_in_mg = "NA",
-    pantothenate_in_mg = "NA",
-    biotin_in_mcg = "NA",
-    vitamind_in_mcg = "NA",
-    vitamine_in_mg = "NA",
-    folicacid_in_mcg = "NA") %>% select(var.name)
-
-#WA19
-MAPS_output <- fct %>%
-  left_join(.,dictionary.df %>% 
-              select(ID_3, FoodName_3, 
-                     FoodName_0, FoodName_1) %>%
-              filter(str_detect(ID_3, "\\b"))) %>% 
-  mutate(nitrogen_in_g = NA, 
-         mn_in_mcg = NA,
-         i_in_mcg = NA, 
-         se_in_mcg = NA, 
-         pantothenate_in_mg = NA, 
-         biotin_in_mcg = NA) %>% 
-  rename(
-    original_food_id = "code",
-    original_food_name = "fooditem",
-    fct_name = "FCT",
-    food_genus_id = "ID_3",
-    food_genus_description = "FoodName_3",
-    food_group = "FoodName_0",
-    food_subgroup = "FoodName_1", 
-    food_genus_confidence = "confidence",
-    data_reference_original_id = "ref",
-    moisture_in_g = "WATER",
-    energy_in_kcal = "ENERC1",
-    energy_in_kj = "ENERC2", 
-    totalprotein_in_g = "PROTCNT",
-    totalfats_in_g = "FAT",
-    saturatedfa_in_g = "FASAT", 
-    monounsaturatedfa_in_g = "FAMS", 
-    polyunsaturatedfa_in_g = "FAPU", 
-    cholesterol_in_mg = "CHOLE",
-    carbohydrates_in_g = "CHOAVLDF", 
-    fibre_in_g = "FIBTG", 
-    ash_in_g = "ASH",
-    ca_in_mg = "CA", 
-    fe_in_mg = "FE",
-    mg_in_mg = "MG",
-    p_in_mg = "P",
-    k_in_mg = "K",
-    na_in_mg = "NA", 
-    zn_in_mg = "ZN", 
-    cu_in_mg = "CU", 
-    vitamina_in_rae_in_mcg = "VITA_RAE", 
-    thiamin_in_mg = "THIA",
-    riboflavin_in_mg = "RIBF", 
-    niacin_in_mg = "NIA", 
-    vitaminb6_in_mg = "VITB6C", 
-    folicacid_in_mcg = "FOLAC", 
-    folate_in_mcg = "FOL",
-    vitaminb12_in_mcg = "VITB12", 
-    vitaminc_in_mg = "VITC",
-    vitamind_in_mcg = "VITD",
-    vitamine_in_mg = "VITE", 
-    phytate_in_mg = "PHYTCPP") %>% 
-  select(var.name)
-
-#UK21
-
-%>% 
-  mutate_at(c("RETOLmcg", "CARTBEQmcg"), as.numeric) %>% 
-  VITA_RAEmcg_std_creator() %>% 
-  rename(
     original_food_id = "fdc_id",
     original_food_name = "food_desc",
+    original_food_group = "food_group",
     food_genus_id = "ID_3",
     food_genus_description = "FoodName_3",
     food_group = "FoodName_0",
@@ -217,14 +116,14 @@ MAPS_output <- fct %>%
     energy_in_kcal = "ENERCkcal",
     energy_in_kj = "ENERCkJ",
     totalprotein_in_g = "PROCNTg",
-    nitrogen_in_g = "NTg", 
-    totalfats_in_g = "FAT_g",
+    totalfats_in_g = "FATg",
     saturatedfa_in_g = "FASATg", 
     monounsaturatedfa_in_g = "FAMSg", 
     polyunsaturatedfa_in_g = "FAPUg", 
-    cholesterol_in_mg = "CHOLmg",
-    carbohydrates_in_g = "CHOAVLg", 
+    cholesterol_in_mg = "CHOLEmg",
+    carbohydrates_in_g = "CHOAVLDFg", 
     fibre_in_g = "FIBTGg", 
+    ash_in_g = "ASHg",
     ca_in_mg = "CAmg", 
     fe_in_mg = "FEmg",
     mg_in_mg = "MGmg",
@@ -233,27 +132,26 @@ MAPS_output <- fct %>%
     na_in_mg = "NAmg", 
     zn_in_mg = "ZNmg",
     se_in_mcg = "SEmcg",
-    i_in_mcg = "IDmcg",
-    cu_in_mg = "CUmg",
-    mn_in_mcg = "MNmg",
-    vitamina_in_rae_in_mcg = "VITA_RAEmcg_std", #Re-calculated
-    thiamin_in_mg = "THIAmg",
+    vitamina_in_rae_in_mcg = "VITA_RAEmcg", 
+    thiamin_in_mg = "THIAmg_std",
     riboflavin_in_mg = "RIBFmg", 
-    niacin_in_mg = "NIAmg", 
-    folate_in_mcg = "FOLmcg", # This should be reviewed
+    niacin_in_mg = "nia_conversion_std", 
+    folate_in_mcg = "FOLFDmcg",
     vitaminb12_in_mcg = "VITB12mcg",
     vitaminc_in_mg = "VITCmg",
-    phytate_in_mg = "Total.PHYTO", 
-    vitaminb6_in_mg = "VITB6_mg",
+    phytate_in_mg = "PHYTCPPDmg",
+    nitrogen_in_g = "NTg", 
+    cu_in_mg = "CUmg",
+    mn_in_mcg = "MNmcg",
+    i_in_mcg = "IDmcg",
+    vitaminb6_in_mg = "VITB6mg_std",
     pantothenate_in_mg = "PANTACmg",
     biotin_in_mcg = "BIOTmcg",
     vitamind_in_mcg = "VITDmcg",
-    vitamine_in_mg = "VITEmg") %>% 
-  mutate(
-    folicacid_in_mcg = "NA", 
-    ash_in_g = "NA") %>% select(var.name)
-
-
+    vitamine_in_mg = "VITEmg",
+    folicacid_in_mcg = "FOLACmcg"
+    ) %>%
+    select(var.name)
 
 # Testing values
 

@@ -185,6 +185,39 @@ THIAmg_std_creator <- function(dataset) {
     })
 }
 
+# Vitamin B6
+# Variable combinations: In absence of VITB6Cmg use values of VITB6Amg, 
+# In absence of both use VITB6_mg
+# ! THIAmg_std = THIAmg OR THIAHCLmg
+VITB6mg_std_creator <- function(dataset) {
+  # Check presence of required columns
+  columns <- grep("VITB6", names(dataset), value = TRUE)
+  for (column in columns) {
+    if (column %in% names(dataset)) {
+    } else {
+      stop(paste0(
+        "Error: variable ",
+        column,
+        " not found, halting execution. Please fix your input data and try again"
+      ))
+    }
+  }
+  # Try the calculation
+  tryCatch(dataset %>%
+             as_tibble() %>%
+             mutate_at(.vars = columns, .funs = as.numeric) %>%
+             mutate(VITB6mg_std = case_when(
+               !is.na(VITB6Cmg) ~ VITB6Cmg,
+               is.na(VITB6Cmg) & !is.na(VITB6Amg) ~ VITB6Amg,
+               is.na(VITB6Cmg) & is.na(VITB6Amg) & !is.na(VITB6_mg) ~ VITB6_mg
+             )), error = function(e) {
+               print("Error : Required columns not found i.e :")
+               print(columns)
+             })
+}
+
+
+
 # # TODO: Function needs testing
 # CHOAVLDFg.calculation <- function(PROTg, FATg_standardised, FBGTg, ASHg, ALCg) {
 #     ALCg <- ALCg %>% replace_na(0)

@@ -3144,6 +3144,50 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,13] <- scientific_name[i]
 }
 
+## ├├ Demersal fish, body oil (1522) -----
+
+food_desc <-  c("salmon, body, oil")
+
+scientific_name <- c(NA)
+
+other_name <- c("")
+
+fex2_new <- c(NA)
+
+#Fixed
+id2 <- "1522"
+desc1 <-  c(NA)
+ref1 <-  c(NA)
+
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1[i]
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
+
 ## ├├  Pelagic fish, cured (1531) -----
 
 food_desc <-  c("mackerel, fillet, salted, plain, raw")

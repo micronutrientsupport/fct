@@ -48,6 +48,8 @@ inter-output/
 *.csv
 *.xlsx
 *.accdb
+*.laccdb
+SR-LEG_DB/
 
 #Images and document
 
