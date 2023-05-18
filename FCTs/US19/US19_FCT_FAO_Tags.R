@@ -34,8 +34,30 @@ for(i in c(2,4,5,9,10)){ #Loops through each data table that is of use
 
 
 # Linking Nutrient codes to nutrient values ----
+#
+#nutrient_code_list <- LegTable_10$Nutr_no #Creates a list of nutrient codes
+#sort(nutrient_code_list) #Sorts the list
+#Composite_Table <- LegTable_5 #Creates Composite_Table out of LegTable_5 - this will be the base table that is expanded on
+#
+#for(i in 1:length(nutrient_code_list)){ #Loops through all the nutrients in the nutrient list
+#  temp_table <- LegTable_9 %>% filter(Nutr_No == nutrient_code_list[i]) #creates a temporary table consisting of all entries of LegTable_9 with the current Nutrient Number in the list
+#  #print(nutrient_code_list[i]) #OPTIONAL: Used to check the nutrient being examined
+#  #assign(paste0("NutrientTable_", nutrient_code_list[i]), temp_table)
+#  Composite_Table$NewCol <- NA #Creates a new column in the composite table
+#  for(c in 1:nrow(temp_table)){ #Loops through each row of the temp table
+#    food_ID <- temp_table[c,1] #checks the entry for the first column of that row, creates a variable for it - this is the food ID of the entry in question
+#    Composite_Table$NewCol[Composite_Table[,1]==food_ID] <- temp_table[c,3] #Assigns the nutrient data value to the new column for that specific food item to the New column
+#  }
+#  nutrient_row <- LegTable_10 %>% filter(Nutr_no == nutrient_code_list[i]) #Finds the nutrient details for that nutrient number
+#  names(Composite_Table)[names(Composite_Table) == 'NewCol'] <- paste0(nutrient_row[4], " (", nutrient_row[2], ")") #This part compresses headers that overrun multiple rows into one, incorporating that nutrient name
+#}
+#
+
+# Renaming variables (Tagnames) ----
+#Linking Nutrient codes to nutrient values (Tagnames) 
 
 nutrient_code_list <- LegTable_10$Nutr_no #Creates a list of nutrient codes
+LegTable_10$Tagname[LegTable_10$Nutr_no == "334"] <- "CRYPXB" # Fixing Tagname (Cryptoxanthin, beta)
 sort(nutrient_code_list) #Sorts the list
 Composite_Table <- LegTable_5 #Creates Composite_Table out of LegTable_5 - this will be the base table that is expanded on
 
@@ -49,9 +71,29 @@ for(i in 1:length(nutrient_code_list)){ #Loops through all the nutrients in the 
     Composite_Table$NewCol[Composite_Table[,1]==food_ID] <- temp_table[c,3] #Assigns the nutrient data value to the new column for that specific food item to the New column
   }
   nutrient_row <- LegTable_10 %>% filter(Nutr_no == nutrient_code_list[i]) #Finds the nutrient details for that nutrient number
-  names(Composite_Table)[names(Composite_Table) == 'NewCol'] <- paste0(nutrient_row[4], " (", nutrient_row[2], ")") #This part compresses headers that overrun multiple rows into one, incorporating that nutrient name
+  names(Composite_Table)[names(Composite_Table) == 'NewCol'] <- paste0(nutrient_row[3], nutrient_row[2] ) #This part compresses headers that overrun multiple rows into one, incorporating that nutrient name
 }
 
+# Checking some Tagnames as variable names
+names(Composite_Table)
+
+# Fixing some double unit variables
+x <- names(Composite_Table)[c(19:46,49:161)]
+setdiff(x, gsub("\\_[[:upper:]]{1,2}", "", names(Composite_Table)[c(19:46,49:161)]))
+names(Composite_Table)[c(19:46,49:161)] <- gsub("\\_[[:upper:]]{1,4}", "", names(Composite_Table)[c(19:46,49:161)])
+
+# Fixing some variables w/o Tagname (NA) excluding Sodium (NA)
+names(Composite_Table)[grep("NA", names(Composite_Table))]
+LegTable_10$NutrDesc[is.na(LegTable_10$Tagname)]
+names(Composite_Table)[c(100, 101, 139, 140, 160)] <- c("VITE_addedmg", 
+                                                        "VITB12_addedmcg",
+                                                        "F18D2tg", 
+                                                        "F18D2ig", 
+                                                        "F18D3ig")
+
+# Replacing µg to mcg
+setdiff(names(Composite_Table), gsub("µg", "mcg", names(Composite_Table)))
+names(Composite_Table) <- gsub("µg", "mcg", names(Composite_Table))
 
 
 # Linking Food Group to Food Group Code ----
@@ -94,7 +136,6 @@ Composite_Table$EDIBLE <- 1-(Composite_Table$Refuse/100) #Edible fraction is cal
 
 
 # Output Table renaming & tidying ----
-# TO - DO: VITA is provided as IU - need to double check 
 Output_table <- Composite_Table %>%
   select(-c("Com_Name", "ManufacName", "Ref_Desc")) %>% #These three columns are removed
   rename( #Some columns are renamed - e.g. NDB_No is renamed to fdc_id
@@ -103,69 +144,72 @@ Output_table <- Composite_Table %>%
     food_group = "foodgroup",
     scientific_name = "Sci_Name",
     Edible_factor_in_FCT = "EDIBLE",
-    #  XN = "N_FActor", # until confirm w/ FAO
-    #food_genus_id = "ID_3",
-    #food_genus_description = "FoodName_3",
-    #food_group = "FoodName_0",
-    #food_subgroup = "FoodName_1",
-    #food_genus_confidence = "confidence",
-    WATERg = "Water (g)",
-    ENERCkcal = "Energy (kcal)",
-    ENERCkJ = "Energy (kJ)",
-    PROCNTg = "Protein (g)",
-    FATg = "Total lipid (fat) (g)", #as per FAO
-    FASATg = "Fatty acids, total saturated (g)", 
-    FAMSg = "Fatty acids, total monounsaturated (g)", 
-    FAPUg = "Fatty acids, total polyunsaturated (g)", 
-    CHOLEmg = "Cholesterol (mg)",
-    CHOCDFg = "Carbohydrate, by difference (g)", 
-    FIBTGg = "Fiber, total dietary (g)", 
-    ALCg = "Alcohol, ethyl (g)", 
-    ASHg = "Ash (g)",
-    CAmg = "Calcium, Ca (mg)", 
-    FEmg = "Iron, Fe (mg)",
-    MGmg = "Magnesium, Mg (mg)",
-    Pmg = "Phosphorus, P (mg)",
-    Kmg = "Potassium, K (mg)",
-    NAmg = "Sodium, Na (mg)", 
-    ZNmg = "Zinc, Zn (mg)",
-    CUmg = "Copper, Cu (mg)", 
-    MNmg = "Manganese, Mn (mg)",
-    SEmcg = "Selenium, Se (µg)",
-    VITA_RAEmcg = "Vitamin A, RAE (µg)", 
-    RETOLmcg = "Retinol (µg)", 
-    CARTAmcg = "Carotene, alpha (µg)",
-    CARTBmcg = "Carotene, beta (µg)", 
-    CRYPXBmcg = "Cryptoxanthin, beta (µg)", 
-    TOCPHAmg = "Vitamin E (alpha-tocopherol) (mg)",
-    TOCPHBmg = "Tocopherol, beta (mg)",
-    TOCPHGmg = "Tocopherol, gamma (mg)", 
-    TOCPHDmg = "Tocopherol, delta (mg)", 
-    TOCTRAmg = "Tocotrienol, alpha (mg)", 
-    TOCTRBmg = "Tocotrienol, beta (mg)", 
-    TOCTRGmg = "Tocotrienol, gamma (mg)",
-    # TOCTRDmg ="Tocotrienol, delta (mg)", #to be confirmed w/ FAO
-    VITCmg = "Vitamin C, total ascorbic acid (mg)",
-    VITEmg = "Vitamin E (alpha-tocopherol) (mg)", 
-    ERGCALmcg = "Vitamin D2 (ergocalciferol) (µg)",
-    CHOCALmcg = "Vitamin D3 (cholecalciferol) (µg)",
-    VITDmcg = "Vitamin D (D2 + D3) (µg)",
-    THIAmg = "Thiamin (mg)",
-    RIBFmg = "Riboflavin (mg)", 
-    NIAmg = "Niacin (mg)", 
-    TRPg = "Tryptophan (g)", 
-    VITB6Amg = "Vitamin B-6 (mg)",
-    #phyticacid_in_mg = "PHYTCPPD"), - not present
-    FOLmcg = "Folate, total (µg)", 
-    FOLACmcg = "Folic acid (µg)", 
-    FOLFDmcg = "Folate, food (µg)",
-    FOLDFEmcg = "Folate, DFE (µg)", 
-    VITB12mcg = "Vitamin B-12 (µg)",
-    SUGARg = "Sugars, total (g)",
-    F22D6N3g = "22:6 n-3 (DHA) (g)", 
-    F20D5N3g = "20:5 n-3 (EPA) (g)") %>%
-  mutate( TRPmg =  TRPg*1000, #convert TRP from g to mg
-          comment = NA) %>%   
+    XN = "N_FActor", # until confirm w/ FAO
+    #WATERg = "Water (g)",
+    #ENERCkcal = "Energy (kcal)",
+    #ENERCkJ = "Energy (kJ)",
+    #PROCNTg = "Protein (g)",
+    #FATg = "Total lipid (fat) (g)", #as per FAO
+    #FASATg = "Fatty acids, total saturated (g)", 
+    #FAMSg = "Fatty acids, total monounsaturated (g)", 
+    #FAPUg = "Fatty acids, total polyunsaturated (g)", 
+    #CHOLEmg = "Cholesterol (mg)",
+    #CHOCDFg = "Carbohydrate, by difference (g)", 
+    #FIBTGg = "Fiber, total dietary (g)", 
+    #ALCg = "Alcohol, ethyl (g)", 
+    #ASHg = "Ash (g)",
+    #CAmg = "Calcium, Ca (mg)", 
+    #FEmg = "Iron, Fe (mg)",
+    #MGmg = "Magnesium, Mg (mg)",
+    #Pmg = "Phosphorus, P (mg)",
+    #Kmg = "Potassium, K (mg)",
+    #NAmg = "Sodium, Na (mg)", 
+    #ZNmg = "Zinc, Zn (mg)",
+    #CUmg = "Copper, Cu (mg)", 
+    #MNmg = "Manganese, Mn (mg)",
+    #SEmcg = "Selenium, Se (µg)",
+    #VITA_RAEmcg = "Vitamin A, RAE (µg)", 
+    #RETOLmcg = "Retinol (µg)", 
+    #CARTAmcg = "Carotene, alpha (µg)",
+    #CARTBmcg = "Carotene, beta (µg)", 
+    #CRYPXBmcg = "Cryptoxanthin, beta (µg)", 
+    #TOCPHAmg = "Vitamin E (alpha-tocopherol) (mg)",
+    #TOCPHBmg = "Tocopherol, beta (mg)",
+    #TOCPHGmg = "Tocopherol, gamma (mg)", 
+    #TOCPHDmg = "Tocopherol, delta (mg)", 
+    #TOCTRAmg = "Tocotrienol, alpha (mg)", 
+    #TOCTRBmg = "Tocotrienol, beta (mg)", 
+    #TOCTRGmg = "Tocotrienol, gamma (mg)",
+    ## TOCTRDmg ="Tocotrienol, delta (mg)", #to be confirmed w/ FAO
+    #VITCmg = "Vitamin C, total ascorbic acid (mg)",
+    #VITEmg = "Vitamin E (alpha-tocopherol) (mg)", 
+    #VITK1mcg = "Vitamin K (phylloquinone) (µg)", 
+    #VITK2mcg = "Vitamin K (menaquinone) (µg)", 
+    #ERGCALmcg = "Vitamin D2 (ergocalciferol) (µg)",
+    #CHOCALmcg = "Vitamin D3 (cholecalciferol) (µg)",
+    #PANTACmg = "Pantothenic acid (mg)",
+    #VITDmcg = "Vitamin D (D2 + D3) (µg)",
+    #THIAmg = "Thiamin (mg)",
+    #RIBFmg = "Riboflavin (mg)", 
+    #NIAmg = "Niacin (mg)", 
+    #TRPg = "Tryptophan (g)", 
+    #VITB6Amg = "Vitamin B-6 (mg)",
+    ##phyticacid_in_mg = "PHYTCPPD"), - not present
+    #FOLmcg = "Folate, total (µg)", 
+    #FOLACmcg = "Folic acid (µg)", 
+    #FOLFDmcg = "Folate, food (µg)",
+    #FOLDFEmcg = "Folate, DFE (µg)", 
+    #VITB12mcg = "Vitamin B-12 (µg)",
+    #SUGARg = "Sugars, total (g)",
+    #F22D6N3g = "22:6 n-3 (DHA) (g)", 
+    #F20D5N3g = "20:5 n-3 (EPA) (g)"
+    )
+
+# Food component transformation 
+## Unit conversion & recalculation
+
+Output_table %>%
+  mutate(comments = NA) %>%   
   CARTBEQmcg_std_creator() %>%
   rename(CARTBEQmcg = "CARTBEQmcg_std") %>%   #Changing name of re-calculated variable for making VITA f(x) to work)
   VITAmcg_std_creator() %>%   #Re-calculating VITAmcg
