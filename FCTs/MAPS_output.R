@@ -169,35 +169,6 @@ fct_names <- unique(MAPS_output$fct_name)
   }
   
   
-# Testing values
 
 
-# Checking for duplicated items
-
-dim(MAPS_ken)
-which(duplicated(MAPS_ken))
-
-MAPS_ken[which(duplicated(MAPS_ken)),]
-subset(MAPS_ken, original_food_id == "2010")
-
-#Checking duplicates in dictionary codes
-sum(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
-x <- which(duplicated(MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"]))
-
-((MAPS_ken$food_genus_id[MAPS_ken$food_genus_id != "NA"][x]))
-subset(MAPS_ken, food_genus_id == "1290.9.14")
-
-#Checking that all dictionary codes have been matched to an entry in the dictionary
-
-subset(MAPS_ken, !is.na(food_genus_id) & is.na(food_genus_description))
-MAPS_output %>% filter(!is.na(food_genus_id), is.na(food_subgroup))  
-
-#Saving file into csv to be used in MAPS tool
-
-fct_name <- unique(MAPS_output$source_fct)
-verion <- "2.2"
-
-file_name <-  paste0("MAPS_", fct_name, "_v", version, ".csv")
-  
-#readr::write_excel_csv(MAPS_ken, here::here('output', file_name))
 
