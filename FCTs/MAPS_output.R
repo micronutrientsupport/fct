@@ -153,6 +153,22 @@ fct_dict <- fct_dict %>%
     ) %>%
     select(var.name)
 
+  
+# Saving the MAPS_FCTs
+  
+split_fct <- MAPS_output %>% 
+    group_by(fct_name) %>% 
+    group_split()
+  
+fct_names <- unique(MAPS_output$fct_name)
+
+  
+  for(i in 1:length(fct_names)){
+    saveName = paste0("output/MAPS_", fct_names[i], "_v2.0.0.csv")
+    readr::write_excel_csv(split_fct[[i]], file = saveName)
+  }
+  
+  
 # Testing values
 
 
