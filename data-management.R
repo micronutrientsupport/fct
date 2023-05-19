@@ -3,7 +3,7 @@
 
 
 #Loading path - untracked file w/ personal WD
-source(here::here("path.R"))
+source(here::here("path.R")) # Local copy of your directory path
 source(here::here("MAPS_Dictionary-Protocol.R"))
 
 #Saving dictionary

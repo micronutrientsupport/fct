@@ -1,21 +1,23 @@
 
+# Loading the dictionary
 dict.df <- readRDS(file = here::here("inter-output", "dictionary.df.rds"))
 
 #Checking higher class categories (ID_0) - cat. == 7
 dict.df %>% group_by(ID_0, FoodName_0) %>% count() %>% arrange(desc(n))
+
 #Empty cells 
 unique(subset(dict.df, is.na(ID_0)))
 
 #Checking categories (ID_1) by ID_0
 id0 <- unique(dict.df$ID_0)
-dict.df %>% filter(ID_0 == id0[3]) %>% 
+dict.df %>% filter(ID_0 == id0[1]) %>% 
   group_by(ID_1, FoodName_1) %>%  distinct(ID_1, FoodName_1) %>% knitr::kable()
 
 subset(dict.df, ID_1 == "2562")
 
 #Checking categories (ID_2) by ID_1, ID_0
-id1 <- unique(dict.df$ID_1[dict.df$ID_0 == id0[3]])
-dict.df %>% filter(ID_1 == id1[7]) %>% 
+id1 <- unique(dict.df$ID_1[dict.df$ID_0 == id0[4]])
+dict.df %>% filter(ID_1 == id1[2]) %>% 
   group_by(ID_2, FoodName_2) %>%  distinct(ID_2, FoodName_2) %>% knitr::kable()
 
 dict.df %>% 
@@ -50,76 +52,41 @@ subset(dict.df, ID_3 == "23161.01.01")
 #
 rproject.path <- str_remove(getwd(), "\\/[:alpha:]{1,}$")
 
+rproject.path <- str_extract(getwd(), "C:/Users/[:alpha:]+/")
+
 #knowing all the MAPS_Dictionary-Protocol.R
 
 list.files(rproject.path, 
-                 pattern = "MAPS_Dictionary-Protocol.R",
+                 pattern = "dictionary.df.rds",
                  recursive = TRUE)
-#
-#
-#
-## find the files that you want
-#dictionary.files <- list.files(rproject.path, 
-#                               pattern = "MAPS_Dictionary_v2.5.csv",
-#                               recursive = TRUE) 
-#
-## copy the files to the new folder
-#file.copy("MAPS_Dictionary-Protocol.R", file.path(rproject.path,
-#                                                  x[2]), overwrite = TRUE)
-#
-##a loop to check that paths are created
-#for(i in 1:length(x)){
-#  
-#  file.copy("MAPS_Dictionary-Protocol.R", file.path(rproject.path,
-#            x[i]))
-#  print(i)
-#  
-#}
-#
-##Storing the files paths for the latest version
-#dictionary.files <- list.files(rproject.path, 
-#                               pattern = "MAPS_Dictionary_v2.5.csv",
-#                               recursive = TRUE) 
-#
-##a loop to check that paths are created
-#for(i in 1:length(dictionary.files)){
-#
-#file.path(rproject.path,
-#          str_replace(dictionary.files[i],
-#          "MAPS_Dictionary_v2.5.csv", "MAPS_Dictionary_v2.6.csv"))
-#print(i)
-#
-#}
-#
-#
-##The loop that actually create the new file in each folder. 
-#
-#for(i in 1:length(dictionary.files)){
-#
-#  dictionary.df %>% 
-#  write.csv(file.path(rproject.path,
-#                str_replace(dictionary.files[i],
-#          "MAPS_Dictionary_v2.5.csv", "MAPS_Dictionary_v2.6.csv")),
-#   row.names = F)
-#
-#  print(i)
-#}
-#
+
+
 #
 ##IMPORTANT: This file needs to be updated in Teams!!
 ##This will only be necessary when a new release is made. 
-#
+
 ##Saving a copy of the master file for MAPS
-#
-#dictionary.df  %>% filter(str_detect(ID_3, "\\b")) %>% 
-#  select(ID_0:FoodName_1, ID_3, FoodName_3) %>% 
-#  rename(
-#    food_group_id = "ID_0",
-#    food_group_name = "FoodName_0",
-#    food_subgroup_id = "ID_1",
-#    food_subgroup_name = "FoodName_1",
-#    food_genus_id = "ID_3",
-#    food_genus_name = "FoodName_3") %>% 
-#  write.csv(here::here('output',
-#                       'MAPS_Dictionary_master-file_v2.6.csv'), row.names = F)
-#
+
+current_version <- str_extract(sort(list.files(here::here("output"), "MAPS_Dictionary"), 
+                 decreasing = TRUE)[1],
+            "(?<=v)[:graph:]{2,}(?=\\.)") 
+
+version <- "3.0.0"
+
+if(current_version < version){
+
+dict.df  %>% filter(str_detect(ID_3, "\\b")) %>% 
+  select(ID_0:FoodName_1, ID_3, FoodName_3) %>% 
+  rename(
+    food_group_id = "ID_0",
+    food_group_name = "FoodName_0",
+    food_subgroup_id = "ID_1",
+    food_subgroup_name = "FoodName_1",
+    food_genus_id = "ID_3",
+    food_genus_name = "FoodName_3") %>% 
+  write.csv(here::here('output',
+                       paste0("MAPS_Dictionary_v", version, ".csv")), 
+            row.names = F) 
+}else{
+  stop("incorrect version")
+}

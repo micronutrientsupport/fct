@@ -77,7 +77,7 @@ plotHistFunc <- function(x, na.rm = TRUE, ...) {
 
 plotHistFunc(MAFOODS) ## execute function
 
-#Addapted version of the previous one for boxplot 
+#Adapted version of the previous one for boxplot 
 #And y = sorting variable
 
 plotBoxFunc <- function(x, na.rm = TRUE, ...) {

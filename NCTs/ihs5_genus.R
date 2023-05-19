@@ -13,7 +13,7 @@ c("food_genus_description"    , "food_group"               ,  "food_subgroup" ,
 #popcorn - AHHA - 1009 
 
 
-ihs5 <- read.csv("ihs5-fct_v1.1.csv")
+ihs5 <- read.csv(here::here("inter-output",  "ihs5-fct_v1.1.csv"))
 
 names(ihs5)
 
