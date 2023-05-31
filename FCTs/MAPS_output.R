@@ -11,6 +11,8 @@ if(sum(ls() == "dictionary.df") == 0) {
 
 var.name <- read.csv(here::here("metadata", "fct-variable-names.csv")) %>% 
   select(Column.Name) %>% pull()
+# Adjusting variable names to updated version (V.1.6 updated on 2021/10/13)
+var.name <- gsub("phyticacid", "phytate", var.name)
 
 #Load dictionary-to-FCTs-matches (can be found in the fct_dict.R)
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
@@ -62,6 +64,7 @@ subset(fct_dict, grepl("baby|infant", food_desc, ignore.case = TRUE) &
          grepl("food", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3)) 
+
 sort(names(fct_dict))
 
 fct_dict %>% filter(!is.na(PHYTCPPDmg)) %>% distinct(source_fct)
@@ -71,26 +74,9 @@ fct_dict <- fct_dict %>%
  THIAmg_std_creator() %>%  # Standardisation of THIAmg
   VITB6mg_std_creator()  # Standardisation of VITB6mg
 
-  ## Standardisation: 
+ ## Standardisation: 
 
 
-"FAT_g"                                           
-"FATCEg"                                          
-"FATg"   
-
-
-
-"PHYTCPPD_PHYTCPPImg"                             
-"PHYTCPPDmg"                                      
-"PHYTCPPmg"                                       
-"PHYTmg"                                          
-"PHYTO"                                           
-"Total PHYTO" - UK21
-
-
-
-"TRPg"                                            
-"TRPmg"
 
 
 
@@ -153,18 +139,35 @@ fct_dict <- fct_dict %>%
     ) %>%
     select(var.name)
 
+# Checking the data
+
+#1) All foods that have a genus ID has a valid description (in dict.)
   
+MAPS_output %>% filter(!is.na(food_genus_id) & 
+                       is.na(food_genus_description)) 
+
+dictionary.df %>% 
+  filter(grepl("bread", FoodName_3) & 
+           grepl("", FoodName_3)) %>% 
+  select(FoodName_3, ID_3)
+
+
+dictionary.df %>% 
+  filter(ID_2 == "F0020") 
+
 # Saving the MAPS_FCTs
   
 split_fct <- MAPS_output %>% 
+  filter(fct_name %in% c("KE18", "MW19", "WA19")) %>% 
     group_by(fct_name) %>% 
     group_split()
   
 fct_names <- unique(MAPS_output$fct_name)
+fct_names <- c("KE18", "MW19", "WA19")
 
   
   for(i in 1:length(fct_names)){
-    saveName = paste0("output/MAPS_", fct_names[i], "_v2.0.0.csv")
+    saveName = paste0("output/MAPS_", fct_names[i], "_v2.0.1.csv")
     readr::write_excel_csv(split_fct[[i]], file = saveName)
   }
   

@@ -104,8 +104,8 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 ## 1) Western Africa FCT (2019)
 
 **Version log**
-
-V.2.0.0 updated on 2023/04/26 - Important changes in dictionary codes, bug fixed on values that were reported with brackets.
+V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for WA19("02_004") from "23170.01" to "23170.01.01", and WA19("06_018") from "1379.02" to "1379.02.01".
+V.2.0.0 updated on 2023/05/19 - Important changes in dictionary codes, bug fixed on values that were reported with brackets, and combining Tagnames for fat, vitamin B6 and thiamine.
 V.1.6 updated on 2021/10/13 - Changed phytic acid to phytate, added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
 
 ID:WA19
@@ -261,7 +261,8 @@ rice, white (fibre = 3.6g/100g) == rice, parboiled
 #### 2) Malawi FCT
 
 **Version log**
-
+V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for MW19("MW01_0017") from "23170.01" to "23170.01.01".
+V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, using excel version of the FCT, and combining Tagnames for fat, vitamin B6 and thiamine.
 V.1.7. updated on 2021/10/25 - Temporary input table from excel (unknown origin), and fixed some dictionary codes (e.g., chicken stew)
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate & loading table from csv instead of pdf (see new folder MW19).
 
@@ -537,7 +538,8 @@ GMBFCT <- GMBFCT %>%
 #### 5) Kenya FCT
 
 **Version log**
-
+V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for KE18("15125") from "F0022.08" to "F0022.07".
+V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, combining Tagnames for fat and thiamine. 
 V.1.7 updated on 2021/10/25 - Removed duplicated items introduced by biblioID merging and removing the dictionary code for baking powder. 
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate.
 V.1.5 updated on 2021/10/11 - Added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
@@ -1171,6 +1173,26 @@ We are standardisation some food components:
 "VITB6Amg"                                        
 "VITB6Cmg"
 
+## To be done:
+
+
+"FAT_g"                                           
+"FATCEg"                                          
+"FATg"   
+
+
+
+"PHYTCPPD_PHYTCPPImg"                             
+"PHYTCPPDmg"                                      
+"PHYTCPPmg"                                       
+"PHYTmg"                                          
+"PHYTO"                                           
+"Total PHYTO" - UK21
+
+
+
+"TRPg"                                            
+"TRPmg"
 
 ## Conclusion
 

@@ -522,63 +522,6 @@ dictionary.df[n1,9] <- "millet, finger, flour,raw"
 dictionary.df[n1,12] <- NA
 dictionary.df[n1,13] <- "eleusine coracana"
 
-#Chapati, white, fortified
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 == "F0020.02")
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- "F0020.06"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "chapati, wheat flour, refined, fortified ghee"
-dictionary.df[n1,10] <- NA
-dictionary.df[n1,11] <- NA
-
-#Chapati, with ghee
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 == "F0020.02")
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- "F0020.05"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "chapati, wheat flour, unrefined, added ghee"
-dictionary.df[n1,10] <- "Also called \"Indian chapati\""
-dictionary.df[n1,11] <- NA
-
-#Chapati, brown
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 == "F0020.02")
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- "F0020.04"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "chapati, wheat flour, unrefined"
-dictionary.df[n1,10] <- NA
-dictionary.df[n1,11] <- NA
-
-
-#Chapati, white
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 == "F0020.02")
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- "F0020.03"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "chapati, wheat flour, refined"
-dictionary.df[n1,10] <- NA
-dictionary.df[n1,11] <- NA
-
 
 #Macaroni
 n1 <- dim(dictionary.df)[1]+1
@@ -724,30 +667,65 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,15] <- taxon_ref
 }
 
+## ├├  Bread (F0020) -----
 
-#Add - F0020 - bread, sweet, wheat flour, refined
+food_desc <-  c("chapati, wheat flour, refined",
+                "chapati, wheat flour, unrefined",
+                "chapati, wheat flour, unrefined, with ghee",
+                "chapati, wheat flour, refined, with fortified ghee",
+                "bread, sweet, wheat flour, refined")
+
+other_name <- c(rep(NA, 2),
+                "also called \"Indian chapati\"",
+                rep(NA, 2))
+
+scientific_name <- c(rep(NA,  5))
+
+taxon <- c(NA)
+
+fex2_new <- c(NA)
+
+#Chapati, white, fortified - "F0020.06"
+#Chapati, with ghee - "F0020.05"
+#Chapati, brown - "F0020.04"
+#Chapati, white - "F0020.03"
+
 #Manual inputs:
+# One input
 id2 <- "F0020"
-desc_new <- "bread, sweet, wheat flour, refined"
-fex2_new <- NA
-scien_new <- NA
+desc1 <-  c("A baked product of flour or meal of cereals, especially wheat. Includes ordinary, unleavened, crackers, rusks, etc (Unofficial definition)")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+taxon_ref <- c(NA)
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-paste0( str_extract(id3, 
-                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
 
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
 
 #Add - 23120.01 - bread, sweet, wheat flour, refined
 #Manual inputs:
