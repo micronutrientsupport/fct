@@ -72,7 +72,18 @@ mwi_genus <- tribble(
 "MW06_0001" ,  "21700.02.01", "h",
 "MW08_0007" ,  "1802.01", "h",
 "MW08_0008" ,  "2899.01.01", "h",
-"MW01_0031", "F1232.05", "l")
+"MW01_0031", "F1232.05", "l", 
+"MW03_0027", "1505.03", "m", 
+"MW04_0016", "1290.9.15", "m",   #same different specie
+"MW04_0021", "1290.9.10", "h", 
+"MW04_0012", "1290.9.16", "h", 
+"MW03_0031", "1505.02", "m",
+"MW01_0002", "F0623.03", "h", 
+"MW03_0042", "1505.06", "l", 
+"MW03_0023", "1505.04", "l", 
+"MW03_0047", "1505.05", "l",
+"MW03_0069", "21183.02", "m"
+)
 
 
 (dupli <- mwi_genus %>%  count(ref_fctcode) %>% 
@@ -131,7 +142,7 @@ mwfct %>% filter(fdc_id %in% c("6017",
 subset(mwfct, fdc_id %in% c("13033"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
-subset(mwfct, fdc_id == "5009", select = c(food_desc, ID_3, scientific_name)) 
+subset(mwfct, fdc_id == "MW03_0027", select = c(food_desc, ID_3, scientific_name)) 
 subset(mwfct, ID_3 == "1359.9.04") 
 subset(mwfct, str_detect(ID_3, "01520")) 
 
@@ -142,7 +153,7 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(mwfct, grepl("bean", food_desc, ignore.case = TRUE) &
+subset(mwfct, grepl("mallow", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(mwfct, str_detect(fdc_id, "^4") &

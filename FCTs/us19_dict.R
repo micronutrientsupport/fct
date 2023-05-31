@@ -107,7 +107,10 @@ genus <- tribble(
   "14037",  "2413.01", "m", 
   "24593", "1522.02", "h",
   "80200", "1587.01", "h",
-  "3682", "23991.01.01", "m")
+  "3682", "23991.01.01", "m",
+  "9218", "1324.02", "h", 
+  "17174", "21119.01.01", "l", 
+  "5160", "21170.01.01", "m")
   
 #Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
@@ -130,7 +133,7 @@ names(us19)
   ## CHECK: Adding new food dictionary code ----
   
   #Checking dictionary/ fct ids availability 
-  subset(us19, fdc_id == "24593", select = c(fdc_id, food_desc, WATERg)) 
+  subset(us19, fdc_id == "9218", select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, fdc_id %in% c("19400"),
   select = c(fdc_id, food_desc, ID_3)) 
   subset(us19, ID_3 == "23140.05.01") 

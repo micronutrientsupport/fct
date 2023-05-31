@@ -158,12 +158,12 @@ dictionary.df %>%
 # Saving the MAPS_FCTs
   
 split_fct <- MAPS_output %>% 
-  filter(fct_name %in% c("KE18", "MW19", "WA19")) %>% 
+ # filter(fct_name %in% c("KE18", "MW19", "WA19")) %>% 
     group_by(fct_name) %>% 
     group_split()
   
 fct_names <- unique(MAPS_output$fct_name)
-fct_names <- c("KE18", "MW19", "WA19")
+# fct_names <- c("KE18", "MW19", "WA19")
 
   
   for(i in 1:length(fct_names)){

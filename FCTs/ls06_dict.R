@@ -13,7 +13,7 @@ lso_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,             
   "30014",  "22290.01",    "l",
  # "140001", "24310.01.01",  "h", we are removing this item bc this FCT doesn't provide info on alc. 
- )                                    # hence alc. beverages shouldn't be included. 
+ "050057", "1290.01.02", "m")                                    # hence alc. beverages shouldn't be included. 
 
 lso_genus$ID_3 <- as.character(lso_genus$ID_3)
 

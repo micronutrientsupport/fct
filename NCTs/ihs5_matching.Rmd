@@ -1,6 +1,6 @@
 ---
-title: "ihs5_matching"
-author: "Segovia D L Revilla, Lucia"
+title: "IHS Food <atching"
+author: "Segovia De La Revilla, Lucia"
 date: "20/09/2021"
 output: html_document
 ---
@@ -8,6 +8,119 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Updated: 2023-05-31
+
+# Introduction
+
+Contains information on the food matching for Malawi household surveys, including IHS4 and IHS5.
+
+# IHS 4
+**Change log**
+V.2.0 - updated on  2023-05-31: Fixed items with not matches on any of the FCTs used in MAPS tool. 
+
+#Important
+
+Thobwa: 24230.03.03 - maize- and millet-fermented beverage, change description in dictionary & found a match for millet-fermented beverage on WA19.
+  
+Maize ufa madeya (bran flour): 39120.04.01 - maize bran, flour, raw --> No information, changing to whole grain flour (23120.03.01)
+  
+Gathered wild green leaves: 1214.06 - blackjack leaves, raw - recoded (1290.9.16)
+  
+Squash (Sobo drink concentrate):  24490.01 - sugar sweetned beverage, concentrate (New code)
+
+Sun Dried fish (Small Variety):  1505.03 -  barb, silver, dried, raw (New code)
+  
+Fresh fish (Small Variety):  1501.06 -  barb, silver, fresh, raw - recode (1501.11)
+  
+Groundnut fresh (unshelled): 142.03 - peanuts, fresh, unshelled, raw. No information on fresh peanuts, hence we need to adjust the quantity from fresh consumption to dry E.g., 100g of fresh weight will be 100*(100-50)/(100-10), and matched to dry peanuts. This is important to not over-estimate the nutrient content from the food consumption.
+  
+Freezes (flavoured ice):  23670.01.02 - flavoured ice - recoded ("22270.06")
+  
+Smoked fish (Small Variety):  1505.06 -  barb, silver, smoked, raw (New code)
+  
+Maheu: 24230.03.02 - maize-fermented beverage - recoded ("24310.02.01")
+  
+Chambiko - soured milk: 22290.01 - sour milk, traditional - recoded("22290.05")
+  
+Sun Dried fish (Large Variety): 1505.02 - tilapia, dried, raw (New code)
+  
+Smoked fish (Large Variety):  1505.05 - tilapia, smoked, raw (New code)
+  
+Smoked fish (Medium Variety):  1505.05 -  tilapia, smoked, raw (New code)
+
+Hot sauce (Nali, etc.): 1699.06 - tabasco, sauce - recode (F1232.04)
+  
+Termites, other insects (eg Ngumbi, caterpillar): 21170.92.02 - edible insect adults, fresh, raw - recode (21183.02) (termite dry as in MW19).
+  
+Cassava - roasted (vendor): 1520.01.03 - cassava root, roasted - recode (1520.01.05) Roasted was not available
+  
+Rosted sweet potatoes: 1530.05 - sweet potato, white-flesh, roasted (New code) - To be reviewed.
+  
+  # Secondary
+  23140.03.02
+  Breakfast cereal
+  breakfast cereals, muesli mix
+  
+  
+  1214.05
+  Other cultivated green leafy vegetables
+  jews mallow leaves, raw
+  	
+Other cultivated green leafy vegetables: 1215.03 roselle leaves, raw - recode()
+
+
+Citrus ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ naartje, orange, etc.: 1324.02 - mandarins, raw (new code)
+
+Maize - boiled or roasted (vendor): 1290.01.02 - maize, green, roasted (new code)
+
+Sun Dried fish (Large Variety): 1505.01 - catfish, african, dried, raw. Catfish from fresh to dried. --> Important due to the water content. Adjust the quantity to fresh E.g., 100g of drt weight will be qty*(100-DW)/(100-FW) Water values based on catfish WA19(09_060) - 78g (FW) and MW19(MW03_0048) - 21g (DW)
+
+Other poultry - guinea fowl, doves, etc.: 21170.01.01 - pigeon meat, fresh, raw (new code)
+
+
+F0623.03
+Zikondamoyo/Nkate
+banana, fritters
+
+1505.04
+Smoked fish (Large Variety)
+catfish, african, smoked, raw
+
+1505.04
+Smoked fish (Medium Variety)
+catfish, african, smoked, raw
+
+F1061.02
+Meal eaten at restaurant (vendor)
+chicken meat, fresh, deep-fried
+
+21170.92.03
+Termites, other insects (eg Ngumbi, caterpillar)
+edible insect larvae, fresh, raw
+
+1501.04
+Fish (vendor)
+catfish, african, fresh, grilled
+
+
+21119.01.01
+Small animal ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ rabbit, mice, etc.
+rat meat, fresh, raw
+
+
+F1061.02
+Meat (vendor)
+chicken meat, fresh, deep-fried
+
+1530.07
+Rosted sweet potatoes
+sweet potatoes, orange-flesh, roasted
+
+F0623.02
+Jam, jelly
+jelly, fruits
+
+Boiled sweet potatoes:  1530.06 - sweet potatoes, orange-flesh, boiled
 
 ## IHS5-foodid matching to Genus
 

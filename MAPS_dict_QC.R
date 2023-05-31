@@ -56,9 +56,7 @@ rproject.path <- str_extract(getwd(), "C:/Users/[:alpha:]+/")
 
 #knowing all the MAPS_Dictionary-Protocol.R
 
-list.files(rproject.path, 
-                 pattern = "dictionary.df.rds",
-                 recursive = TRUE)
+#list.files(rproject.path, pattern = "dictionary.df.rds", recursive = TRUE)
 
 
 #
@@ -71,7 +69,7 @@ current_version <- str_extract(sort(list.files(here::here("output"), "MAPS_Dicti
                  decreasing = TRUE)[1],
             "(?<=v)[:graph:]{2,}(?=\\.)") 
 
-version <- "3.0.0"
+version <- "3.0.2"
 
 if(current_version < version){
 
