@@ -8,27 +8,37 @@ library(dplyr)
 if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
 
-# Load data
+#Loading the FC library
+if(sum(ls() == "fct_dict") == 0) {
+  source(here::here("FCTs",  "MAPS_output.R"))}
+
+# Load data (household - food matches)
 file <- "MAPS_ihs4"
 nct <- readxl::read_excel(here::here("inter-output", paste0(file, ".xlsx")), 1)
 
 names(nct)
+head(nct)
 
 #names(nct)[12] <- "ID_3"
 names(nct)[19] <- "ID_3"
 
-# Checking NCT - dict matches
+# Checking food consumed by household
+nct %>% filter(original_id == "0001c970eecf473099368557e2080b3e" & 
+                 original_food_name == "Maize ufa refined (fine flour)") %>% 
+  select(amount_consumed_in_g)
+
+
+nct %>% filter(original_id == "0001c970eecf473099368557e2080b3e") %>% 
+  count(original_food_name) %>% arrange(desc(n))
 
 nct %>% 
-  left_join(.,dictionary.df %>% 
-              select(ID_3, FoodName_3, 
-                     FoodName_0, FoodName_1) %>%
-              filter(str_detect(ID_3, "\\b"))) %>% 
-  filter(is.na(FoodName_3)) %>% View()
+  count(original_id) %>% pull(n) %>% as.numeric() %>% mean(., na.rm =TRUE)
 
 # Checking NCT - dict matches
 
-total_nct %>% 
+food_list <- nct %>% select(ID_3, original_food_name, food_name) %>% distinct()
+
+food_list %>% 
   left_join(.,dictionary.df %>% 
               select(ID_3, FoodName_3, 
                      FoodName_0, FoodName_1) %>%
@@ -39,13 +49,13 @@ total_nct %>%
 # Checking unmatched/wrong dict to food name
 
 dictionary.df %>% 
-  filter(grepl("banan", FoodName_3) & 
-           grepl("fri", FoodName_3)) %>% 
+  filter(grepl("tilap", FoodName_3) & 
+           grepl("raw", FoodName_3)) %>% 
   select(FoodName_3, ID_3)
 
 
 dictionary.df %>% 
-  filter(ID_3 == "21170.01.01")
+  filter(ID_3 == "1802.02")
 
 # Fixing some ID_3 (dict codes)
 
@@ -66,40 +76,50 @@ nct$ID_3[nct$ID_3 == "1699.04"] <- "F1232.06"
 nct$ID_3[nct$ID_3 == "1699.05"] <- "F1232.07"
 nct$ID_3[nct$ID_3 == "21121.040000000001"] <- "F1061.02"
 
-# Getting total consumption of each food
+## Adding foods to multi-matches
+nct$ID_3[nct$original_food_name == "Gathered wild green leaves"] <- c("1290.9.16", "1290.9.07", "1290.9.15")
+nct$ID_3[nct$original_food_name == "Beef"] <- c("21111.01.01", "21111.02.03", "21184.01.02", "21111.02.01", "21111.02.02")
+nct$ID_3[nct$ID_3 == "1501.05"] <- c("1503.08", "1503.03")
 
-total_nct <- nct %>% group_by(ID_3, original_food_name, food_name) %>% 
-  summarise(consumtion = sum(amount_consumed_in_g)) %>%
-  arrange(desc(consumtion)) 
 
+# Checking matches with FCT
 
 names(fct_dict)
 unique(fct_dict$source_fct)
 
-y <- total_nct  %>% 
+y <- nct  %>% 
   left_join(., fct_dict %>% 
-              select(ID_3, WATERg) %>%
-              filter(str_detect(ID_3, "\\b"))) %>% View()
-  filter(is.na(WATERg)) 
+              select(ID_3, WATERg, VITA_RAEmcg) %>%
+              filter(str_detect(ID_3, "\\b"))) %>% 
+  distinct(ID_3, original_food_name, food_name) %>% View()
+  
   
 
 
 fct_dict$WATERg <- as.numeric(fct_dict$WATERg)
 
 fct_dict %>% 
-  filter(grepl("pigeon", food_desc, ignore.case = TRUE) & 
-           grepl("raw", food_desc, ignore.case = TRUE) &
+  filter(grepl("mice|game", food_desc, ignore.case = TRUE) & 
+           grepl("", food_desc, ignore.case = TRUE) &
          #  !is.na(ID_3) &
          #  WATERg >10 &
            grepl("", food_desc, ignore.case = TRUE)
          ) %>% 
-  select(source_fct, fdc_id, food_desc, ID_3, WATERg, scientific_name) %>% View()
+  select(source_fct, fdc_id, food_desc, ID_3, Edible_factor_in_FCT, WATERg,
+         ENERCkcal, ZNmg, 
+         scientific_name) %>% View()
 
 fct_dict %>% 
   filter(ID_3 == "24490.01")
 
+fct_dict %>% filter(fdc_id %in% c("MW04_0012")) %>% View()
+fct_dict %>% filter(grepl("^07_", fdc_id)) %>% View()
+
 # Fixing food composition code - These matches should be reviewed and
 # updated if new FC values are available. 
+
+#New variable for the changed consumption
+nct$amount_consumed_std_in_g <- 
 
 # Peanuts fresh to peanuts dried --> Important due to the water content. 
 # Adjust the quantity to dry E.g., 100g of fresh weight will be 100*(100-50)/(100-10)
@@ -115,6 +135,8 @@ nct$ID_3[nct$ID_3 == "1505.01"] <- "1503.07"
 # Cassava - roasted, maize bran flour
 nct$ID_3[nct$ID_3 == "1520.01.03"] <-  "1520.01.05"
 nct$ID_3[nct$ID_3 == "39120.04.01"] <-  "23120.03.01"
+nct$ID_3[nct$ID_3 == "1501.06"] <-  "1501.11"
+nct$ID_3[nct$ID_3 == "21170.92.02"] <-  "21183.02"
 
 ## To remove those codes from dict too
 # Jew mallow to jute mallow (scientific name)
@@ -126,6 +148,31 @@ nct$ID_3[nct$ID_3 == "23670.01.02"] <-  "22270.06"
 nct$ID_3[nct$ID_3 == "24230.03.02"] <-  "24310.02.01"
 nct$ID_3[nct$ID_3 == "22290.01"] <-  "22290.05"
 nct$ID_3[nct$ID_3 == "1699.06"] <-  "F1232.04"
-nct$ID_3[nct$ID_3 == "1699.06"] <-  "1501.11"
+nct$ID_3[nct$ID_3 == "1501.04"] <-  "1507.12"
+nct$ID_3[nct$ID_3 == "F0623.02"] <-  "23670.01.05"
+#nct$ID_3[nct$ID_3 == ""] <-  "1501.11"
+
+# Better matches available
+nct$ID_3[nct$ID_3 == "21170.92.02"] <-  "21183.02"
+nct$ID_3[nct$ID_3 == "23140.03.02"] <-  "23140.03.01"
+nct$ID_3[nct$ID_3 == "21170.92.03"] <-  "21183.03"
+nct$ID_3[nct$ID_3 == "1501.02"] <-  "1501.09"
+nct$ID_3[nct$ID_3 == "1802.02"] <-  "1802.01"
 
 
+# Getting total consumption of each food
+
+total_nct <- nct %>% group_by(ID_3, original_food_name, food_name) %>% 
+  summarise(consumtion = sum(amount_consumed_in_g)) %>%
+  arrange(desc(consumtion)) 
+
+
+names(fct_dict)
+unique(fct_dict$source_fct)
+
+y <- total_nct  %>% 
+  left_join(., fct_dict %>% 
+              select(ID_3, WATERg, FEmg, ZNmg) %>%
+              filter(str_detect(ID_3, "\\b"))) 
+
+y %>% filter(is.na(WATERg))

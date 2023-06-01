@@ -261,7 +261,7 @@ rice, white (fibre = 3.6g/100g) == rice, parboiled
 #### 2) Malawi FCT
 
 **Version log**
-V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for MW19("MW01_0017") from "23170.01" to "23170.01.01".
+V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for MW19("MW01_0017") from "23170.01" to "23170.01.01", for MW19("MW08_0007") from "1802.01" to  "1802.02".
 V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, using excel version of the FCT, and combining Tagnames for fat, vitamin B6 and thiamine.
 V.1.7. updated on 2021/10/25 - Temporary input table from excel (unknown origin), and fixed some dictionary codes (e.g., chicken stew)
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate & loading table from csv instead of pdf (see new folder MW19).
@@ -393,6 +393,10 @@ fooditems: "MW05_0016", "MW05_0019",  "MW02_0007",  "MW02_0014",  "MW02_0019",  
 We are using the matches that were used for the ihs4-FCT matches. Hence, the next step is to *manually* check and add the confidence to the match and to check for possible inconsistencies. 
 
 We found some inconsistencies mainly due to how matches were done, i.e. duplicated matches, imputation or substitutions 'mice meat' was matched to 'rabbit meat'. We solved most of the duplicated and those that could not been solved were left. That, ended up with items in MAFOODS that are now duplicated (i.e. beef meat, it's beef meat with and without bones).
+
+#### MAPS dictionary updates
+
+1. Changed sugar cane to "sugar cane juice" due to NVs (i.e., water and Energy) were the same as the juice when compared with the values in KE18. 
 
 We have coded the confidence on the labels following the criteria:
   - high: exact match (i.e., onion, raw and onion, raw)

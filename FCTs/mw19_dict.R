@@ -70,11 +70,11 @@ mwi_genus <- tribble(
 "MW05_0019" ,  "1317.01", "h",
 "MW05_0021" ,  "1318.01", "h",
 "MW06_0001" ,  "21700.02.01", "h",
-"MW08_0007" ,  "1802.01", "h",
+"MW08_0007" ,  "1802.02", "h",   # Changed to the "sugar cane juice" due to NVs are the same as the juice
 "MW08_0008" ,  "2899.01.01", "h",
 "MW01_0031", "F1232.05", "l", 
 "MW03_0027", "1505.03", "m", 
-"MW04_0016", "1290.9.15", "m",   #same different specie
+"MW04_0016", "1290.9.15", "m",   #same specie different sub.specie
 "MW04_0021", "1290.9.10", "h", 
 "MW04_0012", "1290.9.16", "h", 
 "MW03_0031", "1505.02", "m",
@@ -82,7 +82,11 @@ mwi_genus <- tribble(
 "MW03_0042", "1505.06", "l", 
 "MW03_0023", "1505.04", "l", 
 "MW03_0047", "1505.05", "l",
-"MW03_0069", "21183.02", "m"
+"MW03_0069", "21183.02", "m",  #same specie different sub.specie
+"MW03_0008", "21183.03", "h", 
+"MW03_0021", "1507.14", "h",
+"MW04_0015", "1290.9.07", "h", 
+"MW03_0022", "1501.09", "h", 
 )
 
 
@@ -153,7 +157,7 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(mwfct, grepl("mallow", food_desc, ignore.case = TRUE) &
+subset(mwfct, grepl("cat", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(mwfct, str_detect(fdc_id, "^4") &

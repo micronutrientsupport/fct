@@ -110,7 +110,9 @@ genus <- tribble(
   "3682", "23991.01.01", "m",
   "9218", "1324.02", "h", 
   "17174", "21119.01.01", "l", 
-  "5160", "21170.01.01", "m")
+  "5160", "21170.01.01", "m",
+  "19300", "23670.01.05", "h",
+  "11109", "1212.01", "h")
   
 #Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),

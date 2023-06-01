@@ -39,7 +39,7 @@ fct_cover <- list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, fu
 fct_cover %>% distinct(source_fct) 
 colnames(fct_cover)
 
-fct_cover$fdc_id[fct_cover$source_fct == "JA15"] <- gsub("^0", "", fct_cover$fdc_id )
+fct_cover$fdc_id[fct_cover$source_fct %in% c("JA15", "LS06")] <- gsub("^0", "", fct_cover$fdc_id[fct_cover$source_fct %in% c("JA15", "LS06")])
 fct_cover$fdc_id <- str_squish(fct_cover$fdc_id )
 fct_cover$source_fct <- str_squish(fct_cover$source_fct )
 

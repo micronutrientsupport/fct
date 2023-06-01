@@ -2234,112 +2234,59 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 
 
+## ├├  Freshwater fish, preparation ns (1507) -----
 
-# 1507 -  North African catfish, fillet, steamed (without salt)
-#Manual inputs:
+food_desc <-  c("north african catfish, fresh, steamed",
+                "north african catfish, fresh, grilled", 
+                "north african catfish, fresh, boiled", 
+                "catfish, fresh, fried")
+
+scientific_name <-  c(rep("protopterus annectens", 3), 
+                      "clarias gariepinus")
+
+other_name <-  c(rep("mudfish (kamongo) (KE18)", 3), 
+                 "Mlamba wokazinga (MW19)")
+
+taxon <- c(rep("ISSCAAP Code: 13; Taxonomic Code: NA; Inter-Agency3-Alpha Code: NA", 3),
+           NA)
+
+ref2 <- c(rep("https://www.fishbase.se/ComNames/CommonNameSummary.php?autoctr=53372", 3),
+          NA)
+
+#Fixed
 id2 <- "1507"
-desc_new <- "north african catfish, fresh, steamed"
-fex2_new <- NA
-taxon <- "ISSCAAP Code: 13; Taxonomic Code: NA; Inter-Agency3-Alpha Code: NA"
-ref1 <-  "See Fisheries Global NCT, 2022, https://www.fao.org/fishery/en/collection/asfis/en"
-scien_new <- "protopterus annectens"
-other_name <- "mudfish (kamongo) in KE18"
-ref2 <- "https://www.fishbase.se/ComNames/CommonNameSummary.php?autoctr=53372"
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxon
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-dictionary.df[n1,14] <- ref2
-
-# 1507 -  North African catfish, fillet, grilled (without salt and fa~ (without salt)
-#Manual inputs:
-id2 <- "1507"
-desc_new <- "north african catfish, fresh, grilled"
-fex2_new <- NA
-taxon <- "ISSCAAP Code: 13; Taxonomic Code: NA; Inter-Agency3-Alpha Code: NA"
-ref1 <-  "See Fisheries Global NCT, 2022, https://www.fao.org/fishery/en/collection/asfis/en"
-scien_new <- "protopterus annectens"
-other_name <- "mudfish (kamongo) in KE18"
-ref2 <- "https://www.fishbase.se/ComNames/CommonNameSummary.php?autoctr=53372"
+ref_taxon <-  "FAO-FIES. Aquatic Sciences and Fisheries Information System (ASFIS) species list. Retrievef from http://www.fao.org/fishery/collection/asfis/en (accessed 2022/08/01). (2022)"
 
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- taxon[i]
+  dictionary.df[n1,11] <- ref_taxon
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- ref2[i]
+}
 
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxon
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-dictionary.df[n1,14] <- ref2
-
-# 1507 -  North African catfish, fillet, boiled in recipe (without salt)
-#Manual inputs:
-id2 <- "1507"
-desc_new <- "north african catfish, fresh, boiled"
-fex2_new <- NA
-taxon <- "ISSCAAP Code: 13; Taxonomic Code: NA; Inter-Agency3-Alpha Code: NA"
-ref1 <-  "See Fisheries Global NCT, 2022, https://www.fao.org/fishery/en/collection/asfis/en"
-scien_new <- "protopterus annectens"
-other_name <- "mudfish (kamongo) in KE18"
-ref2 <- "https://www.fishbase.se/ComNames/CommonNameSummary.php?autoctr=53372"
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxon
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-dictionary.df[n1,14] <- ref2
 
 # 1557 -  Prawns, fresh, steamed (without salt)
 #Manual inputs:
@@ -2656,7 +2603,7 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 dictionary.df[n1,14] <- ref2
 
-# 1501 - Indian ilisha, fresh, raw   
+
 
 ## ├├  Freshwater fish, fresh (1501) -----
 
@@ -3746,11 +3693,16 @@ dictionary.df[n1,13] <- scien_new
 
 # Manual inputs:
 food_desc <- c("game meat, dried, salted, raw",
-               "termites, dried, raw")
+               "termites, dried, raw", 
+               "caterpillar, dried, roasted")
 
-scientific_name <- c(NA, "Macrotermes spp.")
+scientific_name <- c(NA, 
+                     "Macrotermes spp.",
+                     "Usta terphrichore")
 
-other_name <- c(NA, "Ngumbi (Macrotermes subhyanlinus) (MW19)")
+other_name <- c(NA, 
+                "Ngumbi (Macrotermes subhyanlinus) (MW19)", 
+                "Nyamanyama zootcha (MW19)")
 
 # 
 id2 <- "21183"
@@ -6027,7 +5979,8 @@ food_desc <-  c("malabar spinach, leaves, fresh, raw",
   "blackjack, leaves, fresh, raw")
 
 other_name <- c("Vine (African) spinach (KE18)",
-  rep(NA, 13), 
+                "cat\\'s whiskers (Luni) (MW19)",
+  rep(NA, 12), 
   "bush okra, leaves, dried raw (WA19), Leaves, jews mallow, raw, Corchorus trilocularis, (Denje)",
   rep(NA, 1))
 
@@ -6035,7 +5988,7 @@ other_info <- c("https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/nd
                 rep(NA, 14),
                 "https://www.healthbenefitstimes.com/blackjack/, (RESEWO, 2013)")
 
-scientific_name <- c("basella alba", "gynandropsis gynandra",
+scientific_name <- c("basella alba", "gynandropsis gynandra/cleome gynandra",
                      "solanum scabrum", "solanum macrocarpon",
                      "colocasia esculenta", "vigna unguiculata",
                     NA,  "apium graveolens", NA, 
@@ -7112,13 +7065,18 @@ for(i in 1:length(food_desc)){
 
 ## ├├  sugar confectionery (23670.01) -----
 
-food_desc <- c("candies, hard", "chewing gum")
+food_desc <- c("candies, hard", "chewing gum", 
+               "jelly, fruits")
+
+fex2_new <- c(rep(NA, 2), 
+              "A16FC#F02.A16FD$F28.A0BA1$F04.A0BY6$F04.A04RK")
+
+other_name <- c(rep(NA, 2), "fruit gums (UK21), jellies (US19)")
 
 #Manual inputs:
 id2 <- "23670.01"
 scientific_name <- c(NA)
-other_name <- c(NA)
-fex2_new <- c(NA)
+
 desc1 <-  c(NA)
 ref1 <-  c(NA)
 
@@ -7143,7 +7101,7 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,] <- dictionary.df[n2,]
   #New entry - population:
   dictionary.df[n1,7] <- id3_new
-  dictionary.df[n1,8] <- fex2_new
+  dictionary.df[n1,8] <- fex2_new[i]
   dictionary.df[n1,9] <- food_desc[i]
   dictionary.df[n1,10] <- desc1
   dictionary.df[n1,11] <- ref1[i]

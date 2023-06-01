@@ -89,7 +89,7 @@ subset(ihs5, ihs5_foodid == "812")
 
 ## Loading data
    
-ihs5 <- read.csv("ihs5-fct_v1.2.csv") %>% select(-X)
+ihs5 <- read.csv(here::here("inter-output",  "ihs5-fct_v1.2.csv")) %>% select(-X)
    
 source("MAPS_Dictionary-Protocol.R")
 
@@ -177,7 +177,7 @@ subset(ihs5_genus, is.na(FoodName_3))
 x <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
    left_join(., dictionary.df %>% select(ID_3, FoodName_3),
              by = c("food_genus_id" = "ID_3")) %>% 
-   relocate(c(FoodName_3, ref_fctcode, ref_fctitem), .after = food_genus_id) %>% select(1:4) %>% 
+   relocate(c(FoodName_3.x, ref_fctcode, ref_fctitem), .after = food_genus_id) %>% select(1:4) %>% 
    separate_rows(c("ref_fctcode", "ref_fctitem"), sep = ";")  %>% 
    arrange(food_genus_id)
 
