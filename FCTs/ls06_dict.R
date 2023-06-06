@@ -14,7 +14,7 @@ lso_genus <- tribble(
   "30014",  "22290.01",    "l",
  # "140001", "24310.01.01",  "h", we are removing this item bc this FCT doesn't provide info on alc. 
  "50057", "1290.01.02", "m",
- )                                    # hence alc. beverages shouldn't be included. 
+ "11021", "112.03", "m")                                    # hence alc. beverages shouldn't be included. 
 
 lso_genus$ID_3 <- as.character(lso_genus$ID_3)
 
@@ -78,7 +78,7 @@ subset(lsfct, grepl("beer", food_desc, ignore.case = TRUE) &
 ## Dictionary
 
 
-dictionary.df %>% filter(ID_3 %in% c("24310.02.01"))
+dictionary.df %>% filter(ID_3 %in% c("112.03"))
 subset(dictionary.df, ID_2 == "F1232")
 subset(dictionary.df, ID_2 %in% c("1379.02"
 ))

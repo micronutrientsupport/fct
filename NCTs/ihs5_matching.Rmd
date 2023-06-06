@@ -10,13 +10,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 Updated: 2023-05-31
 
-# Introduction
-
-Contains information on the food matching for Malawi household surveys, including IHS4 and IHS5.
-
 # IHS 4
 **Change log**
-V.2.0 - updated on  2023-05-31: Fixed items with not matches on any of the FCTs used in MAPS tool. 
+V.2.0.0 - updated on  2023-05-31: Fixed items without matches on any of the FCTs used in MAPS tool, changed to better matches in the FCTs.
+
+# Introduction
+
+The document contains information on the food matching for Malawi household surveys, including IHS4 () and IHS5 ().
+
 
 # Updating food matches to be performed within the MAPS tool.
 
@@ -24,7 +25,16 @@ Some food needed a better match, for instance, beef was matched to "with bones" 
 
 beef, lean, with bones, fresh, raw (21111.01.01) --> Added beef w/o bones, including ground raw. c("21111.02.03", "21184.01.02", "21111.02.01", "21111.02.02")
 
-#Need to change food name for recoded items, and generate a new consumption variable with the adjusted values. 
+# Need to change food name for recoded items, and generate a new consumption variable with the adjusted values. 
+
+We are updating the workflow, so the it allows for taking the survey data (from the MAPS tool or from a user), check the food matches and then merge and adapt the consumption data according to the matches. 
+
+Including, allocation (re-calculation) of the consumed food by multiple items (i.e., weighting factors), edible portion, water content (i.e., reported dried but matched to fresh), etc. 
+
+# Food items with better matches
+
+106 - Rice: We changed from multiple (imported & local, white) to only  rice grain, local, white, dried, raw (23161.02.01), because it is the only reported in FAO SUA (2015-2017).
+
 
 # Food items reported in the IHS4 without any matches
 
@@ -76,7 +86,7 @@ Citrus ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ naartje, orang
 
 Maize - boiled or roasted (vendor): 1290.01.02 - maize, green, roasted (new code)
 
-Sun Dried fish (Large Variety): 1505.01 - catfish, African, dried, raw. Catfish from fresh to dried. --> Important due to the water content. Adjust the quantity to fresh E.g., 100g of drt weight will be qty*(100-DW)/(100-FW) Water values based on catfish WA19(09_060) - 78g (FW) and MW19(MW03_0048) - 21g (DW)
+Sun Dried fish (Large Variety): 1505.01 - catfish, African, dried, raw. Catfish from fresh to dried. --> Important due to the water content. Adjust the quantity to fresh E.g., 100g of dry weight will be qty*(100-DW)/(100-FW) Water values based on catfish WA19(09_060) - 78g (FW) and MW19(MW03_0048) - 21g (DW)
 
 Other poultry - guinea fowl, doves, etc.: 21170.01.01 - pigeon meat, fresh, raw (new code)
 
@@ -96,12 +106,14 @@ Small animal ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ rabbit, 
 
 Meat (vendor): (F1061.02) chicken meat, fresh, deep-fried (new code)
 
-# Rosted sweet potatoes: (1530.07) sweet potatoes, orange-flesh, roasted
-
 Jam, jelly: (F0623.02) jelly, fruits - recode (23670.01.05) & New code
 
-# Boiled sweet potatoes:  1530.06 - sweet potatoes, orange-flesh, boiled
+#### Orange fleshed sweet potato
 
+We are using an allocation factor of .162 (16.2%), according to G.O. analysis of the coverage of OFSP in Malawi (Osman et al. *unpublished*).
+
+# Roasted sweet potatoes: (1530.07) sweet potatoes, orange-flesh, roasted
+# Boiled sweet potatoes:  (1530.06) sweet potatoes, orange-flesh, boiled
 
 ## Checking Vitamin A values (VITA_RAEmg)
 
