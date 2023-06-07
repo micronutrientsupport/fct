@@ -30,10 +30,10 @@ dat %>% filter(item_code == "502" & g_consumed >0)
 ## Adjusting quantity of apparent consumption to FCT matches
 
 food <- dat %>% 
-  left_join(., food_list[,c("code", "ID_3", "wt")], 
+  left_join(., food_list[,c("code", "item", "ID_3", "food_genus_confidence", "wt")], 
                   by =c("item_code" = "code"))
 
-  food %>% filter(g_consumed>0 & is.na(ID_3)) %>% 
+  food %>% filter(g_consumed>0 & (is.na(ID_3) |is.na(food_genus_confidence))) %>% 
     distinct(item_code)
   
 #New variable for the changed consumption
@@ -65,12 +65,12 @@ next
   
   # Peanuts fresh to peanuts dried --> Important due to the water content. 
   # Adjust the quantity to dry E.g., 100g of fresh weight will be 100*(100-50)/(100-10)
-food$amount_consumed_std_in_g[food$ID_3 == "142.03"] <- food$amount_consumed_std_in_g[food$ID_3 == "142.03"]*(100-50)/(100-10)
+food$amount_consumed_std_in_g[food$ID_3 == "142.03" & !is.na(food$amount_consumed_std_in_g)] <- food$amount_consumed_std_in_g[food$ID_3 == "142.03"& !is.na(food$amount_consumed_std_in_g)]*(100-50)/(100-10)
 food$ID_3[food$ID_3 == "142.03"] <- "142.01"
 
 # Catfish from fresh to dried. --> Important due to the water content. 
 # Adjust the quantity to fresh E.g., 100g of dry weight will be qty*(100-DW)/(100-FW)
 #Water values based on catfish WA19(09_060) - 78g (FW) and MW19(MW03_0048) - 21g (DW)
-food$amount_consumed_std_in_g[food$ID_3 == "1505.01"] <- food$amount_consumed_std_in_g[food$ID_3 == "1505.01"]*(100-21)/(100-78)
+food$amount_consumed_std_in_g[food$ID_3 == "1505.01" & !is.na(food$amount_consumed_std_in_g)] <- food$amount_consumed_std_in_g[food$ID_3 == "1505.01" & !is.na(food$amount_consumed_std_in_g)]*(100-21)/(100-78)
 food$ID_3[food$ID_3 == "1505.01"] <- "1503.07"
 

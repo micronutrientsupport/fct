@@ -45,7 +45,8 @@ nct %>%
 
 # Generating the food list with dict codes (from survey data in the tool)
 
-food_list <- nct %>% select(ID_3, original_food_name, food_name) %>% distinct()
+food_list <- nct %>% select(ID_3, original_food_name, food_name, food_genus_confidence) %>% 
+  distinct()
 head(food_list)
 
 food_list %>% filter(grepl("citru", original_food_name, ignore.case = TRUE)) %>% pull(original_food_name)
@@ -65,11 +66,15 @@ food_list <- flist %>%
 food_list %>% filter(is.na(ID_3) &           # missing ID_3 and/or foods in the tool
                    !grepl("00$", code))
 
-#Adding dict code to those foods missing it (ID_3)
+#Adding dict code & confidenceto those foods missing it (ID_3)
 food_list$ID_3[food_list$code == "116"] <- "23991.01.01"
+food_list$food_genus_confidence[food_list$code == "116"] <- "low"
 food_list$ID_3[food_list$code == "314"] <- "141.01"
+food_list$food_genus_confidence[food_list$code == "314"] <- "low"
 food_list$ID_3[food_list$code == "708"] <- "23991.01.03, 23991.01.04"
+food_list$food_genus_confidence[food_list$code == "708"] <- "medium"
 food_list$ID_3[food_list$code == "835"] <- "112.03"
+food_list$food_genus_confidence[food_list$code == "835"] <- "high"
 
 food_list <- food_list %>% separate_rows(ID_3, sep = ",") %>% # separating multiple items from above into idnv. rows
   mutate(ID_3 = str_squish(ID_3))
@@ -93,10 +98,9 @@ dictionary.df %>%
 
 
 dictionary.df %>% 
-  filter(ID_3 == "21111.02.03")
+  filter(ID_3 == "21170.92.02")
 
 # Fixing some ID_3 (dict codes)
-
 food_list$ID_3[food_list$ID_3 == "142.02000000000001"] <- "142.02"
 food_list$ID_3[food_list$ID_3 == "141.02000000000001"] <- "141.02"
 food_list$ID_3[food_list$ID_3 == "2211.0100000000002"] <- "2211.01"
@@ -155,38 +159,55 @@ fct_dict %>% filter(grepl("^07_", fdc_id)) %>% View()
 
 
 # Fixing food composition code - These matches should be reviewed and
-# updated if new FC values are available. 
+# updated if new FC values are available, low Q matches. 
 
 # Cassava - roasted, maize bran flour
+food_list$food_genus_confidence[food_list$ID_3 == "1520.01.03"] <-  "low"
 food_list$ID_3[food_list$ID_3 == "1520.01.03"] <-  "1520.01.05"
+food_list$food_genus_confidence[food_list$ID_3 == "39120.04.01"] <-  "low"
 food_list$ID_3[food_list$ID_3 == "39120.04.01"] <-  "23120.03.01"
+food_list$food_genus_confidence[food_list$ID_3 == "1501.06"] 
 food_list$ID_3[food_list$ID_3 == "1501.06"] <-  "1501.11"
-food_list$ID_3[food_list$ID_3 == "21170.92.02"] <-  "21183.02"
+
 
 ## To remove those codes from dict too
 # Jew mallow to jute mallow (scientific name)
-
+food_list$food_genus_confidence[food_list$ID_3 == "1214.05"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "1214.05"] <-  "1290.9.15"
+food_list$food_genus_confidence[food_list$ID_3 == "1215.03"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "1215.03"] <-  "1290.9.10"
+food_list$food_genus_confidence[food_list$ID_3 == "1214.06"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "1214.06"] <-  "1290.9.16"
+food_list$food_genus_confidence[food_list$ID_3 == "23670.01.02"] 
 food_list$ID_3[food_list$ID_3 == "23670.01.02"] <-  "22270.06"
+food_list$food_genus_confidence[food_list$ID_3 == "24230.03.02"]
 food_list$ID_3[food_list$ID_3 == "24230.03.02"] <-  "24310.02.01"
+food_list$food_genus_confidence[food_list$ID_3 == "22290.01"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "22290.01"] <-  "22290.05"
+food_list$food_genus_confidence[food_list$ID_3 == "1699.06"]
 food_list$ID_3[food_list$ID_3 == "1699.06"] <-  "F1232.04"
+food_list$food_genus_confidence[food_list$ID_3 == "1501.04"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "1501.04"] <-  "1507.12"
+food_list$food_genus_confidence[food_list$ID_3 == "F0623.02"] 
 food_list$ID_3[food_list$ID_3 == "F0623.02"] <-  "23670.01.05"
-#nct$ID_3[nct$ID_3 == ""] <-  "1501.11"
 
 # Better matches available
+food_list$food_genus_confidence[food_list$ID_3 == "21170.92.02"] <-  "high"
 food_list$ID_3[food_list$ID_3 == "21170.92.02"] <-  "21183.02"
+food_list$food_genus_confidence[food_list$ID_3 == "23140.03.02"] <-  "high"
 food_list$ID_3[food_list$ID_3 == "23140.03.02"] <-  "23140.03.01"
+food_list$food_genus_confidence[food_list$ID_3 == "21170.92.03"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "21170.92.03"] <-  "21183.03"
+food_list$food_genus_confidence[food_list$ID_3 == "1501.02"] <-  "medium"
 food_list$ID_3[food_list$ID_3 == "1501.02"] <-  "1501.09"
-food_list$ID_3[food_list$ID_3 == "1802.02"] <-  "1802.01"
+#food_list$food_genus_confidence[food_list$ID_3 == "1802.02"] 
+#food_list$ID_3[food_list$ID_3 == "1802.02"] <-  "1802.01"
 
 ## Adding foods to multi-matches
 food_list$ID_3[food_list$item == "Gathered wild green leaves"] <- c("1290.9.16, 1290.9.07, 1290.9.15")
+food_list$food_genus_confidence[food_list$item == "Gathered wild green leaves"] <- "medium"
 food_list$ID_3[food_list$item == "Beef"] <- c("21111.01.01, 21111.02.03, 21184.01.02, 21111.02.01, 21111.02.02")
+food_list$food_genus_confidence[food_list$item == "Beef"] <- "medium"
 #food_list$ID_3[food_list$ID_3 == "1501.05"] <- c("1503.08, 1503.03")
 
 food_list <- food_list %>% separate_rows(ID_3, sep = ",") %>% # separating multiple items from above into idnv. rows
@@ -213,7 +234,7 @@ if(sum(food_list != current_food_list, na.rm = TRUE)>0){
 } else {
   
 saveRDS(food_list,
-        here::here("inter-output",  "MAPS_food-list_ihs4_v2.0.0.rds"))
+        here::here("inter-output",  "MAPS_food-list_ihs4_v2.1.0.rds"))
 
 }
   
