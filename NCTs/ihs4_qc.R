@@ -7,7 +7,7 @@ library(dplyr)
 dat <- read.csv(here::here("inter-output", "hces", "ihs4.cons.csv"))[,2:4]
 food_list <- readRDS(here::here("inter-output", 
                       sort(list.files(here::here("inter-output"), 
-                            "MAPS_food-list_ihs4"), decreasing = TRUE)[1])) 
+                            "food-list_ihs4"), decreasing = TRUE)[1])) 
 
 
 
@@ -74,3 +74,24 @@ food$ID_3[food$ID_3 == "142.03"] <- "142.01"
 food$amount_consumed_std_in_g[food$ID_3 == "1505.01" & !is.na(food$amount_consumed_std_in_g)] <- food$amount_consumed_std_in_g[food$ID_3 == "1505.01" & !is.na(food$amount_consumed_std_in_g)]*(100-21)/(100-78)
 food$ID_3[food$ID_3 == "1505.01"] <- "1503.07"
 
+
+
+# Saving the food consumption and food matches
+# Checking version
+
+hces <-  "ihs4"
+current_food <- readRDS(here::here("inter-output", 
+                sort(list.files(here::here("inter-output"), 
+                paste0("food-cons_", hces)), decreasing = TRUE)[1])) 
+
+
+if(sum(food != current_food, na.rm = TRUE)>0){
+  stop("Difference in food list file, need new version")
+  
+} else {
+  
+  saveRDS(food,
+          here::here("inter-output",
+                     paste0("food-cons_", hces, "_v1.0.0.rds")))
+  
+}

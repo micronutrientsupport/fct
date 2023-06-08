@@ -225,7 +225,7 @@ food_list <- food_list %>% add_count(code) %>%
 
 current_food_list <- readRDS(here::here("inter-output", 
                                 sort(list.files(here::here("inter-output"), 
-                                "MAPS_food-list_ihs4"), decreasing = TRUE)[1])) 
+                                "food-list_ihs4"), decreasing = TRUE)[1])) 
 
 
 if(sum(food_list != current_food_list, na.rm = TRUE)>0){
@@ -234,7 +234,7 @@ if(sum(food_list != current_food_list, na.rm = TRUE)>0){
 } else {
   
 saveRDS(food_list,
-        here::here("inter-output",  "MAPS_food-list_ihs4_v2.1.0.rds"))
+        here::here("inter-output",  "food-list_ihs4_v2.1.0.rds"))
 
 }
   
