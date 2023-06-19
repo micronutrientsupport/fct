@@ -260,7 +260,8 @@ wa_genus <- tribble(
   "07_081", "21170.92.09", "h", 
   "09_051", "1501.11", "h", 
   "08_003", "F1061.02", "m", 
-  "04_072", "1290.9.07", "h"
+  "04_072", "1290.9.07", "h", 
+  "01_184", "1199.9.01", "h", 
 
   )
 
@@ -278,13 +279,13 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) 
 wafct.genus %>%  count(ref_fctcode) %>% 
   filter(n>1) 
 
-subset(wafct.genus, ref_fctcode == "09_018")
+subset(wafct.genus, ref_fctcode == "01_184")
 
 
 #Checking the items of the list above
 
 dictionary.df %>% 
-  filter(ID_3 %in% c("2899.01.01"))
+  filter(ID_3 %in% c("1530.01"))
 
 #Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
@@ -302,13 +303,13 @@ wafct <- wafct %>%
 
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "")
-wafct.genus %>% filter(ref_fctcode == "05_011")
-wafct %>% filter(fdc_id == "02_021") %>% glimpse()
+wafct.genus %>% filter(ref_fctcode == "01_184")
+wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 
 #Checking code availability 
-wafct %>% filter(fdc_id %in% c("12_012", "12_013")) %>% View()
+wafct %>% filter(fdc_id %in% c("12_012", "12_013")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("09_024", "09_025", "09_069" ), 
+subset(wafct, fdc_id %in% c("01_184", "09_025", "09_069" ), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
 subset(wafct, fdc_id == "01_099", select = food_desc) 
@@ -325,12 +326,12 @@ distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("cream", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("ginger", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
-       select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
+       select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct, str_detect(food_desc, "trout|Trout") & 
+subset(wafct, str_detect(food_desc, "sweet potato") & 
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 

@@ -74,6 +74,10 @@ fct_dict <- fct_dict %>%
  THIAmg_std_creator() %>%  # Standardisation of THIAmg
   VITB6mg_std_creator()  # Standardisation of VITB6mg
 
+#Saving for other works
+#fct_dict %>% #filter(!is.na(ID_3)) %>% 
+ # write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.0.csv"), row.names = FALSE)
+
  ## Standardisation: 
 
 

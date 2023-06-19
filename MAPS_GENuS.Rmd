@@ -232,8 +232,9 @@ For some instances, dictionary values were not available and/or compiled (there 
 ##Any "whole fat would be under raw milk
 
 # Change log
-2023/04/25
+2023/06/16 - fix: mandazi was missing (F0022.08).
 
+2023/04/25
 -changes "rice grain, local, red" from 23161.01 to 23161.02.
 
 
