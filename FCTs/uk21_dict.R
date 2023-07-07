@@ -36,7 +36,7 @@ genus <- tribble(
   "13-340", "1594.01", "l", # nori, dried TBC
   "16-492", "1518.01", "m", 
   "13-582", "1212.01", "h",
-  "17-170", "1620.01", "l",  # tea leaves infusion
+ # "17-170", "1620.01", "l",  # tea leaves infusion - 
   "17-171", "23914.04", "h", 
   "17-172", "23914.05", "h",
   "14-125", "1329.01", "h", 
@@ -138,7 +138,7 @@ dim(uk21)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(uk21, fdc_id == "13-888", select = c(food_desc, ID_3)) 
+subset(uk21, fdc_id == "17-170", select = c(food_desc, ID_3)) 
 subset(uk21, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
 subset(uk21, ID_3 == "23670.01.01") 
 

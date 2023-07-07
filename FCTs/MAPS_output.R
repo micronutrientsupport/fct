@@ -59,8 +59,8 @@ dictionary.df %>%
   left_join(., fct_dict , by = "ID_3") %>% 
   filter(is.na(source_fct)) %>% select(FoodName_3, ID_3)
 
-desc1 <- "cat"
-desc2 <- "fish"
+desc1 <- "tea"
+desc2 <- ""
   
 subset(fct_dict, grepl(desc1, food_desc, ignore.case = TRUE) &
          grepl(desc2, food_desc, ignore.case = TRUE) &
@@ -70,7 +70,7 @@ subset(fct_dict, grepl(desc1, food_desc, ignore.case = TRUE) &
 subset(dictionary.df, grepl(desc1, FoodName_3, ignore.case = TRUE) &
          grepl(desc2, FoodName_3, ignore.case = TRUE))
 
-subset(dictionary.df, grepl("21116.02", ID_3))
+subset(dictionary.df, grepl("23914", ID_3))
 
 sort(names(fct_dict))
 
