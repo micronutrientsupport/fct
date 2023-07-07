@@ -45,7 +45,7 @@ data/
 old-scripts/
 output/
 inter-output/
-*.csv
+FCTs/*.csv
 *.xlsx
 *.accdb
 *.laccdb

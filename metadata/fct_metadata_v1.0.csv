@@ -1,0 +1,61 @@
+Variable_Name,Variables_Description
+fct_name,Name with description of the FCT (including version and/or year of publication) (as per in FAO/INFOODS website)
+fct_short_name,Name of the food composition
+fct_authors,Name of the authors
+fct_region,Country or region intended use. Countries ISO 3166-1 alpha-3
+fct_lead_organization,Name of the organization(s) responsible
+fct_year,Year of publication
+fct_language,Language(s) of the FCT
+fct_data_format,"Primary data type in which the information is provided (xlxs, pdf, csv )"
+fct_documentation,"Information about the data, within the dataset or as user guide, manuscript, etc. (yes or no)"
+fct_documentation_link,link to the data and/or metadata
+fct_licence,"Type of licence (i.e. CC, propietary, etc.)"
+fct_data_sources,"Source of data, i.e. other food composition tables, analyzed, etc. with number (n) or perc. (%) if available"
+fct_fooditem,Number of food items
+fct_component,Number of nutrient and other components reported
+fct_component_list,List of nutrient and other components reported
+moisture_method,Analysis or method used  to calculate moisture (or water) content
+energy_kcal_method,Analysis or method used  to calculate energy (kcal)
+energy_kj_method,Analysis or method used  to calculate energy (kj)
+nitrogen_method,Analysis or method used  to calculate nitrogen 
+totalprotein_method,Analysis or method used  to calculate protein 
+totalfats_method,Analysis or method used  to calculate total fats 
+saturatedfa_method,Analysis or method used  to calculate saturated fats 
+monounsaturatedfa_method,Analysis or method used  to calculate monosaturated fats 
+polyunsaturatedfa_method,Analysis or method used  to calculate polyunsaturated fats 
+cholesterol_method,Analysis or method used  to calculate cholesterol
+carbohydrates_method,Analysis or method used  to calculate carbohydrates
+fibre_method,Analysis or method used  to calculate fibre
+ash_method,Analysis or method used  to calculate ash
+ca_method,Analysis or method used  to calculate calcium
+fe_method,Analysis or method used  to calculate iron
+mg_method,Analysis or method used  to calculate magnesium
+p_method,Analysis or method used  to calculate phosphorus
+k_method,Analysis or method used  to calculate potasium
+na_method,Analysis or method used  to calculate sodium
+zn_method,Analysis or method used  to calculate zinc
+cu_method,Analysis or method used  to calculate copper
+mn_method,Analysis or method used  to calculate manganese
+i_method,Analysis or method used  to calculate iodine
+se_method,"Analysis or method used  to calculate selenium (total, organic and inorganic)"
+vitamina_rae_method,Analysis or method used  to calculate vitamin A as retinol active eq. [VITA_REA]
+thiamin_method,Analysis or method used  to calculate thiamin
+riboflavin_method,Analysis or method used  to calculate riboflavin
+niacin_method,Analysis or method used  to calculate niacin
+vitaminb6_method,Analysis or method used  to calculate vitamin B6
+folicacid_method,Analysis or method used  to calculate folic acid (synthetic folate)
+folate_method,Analysis or method used to calculate total folate 
+vitaminb12_method,Analysis or method used  to calculate vitamin B12
+pantothenate_method,Analysis or method used  to calculate pantothenate
+biotin_method,Analysis or method used  to calculate biotin
+vitaminc_method,Analysis or method used  to calculate vitamin C
+vitamind_method,Analysis or method used  to calculate vitamin E
+vitamine_method,Analysis or method used  to calculate vitamin E
+phyticacid_method,"Analysis or method used  to calculate phytate (total), phytic acid or Inositol phosphate 2-6"
+edible,"This variable contains information on the reporting of edible portion. Values can be reported as EDIBLE, REFUSE, INEDIBLE or NONE (no reported); Edible coefficient = ""from whole to fillet/flesh""(EDIBLE1);  'from purchased to portion as consumed' (EDIBLE2)"
+edible_source,"If edible portion is repoted, source of the data "
+yieldfactor,If yield factor is reported (yes or no)
+yieldfactor_source,"If yield factor is repoted, source of the data "
+retentionfactor,If retention factor is reported (yes or no)
+retentionfactor_source,"If retention factor is repoted, source of the data "
+recipe_method,How the recipes were calculated: ?Ingredient method (i); Recipe method (recipe); Mixed method (m);  Raw ingredient method (r); Raw ingrediente corrected by weigh method (r-w); none
