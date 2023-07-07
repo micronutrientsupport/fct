@@ -54,7 +54,7 @@ wa_genus <- tribble(
   "08_001", "231.01", "h",
   "14_001", "1533.01", "l",
   "09_043", "1501.03", "h",
-  "07_046", "21116.01", "m",
+  "07_046", "21116.03", "m",
   "10_029", "2211.01", "h",
   "07_072", "21115.01", "m",
   "07_006", "21113.02.01", "m",
@@ -185,7 +185,7 @@ wa_genus <- tribble(
   "04_008", "1219.01.01", "h", 
   "05_012", "1359.9.01", "h", 
   "05_004", "1359.9.02", "h",
-  "04_001", "21393.9.01", "h",
+  "04_001", "1290.9.17", "h",
   "12_009", "23912.02.02", "m", 
   "13_017", "F1232.06", "h", 
   "14_033", "F1232.18", "h", 
@@ -262,8 +262,30 @@ wa_genus <- tribble(
   "08_003", "F1061.02", "m", 
   "04_072", "1290.9.07", "h", 
   "01_184", "1199.9.01", "h", 
-
-  )
+ "04_057", "1215.01", "h", 
+ "04_059", "1290.9.02", "h", 
+ "04_065", "21399.02.01", "l", 
+ "05_041", "1359.9.06", "h", 
+ "07_069", "21116.02", "h", 
+ "07_070", "21170.01.02", "h", 
+ "10_014", "22110.02.01", "h", 
+ "10_022", "22290.04", "h", 
+ "12_006", "2413.02", "h" ,
+ "03_034", "141.04", "h", 
+ "03_026", "1706.06", "h",
+ "03_025", "1702.03", "h",
+ "05_005", "1319.07", "h",
+ "05_034", "F0623.07", "h", 
+ "05_053", "1359.9.08", "h", 
+ "06_033", "1379.9.02", "h", 
+ "06_032", "1379.9.03", "h", 
+ "09_054", "1562.02", "h", 
+ "13_026", "1699.12", "h", 
+ "04_045", "1699.13", "h", 
+ "09_056", "1562.05", "h", 
+ "07_083", "2920.01", "h", 
+ 
+ )
 
 # Checking for dictionary duplicates -----
 
@@ -313,8 +335,8 @@ subset(wafct, fdc_id %in% c("01_184", "09_025", "09_069" ),
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
 subset(wafct, fdc_id == "01_099", select = food_desc) 
-subset(wafct, fdc_id == "09_001", select = c(food_desc, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "1290.9.12") 
+subset(wafct, fdc_id == "04_080", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "21393.9.01" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
 dictionary.df %>% filter(ID_3 %in% c("1529.03", "1527.03"))
@@ -338,5 +360,5 @@ subset(wafct, str_detect(scientific_name, "Scomberomorus"),
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("tur", FoodName_2, ignore.case = TRUE) &
-         grepl("", FoodName_2, ignore.case = TRUE))
+       grepl("baoba", FoodName_3, ignore.case = TRUE) &
+         grepl("leav", FoodName_3, ignore.case = TRUE))

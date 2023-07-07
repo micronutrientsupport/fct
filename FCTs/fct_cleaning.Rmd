@@ -25,6 +25,10 @@ library(tidyverse)
 Most of the FCTs used here were freely available in the [FAO/INFOODS website](https://www.fao.org/infoods/infoods/tables-and-databases/en/), and particuarly under [FAO/INFOODS:Africa](https://www.fao.org/infoods/infoods/tables-and-databases/africa/en/). 
 
 
+In section 5 (Quality checks), we provide information on drawbacks and usage warnings  (i.e., food items to be avoided) for each FCT.
+ 
+
+
 
 First, we are loading the tidyverse package and the FCT_QA spreadsheet. This spreadsheet is where all the information about each FCT is collated 
 
@@ -101,16 +105,17 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 
 
 
-## 1) Western Africa FCT (2019)
+### 1) Western Africa FCT (2019)
 
 **Version log**
+V.2.0.2 updated on 2023/06/20 - Bug fix: Changed dictionary code for WA("07_046") from "21116.01" to "21116.03". 
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for WA19("02_004") from "23170.01" to "23170.01.01", and WA19("06_018") from "1379.02" to "1379.02.01". 
 V.2.0.0 updated on 2023/05/19 - Important changes in dictionary codes, bug fixed on values that were reported with brackets, and combining Tagnames for fat, vitamin B6 and thiamine.
 V.1.6 updated on 2021/10/13 - Changed phytic acid to phytate, added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 
 
 ID:WA19
 
-### 1. Obtaining the data
+#### 1. Obtaining the data
 
 It can be downloaded from [here](http://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx), using the following piece of code. Depending on the system, you need to use "curl" for OS X / Linux, "wininet" for Windows.
 
@@ -131,9 +136,9 @@ UPDATE: Add rename to Energy variables following the standard that it is set bel
  +ENERC1 = ENERC...10 = Energy in kcal; 
  +ENERC2 = ENERC...10 = Energy in kJ).
  
-### 2. Harmonising the data
+#### 2. Harmonising the data
 
-#### 2.2. Special characters
+##### 2.2. Special characters
 
 Currently, we are, when possible, adding values within the bracket to a new column, or updating an existing if it was empty. Then, we are keeping the values in the table in the same column, this is to help with minimising the missing values when doing food matching. 
 
@@ -187,7 +192,7 @@ NOTE: I am not replacing the food categories for WAFCT because when I pulled man
  
 --TILL HERE--
 
-###Food groups
+### Food groups
 
 A piece of code is written to remove food groups from the code column and convert it in a new variable. This will be useful for sub-setting by 'foodgroups'. I.e. cereals and other staples. That part will be reconverted when food groups are standardized according to FoodEx2.
 
@@ -258,16 +263,17 @@ rice, white (fibre = 3.6g/100g) == rice, parboiled
 1) Deal with *tr*: there are some values that are coded as *trace* however, when we are converting the values into numbers those are converted to `NA` as it was done wit the []. Hence, we should convert those values coded as `tr` into `0`. 
 
 
-#### 2) Malawi FCT
+### 2) Malawi FCT
 
 **Version log**
+V.2.0.2 updated on 2023/06/20 - Bug fix: Changed dictionary code for MW19("MW03_0052") from "21116.01" to "21116.03", as it is the same fat concentration as "moderately fat" in WA19. 
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for MW19("MW01_0017") from "23170.01" to "23170.01.01", for MW19("MW08_0007") from "1802.01" to  "1802.02".
 V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, using excel version of the FCT, and combining Tagnames for fat, vitamin B6 and thiamine.
 V.1.7. updated on 2021/10/25 - Temporary input table from excel (unknown origin), and fixed some dictionary codes (e.g., chicken stew)
 V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate & loading table from csv instead of pdf (see new folder MW19).
 
 
-### Standtadization of values reported
+#### Standtadization of values reported
 
 For Malawi dataset all the variables names need to be converted manually because in this FCT component names are not standardized using tagnames or other method. To rename all the component in a standardized way three parameters needs to be taken into account:
 
@@ -446,100 +452,8 @@ summary(MAFOODS$SOP)
 
 ```
 
-####3) Ethiopia FCT
 
-5) Moisture (%): WATER (Unit: g). It is reported in %. 
-
-9) CHO (inc. fiber) (g): CHOT (total carbohydrates, Unit: g). It is reported including fibre, hence it is 'total CHO'. Because the method is unknown we use the generic CHOT. 
-
-10) Fiber (g): FIBTG (dietary fibre, Unit: g). We are going to assume that it is according to the standards and it is dietary fibre, until further clarification can be obtained. 
-
-16) Beta-carotene Equiv. (mcg): CARTBEQ (beta-caroten equivalent, Unit: mcg). It is not recommended to be listed alone in the FCT. Since we are going to use VITA_RAE or VITA when possible. We can convert this variable to VITA_RAE and VITA by using the following equations. However, retinol information is missing in the ETHFCT.  
-
-Eq.4:  VITA_RAE = mcg retinol + 1/12 mcg ß- carotene equivalent
-
-Eq.5:  VITA = mcg retinol + 1/6 mcg ß- carotene equivalent
-
-20) Tryptophan (mg) : TRP (L-tryptophan, Unit: mg)
-
-21) Ascorbic acid (mg): We are going to assume that it is VitC. 
-
-22) Refuse (%): REFUSE. It might be re-converted to EDIBLE portion to keep consistency
-
-NOTE:Still need to arrange foodgroups
-
-NOTE: When calculating SOP, we do not include fibre because it is already included in CHOT.
-
-####4) Gambia FCT
-
-Within the GMBFCT there are tagnames assigned to each food component
-
-4) Energy...4(kcal): ENERC1 (it should be ENERGYC, as per GMBFCT), this should be re-calculated as CHOAVL but it is not possible since we have no information to convert monosacharides information to weight. Hence, we are going to use it as it is and compared it with the other ENERC.
-
-5) Energy...5 (kJ): ENERC2 (it should be ENERGYC, as per GMBFCT), this needs to be re-calculated as per kJ contribution per macronutrient.
-
-8) Carbo-hydrate (g): CHOAVLM (Carbohydrates availables expresed as monosacharides equivalents, Unit: g). This can not be converted due to lack of information of the carbohydrates composition and can not be compared with available CHO in weight.
-
-9) Fibre (g): FIBTS (total dietary fibre, sum of non-digestible polysaccharides and lignin, Unit: g). More information is needed to know how the estimates are affected by the method. 
-
-10) Phytate (g): PHYTAC. I think it should be PHYPPCD - Phytic acid, based on phytate phosphorus estimated by direct ferric precipitation (Unit: mg) because it used FE precipitation. 
-
-16) Carotene (mcg): CARBEQ (beta-caroten equivalent, Unit: mcg). As in ETHFCT, this should not be listed alone in the FCT.
-
-Ash are not reported, we can see a slightly lower SOP when comparing it with MAFOODS and WAFCT.
-
-```{r GBMFCT tagname }
-
-#Gambia FCT - tagname standardization
-
-#View FCT structure
-#Creating a variable for the names of the data-set 
-# it is composed by 2 columns on the FCT_QA dataset
-#Column 6 == Year
-#Column 2 == Short_name
-#Just need to input the number of the row (1-13)
-
-x <- 4
-
-
-readxl::read_excel(here::here( 'data', 
-                              paste(paste(FCT_QA[x,6],
-                                          FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>%
-  head()
-
-#Customized saving FCT
-
-GMBFCT <- readxl::read_excel(here::here( 'data', 
-                                        paste(paste(FCT_QA[x,6],
-                                                    FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                             sheet = 1) %>% mutate(FCT = 'GMBFCT') %>% glimpse()
-
-
-FCT4_tag <- c('foodgroup','code',  'fooditem', 'ENERC1', 'ENERC2',  
-              'PROTCNT', 'FAT',  'CHOAVLM', 'FIBTS', 'PHYTAC',
-              'WATER', 'CA',  'P', 'FE',  'ZN', 'CARTBEQ', 'VITC',
-              'ref', 'FCT')
-
-#Renaming and converting into numeric (needed for binding datasets)
-
-GMBFCT <- GMBFCT %>% rename_all( ~ FCT4_tag) %>% slice(3:527) %>%
-  mutate_at(vars(4:17), funs(as.numeric)) 
-
-#Converting into character (needed for binding datasets)
-
-GMBFCT$code <- as.character(GMBFCT$code)
-
-#SOP - changing CHOAVLDF to CHOAVLM, FIBTG to FIBTS, removing ALC, no ASH are included.
-
-GMBFCT <- GMBFCT %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLM','FIBTS'), `+`))
-
-
-```
-
-
-#### 5) Kenya FCT
+### 3) Kenya FCT
 
 **Version log**
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for KE18("15125") from "F0022.08" to "F0022.07", KE18(4018) from  "21393.9.05" to "1290.9.15". 
@@ -612,9 +526,9 @@ KENFCT2 - We have incorporated tagnames as per in the dataset (with no modificat
 
 UPDATES: We added the three main fat fractions ('FASAT', "FAMS","FAPU") from the original FCT dataset. We also added the ref (biblioID) and the scientificName from a different sheet in the FCT.
 
-###### Quality Checks
+#### 5. Quality Checks
 
-**Food items to be avoided**
+###### Food items to be avoided
 
 The food item "13002 - Baking powder, dry powder" has quite extreme Ca (and other minerals) values. In addition, it has a very high standard deviation. It was not an analytical value and all the sources of the nutrient values were from abroad (see `r kenfct$biblio_id[kenfct$code == "13002"]`). Furthermore, even being used in small amounts, it was the main driver of Ca consumption in IHS4 and IHS5. Hence, we are not using this item, and hence removing the dictionary code from it. However, the value is plausible for that kind of product as it can contain calcium carbonate. 
 
@@ -675,7 +589,7 @@ Beef meat are all specified w/o bones, except the lean (7002). The edible portio
 
 Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). However, we assigned a "low confidence". 
 
-## 6) Lesotho FCT
+### 4) Lesotho FCT
 
 ID:LS06
 
@@ -685,11 +599,11 @@ V.1.4 updated on 2021/11/01 - Created a stand-alone script and added dictionary 
 V.1.3 updated on 2021/10/1 - Replace Trace to zero and removed (*) using new function
 V.1.2 updated on 2021/10/12 - Changed phytic acid to phytate.
 
-### 1. Obtaining the data (Data Access)
+#### 1. Obtaining the data (Data Access)
 
 The excel file used in this repository can be downloaded [here](https://www.fao.org/fileadmin/templates/food_composition/documents/LesFCT_final_copyrevised1.xlsm)
 
-### Food components and other variables
+#### Food components and other variables
 
 Energy is only reported in kJ. Hence, Energy (kcal) (`ENERC1`) was calculated, as well as Sum of proximate (`SOP`). It was not done using thefunction but it could be applied in the future. 
 
@@ -700,17 +614,462 @@ NOTE: I need to update the loop for foodgroup variable. None of the loops that I
 There were trace values that were converted to zero, there were (*) values (e.g, in `EDIBLE`) which were removed, although it would good to check the meaning.
 In addition, there were ("[]") which were also removed, and would need to be checked as well. 
 
-### Drawbacks and usage warnings
+#### 5. Quality Checks
+
+###### Food items to be avoided
 
 1. This FCT do not report alcohol content in foods yet it has two alcoholic beverages, see food group "BEVERAGES, ALCOHOLIC". We advise to avoid the use of these foods for nutrient assessment. 
 
 
-####7) Mozambique FCT
+### 5) uFish FCT
+
+This FCT needs only minor renaming since it has all components named using tagnames form FAO/INFOODS. Scientific name are available in the user-guide.
+
+The table reported the ASFIS List of Species for Fishery Statistics Purposes, which refers to column 2 and 3. 
+
+2) ISSCAAP: International Standard Statistical Classification of Aquatic Animals and Plants. Remind unchanged.
+
+3) 3-Alpha: three_alpha - International code for fish.
+
+5) Habitat: referring to fish habitat coded as F - Farmed and W - Wild. Remind unchanged.
+
+6) State of food: food_state - referring to r - raw, c - cooked, p - processed/preserved. We used same code as UGAFCT while keeping it as close as the original uFish. 
+
+8) EDIBLE...8: EDIBLE1 - Following the same rationale as in WAFCT
+
+9) EDIBLE...9: EDIBLE2 - Following the same rationale as in WAFCT
+
+For FAO/INFOODS tagname, I will change all at once for NGAFCT, uFish and uPulses.
+
+```{r uFish tagname }
+
+#uFish FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 12
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
+  head()
+
+#Customized saving FCT
+
+uFish <- readxl::read_excel(here::here(  'data', 
+                                           paste(paste(FCT_QA[x,6],
+                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                              sheet = 4) %>% slice(2:516) %>% mutate(FCT = 'uFish')   %>% glimpse()
+
+uFish <- uFish %>% rename(
+  code = 'Food Item ID', 
+  three_alpha = '3-Alpha',
+  fooditem = 'Food name in English',
+  food_state = 'State of food',
+  ref = 'RefID',
+  EDIBLE1 = 'EDIBLE...8',
+  EDIBLE2 = 'EDIBLE...9',
+  ENERC1 = 'ENERC(kcal)',
+  ENERC2 = 'ENERC(kJ)')
+
+names(uFish) <- sub("\\(.*?\\)", "", names(uFish))
+
+
+uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
+
+
+uFish <- uFish %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+summary(uFish$SOP)
+
+```
+
+### 6) uPulses FCT
+
+The structure is very similar to uFish and we will proceed in the same fashion. 
+
+2) 'Country, region': origin - reference of the origin of the food item
+
+4) Processing: food_state coded as r: raw, d: dried, p: processed.
+
+5) Species/Subspecies: scientificName - In the User-guide are refered as the scientific names. Hence, to keep consistency,we have used the same variable names as in WAFCT for the scientific name.
+
+6) Cultivar/Variety/Accession Name: variety - for simplicity we have kept the most common name of the three possible.
+
+FATCE: Fat values derived from Soxhlet method (FATCE)
+
+```{r uPulses tagname }
+
+#uPulses FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 13
+
+
+readxl::read_excel(here::here(  'data', 
+                                paste(paste(FCT_QA[x,6],
+                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
+  head()
+
+#Customized saving FCT
+
+uPulses <- readxl::read_excel(here::here(  'data', 
+                                         paste(paste(FCT_QA[x,6],
+                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                            sheet = 4) %>%  slice(2:177) %>% mutate(FCT = 'uPulses')   %>% glimpse()
+
+uPulses <- uPulses %>% rename(
+  code = 'FoodID', 
+  origin = 'Country, region',
+  fooditem = 'Food name in English',
+  food_state = 'Processing',
+  scientificName = 'Species/Subspecies',
+  variety = 'Cultivar/Variety/Accession Name',
+  ref = 'BiblioID',
+  ENERC1 = 'ENERC(kcal)',
+  ENERC2 = 'ENERC(kJ)')
+
+
+names(uPulses) <- sub("\\(.*?\\)", "", names(uPulses))
+
+uPulses <- uPulses %>% mutate_at(vars(8:68), funs(as.numeric)) 
+
+
+uPulses <- uPulses  %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
+
+
+summary(uPulses$SOP)
+
+```
+
+### 7) regional fct - Need some work!
+
+**Version log**
+
+V.2.0 updated on 2021/11/01 - Bug fixed: Updated script to the most updated dictionary version.
+V.1.9 updated on 2021/10/13 - Changed phytic acid to phytate.
+
+This data is coming from Joy et al. (2014) study. We have reformatted and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
+
+We have prepared a list of updates that could benefit the use of the regional fct for matching with the food balance sheet (or other surveys in sub-Saharan region). Updates to be done for the next release:
+
+###Next steps:
+
+1- There are three missing items in the regional food composition table when compared with all the food balance sheet possible items. The next step will be provide food composition values for those items. 
+
+|item_code| item |
+|-|-|
+| 2680 |infant food|
+| 2558 | rape and mustardseed|
+|  2562 | palm kernels|
+
+2- There are multiple matches that were classified as "low confidence", hence those items should be reviewed and updated when possible.
+
+3- The regional fct only reported certain mineral micronutrients, hence we would include other micronurtients of interest to the fct. 
+
+4- The "middle region" food composition table is a exact copy of the "western region" fct, hence when possible and available data for that region should be generated. 
+
+**List of Unavailable foods (from FBS)**:
+marine mammals
+imported rice
+beetroots
+sugar cane
+fructose, powder
+wine rose
+
+### 8) UK FCT (CoFID FCT) -----------
+
+**Version log**
+
+V.1.0 generated on 2021/10/12
+V.1.1 updated on 2021/10/13 - Changed "N" to zero using the same function as for "Tr".
+
+ID: UK21
+
+#### 1. Obtaining the data
+
+The data can be obtained from the UK website [here]().
+
+All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]()
+
+#### Data cleaning
+
+
+
+
+##### Food components and other variables
+
+Folate is expressed as: Folate (FOLT) Values are expressed as total folates measured after deconjugation of the polyglutamyl forms, and it was reported in mcg. 
+
+According to the documentation, there are value recorded as "Tr" and as "N". 
+
+- "A trace value for a nutrient is represented by Tr".
+- "Where a nutrient is present in significant quantities, but there is no reliable information on the amount, the value is represented by N."
+
+Public Health England, 2021. McCance and Widdowson’s The Composition of Foods Integrated Dataset 2021. User guide. 
+
+
+**List of Unavailable foods (from FBS)**:
+Rye grain
+Fonio
+Linseed / flaxseed
+palm kernel oil
+Rice oil / rice bran, oil
+Turmeric root
+beer, maize grain
+gin
+cream (Average)
+Pork lard / lard
+Cod body oil
+groupers, white, fresh, raw
+crab raw
+Frog, raw
+Infant formula
+Water bottle
+Millet (generic)
+Sorghum beer
+Deer meat
+Beef offal, raw
+palm kernel
+Sugar cane
+
+###### MAPS Food dictionary
+
+
+**Aquatic products**
+Nori (13-340) were matched to Red algae (1594.01) in the food dictionary. Nori are a form of red algae. However it was reported as dried, which is the most common form. But, it should be specified in the food dictionary. 
+https://en.wikipedia.org/wiki/Red_algae. 
+
+**Other food**
+We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should be reviewed in the future. 
+
+### 9) Japan FCT (2015)
+
+**Version log**
+V1.0.0 - 
+
+ID: JA15
+
+#### 1. Obtaining the data
+
+The data can be obtained from the UK website [here]().
+
+All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]().
+
+### 10) US FCT (2019)
+
+**Version log**
+
+v1.0.0 - 
+
+ID: US19
+
+#### 1. Obtaining the data
+
+The data can be obtained from the US FoodCentral website [here]().
+
+All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]().
+
+#### 5. Quality Checks
+
+###### Food items to be avoided
+
+The seasoning mix: US19(2074, 2075, 2076) have high number of missing values, and values for Vit. A were quite high, hence we are excluding those foods.  
+
+###### MAPS Food dictionary 
+
+ - **F0623.08**: We used the item US19(9100) (heavy syrup) from the four options available because the water content was the closest match to the water content in our "reference value" WA19(05_034).
+- **F0623.07**: We used the item US19(9271) (extra heavy syrup) from the options available because the water content was the closest match to the reference food KE18(5029).
+- **F1232.31**: We selected item US19(21108) from the options available because the water content was the closest match to the reference food UK21(19-544).
+- **2920.01**: We opted to match US19(90560) to this dictionary code because the water content was the same as the "snail" in WA19(07_083), which has the same dictionary code.
+
+## MAPS formatting
+
+Final steps are common to all the FCTs, which is renaming the variables according to MAPS standards and descriptions. These are stored in the metadata folder in the file "fct-variable-names.csv". 
+
+A change have been made (2022-10-12), so the variable phyticacid_in_mg would be called phytate_in_mg. 
+
+# Food components standardisation 
+
+There are few food components that needed unit transformation 
+
+We are standardisation some food components: 
+
+### Niacin - "nia_conversion_std"   
+
+"NIAEQmg"                                         
+"NIAmg"                                           
+"NIATRPmg" 
+
+### Thiamin - "THIAmg_std" 
+
+"THIAHCLmg"                                       
+"THIAmg" 
+
+### Vitamin B6 - "VITB6mg_std"
+
+"VITB6_mg"                                        
+"VITB6Amg"                                        
+"VITB6Cmg"
+
+## To be done:
+
+
+"FAT_g"                                           
+"FATCEg"                                          
+"FATg"   
+
+
+
+"PHYTCPPD_PHYTCPPImg"                             
+"PHYTCPPDmg"                                      
+"PHYTCPPmg"                                       
+"PHYTmg"                                          
+"PHYTO"                                           
+"Total PHYTO" - UK21
+
+
+
+"TRPg"                                            
+"TRPmg"
+
+## Conclusion
+
+1) Energy: Most of the FCT used the ENERC values and conversion factor as established by FAO/INFOODS. Most of the differences were including calculation for kcal and/or kJ. Including ALC or not into the calculation. Mozambique kcal were calculated as kJ and applying a conversion factor (Energy, kJ/4,184). Gambia did not account for fibre and the conversion factor used for CHO was 3.75 (due to the calculation is based on monosaccharide equivalents). In addition, Tanzania used total carbohydrates, hence fibre was included into the CHO fraction (not accounting for differences in fibre conversion factors). Three FCT (eth, nga, uga) did not report the method used to calculate the energy content. This variable will be (re-)calculated following the equations:
+
+Eq.1: ENERC - (kcal/100 g EP) = PROTCNT (g/100 g EP) x 4 + FAT (g/100 g EP) x 9 + CHOAVLDF (g/100 g EP) x 4 + FIBTG (g/100 g EP) x 2 + ALC (g/100 g EP) x 7]
+
+Eq.2: ENERC - (kJ/10- g EP) = PROTCNT (g/100 g EP) x 17 + FAT (g/100 g EP) x 37 + CHOAVLDF (g/100 g EP) x 16 + FIBTG (g/100 g EP) x 8 + ALC (g/100 g EP) x 29]
+
+2) Protein: All FCT that reported used similar approach. It was calculated using total nitrogen (NT) and either a general conversion factor (6.75) or specific conversion factors (XN). If NT information is available for those that used general conversion factor, we could re-calculate using the conversion factors. 
+
+Eq.3: PROTCNT - (g/100 g EP) = nitrogen conversion factor (XN) × total nitrogen (NT) (g/100 g EP)
+
+3) Fat: FAT - is the most common used and it refers to fat calculated using mixed solvent extraction. This was not initially compiled in FCT_QA.  
+
+4) Carbohydrates: Most of the FCT calculated CHO as CHOAVLF (carbohydrates available) as per FAO/INFOODS recommendation with slight variability of the presence or absence of ALC (alcohol). Tanzania reported total carbohydrates (CHOTDF). While, Gambia FCT accounted for available CHO by summation and expressed as monosaccharide equivalents (CHOAVLM). MAFOODS reported total CHO by summation (CHOCSM/CHOTSM?). ETHFCT reported CHOT. According to FAO/INFOOD the preferred reporting is CHOAVL followed by CHOAVLF.  
+
+5) Fibre: Most of the dataset reported total fibre (FIBTG), while MAFOODS reported FIBC (and marked as italic when FIBTG was available) and GMBFCT that reported FIBTS (the sum of non-digestible polysaccharides and lignin). According to the FAO/INFOODS the preferred reporting method is FIBGT followed by FIBTS. While FIBC should be phased out. 
+
+6) Vitamin E: It is reported in some databases as vitamin E and in other it is reported as alpha-tocopherol. We would used vitamin E for both. But, it would be specified in the metadata database. (https://www.kcl.ac.uk/open-global/biomarkers/vitamin/vitamin-e)
+
+
+## Excluded FCTs from MAPS
+
+## 3) Ethiopia FCT
+
+5) Moisture (%): WATER (Unit: g). It is reported in %. 
+
+9) CHO (inc. fiber) (g): CHOT (total carbohydrates, Unit: g). It is reported including fibre, hence it is 'total CHO'. Because the method is unknown we use the generic CHOT. 
+
+10) Fiber (g): FIBTG (dietary fibre, Unit: g). We are going to assume that it is according to the standards and it is dietary fibre, until further clarification can be obtained. 
+
+16) Beta-carotene Equiv. (mcg): CARTBEQ (beta-caroten equivalent, Unit: mcg). It is not recommended to be listed alone in the FCT. Since we are going to use VITA_RAE or VITA when possible. We can convert this variable to VITA_RAE and VITA by using the following equations. However, retinol information is missing in the ETHFCT.  
+
+Eq.4:  VITA_RAE = mcg retinol + 1/12 mcg ß- carotene equivalent
+
+Eq.5:  VITA = mcg retinol + 1/6 mcg ß- carotene equivalent
+
+20) Tryptophan (mg) : TRP (L-tryptophan, Unit: mg)
+
+21) Ascorbic acid (mg): We are going to assume that it is VitC. 
+
+22) Refuse (%): REFUSE. It might be re-converted to EDIBLE portion to keep consistency
+
+NOTE:Still need to arrange foodgroups
+
+NOTE: When calculating SOP, we do not include fibre because it is already included in CHOT.
+
+### 4) Gambia FCT
+
+Within the GMBFCT there are tagnames assigned to each food component
+
+4) Energy...4(kcal): ENERC1 (it should be ENERGYC, as per GMBFCT), this should be re-calculated as CHOAVL but it is not possible since we have no information to convert monosacharides information to weight. Hence, we are going to use it as it is and compared it with the other ENERC.
+
+5) Energy...5 (kJ): ENERC2 (it should be ENERGYC, as per GMBFCT), this needs to be re-calculated as per kJ contribution per macronutrient.
+
+8) Carbo-hydrate (g): CHOAVLM (Carbohydrates availables expresed as monosacharides equivalents, Unit: g). This can not be converted due to lack of information of the carbohydrates composition and can not be compared with available CHO in weight.
+
+9) Fibre (g): FIBTS (total dietary fibre, sum of non-digestible polysaccharides and lignin, Unit: g). More information is needed to know how the estimates are affected by the method. 
+
+10) Phytate (g): PHYTAC. I think it should be PHYPPCD - Phytic acid, based on phytate phosphorus estimated by direct ferric precipitation (Unit: mg) because it used FE precipitation. 
+
+16) Carotene (mcg): CARBEQ (beta-caroten equivalent, Unit: mcg). As in ETHFCT, this should not be listed alone in the FCT.
+
+Ash are not reported, we can see a slightly lower SOP when comparing it with MAFOODS and WAFCT.
+
+```{r GBMFCT tagname }
+
+#Gambia FCT - tagname standardization
+
+#View FCT structure
+#Creating a variable for the names of the data-set 
+# it is composed by 2 columns on the FCT_QA dataset
+#Column 6 == Year
+#Column 2 == Short_name
+#Just need to input the number of the row (1-13)
+
+x <- 4
+
+
+readxl::read_excel(here::here( 'data', 
+                              paste(paste(FCT_QA[x,6],
+                                          FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>%
+  head()
+
+#Customized saving FCT
+
+GMBFCT <- readxl::read_excel(here::here( 'data', 
+                                        paste(paste(FCT_QA[x,6],
+                                                    FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
+                             sheet = 1) %>% mutate(FCT = 'GMBFCT') %>% glimpse()
+
+
+FCT4_tag <- c('foodgroup','code',  'fooditem', 'ENERC1', 'ENERC2',  
+              'PROTCNT', 'FAT',  'CHOAVLM', 'FIBTS', 'PHYTAC',
+              'WATER', 'CA',  'P', 'FE',  'ZN', 'CARTBEQ', 'VITC',
+              'ref', 'FCT')
+
+#Renaming and converting into numeric (needed for binding datasets)
+
+GMBFCT <- GMBFCT %>% rename_all( ~ FCT4_tag) %>% slice(3:527) %>%
+  mutate_at(vars(4:17), funs(as.numeric)) 
+
+#Converting into character (needed for binding datasets)
+
+GMBFCT$code <- as.character(GMBFCT$code)
+
+#SOP - changing CHOAVLDF to CHOAVLM, FIBTG to FIBTS, removing ALC, no ASH are included.
+
+GMBFCT <- GMBFCT %>%
+  mutate(SOP = reduce(select(.,
+                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLM','FIBTS'), `+`))
+
+
+```
+
+### 7) Mozambique FCT
 
 ONLY PDF
 
 
-####8) Nigeria FCT
+### 8) Nigeria FCT
 
 All the variables are already labelled following FAO/INFOODS, hence only minor cleaning is needed. For MN, we need to capitalize them
 
@@ -780,17 +1139,18 @@ NGAFCT <- NGAFCT %>%
                              'WATER', 'PROTCNT' ,'FATCE', 'CHOCDF',  'ASH'), `+`))
 
 ```
-####9) South Africa FCT
+
+### 9) South Africa FCT
 
 ONLY PDF
 
-####10) Tanzania FCT
+### 10) Tanzania FCT
 
 ONLY PDF
 
-####11) Uganda FCT
+### 11) Uganda FCT
 
-There are some variables that we want to keep but we are not going to rename. The fastest approach is to proceed as with KENFCT and cut into two part. Then, to modify separately both and then bind them. 
+There are some variables that we want to keep but we are not goin g to rename. The fastest approach is to proceed as with KENFCT and cut into two part. Then, to modify separately both and then bind them. 
 
 UGAFCT1 
 
@@ -882,338 +1242,3 @@ summary(UGAFCT$SOP)
 
 ```
 
-####12) uFish FCT
-
-This FCT needs only minor renaming since it has all components named using tagnames form FAO/INFOODS. Scientific name are available in the user-guide.
-
-The table reported the ASFIS List of Species for Fishery Statistics Purposes, which refers to column 2 and 3. 
-
-2) ISSCAAP: International Standard Statistical Classification of Aquatic Animals and Plants. Remind unchanged.
-
-3) 3-Alpha: three_alpha - International code for fish.
-
-5) Habitat: referring to fish habitat coded as F - Farmed and W - Wild. Remind unchanged.
-
-6) State of food: food_state - referring to r - raw, c - cooked, p - processed/preserved. We used same code as UGAFCT while keeping it as close as the original uFish. 
-
-8) EDIBLE...8: EDIBLE1 - Following the same rationale as in WAFCT
-
-9) EDIBLE...9: EDIBLE2 - Following the same rationale as in WAFCT
-
-For FAO/INFOODS tagname, I will change all at once for NGAFCT, uFish and uPulses.
-
-```{r uFish tagname }
-
-#uFish FCT - tagname standardization
-
-#View FCT structure
-#Creating a variable for the names of the data-set 
-# it is composed by 2 columns on the FCT_QA dataset
-#Column 6 == Year
-#Column 2 == Short_name
-#Just need to input the number of the row (1-13)
-
-x <- 12
-
-
-readxl::read_excel(here::here(  'data', 
-                                paste(paste(FCT_QA[x,6],
-                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
-  head()
-
-#Customized saving FCT
-
-uFish <- readxl::read_excel(here::here(  'data', 
-                                           paste(paste(FCT_QA[x,6],
-                                                       FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                              sheet = 4) %>% slice(2:516) %>% mutate(FCT = 'uFish')   %>% glimpse()
-
-uFish <- uFish %>% rename(
-  code = 'Food Item ID', 
-  three_alpha = '3-Alpha',
-  fooditem = 'Food name in English',
-  food_state = 'State of food',
-  ref = 'RefID',
-  EDIBLE1 = 'EDIBLE...8',
-  EDIBLE2 = 'EDIBLE...9',
-  ENERC1 = 'ENERC(kcal)',
-  ENERC2 = 'ENERC(kJ)')
-
-names(uFish) <- sub("\\(.*?\\)", "", names(uFish))
-
-
-uFish <- uFish %>% mutate_at(vars(8:168), funs(as.numeric)) 
-
-
-uFish <- uFish %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
-
-summary(uFish$SOP)
-
-```
-
-####13) uPulses FCT
-
-The structure is very similar to uFish and we will proceed in the same fashion. 
-
-2) 'Country, region': origin - reference of the origin of the food item
-
-4) Processing: food_state coded as r: raw, d: dried, p: processed.
-
-5) Species/Subspecies: scientificName - In the User-guide are refered as the scientific names. Hence, to keep consistency,we have used the same variable names as in WAFCT for the scientific name.
-
-6) Cultivar/Variety/Accession Name: variety - for simplicity we have kept the most common name of the three possible.
-
-FATCE: Fat values derived from Soxhlet method (FATCE)
-
-```{r uPulses tagname }
-
-#uPulses FCT - tagname standardization
-
-#View FCT structure
-#Creating a variable for the names of the data-set 
-# it is composed by 2 columns on the FCT_QA dataset
-#Column 6 == Year
-#Column 2 == Short_name
-#Just need to input the number of the row (1-13)
-
-x <- 13
-
-
-readxl::read_excel(here::here(  'data', 
-                                paste(paste(FCT_QA[x,6],
-                                            FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 4) %>%
-  head()
-
-#Customized saving FCT
-
-uPulses <- readxl::read_excel(here::here(  'data', 
-                                         paste(paste(FCT_QA[x,6],
-                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                            sheet = 4) %>%  slice(2:177) %>% mutate(FCT = 'uPulses')   %>% glimpse()
-
-uPulses <- uPulses %>% rename(
-  code = 'FoodID', 
-  origin = 'Country, region',
-  fooditem = 'Food name in English',
-  food_state = 'Processing',
-  scientificName = 'Species/Subspecies',
-  variety = 'Cultivar/Variety/Accession Name',
-  ref = 'BiblioID',
-  ENERC1 = 'ENERC(kcal)',
-  ENERC2 = 'ENERC(kJ)')
-
-
-names(uPulses) <- sub("\\(.*?\\)", "", names(uPulses))
-
-uPulses <- uPulses %>% mutate_at(vars(8:68), funs(as.numeric)) 
-
-
-uPulses <- uPulses  %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FATCE', 'CHOAVLDF','FIBTG',  'ASH'), `+`))
-
-
-summary(uPulses$SOP)
-
-```
-
-#### 14) regional fct - Need some work!
-
-**Version log**
-
-V.2.0 updated on 2021/11/01 - Bug fixed: Updated script to the most updated dictionary version.
-V.1.9 updated on 2021/10/13 - Changed phytic acid to phytate.
-
-This data is coming from Joy et al. (2014) study. We have reformatted and added the "GENuS" code to each food item, together with the confidence in the matches between the food items that represented and the food items chosen. 
-
-We have prepared a list of updates that could benefit the use of the regional fct for matching with the food balance sheet (or other surveys in sub-Saharan region). Updates to be done for the next release:
-
-###Next steps:
-
-1- There are three missing items in the regional food composition table when compared with all the food balance sheet possible items. The next step will be provide food composition values for those items. 
-
-|item_code| item |
-|-|-|
-| 2680 |infant food|
-| 2558 | rape and mustardseed|
-|  2562 | palm kernels|
-
-2- There are multiple matches that were classified as "low confidence", hence those items should be reviewed and updated when possible.
-
-3- The regional fct only reported certain mineral micronutrients, hence we would include other micronurtients of interest to the fct. 
-
-4- The "middle region" food composition table is a exact copy of the "western region" fct, hence when possible and available data for that region should be generated. 
-
-**List of Unavailable foods (from FBS)**:
-marine mammals
-imported rice
-beetroots
-sugar cane
-fructose, powder
-wine rose
-
-## 15) UK FCT (CoFID FCT) -----------
-
-**Version log**
-
-V.1.0 generated on 2021/10/12
-V.1.1 updated on 2021/10/13 - Changed "N" to zero using the same function as for "Tr".
-
-ID: UK21
-
-### 1. Obtaining the data
-
-The data can be obtained from the UK website [here]().
-
-All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]()
-
-#### Data cleaning
-
-
-
-
-##### Food components and other variables
-
-Folate is expressed as: Folate (FOLT) Values are expressed as total folates measured after deconjugation of the polyglutamyl forms, and it was reported in mcg. 
-
-According to the documentation, there are value recorded as "Tr" and as "N". 
-
-- "A trace value for a nutrient is represented by Tr".
-- "Where a nutrient is present in significant quantities, but there is no reliable information on the amount, the value is represented by N."
-
-Public Health England, 2021. McCance and Widdowson’s The Composition of Foods Integrated Dataset 2021. User guide. 
-
-
-**List of Unavailable foods (from FBS)**:
-Rye grain
-Fonio
-Linseed / flaxseed
-palm kernel oil
-Rice oil / rice bran, oil
-Turmeric root
-beer, maize grain
-gin
-cream (Average)
-Pork lard / lard
-Cod body oil
-groupers, white, fresh, raw
-crab raw
-Frog, raw
-Infant formula
-Water bottle
-Millet (generic)
-Sorghum beer
-Deer meat
-Beef offal, raw
-palm kernel
-Sugar cane
-
-###### MAPS Food dictionary
-
-
-**Aquatic products**
-Nori (13-340) were matched to Red algae (1594.01) in the food dictionary. Nori are a form of red algae. However it was reported as dried, which is the most common form. But, it should be specified in the food dictionary. 
-https://en.wikipedia.org/wiki/Red_algae. 
-
-**Other food**
-We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should be reviewed in the future. 
-
-## 16) Japan FCT (2015)
-
-**Version log**
-V1.0.0 - 
-
-ID: JA15
-
-### 1. Obtaining the data
-
-The data can be obtained from the UK website [here]().
-
-All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]().
-
-## 17) US FCT (2019)
-
-**Version log**
-
-v1.0.0 - 
-
-ID: US19
-
-### 1. Obtaining the data
-
-The data can be obtained from the US FoodCentral website [here]().
-
-All the steps of the cleaning can be found in the report [here](), and it was done as part of the project (xxx), and the original repository can be found [here]().
-
-
-## MAPS formatting
-
-Final steps are common to all the FCTs, which is renaming the variables according to MAPS standards and descriptions. These are stored in the metadata folder in the file "fct-variable-names.csv". 
-
-A change have been made (2022-10-12), so the variable phyticacid_in_mg would be called phytate_in_mg. 
-
-# Food components standardisation 
-
-There are few food components that needed unit transformation 
-
-We are standardisation some food components: 
-
-### Niacin - "nia_conversion_std"   
-
-"NIAEQmg"                                         
-"NIAmg"                                           
-"NIATRPmg" 
-
-### Thiamin - "THIAmg_std" 
-
-"THIAHCLmg"                                       
-"THIAmg" 
-
-### Vitamin B6 - "VITB6mg_std"
-
-"VITB6_mg"                                        
-"VITB6Amg"                                        
-"VITB6Cmg"
-
-## To be done:
-
-
-"FAT_g"                                           
-"FATCEg"                                          
-"FATg"   
-
-
-
-"PHYTCPPD_PHYTCPPImg"                             
-"PHYTCPPDmg"                                      
-"PHYTCPPmg"                                       
-"PHYTmg"                                          
-"PHYTO"                                           
-"Total PHYTO" - UK21
-
-
-
-"TRPg"                                            
-"TRPmg"
-
-## Conclusion
-
-1) Energy: Most of the FCT used the ENERC values and conversion factor as established by FAO/INFOODS. Most of the differences were including calculation for kcal and/or kJ. Including ALC or not into the calculation. Mozambique kcal were calculated as kJ and applying a conversion factor (Energy, kJ/4,184). Gambia did not account for fibre and the conversion factor used for CHO was 3.75 (due to the calculation is based on monosaccharide equivalents). In addition, Tanzania used total carbohydrates, hence fibre was included into the CHO fraction (not accounting for differences in fibre conversion factors). Three FCT (eth, nga, uga) did not report the method used to calculate the energy content. This variable will be (re-)calculated following the equations:
-
-Eq.1: ENERC - (kcal/100 g EP) = PROTCNT (g/100 g EP) x 4 + FAT (g/100 g EP) x 9 + CHOAVLDF (g/100 g EP) x 4 + FIBTG (g/100 g EP) x 2 + ALC (g/100 g EP) x 7]
-
-Eq.2: ENERC - (kJ/10- g EP) = PROTCNT (g/100 g EP) x 17 + FAT (g/100 g EP) x 37 + CHOAVLDF (g/100 g EP) x 16 + FIBTG (g/100 g EP) x 8 + ALC (g/100 g EP) x 29]
-
-2) Protein: All FCT that reported used similar approach. It was calculated using total nitrogen (NT) and either a general conversion factor (6.75) or specific conversion factors (XN). If NT information is available for those that used general conversion factor, we could re-calculate using the conversion factors. 
-
-Eq.3: PROTCNT - (g/100 g EP) = nitrogen conversion factor (XN) × total nitrogen (NT) (g/100 g EP)
-
-3) Fat: FAT - is the most common used and it refers to fat calculated using mixed solvent extraction. This was not initially compiled in FCT_QA.  
-
-4) Carbohydrates: Most of the FCT calculated CHO as CHOAVLF (carbohydrates available) as per FAO/INFOODS recommendation with slight variability of the presence or absence of ALC (alcohol). Tanzania reported total carbohydrates (CHOTDF). While, Gambia FCT accounted for available CHO by summation and expressed as monosaccharide equivalents (CHOAVLM). MAFOODS reported total CHO by summation (CHOCSM/CHOTSM?). ETHFCT reported CHOT. According to FAO/INFOOD the preferred reporting is CHOAVL followed by CHOAVLF.  
-
-5) Fibre: Most of the dataset reported total fibre (FIBTG), while MAFOODS reported FIBC (and marked as italic when FIBTG was available) and GMBFCT that reported FIBTS (the sum of non-digestible polysaccharides and lignin). According to the FAO/INFOODS the preferred reporting method is FIBGT followed by FIBTS. While FIBC should be phased out. 
-
-6) Vitamin E: It is reported in some databases as vitamin E and in other it is reported as alpha-tocopherol. We would used vitamin E for both. But, it would be specified in the metadata database. (https://www.kcl.ac.uk/open-global/biomarkers/vitamin/vitamin-e)

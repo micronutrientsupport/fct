@@ -14,7 +14,8 @@ lso_genus <- tribble(
   "30014",  "22290.01",    "l",
  # "140001", "24310.01.01",  "h", we are removing this item bc this FCT doesn't provide info on alc. 
  "50057", "1290.01.02", "m",
- "11021", "112.03", "m")                                    # hence alc. beverages shouldn't be included. 
+ "11021", "112.03", "m", 
+ "80059", "1354.01", "h", )                                    # hence alc. beverages shouldn't be included. 
 
 lso_genus$ID_3 <- as.character(lso_genus$ID_3)
 

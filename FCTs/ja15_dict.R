@@ -33,9 +33,37 @@ genus <- tribble(
 "1001", "1199.9.02", "h", 
 "6124", "1243.01", "h", 
 "6156", "1253.02.03", "h", 
+"6064", "1212.05", "h", 
+"6184", "21399.02.01", "m", 
+"7114", "1349.2.01", "h", 
+"7012", "1354.01", "h", 
+"7073", "1359.9.06", "h", 
+"11204", "21116.02", "h", 
+"11206", "21122.01", "h", 
+"11240", "21170.01.02", "h", 
+"11207", "21170.01.03", "h", 
+"13033", "22251.01.04", "h", 
+"7102", "21491.01", "h", 
+"10289", "1562.03", "m", 
+"10303", "1562.04", "m",
+"6239", "1699.13", "h", 
+"17078", "1699.14", "h", 
+
 )
 
 genus$ID_3 <- as.character(genus$ID_3)
+
+
+(dupli <- genus %>%  count(ref_fctcode) %>% 
+    filter(n>1) %>% pull(ref_fctcode))
+
+##Find a way to stop it running if dupli == TRUE
+x <- if(length(dupli) == 0){NA}else{length(dupli)} 
+#x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
+
+if(!(is.na(x)))stop("duplicated code")
+
+genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
 
 #Updating the dictionary compilation -----
 #for further use (to update versions) - first by alphabetic order
@@ -57,9 +85,9 @@ names(ja15)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(ja15, fdc_id == "10161", select = c(food_desc)) 
+subset(ja15, fdc_id == "11204", select = c(food_desc)) 
 subset(ja15, fdc_id %in% c("2022", 
                                    "2023",
                                    "2025"), select = c(food_desc)) 
-subset(ja15, ID_3 == "2351F.01") 
-subset(dictionary.df, ID_1 == "2645")
+subset(ja15, ID_3 == "21156.01") 
+subset(dictionary.df, ID_3 == "21116.01")

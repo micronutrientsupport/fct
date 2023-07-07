@@ -42,7 +42,7 @@ vignettes/*.pdf
 #data and metadata folder
 
 data/
-metadata/
+old-scripts/
 output/
 inter-output/
 *.csv

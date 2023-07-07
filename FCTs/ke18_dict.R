@@ -181,13 +181,13 @@ ken_genus <- tribble(
   "1037", "114.02", "h", 
   "1011", "F0022.01", "m", 
   "4023", "1270.01", "h", 
-  "7017", "21170.01.02", "h", 
+  "7017", "21170.01.02", "l", #meat and skin 
   "10012", "21495.02.01", "h", 
   "8004", "1501.10", "h",
   "8022", "1507.05", "h",
   "1006", "F0020.07", "h",
   "1060", "23161.02.03", "h", 
-  "5029", "21491.01", "m", 
+  "5029", "21491.01", "h", 
   "10007", "21422.01", "h", 
   "10011", "1375.01", "m", # Check EP (as in this fct is shelled)
   "6015", "22222.02.01", "h", 
@@ -239,7 +239,14 @@ ken_genus <- tribble(
   "1063", "F1232.28", "h",
   "3007", "F1232.29", "h",
  "14003", "21183.02", "h", 
- "15073", "F1061.02", "m"
+ "15073", "F1061.02", "m",
+ "3071", "141.04", "h", 
+ "3023", "1702.03", "h", 
+ "15075", "F1232.30", "m",
+ "13025", "1699.13", "h", 
+ "13012", "1654.03", "m" ,
+ 
+ 
 )
 
 
@@ -334,10 +341,10 @@ kenfct %>% filter(fdc_id %in% c("6017",
                               "6005",
                               "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, fdc_id %in% c("13033"), 
+subset(kenfct, fdc_id %in% c("4032"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
-subset(kenfct, fdc_id == "9218", select = c(food_desc, ID_3, scientific_name)) 
+subset(kenfct, fdc_id == "5029", select = c(food_desc, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1359.9.04") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
@@ -353,7 +360,7 @@ subset(kenfct, grepl("mallow", food_desc, ignore.case = TRUE) &
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(kenfct, str_detect(fdc_id, "^4") &
          grepl("raw", food_desc, ignore.case = TRUE),
-       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name)) %>% View()
+       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name)) # %>% View()
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 

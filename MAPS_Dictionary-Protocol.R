@@ -6304,37 +6304,48 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 dictionary.df[n1,14] <- ref2
 
-#Add - 21491 - Pineapple, canned
+## ├├ Pineapples, otherwise prepared or preserved  (21491) -----
+
 #Manual inputs:
-id2 <- "21491"
-desc_new <- "pinneaple, canned"
-fex2_new <- NA
-scien_new <- "Ananas comosus"
-taxo <- NA
-other_name <- NA
-ref2 <- NA
+food_desc <- c("pineapple, canned in syrup, whole contents",
+               "fruit cocktail, canned in syrup, whole contents")
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-n1 <- dim(dictionary.df)[1]+1
+other_name <- c(NA)
 
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
+# Fixed
+id2 <- "F0623"
+fex2 <- NA
+scientific_name <- "ananas comosus"
+desc1 <- "Fruit, nuts and peel, including frozen, prepared or preserved, jam, paste, marmalade, pure and cooked fruits, other than those listed separately (Unofficial definition)"
+ref1 <- "https://www.fao.org/faostat/en/#data/SCL"
 
-dictionary.df[n1,] <- dictionary.df[n2,]
 
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxo
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-dictionary.df[n1,14] <- ref2
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name
+}
 
 #Add - 21321 - Tomato, juice
 #Manual inputs:
@@ -6406,21 +6417,25 @@ dictionary.df[n1,14] <- ref2
 food_desc <- c("chutney, apple",
                "chutney, mango", 
                "banana, chips", 
-                "pineapple, canned in syrup, whole contents")
+              "fruit cocktail, canned in syrup, whole contents")
 
 scientific_name <- c(rep(NA, 2), "musa spp.",
                      rep(NA, 1))
 
+fex2 <- c(rep(NA, 4))
 
+other_name <- c(rep(NA, 4))
+
+# One time input
+id2 <- "F0623"
+desc1 <- "Fruit, nuts and peel, including frozen, prepared or preserved, jam, paste, marmalade, pure and cooked fruits, other than those listed separately (Unofficial definition)"
+ref1 <- "https://www.fao.org/faostat/en/#data/SCL"
+
+
+# Function:
 for(i in 1:length(food_desc)){
   
-  id2 <- "F0623"
-  desc_new <- food_desc[i]
-  fex2_new <- NA
-  scien_new <- scientific_name[i]
-  desc1 <- "Fruit, nuts and peel, including frozen, prepared or preserved, jam, paste, marmalade, pure and cooked fruits, other than those listed separately (Unofficial definition)"
-  ref1 <- NA
-  other_name <-NA
+  id2 <- id2
   
   id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
   id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
@@ -6437,12 +6452,12 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,] <- dictionary.df[n2,]
   #New entry - population:
   dictionary.df[n1,7] <- id3_new
-  dictionary.df[n1,8] <- fex2_new
-  dictionary.df[n1,9] <- desc_new
+  dictionary.df[n1,8] <- fex2[i]
+  dictionary.df[n1,9] <- food_desc[i]
   dictionary.df[n1,10] <- desc1
   dictionary.df[n1,11] <- ref1
-  dictionary.df[n1,12] <- other_name
-  dictionary.df[n1,13] <- scien_new
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
 }
 
 ## ├├ chillies and peppers, dry (capsicum spp. and pimenta spp.), raw (1652) -----
@@ -6766,7 +6781,7 @@ for(i in 1:length(food_desc)){
 
 ## ├├ fruit, nuts, peel, sugar preserved (23670.02) -----
 
-food_desc <-  c("cocktail, fruit, canned in syrup, drained", 
+food_desc <-  c("fruit cocktail, canned in syrup, drained", 
                  "pineapple, candied")
 
 scientific_name <- c(rep(NA, 2))
@@ -6959,9 +6974,6 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "pasta, spaghetti, refined, dried, boiled", 
                 "beans, shellie, canned", 
                 "rice, egg, fried", 
-                "seasoning mix, chili, dried",
-                "seasoning mix, taco, dried",
-                "seasoning mix, sazon, dried",
                 "burger, hamburger, takeaway",
                  "kebab in pitta bread with salad")
 

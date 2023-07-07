@@ -59,11 +59,18 @@ dictionary.df %>%
   left_join(., fct_dict , by = "ID_3") %>% 
   filter(is.na(source_fct)) %>% select(FoodName_3, ID_3)
 
+desc1 <- "cat"
+desc2 <- "fish"
+  
+subset(fct_dict, grepl(desc1, food_desc, ignore.case = TRUE) &
+         grepl(desc2, food_desc, ignore.case = TRUE) &
+         !grepl("juice", food_desc, ignore.case = TRUE),
+       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3)) %>% View()
 
-subset(fct_dict, grepl("baby|infant", food_desc, ignore.case = TRUE) &
-         grepl("food", food_desc, ignore.case = TRUE) &
-         grepl("", food_desc, ignore.case = TRUE),
-       select = c(source_fct, fdc_id, food_desc, scientific_name, WATERg, ID_3)) 
+subset(dictionary.df, grepl(desc1, FoodName_3, ignore.case = TRUE) &
+         grepl(desc2, FoodName_3, ignore.case = TRUE))
+
+subset(dictionary.df, grepl("21116.02", ID_3))
 
 sort(names(fct_dict))
 
@@ -75,8 +82,8 @@ fct_dict <- fct_dict %>%
   VITB6mg_std_creator()  # Standardisation of VITB6mg
 
 #Saving for other works
-#fct_dict %>% #filter(!is.na(ID_3)) %>% 
- # write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.0.csv"), row.names = FALSE)
+fct_dict %>% #filter(!is.na(ID_3)) %>% 
+  write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.1.csv"), row.names = FALSE)
 
  ## Standardisation: 
 
