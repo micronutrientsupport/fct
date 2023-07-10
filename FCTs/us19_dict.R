@@ -93,8 +93,11 @@ genus <- tribble(
   "20004", "115.01", "h", 
   "19400", "F0623.06", "h", 
   "16090", "142.04", "h",
-  "3184", "23991.01.05", "h", 
-  "3216", "23991.01.06", "h", 
+  "3186", "23991.01.07", "h", 
+  "3190", "23991.01.08", "h", 
+  "3193", "23991.01.11", "h", 
+  "3212", "23991.01.09", "h", 
+  "42285", "23991.01.10", "h", 
   "16138", "F1232.26", "m",
   "10109", "21521.01", "m", 
   "19107", "23670.01.03", "h", 
@@ -107,13 +110,12 @@ genus <- tribble(
   "14037",  "2413.01", "m", 
   "24593", "1522.02", "h",
   "80200", "1587.01", "h",
-  "3682", "23991.01.01", "m",
   "9218", "1324.02", "h", 
   "17174", "21119.01.01", "l", 
   "5160", "21170.01.01", "m",
   "19300", "23670.01.05", "h",
   "11109", "1212.01", "h", 
-  "19807", "112.03", "m", 
+ # "19807", "112.03", "m",  # Silencing this item because it has multiple missing values
   "11088", "1243.01", "h", 
   "16074", "1701.05", "m" , 
   "12151", "1375.01", "h", 
@@ -144,16 +146,29 @@ genus <- tribble(
   "9271", "21491.01", "h",
   "21108", "F1232.31", "h", 
   "15164", "1562.03", "m", 
-  "35028", "1562.04", "m", 
+ # "35028", "1562.04", "m", # removed bc it has many missing values
   "11297", "1699.13", "h", 
   "2029", "1699.14", "h", 
   "2012", "1654.02", "h",
-  "2013", "1654.02", "h", 
+  "2013", "1654.03", "h", 
   "90560", "2920.01", "h", 
   
   
   )
   
+
+(dupli <- genus %>%  count(ref_fctcode) %>% 
+    filter(n>1) %>% pull(ref_fctcode))
+
+##Find a way to stop it running if dupli == TRUE
+x <- if(length(dupli) == 0){NA}else{length(dupli)} 
+#x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
+
+if(!(is.na(x)))stop("duplicated code")
+
+genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
+
+
 #Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
@@ -175,21 +190,29 @@ names(us19)
   ## CHECK: Adding new food dictionary code ----
   
   #Checking dictionary/ fct ids availability 
-  subset(us19, fdc_id == "9218", select = c(fdc_id, food_desc, WATERg)) 
-  subset(us19, fdc_id %in% c("19400"),
+  subset(us19, fdc_id == "2013", select = c(fdc_id, food_desc, WATERg)) 
+  subset(us19, fdc_id %in% c("3186",
+                             "3190",
+                             "3193",
+                             "3212"),
   select = c(fdc_id, food_desc, ID_3)) 
   subset(us19, ID_3 == "23140.05.01") 
   
-  subset(us19, grepl("cream", food_desc, ignore.case = TRUE) &
+  subset(us19, grepl("pigeon", food_desc, ignore.case = TRUE) & !is.na(VITA_RAEmcg) &
+           grepl("", food_desc, ignore.case = TRUE) &
+           !grepl("", food_desc, ignore.case = TRUE), select = 1:2)
+  
+  
+  subset(us19, grepl("pigeon", food_desc, ignore.case = TRUE) &
            grepl("", food_desc, ignore.case = TRUE) 
            #!grepl("with", food_desc, ignore.case = TRUE) &
   
          , 
-         select = c(fdc_id, food_desc, ID_3, WATERg, scientific_name))
+         select = c(fdc_id, food_desc, ID_3, WATERg, VITA_RAEmcg, scientific_name))
   
-  dictionary.df %>% filter(ID_3%in% c("22290.01"))
-  subset(dictionary.df, ID_2 == "1505")
-  subset(dictionary.df, ID_1 == "2513")
+  dictionary.df %>% filter(ID_3%in% c("1654.02"))
+  subset(dictionary.df, ID_2 == "1654")
+  subset(dictionary.df, ID_1 == "2012")
   subset(dictionary.df, ID_0 == "FV")
   subset(dictionary.df, grepl("cous", FoodName_3, ignore.case = TRUE))
   subset(dictionary.df, grepl("sugar", Description1, ignore.case = TRUE))

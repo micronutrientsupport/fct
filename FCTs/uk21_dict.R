@@ -65,7 +65,7 @@ genus <- tribble(
  "17-738", "24490.01", "m", 
  "18-327", "F1061.02", "h", 
  "17-107", "23670.01.05", "h",
- "17-692", "112.03", "m", 
+ #"17-692", "112.03", "m", 
  "14-212", "21491.01", "h", 
  "13-056", "1709.9.03", "h", 
  "13-352", "1253.01.01", "h", 
@@ -138,7 +138,7 @@ dim(uk21)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(uk21, fdc_id == "17-170", select = c(food_desc, ID_3)) 
+subset(uk21, fdc_id == "17-727", select = c(food_desc, ID_3)) 
 subset(uk21, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
 subset(uk21, ID_3 == "23670.01.01") 
 

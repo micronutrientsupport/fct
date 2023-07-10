@@ -4979,18 +4979,20 @@ food_desc <-  c("jackfruit, fresh, raw",
                 "Java plum, fruit, fresh, raw", 
                 "soursop, fruit, fresh, raw", 
                 "carambola, fruit, fresh, raw", 
-                "breadfruit, fresh, raw"
+                "breadfruit, fresh, raw",
+                "custard apple, fruit, fresh, raw"
                 )
 
 other_name <- c(rep(NA, 4), "malabar plum", 
                 "jambolan, black plum, zambarau (KE18), malabar plum (used for s. cumini and s.jambos)", 
-                "Sweet sop (custard apple) (SL18)", "star fruit (WA19, SL18)")
+               NA, "star fruit (WA19, SL18)", NA,  "sweet sop (SL18)")
 
 scientific_name <- c("artocarpus heterophyllus", "passiflora edulis",
                      "syzygium jambos", "syzygium cumini", "annona spp.",
-                     "averrhoa carambola", "artocarpus altilis")
+                     "averrhoa carambola", "artocarpus altilis",
+                     "annona squamosa")
 
-taxo <- c(rep(NA, 4), "5468B", "545XT", rep(NA, 3))
+taxo <- c(rep(NA, 4), "5468B", "545XT", rep(NA, 4))
 
 # One input
 fex2_new <- c(NA)
@@ -7105,21 +7107,27 @@ dictionary.df[n1,13] <- "cocos nucifera"
 
 ## ├├ Infant food (23991.01) -----
 
-food_desc <- c("infant formula, 3 months, fortified", 
-               "infant formula, 6 months, fortified", 
+food_desc <- c("infant formula, 3 months, fortified, powder", 
+               "infant formula, 6 months, fortified, powder", 
                "infant food, whole wheat, with apples, fortified, dried",
-               "infant food, wheat, biscuits")
-
-scientific_name <- c(rep(NA, 4))
+               "infant food, wheat, biscuits",
+               "infant food, cereal, mixed, with bananas, dried",
+               "infant food, cereal, oatmeal, with bananas, dried",
+               "infant food, cereal, rice, with bananas, dried",
+               "infant food, cereal, rice, brown, dried",
+               "infant food, cereal, oatmeal, with honey, dried"
+               )
 
 other_name <- c(rep(NA, 2), 
                 "baby food, whole wheat, with apples, fortified, dried",
-                "baby food, GERBER, GRADUATES Lil Biscuits Vanilla Wheat (US19)")
+                "baby food, GERBER, GRADUATES Lil Biscuits Vanilla Wheat (US19)",
+                rep(NA, 5))
 
-fex2_new <- c(rep(NA, 4)) 
+fex2_new <- c(rep(NA, 9)) 
 
 #Manual inputs:
 id2 <- "23991.01"
+scientific_name <- NA
 desc1 <-  c("Preparations for infant consumption, usually containing some non-cereal ingredient (Unofficial definition)")
 ref1 <-  c(NA)
 
@@ -7149,7 +7157,7 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,10] <- desc1
   dictionary.df[n1,11] <- ref1
   dictionary.df[n1,12] <- other_name[i]
-  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,13] <- scientific_name
 }
 
 

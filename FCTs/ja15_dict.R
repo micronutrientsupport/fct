@@ -89,5 +89,5 @@ subset(ja15, fdc_id == "16033", select = c(food_desc))
 subset(ja15, fdc_id %in% c("2022", 
                                    "2023",
                                    "2025"), select = c(food_desc)) 
-subset(ja15, ID_3 == "21156.01") 
-subset(dictionary.df, ID_3 == "21116.01")
+subset(ja15, ID_3 == "112.03") 
+subset(dictionary.df, ID_3 == "112.03")

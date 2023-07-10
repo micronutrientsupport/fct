@@ -456,6 +456,7 @@ summary(MAFOODS$SOP)
 ### 3) Kenya FCT
 
 **Version log**
+V.2.0.2 updated on 2023/07/10 - Bug fix: Updated one dictionary code for KE18("5006") from "1319.05" to "1319.08".
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for KE18("15125") from "F0022.08" to "F0022.07", KE18(4018) from  "21393.9.05" to "1290.9.15". 
 V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, combining Tagnames for fat and thiamine. 
 V.1.7 updated on 2021/10/25 - Removed duplicated items introduced by biblioID merging and removing the dictionary code for baking powder. 
@@ -588,6 +589,8 @@ Beef meat are all specified w/o bones, except the lean (7002). The edible portio
 *- Fats & Oils*:
 
 Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). However, we assigned a "low confidence". 
+
+- **Fruits**: We used the same dictionary code for custard apple (sweet sop) KE18("5006") as for soursop which are the same family as **. However they are different foods, and they were reported individually in SL18. Hence, we changed to code from "1319.05" to "1319.08" (See change log).
 
 ### 4) Lesotho FCT
 
@@ -761,7 +764,6 @@ summary(uPulses$SOP)
 ### 7) regional fct - Need some work!
 
 **Version log**
-
 V.2.0 updated on 2021/11/01 - Bug fixed: Updated script to the most updated dictionary version.
 V.1.9 updated on 2021/10/13 - Changed phytic acid to phytate.
 
@@ -796,7 +798,7 @@ wine rose
 ### 8) UK FCT (CoFID FCT) -----------
 
 **Version log**
-
+V.2.0.2 updated on 2023/07/10 - Bug fixed: Excluded the item "17-692" due to high number of missing values.
 V.1.0 generated on 2021/10/12
 V.1.1 updated on 2021/10/13 - Changed "N" to zero using the same function as for "Tr".
 
@@ -858,6 +860,9 @@ https://en.wikipedia.org/wiki/Red_algae.
 
 **Other food**
 We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should be reviewed in the future. 
+
+-**17-692**: We excluded the use of popcorn because it has many missing values, particularly for micronutrients. 
+
 
 ### 9) Japan FCT (2015)
 
