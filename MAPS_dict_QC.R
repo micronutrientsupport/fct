@@ -1,4 +1,7 @@
 
+# Loading libraries
+library(dplyr)
+
 # Loading the dictionary
 dict.df <- readRDS(file = here::here("inter-output", "dictionary.df.rds"))
 
@@ -24,7 +27,7 @@ dict.df %>%
   group_by(ID_1, FoodName_1, ID_2, FoodName_2) %>%  distinct(ID_2, FoodName_2) %>% count() %>% 
   arrange(desc(n))
 
-subset(dict.df, ID_2 == "23110")
+subset(dict.df, ID_2 == "21183")
 
 #Checking categories (ID_3) by ID_2
 dict.df %>% 
@@ -39,7 +42,7 @@ x <- which(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
 n1 <- dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""][x]
 
 subset(dict.df, ID_3 %in% n1)
-subset(dict.df, ID_3 == "23161.01.01")
+subset(dict.df, ID_3 == "21183.03")
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder

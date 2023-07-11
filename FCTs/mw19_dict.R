@@ -160,7 +160,7 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(mwfct, grepl("cat", food_desc, ignore.case = TRUE) &
+subset(mwfct, grepl("insect|term", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(mwfct, str_detect(fdc_id, "^4") &
@@ -169,8 +169,8 @@ subset(mwfct, str_detect(fdc_id, "^4") &
 subset(mwfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
-subset(dictionary.df, grepl("bean", FoodName_3, ignore.case = T) &
-         grepl("canned", FoodName_3, ignore.case = T))
+subset(dict.df, grepl("insect|term", FoodName_3, ignore.case = T) &
+         grepl("", FoodName_3, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
