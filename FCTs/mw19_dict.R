@@ -169,7 +169,7 @@ subset(mwfct, str_detect(fdc_id, "^4") &
 subset(mwfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
-subset(dict.df, grepl("insect|term", FoodName_3, ignore.case = T) &
+subset(dictionary.df, grepl("term", FoodName_3, ignore.case = T) &
          grepl("", FoodName_3, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &

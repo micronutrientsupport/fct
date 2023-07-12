@@ -216,7 +216,7 @@ dictionary.df <- dictionary.df %>%
     ID_2 = "21435.01", 
     FoodName_2 = "apple juice",
     ID_3 = "21435.01.01",
-    FE2_3 = "A039M#F10.A077J", #We used qualitative info w/ added sugar to specify that it's sweetened 
+    FE2_3 = "A039M#F10.A077J", # We used qualitative info w/ added sugar to specify that it's sweetened 
     FoodName_3 = " apple juice, sweetened")  #we did not used the #sweetened agent bc we did not know 
 #the sweetened used. 
 
@@ -229,26 +229,10 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.01.01"] <- "rice grain, im
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "23161.02.01"] <- "rice grain, local, white, dried, raw"
 
 #Found a issue with some ID_0 classification
-#Need to change them to oil and seeds. 
-
-#PB Pulses and Beans "2561",             sesame seed and products
-#PB Pulses and Beans "2571",            soyabean oil and products
-#PB Pulses and Beans "2572",           groundnut oil and products
-#PB Pulses and Beans "2579",          sesameseed oil and products
-
-#Found a issue with some ID_0 classification
-#Need to change them to Other foods. 
-
-#PB Pulses and Beans 2561             sesame seed and products
-#PB Pulses and Beans 2571            soyabean oil and products
-#PB Pulses and Beans 2572           groundnut oil and products
-#PB Pulses and Beans 2579          sesameseed oil and products
+#Need to change them to oil and seeds.
 
 #checking what items with duplicated ids
-dictionary.df %>% filter(ID_1 %in% c("2561",
-                                     "2571",
-                                     "2572",
-                                     "2579"))
+dictionary.df %>% filter(ID_1 %in% c("2561", "2571", "2572", "2579"))
 
 dictionary.df$ID_0[dictionary.df$ID_1 %in% c("2561", "2571",
                                              "2572","2579")] <- "OT"
@@ -329,17 +313,17 @@ dictionary.df <- dictionary.df %>%
     ID_3 = "23170.02.02",
     FE2_3 = "",
     FoodName_3 = "ensete, flour, raw", 
-    Description1 = "bula") %>% 
-  add_row(
-    ID_0 = "CE",
-    FoodName_0 = "Cereals", 
-    ID_1 = 2520,
-    FoodName_1 = "cereals, other and products", 
-    ID_2 = "23140.08", 
-    FoodName_2 =  "cereal preparations",
-    ID_3 = "23140.08.01",
-    FE2_3 = "",
-    FoodName_3 = "injera, teff grain, ready-to-eat")
+    Description1 = "bula") # %>% 
+ # add_row(
+ #   ID_0 = "CE",
+ #   FoodName_0 = "Cereals", 
+ #   ID_1 = 2520,
+ #   FoodName_1 = "cereals, other and products", 
+ #   ID_2 = "23140.08", 
+ #   FoodName_2 =  "cereal preparations",
+ #   ID_3 = "23140.08.01",
+ #   FE2_3 = "",
+ #   FoodName_3 = "injera, teff grain, ready-to-eat")
 
 #Adding new entries from Ethiopia HCES - ESS4
 
@@ -363,7 +347,7 @@ dictionary.df <- dictionary.df %>%
     FoodName_2 =  "other stimulant, spice and aromatic crops, n.e.c.",
     ID_3 = "1699.07",
     FE2_3 = "",
-    FoodName_3 = "fenugreek, dried, raw") %>%
+    FoodName_3 = "fenugreek, dried, raw")  %>%
   add_row(
     ID_0 = "PB",
     FoodName_0 = "Pulses and Beans", 
@@ -393,17 +377,17 @@ dictionary.df <- dictionary.df %>%
     FoodName_2 =  "green garlic", #http://datalab.review.fao.org/datalab/caliper/web/concept-page/0406-garlic
     ID_3 = "1252.01",
     FE2_3 = "",
-    FoodName_3 = "garlic, fresh, raw") %>% 
-  add_row(
-    ID_0 = "OT",
-    FoodName_0 = "Other foods", 
-    ID_1 = 2645,
-    FoodName_1 = "spices, other and products", 
-    ID_2 = "1699", 
-    FoodName_2 =  "other stimulant, spice and aromatic crops, n.e.c.",
-    ID_3 = "1699.08",
-    FE2_3 = "",
-    FoodName_3 = "moringa, leaves, raw") %>%
+    FoodName_3 = "garlic, fresh, raw")  %>% 
+ # add_row(
+ #   ID_0 = "OT",
+ #   FoodName_0 = "Other foods", 
+ #   ID_1 = 2645,
+ #   FoodName_1 = "spices, other and products", 
+ #   ID_2 = "1699", 
+ #   FoodName_2 =  "other stimulant, spice and aromatic crops, n.e.c.",
+ #   ID_3 = "1699.08",
+ #   FE2_3 = "",
+ #   FoodName_3 = "moringa, leaves, raw") %>%
   add_row(
     ID_0 = "OT",
     FoodName_0 = "Other foods", 
@@ -5966,17 +5950,19 @@ food_desc <-  c(
   "stinging nettle, leaves, fresh, raw", 
   "jute mallow, leaves, fresh, raw", 
   "blackjack, leaves, fresh, raw",
-  "baobab, leaves, fresh, raw")
+  "baobab, leaves, fresh, raw", 
+  "moringa, leaves, fresh, raw")
 
 other_name <- c("Vine (African) spinach (KE18)",
                 "cat\\'s whiskers (Luni) (MW19)",
   rep(NA, 12), 
   "bush okra, leaves, dried raw (WA19), Leaves, jews mallow, raw, Corchorus trilocularis, (Denje)",
-  rep(NA, 2))
+  rep(NA, 3))
 
 other_info <- c("https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/nderema/#:~:text=Nderema%2C%20also%20known%20as%20vine,green%20or%20brownish%2Dpurple%20stems.", 
                 rep(NA, 14),
-                "https://www.healthbenefitstimes.com/blackjack/, (RESEWO, 2013)")
+                "https://www.healthbenefitstimes.com/blackjack/, (RESEWO, 2013)",
+                rep(NA, 2))
 
 scientific_name <- c("basella alba", "gynandropsis gynandra/cleome gynandra",
                      "solanum scabrum", "solanum macrocarpon",
@@ -5989,9 +5975,10 @@ scientific_name <- c("basella alba", "gynandropsis gynandra/cleome gynandra",
                     "urtica dioica", 
                     "corchorus spp.", 
                     "bidens pilosa",
-                     "adansonia digitata")
+                     "adansonia digitata",
+                    "moringa stenopetala")
 
-fex2_new <- c(rep(NA, 14), "A00NY#F28.A07HS", rep(NA, 1))
+fex2_new <- c(rep(NA, 14), "A00NY#F28.A07HS", rep(NA, 2))
 
 # One input
 id2 <- "1290.9"
@@ -6948,7 +6935,8 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "beans, shellie, canned", 
                 "rice, egg, fried", 
                 "burger, hamburger, takeaway",
-                 "kebab in pitta bread with salad")
+                 "kebab in pitta bread with salad",
+                "injera, teff grain, cooked")
 
 scientific_name <- c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
                      rep(NA,10))
@@ -6965,7 +6953,7 @@ other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA,
 
 fex2_new <- c(rep(NA, 5), "A049A#F02.A06CK$F01.A066J$F27.A049A", 
               "A048Q#F02.A06CG", 
-              rep(NA, 28))
+              rep(NA, 29))
 
 # Fixed input
 id2 <- "F1232"
