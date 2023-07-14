@@ -798,6 +798,7 @@ wine rose
 ### 8) UK FCT (CoFID FCT) -----------
 
 **Version log**
+v.3.0.0 updated on 2023/07/10 - Incorrect variable - fixed CHOALVMg to CHOALVg
 V.2.0.2 updated on 2023/07/10 - Bug fixed: Excluded the item "17-692" due to high number of missing values.
 V.1.0 generated on 2021/10/12
 V.1.1 updated on 2021/10/13 - Changed "N" to zero using the same function as for "Tr".
@@ -816,6 +817,12 @@ All the steps of the cleaning can be found in the report [here](), and it was do
 
 
 ##### Food components and other variables
+
+###### 2.3.4.	Units of measurements
+
+Food components are occasionally expressed using different units of measurement (e.g., g of Ca per 100g of fresh weight, edible portion or mg of Ca per 100g of fresh weigh, edible portion) which are standardised (including denominators) following the FAO/INFOODS Guidelines for Converting Units, Denominators and Expression (FAO/INFOODS, 2012).
+
+**CHOALVg**: Carbohydrates were expressed as "Available Carbohydrates expressed as monosaccharide equivalents" (CHOALVM) and we needed to change it to "Available Carbohydrates expressed by weight" (CHOALV) in order for them to be comparable with "Available Carbohydrates by difference (CHOALVDg). To do so, we were using the recommendation from the UK21 - user guide (REF) (page 16) of diving CHOALVMg by 1.05. Although the FAO/INFOODS recommended the use of the fractions, in most of the food entries the fractions were not always available. 
 
 Folate is expressed as: Folate (FOLT) Values are expressed as total folates measured after deconjugation of the polyglutamyl forms, and it was reported in mcg. 
 

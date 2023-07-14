@@ -80,7 +80,7 @@ uk21_colnames <- c("fdc_id", #Creates a list of column names following thew FAO 
                    "NTg", 
                    "PROCNTg",
                    "FAT_g",
-                   "CHOAVLg",
+                   "CHOAVLMg",
                    "ENERCkcal", 
                    "ENERCkJ", 
                    "STARCHMg", 
@@ -192,6 +192,13 @@ Output_table <- Output_table %>%
 Output_table[Output_table == "N"] <- NA # Sets all N values, defined as "where a nutrient is present in significant quantities, but there is no reliable information on the amount", to NA
 
 Output_table[,c(9:288)] <- apply(Output_table[,c(9:288)], 2, TraceToZero)
+
+# Conversion: Measurement units -----
+
+# CHOALVM to CHOALV (See UK21 docu - page 16)
+
+Output_table <- Output_table %>% 
+  mutate(CHOALVg = as.numeric(CHOAVLMg)/1.05)
 
 
 write.csv(Output_table, file = here::here("FCTs", "UK21_FCT_FAO_Tags.csv"),
