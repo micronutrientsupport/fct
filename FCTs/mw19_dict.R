@@ -7,7 +7,7 @@ if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
 
 #Checking dictionary codes
-dictionary.df %>% filter(ID_3 == "1520.01.03")
+dictionary.df %>% filter(ID_3 == "23670.01.05")
 
 #Adding GENuS code
 
@@ -153,7 +153,7 @@ subset(mwfct, fdc_id == "MW03_0027", select = c(food_desc, ID_3, scientific_name
 subset(mwfct, ID_3 == "1359.9.04") 
 subset(mwfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("1359.9.04"))
+dictionary.df %>% filter(ID_3 %in% c("23670.01.05"))
 subset(dictionary.df, ID_2 == "F1232")
 subset(dictionary.df, ID_2 %in% c("1379.02"
 ))
