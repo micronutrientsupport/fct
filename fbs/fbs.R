@@ -1,7 +1,7 @@
 
 
 library(tidyverse)
-source(here::here("FCTs", "kenfct.R"))
+#source(here::here("FCTs", "kenfct.R"))
 #source("MAPS_Dictionary-Protocol.R")
 
 
@@ -11,6 +11,9 @@ source(here::here("FCTs", "kenfct.R"))
 fbs <- read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv")) %>% 
   dplyr::select(-X)
 
+# Checking dict codes
+dictionary.df %>% dplyr::filter(ID_2 == "1501")
+dictionary.df %>% dplyr::filter(grepl("catfish", FoodName_3, ignore.case = TRUE))
 
 #fixing original names 
 fbs$original_id[fbs$original_name == "citrus, other"] <- "2614"
@@ -136,7 +139,9 @@ fbs$food_genus_id[fbs$food_genus_id == "1501.01"] <- "1503.01"
 #pig fat to lard
 fbs$food_genus_id[fbs$food_genus_id == "21521.01"]  <- "F1243.01"
 
-
-
 #Bug fixed    
-readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv"))
+#readr::write_csv(fbs, here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv"))
+
+# From GHA north african catfish (1501.02) to fillet (1503.07)
+fbs$food_genus_id[fbs$food_genus_id == "1501.02"] <-  "1503.07"
+

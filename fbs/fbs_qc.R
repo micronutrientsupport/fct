@@ -53,8 +53,10 @@ unique(fbs$country_id)
 country <- "UGA"
 all_variables <- names(fbs)[c(1:5,7)]
 
-country_fbs <- subset(fbs, country_id %in% country) %>% group_by(across(all_variables)) %>% 
-  summarise(mean_supply = round(mean(amount_consumed_in_g), 2)) %>% arrange(desc(mean_supply))
+country_fbs <- subset(fbs, country_id %in% country) %>%
+  group_by(across(all_variables)) %>% 
+  summarise(mean_supply = round(mean(amount_consumed_in_g), 2)) %>% 
+  arrange(desc(mean_supply))
 
 
 subset(country_fbs, grepl("bovi|offa|poult|pig|goat", original_name,  ignore.case = TRUE))
