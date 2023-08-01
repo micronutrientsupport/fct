@@ -49,6 +49,7 @@ genus <- tribble(
 "6239", "1699.13", "h", 
 "17078", "1699.14", "h", 
 "16033", "1620.01", "h", 
+"10221", "1531.02", "h"
 )
 
 genus$ID_3 <- as.character(genus$ID_3)
@@ -85,9 +86,9 @@ names(ja15)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(ja15, fdc_id == "16033", select = c(food_desc)) 
+subset(ja15, fdc_id == "10221", select = c(food_desc)) 
 subset(ja15, fdc_id %in% c("2022", 
                                    "2023",
                                    "2025"), select = c(food_desc)) 
 subset(ja15, ID_3 == "112.03") 
-subset(dictionary.df, ID_3 == "112.03")
+subset(dictionary.df, ID_2 == "1531")

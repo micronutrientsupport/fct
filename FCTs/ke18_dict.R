@@ -62,7 +62,7 @@ ken_genus <- tribble(
   "6007", "22120.02", "h",
   "13011", "1654.01", "h", 
   "7020", "21113.02.01", "h", #assumed w/o bones bc EP = 1
-  "15125", "F0022.07", "h", 
+  "15125", "F0022.08", "h", 
   "13015", "1699.10", "h", 
   "4013", "1290.9.04", "h", 
   "1005", "F0020.02", "m", 
@@ -355,7 +355,7 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("coriand", food_desc, ignore.case = TRUE) &
+subset(kenfct, grepl("fish", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(kenfct, str_detect(fdc_id, "^4") &

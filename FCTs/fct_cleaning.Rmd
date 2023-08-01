@@ -108,6 +108,7 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 ### 1) Western Africa FCT (2019)
 
 **Version log**
+V.2.0.3 updated on 2023/08/01 - Bug fix: Changed dictionary code for WA19("02_041") from "23170.01.02" to "23170.01.03", and WA19("02_040") from "23170.01.03" to "23170.01.02",
 V.2.0.2 updated on 2023/06/20 - Bug fix: Changed dictionary code for WA("07_046") from "21116.01" to "21116.03". 
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for WA19("02_004") from "23170.01" to "23170.01.01", and WA19("06_018") from "1379.02" to "1379.02.01". 
 V.2.0.0 updated on 2023/05/19 - Important changes in dictionary codes, bug fixed on values that were reported with brackets, and combining Tagnames for fat, vitamin B6 and thiamine.
@@ -456,6 +457,7 @@ summary(MAFOODS$SOP)
 ### 3) Kenya FCT
 
 **Version log**
+V.2.0.3 updated on 2023/08/01 - Bug fix: Updated one dictionary code for KE18("15125") back to the original "F0022.08".
 V.2.0.2 updated on 2023/07/10 - Bug fix: Updated one dictionary code for KE18("5006") from "1319.05" to "1319.08".
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for KE18("15125") from "F0022.08" to "F0022.07", KE18(4018) from  "21393.9.05" to "1290.9.15". 
 V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, combining Tagnames for fat and thiamine. 

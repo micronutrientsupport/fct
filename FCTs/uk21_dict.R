@@ -57,7 +57,7 @@ genus <- tribble(
   "19-649", "21181.01", "m",
   "17-784", "F0623.04", "h", 
   "17-343", "F0623.05", "h",
- # "13-881", 
+  "13-881",  "1651.02", "h", 
  "12-535", "22290.02", "h",
  "12-326", "22290.03", "h",
  "17-647", "23670.01.01", "h", 
@@ -90,6 +90,8 @@ genus <- tribble(
  "13-845", "1699.14", "h", 
  "13-818", "1654.02", "h", 
  "13-875", "1654.03", "h", 
+ "17-222", "24230.03.01", "m", 
+ "11-1029", "F0022.07", "m", 
  
  
  
@@ -138,12 +140,12 @@ dim(uk21)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(uk21, fdc_id == "17-727", select = c(food_desc, ID_3)) 
+subset(uk21, fdc_id == "11-1029", select = c(food_desc, ID_3)) 
 subset(uk21, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
 subset(uk21, ID_3 == "23670.01.01") 
 
 dictionary.df %>% filter(ID_3 == "23670.01.01")
-subset(dictionary.df, ID_2 == "1290.9")
+subset(dictionary.df, ID_2 == "1651")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 

@@ -92,10 +92,12 @@ matches4 <- country_fbs %>%
 
 data.df <- bind_rows(matches1, matches2, matches3, matches4)
 
+# Saving the data
 
-data.df %>% dplyr::select(1:ncol(country_fbs), nutrient, 
-                          Edible_factor_in_FCT, WATERg) %>%
-  write.csv(., here::here("inter-output", paste0(country, "_", fbs_file)))
+data.df %>% dplyr::select(1:ncol(country_fbs),fdc_id, food_desc,  source_fct,
+                          nutrient, Edible_factor_in_FCT, WATERg) %>%
+  write.csv(., here::here("inter-output", paste0(country, "_", fbs_file)), 
+            row.names = FALSE)
 
 
 

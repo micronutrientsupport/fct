@@ -123,7 +123,7 @@ wa_genus <- tribble(
   "09_003",  "1527.01", "l", #need to check w/ specie
   "09_037", "1532.01", "l", #need specify in oil
   "06_029", "1491.02.01", "l", 
-  "01_163", "23120.01.02", "l", 
+  "01_163", "23120.01.03", "m", 
   "04_002", "21393.9.01", "h",
   "04_081", "21393.9.02", "h",
   "04_031", "21393.9.03", "h",
@@ -147,7 +147,7 @@ wa_genus <- tribble(
   "07_044", "21170.92.04", "h",
   "13_008", "F1232.11", "h", 
   "03_154", "F1232.15", "h", 
-  "04_0162", "1290.9.12", "h",
+ # "04_0162", "1290.9.12", "h", # No idea of this
   "05_011", "1359.9.03", "h",
   "10_016",  "22221.01.01", "h", 
   "01_034", "23162.03", "h", 
@@ -162,8 +162,8 @@ wa_genus <- tribble(
   "03_005" , "1706.03", "h",
   "03_027",  "1706.03", "h",
   "03_006",  "1706.03", "h",
-  "02_041",  "23170.01.02", "h", 
-  "02_040",  "23170.01.03", "h",
+  "02_041",  "23170.01.03", "h", 
+  "02_040",  "23170.01.02", "h",
   "07_014",  "21111.02.03", "m",
   "07_002", "21111.02.02", "m", 
   "02_084",  "1313.03", "h", 
@@ -284,7 +284,18 @@ wa_genus <- tribble(
  "04_045", "1699.13", "h", 
  "09_056", "1562.05", "h", 
  "07_083", "2920.01", "h", 
- 
+ "09_048", "1516.04", "h", 
+ "09_021", "1503.09", "h", 
+ "09_026", "1503.10", "h",
+ "09_059", "1553.03", "h", 
+ "02_072", "1530.06", "h", 
+ "06_016", "1499.01.01", "m", 
+ "02_057", "1313.02", "l", # plenty of varieties -double check
+ "09_081", "1507.12", "h", 
+ "09_020", "1507.15", "h",
+ "09_077", "1507.16", "h", 
+ "01_087", "23110.03", "h", 
+ "07_064", "21117.01.01", "h"
  )
 
 # Checking for dictionary duplicates -----
@@ -307,9 +318,9 @@ subset(wafct.genus, ref_fctcode == "01_184")
 #Checking the items of the list above
 
 dictionary.df %>% 
-  filter(ID_3 %in% c("1530.01"))
+  filter(ID_3 %in% c("23110.02"))
 
-#Updating the dictionary compilation -----
+# Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 
@@ -329,18 +340,24 @@ wafct.genus %>% filter(ref_fctcode == "01_184")
 wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 
 #Checking code availability 
-wafct %>% filter(fdc_id %in% c("12_012", "12_013")) ## %>% View()
+wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("01_184", "09_025", "09_069" ), 
+subset(wafct, fdc_id %in% c("09_020", "09_077", "09_081" ), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
-subset(wafct, fdc_id == "01_099", select = food_desc) 
-subset(wafct, fdc_id == "04_080", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, fdc_id == "01_087", select = food_desc) 
+subset(wafct, fdc_id == "04_012", select = c(food_desc, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "21393.9.01" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
-dictionary.df %>% filter(ID_3 %in% c("1529.03", "1527.03"))
-subset(dictionary.df, ID_2 == "2735")
+# Checking food groups
+subset(wafct, grepl("^04", fdc_id, ignore.case = TRUE) &
+         grepl("raw", food_desc, ignore.case = TRUE), 
+       select = c(fdc_id, food_desc,scientific_name,  ID_3)) %>% View()
+
+# Checking in the dict
+dictionary.df %>% filter(ID_3 %in% c("1290.9.10"))
+subset(dictionary.df, ID_2 == "21117.01")
 subset(dictionary.df, ID_1 == "2735")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -348,12 +365,12 @@ distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("ginger", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("radi", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct, str_detect(food_desc, "sweet potato") & 
+subset(wafct, str_detect(food_desc, "Radis") & 
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
