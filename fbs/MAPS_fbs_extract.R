@@ -4,7 +4,7 @@ library(dplyr)
 
 
 #Load FBS matched to dictionary (most recent one)
-fbs_file <- sort(list.files(here::here("output") , "MAPS_FBS_2014-2018_v"), # identifying most recent one
+fbs_file <- sort(list.files(here::here("output") , "MAPS_FBS_"), # identifying most recent one
              decreasing = T)[1]
 
 fbs <- read.csv(here::here("output", fbs_file)) # loading the data

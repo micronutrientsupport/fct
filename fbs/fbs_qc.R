@@ -4,7 +4,7 @@ library(dplyr)
 
 # Loading the data
 
-fbs <- read.csv(here::here("inter-output", "MAPS_FBS_2018-2020_v3.0.1.csv")) 
+fbs <- read.csv(here::here("output", "MAPS_FBS_2018-2020_v3.0.1.csv")) 
 
 #fbs <- read.csv(here::here("output", "MAPS_FBS_2014-2018_v2.1.1.csv")) 
 
