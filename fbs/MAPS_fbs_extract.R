@@ -9,6 +9,10 @@ fbs_file <- sort(list.files(here::here("output") , "MAPS_FBS_"), # identifying m
 
 fbs <- read.csv(here::here("output", fbs_file)) # loading the data
 
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+
 #Load FCTs matched to dictionary (most recent one)
 file <- sort(list.files(here::here("inter-output") , "FCTs_dict_compiled_v"), # identifying most recent one
              decreasing = T)[1]
@@ -24,7 +28,7 @@ subset(fct_dict, fct_source = "US19", select = c(VITA_RAEmcg))
 unique(fbs$country_id)
 
 # Selecting country of interest
-country <- "GHA"
+country <- "MWI"
 all_variables <- names(fbs)[c(1:5,7)] # And variables of interest
 
 # Getting the country mean supply
@@ -33,13 +37,43 @@ country_fbs <- subset(fbs, country_id %in% country) %>%
   summarise(mean_supply = round(mean(amount_consumed_in_g), 2)) %>% 
   arrange(desc(mean_supply))
 
+head(country_fbs)
+
+##Checking dictionary ID matches
+country_fbs %>% 
+  left_join(., dictionary.df, by = c("food_genus_id" = "ID_3")) %>% 
+  filter(is.na(FoodName_3)) %>% distinct()
+
 # Matching with FCT by priority FCT
-fct1 <- "WA19"
+fct1 <- "MW19"
 fct2 <- "KE18"
-fct3 <- "UK21"
-fct4 <- "US19"
+fct3 <- "WA19"
+fct4 <- "UK21"
+fct5 <- "US19"
 
 nutrient <- "VITA_RAEmcg" # Nutrient of interest
+
+# Checking fbs w/o a match in all FCTs
+country_fbs %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct1), 
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient)))  %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct2),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient))) %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct3),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient))) %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct4),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient)))  %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct5),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient)) & mean_supply>0)
 
 # Matching with the priority 1 
 
@@ -90,7 +124,30 @@ matches4 <- country_fbs %>%
             by = "food_genus_id") %>% 
   filter(!is.na(!!sym(nutrient))) 
 
+#Checking fbs w/o a match in fct1 & matches in fct priority 5
+matches5 <- country_fbs %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct1), 
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient)))  %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct2),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient))) %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct3),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient))) %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct4),
+            by = "food_genus_id") %>% 
+  filter(is.na(!!sym(nutrient)))  %>% 
+  dplyr::select(1:ncol(country_fbs)) %>% 
+  left_join(., fct_dict %>% dplyr::filter(source_fct %in% fct5),
+            by = "food_genus_id") %>% 
+  filter(!is.na(!!sym(nutrient))) 
+
 data.df <- bind_rows(matches1, matches2, matches3, matches4)
+data.df <- bind_rows(matches1, matches2, matches3, matches4, matches5)
 
 # Saving the data
 

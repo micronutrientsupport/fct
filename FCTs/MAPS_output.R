@@ -83,7 +83,7 @@ fct_dict <- fct_dict %>%
 
 #Saving for other works
 fct_dict %>% #filter(!is.na(ID_3)) %>% 
-  write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.1.csv"),
+  write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.2.csv"),
             row.names = FALSE)
 
  ## Standardisation: 

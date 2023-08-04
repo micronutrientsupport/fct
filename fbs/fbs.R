@@ -145,3 +145,6 @@ fbs$food_genus_id[fbs$food_genus_id == "21521.01"]  <- "F1243.01"
 # From GHA north african catfish (1501.02) to fillet (1503.07)
 fbs$food_genus_id[fbs$food_genus_id == "1501.02"] <-  "1503.07"
 
+# From MWI goat meat, fresh, averag (21116.01) to moderate (21116.03)
+fbs$food_genus_id[fbs$food_genus_id == "21116.01"] <-  "21116.03"
+

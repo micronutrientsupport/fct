@@ -49,7 +49,9 @@ wa_genus <- tribble(
   "03_032", "1707.01", "h",
   "03_008", "141.01", "h",
   "07_003", "21121.03", "m",
-  "07_030", "21121.01", "m",
+  "07_030", "21121.04", "h",
+  "07_036", "21121.05", "h",
+  "07_033", "21121.06", "h",
   "08_002", "231.02", "h",
   "08_001", "231.01", "h",
   "14_001", "1533.01", "l",
@@ -57,6 +59,7 @@ wa_genus <- tribble(
   "07_046", "21116.03", "m",
   "10_029", "2211.01", "h",
   "07_072", "21115.01", "m",
+  "07_004", "21115.02", "h",
   "07_006", "21113.02.01", "m",
   "07_007", "21114.01", "h",
   "04_005", "1212.03", "h",
@@ -72,8 +75,10 @@ wa_genus <- tribble(
   "05_037", "1316.01", "l",
   "05_017", "1317.01", "h",
   "05_018", "1318.01", "h", 
-  "11_007", "2165.01", "l", 
-  "01_101",  "23140.07.01", "m", 
+  "11_007", "2165.01", "m", 
+  "11_024", "2165.02", "h", 
+  "11_023", "2165.03", "h", 
+  "01_101", "23140.07.01", "m", 
   "04_011", "1699.08", "m", 
   "04_003", "1241.9.02", "h",
   "09_004", "1529.02", "h",
@@ -97,13 +102,25 @@ wa_genus <- tribble(
   "06_002", "1460.01", "h",
   "06_015", "1444.01", "m", 
   "11_009", "2161.01", "m", 
+  "11_027", "2161.02", "h", 
+  "11_028", "2161.03", "h", 
   "11_003", "2162.01", "m", 
+  "11_021", "2162.02", "h", 
+  "11_022", "2162.03", "h", 
   "11_016", "21631.01.01", "m", 
+  "11_035", "21631.01.02", "h", 
+  "11_034", "21631.01.03", "h", 
   "11_012", "21691.14.01", "m", 
+  "11_026", "21691.14.02", "m", 
+  "11_025", "21691.14.03", "m", 
   "11_002", "2166.01", "m", 
+  "11_018", "2166.02", "h", 
+  "11_017", "2166.03", "h", 
   "11_014", "2167.01", "m", 
   "11_013", "21691.02.01", "m", 
   "11_010", "34550.01", "m", 
+  "11_031", "34550.02", "h", 
+  "11_030", "34550.03", "h", 
   "05_016", "1323.01", "h", 
   "05_014", "1322.01", "h", 
   "05_035", "1321.02", "l",
@@ -295,7 +312,18 @@ wa_genus <- tribble(
  "09_020", "1507.15", "h",
  "09_077", "1507.16", "h", 
  "01_087", "23110.03", "h", 
- "07_064", "21117.01.01", "h"
+ "07_064", "21117.01.01", "h", 
+ "10_005", "22230.01.01", "h", 
+ "10_010", "22120.03", "h", 
+ "05_047", "1341.02", "h",
+ "05_046", "1341.03", "h",
+ "01_006",  "112.02", "h", 
+ "11_005", "2168.01", "m", 
+ "11_020", "2168.02", "h", 
+ "11_019", "2168.03", "h",
+ "07_005", "21113.02.03", "h", 
+ "07_071", "21113.02.04", "h", 
+ "07_025", "F1172.03", "h"
  )
 
 # Checking for dictionary duplicates -----
@@ -342,22 +370,23 @@ wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("09_020", "09_077", "09_081" ), 
+subset(wafct, fdc_id %in% c("07_025",
+                            "07_063"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
 subset(wafct, fdc_id == "01_087", select = food_desc) 
-subset(wafct, fdc_id == "04_012", select = c(food_desc, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "21393.9.01" ) 
+subset(wafct, fdc_id == "07_025", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "112.01" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
 # Checking food groups
-subset(wafct, grepl("^04", fdc_id, ignore.case = TRUE) &
-         grepl("raw", food_desc, ignore.case = TRUE), 
+subset(wafct, grepl("^05", fdc_id, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc,scientific_name,  ID_3)) %>% View()
 
 # Checking in the dict
 dictionary.df %>% filter(ID_3 %in% c("1290.9.10"))
-subset(dictionary.df, ID_2 == "21117.01")
+subset(dictionary.df, ID_2 == "21121")
 subset(dictionary.df, ID_1 == "2735")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -365,17 +394,17 @@ distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("radi", food_desc, ignore.case = TRUE) &
-         grepl("", food_desc, ignore.case = TRUE) 
+subset(wafct, grepl("cotton", food_desc, ignore.case = TRUE) &
+         grepl("oil", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct, str_detect(food_desc, "Radis") & 
-         grepl("", food_desc, ignore.case = TRUE),
+subset(wafct,  grepl("chicken", food_desc, ignore.case = TRUE) & 
+         grepl("raw", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("baoba", FoodName_3, ignore.case = TRUE) &
-         grepl("leav", FoodName_3, ignore.case = TRUE))
+       grepl("mango", FoodName_3, ignore.case = TRUE) &
+         grepl("", FoodName_3, ignore.case = TRUE))

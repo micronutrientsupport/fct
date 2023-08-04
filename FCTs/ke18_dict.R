@@ -307,7 +307,7 @@ ken_genus$confidence[ken_genus$ref_fctcode == "1039"]  <- "h"
 ken_genus$ID_3[ken_genus$ref_fctcode == "2007"]  <- "1520.01.01"
 
 
-#Updating the dictionary compilation -----
+# Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 

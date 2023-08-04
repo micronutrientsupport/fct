@@ -92,6 +92,7 @@ genus <- tribble(
  "13-875", "1654.03", "h", 
  "17-222", "24230.03.01", "m", 
  "11-1029", "F0022.07", "m", 
+ "17-002", "23620.01", "h"
  
  
  
@@ -120,6 +121,15 @@ genus$ID_3[genus$ID_3 == "1290.9.03"] <- "1654.01"
 (dupli <- genus %>%  count(ref_fctcode) %>% 
     filter(n>1) %>% pull(ref_fctcode))
 
+##Find a way to stop it running if dupli == TRUE
+x <- if(length(dupli) == 0){NA}else{length(dupli)} 
+#x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
+
+if(!(is.na(x)))stop("duplicated code")
+
+genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
+
+
 #Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
@@ -145,16 +155,16 @@ subset(uk21, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID
 subset(uk21, ID_3 == "23670.01.01") 
 
 dictionary.df %>% filter(ID_3 == "23670.01.01")
-subset(dictionary.df, ID_2 == "1651")
+subset(dictionary.df, ID_2 == "23620")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 
 subset(uk21, 
-       grepl("sugar", food_desc, ignore.case = TRUE)&
+       grepl("", food_desc, ignore.case = TRUE)&
       grepl("^17", fdc_id), 
         select = c(fdc_id, food_desc, ID_3, WATERg))
 
-subset(uk21, grepl("panel", food_desc, ignore.case = TRUE) &
+subset(uk21, grepl("cocoa", food_desc, ignore.case = TRUE) &
        grepl("", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 

@@ -108,7 +108,7 @@ If we cannot solve the issue, we would still need to flag that data entry and to
 ### 1) Western Africa FCT (2019)
 
 **Version log**
-V.2.0.3 updated on 2023/08/01 - Bug fix: Changed dictionary code for WA19("02_041") from "23170.01.02" to "23170.01.03", and WA19("02_040") from "23170.01.03" to "23170.01.02",
+V.2.0.3 updated on 2023/08/04 - Bug fix: Changed dictionary code for WA19("02_041") from "23170.01.02" to "23170.01.03", and WA19("02_040") from "23170.01.03" to "23170.01.02", change WA19(07_030) from "21121.01" to "21121.04". 
 V.2.0.2 updated on 2023/06/20 - Bug fix: Changed dictionary code for WA("07_046") from "21116.01" to "21116.03". 
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for WA19("02_004") from "23170.01" to "23170.01.01", and WA19("06_018") from "1379.02" to "1379.02.01". 
 V.2.0.0 updated on 2023/05/19 - Important changes in dictionary codes, bug fixed on values that were reported with brackets, and combining Tagnames for fat, vitamin B6 and thiamine.
@@ -258,6 +258,11 @@ alcohol, 80perc
 Rice, white, raw (01_037) was assigned to imported rice (23161.01.02), mainly because it is for the whole region hence we assumed that it would be an average for all countries. However, because we are not 100% sure, we have assigned confidence low.  (**TO BE REVIEW**). We used parboiled because the "white rice" was assigned to the "polished" it was decided based on the fibre content. 
 rice, white, polished (fibre = 1.9g/100g) == rice, white 
 rice, white (fibre = 3.6g/100g) == rice, parboiled
+
+**Meat**
+
+- WA19(07_030): Changed chicken WA19(07_030) to a more detail code, as when we calculate the fat content of the "unespecified" chicken in KE18 was the mean of the fat content with skin in WA19. 
+
 
 ###Next steps:
 
