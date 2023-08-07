@@ -225,6 +225,11 @@ Hence, we needed to change the food groups "oils and products" & "seed and produ
 
 # Food description
 
+- **23999.01.01**: For "ovaltine" we are using malt extract. 
+https://www.wcoomd.org/-/media/wco/public/global/pdf/topics/nomenclature/instruments-and-tools/hs-nomenclature-2022/2022/0419_2022e.pdf?la=en
+
+https://en.wikipedia.org/wiki/Ovaltine
+
 - **21435.01.01**: For "apple juice, sweetened", we used qualitative information into the FoodEx2 code, using "with added sugar" to specify that it was sweetened. We did not specify the sweetened agent because it was unknown. 
 
 -**23170.02.01**: Kocho was reported in the ESS3 (Ethiopia HCES), which according to the [Wikipedia](https://en.wikipedia.org/wiki/Kocho_(food)), it is a bread-like fermented food made from chopped and grated ensete pulp. 

@@ -177,8 +177,8 @@ wa_genus <- tribble(
   "04_012",  "1233.01", "h" ,
   "04_074",  "1290.9.09", "h",
   "03_005" , "1706.03", "h",
-  "03_027",  "1706.03", "h",
-  "03_006",  "1706.03", "h",
+  "03_027",  "1706.04", "h",
+  "03_006",  "1706.05", "h",
   "02_041",  "23170.01.03", "h", 
   "02_040",  "23170.01.02", "h",
   "07_014",  "21111.02.03", "m",
@@ -331,7 +331,9 @@ wa_genus <- tribble(
  "05_022", "1221.01", "h", 
  "05_039", "1229.01", "h", 
  "05_038", "1229.02", "h", 
- "05_015", "1316.04", "m"
+ "05_015", "1316.04", "m",
+ "05_052", "1359.9.09", "h",
+ "13_028", "23999.01.01", "h"
 )
 
 # Checking for dictionary duplicates -----
@@ -378,8 +380,7 @@ wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("07_025",
-                            "07_063"), 
+subset(wafct, fdc_id %in% c("03_004" ,"03_005" ,"03_027", "03_006"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
 subset(wafct, fdc_id == "01_087", select = food_desc) 
@@ -394,15 +395,15 @@ subset(wafct, grepl("^05", fdc_id, ignore.case = TRUE) &
 
 # Checking in the dict
 dictionary.df %>% filter(ID_3 %in% c("23161.01.04"))
-subset(dictionary.df, ID_2 == "1229")
-subset(dictionary.df, ID_1 == "2735")
+subset(dictionary.df, ID_2 == "1359.9")
+subset(dictionary.df, ID_1 == "2633")
 subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("pork", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("oval", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
@@ -414,5 +415,5 @@ subset(wafct, str_detect(scientific_name, "Scomberomorus"),
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("fig", FoodName_2, ignore.case = TRUE) &
+       grepl("oval", FoodName_3, ignore.case = TRUE) &
          grepl("", FoodName_3, ignore.case = TRUE))

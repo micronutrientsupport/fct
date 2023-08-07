@@ -12,7 +12,7 @@ ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
   "1004",   "F0022.03",    "m",
   "6001",   "22241.01.01", "h",
-  "12004",  "F0665.01",    "m", 
+  "12004",  "F0666.06",    "h", 
   "12003",  "23912.02.01", "m", 
   "4016",   "1232.01"  ,   "m",
   "11001",  "2910.01"  ,   "h",
@@ -118,7 +118,7 @@ ken_genus <- tribble(
   "3005", "1701.05", "h", 
   "10008", "1372.01", "l", 
   "10002", "1460.01", "h", 
-  "9007", "21641.01.01", "m",
+  "9007", "21641.02.01", "m",
   "5002", "1341.02", "h",
   "5007", "1314.01", "h", 
   "5008", "1314.02", "h", 
@@ -344,15 +344,15 @@ kenfct %>% filter(fdc_id %in% c("6017",
 subset(kenfct, fdc_id %in% c("4032"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
-subset(kenfct, fdc_id == "5029", select = c(food_desc, ID_3, scientific_name)) 
+subset(kenfct, fdc_id == "9007", select = c(food_desc, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1359.9.04") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("1359.9.04"))
-subset(dictionary.df, ID_2 == "1319")
+dictionary.df %>% filter(ID_3 %in% c("F0665.01"))
+subset(dictionary.df, ID_2 == "21641.02")
 subset(dictionary.df, ID_2 %in% c("1379.02"
 ))
-subset(dictionary.df, ID_1 == "2533")
+subset(dictionary.df, ID_1 == "2574")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
 subset(kenfct, grepl("fish", food_desc, ignore.case = TRUE) &

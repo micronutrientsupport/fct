@@ -462,7 +462,7 @@ summary(MAFOODS$SOP)
 ### 3) Kenya FCT
 
 **Version log**
-V.2.0.3 updated on 2023/08/01 - Bug fix: Updated one dictionary code for KE18("15125") back to the original "F0022.08".
+V.2.0.3 updated on 2023/08/07 - Bug fix: Updated one dictionary code for KE18("15125") back to the original "F0022.08", KE18(9007) from "21641.01.01" to "21641.02.01"
 V.2.0.2 updated on 2023/07/10 - Bug fix: Updated one dictionary code for KE18("5006") from "1319.05" to "1319.08".
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for KE18("15125") from "F0022.08" to "F0022.07", KE18(4018) from  "21393.9.05" to "1290.9.15". 
 V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, combining Tagnames for fat and thiamine. 
@@ -596,6 +596,8 @@ Beef meat are all specified w/o bones, except the lean (7002). The edible portio
 *- Fats & Oils*:
 
 Fish liver oil (9003) did not specified the fish type, hence we assumed cod liver oil because it is the most common fish liver oil (REF). However, we assigned a "low confidence". 
+
+Mustard seed oil (9007) was wrongly coded as "rape seed oil" (21641.01.01). Now it is correclty changed to mustard seed oil (21641.02.01).
 
 - **Fruits**: We used the same dictionary code for custard apple (sweet sop) KE18("5006") as for soursop which are the same family as **. However they are different foods, and they were reported individually in SL18. Hence, we changed to code from "1319.05" to "1319.08" (See change log).
 
@@ -877,6 +879,8 @@ We matched tea, Chinese, leaves (17-170) with Tea leaves (1620.01). This should 
 
 -**17-692**: We excluded the use of popcorn because it has many missing values, particularly for micronutrients. 
 
+- **17-734**: We are using ovaltine fortified (23999.01.01) because the values seemed in line with the ovaltine fortied reported in WA19(13_028). 
+
 
 ### 9) Japan FCT (2015)
 
@@ -913,10 +917,14 @@ The seasoning mix: US19(2074, 2075, 2076) have high number of missing values, an
 
 ###### MAPS Food dictionary 
 
+- **23999.01.01**: We are using ovaltine fortified for US19(14315) because the values seemed in line with the ovaltine fortied reported in WA19(13_028).
+
  - **F0623.08**: We used the item US19(9100) (heavy syrup) from the four options available because the water content was the closest match to the water content in our "reference value" WA19(05_034).
 - **F0623.07**: We used the item US19(9271) (extra heavy syrup) from the options available because the water content was the closest match to the reference food KE18(5029).
 - **F1232.31**: We selected item US19(21108) from the options available because the water content was the closest match to the reference food UK21(19-544).
 - **2920.01**: We opted to match US19(90560) to this dictionary code because the water content was the same as the "snail" in WA19(07_083), which has the same dictionary code.
+
+ 
 
 ## MAPS formatting
 
