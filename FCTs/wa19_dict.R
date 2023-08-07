@@ -169,7 +169,7 @@ wa_genus <- tribble(
   "10_016",  "22221.01.01", "h", 
   "01_034", "23162.03", "h", 
   "01_065", "23162.04", "h", 
-  "01_067", "23161.01.04", "h",
+  "01_067", "23161.02.04", "h",
   "01_036", "23161.01.01", "l",
   "01_045" , "F0022.09", "h", 
   #"01_187",  "F0020.07", "l", # This is cake not sweet bread (can use value from KE18)
@@ -323,8 +323,16 @@ wa_genus <- tribble(
  "11_019", "2168.03", "h",
  "07_005", "21113.02.03", "h", 
  "07_071", "21113.02.04", "h", 
- "07_025", "F1172.03", "h"
- )
+ "07_025", "F1172.03", "h",
+ "07_079", "21170.92.03", "m",
+ "07_074", "21170.92.10", "m",
+ "07_076", "21170.92.11", "h",
+ "07_075", "21183.04", "h", 
+ "05_022", "1221.01", "h", 
+ "05_039", "1229.01", "h", 
+ "05_038", "1229.02", "h", 
+ "05_015", "1316.04", "m"
+)
 
 # Checking for dictionary duplicates -----
 
@@ -385,8 +393,8 @@ subset(wafct, grepl("^05", fdc_id, ignore.case = TRUE) &
        select = c(fdc_id, food_desc,scientific_name,  ID_3)) %>% View()
 
 # Checking in the dict
-dictionary.df %>% filter(ID_3 %in% c("1290.9.10"))
-subset(dictionary.df, ID_2 == "21121")
+dictionary.df %>% filter(ID_3 %in% c("23161.01.04"))
+subset(dictionary.df, ID_2 == "1229")
 subset(dictionary.df, ID_1 == "2735")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -394,17 +402,17 @@ distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("cotton", food_desc, ignore.case = TRUE) &
-         grepl("oil", food_desc, ignore.case = TRUE) 
+subset(wafct, grepl("pork", food_desc, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct,  grepl("chicken", food_desc, ignore.case = TRUE) & 
-         grepl("raw", food_desc, ignore.case = TRUE),
+subset(wafct,  grepl("fruit", food_desc, ignore.case = TRUE) & 
+         grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("mango", FoodName_3, ignore.case = TRUE) &
+       grepl("fig", FoodName_2, ignore.case = TRUE) &
          grepl("", FoodName_3, ignore.case = TRUE))
