@@ -462,7 +462,7 @@ summary(MAFOODS$SOP)
 ### 3) Kenya FCT
 
 **Version log**
-V.2.0.3 updated on 2023/08/07 - Bug fix: Updated one dictionary code for KE18("15125") back to the original "F0022.08", KE18(9007) from "21641.01.01" to "21641.02.01"
+V.2.1.0 updated on 2023/08/07 - New variable: Generate the ALCg variable. Bug fix: Updated one dictionary code for KE18("15125") back to the original "F0022.08", KE18(9007) from "21641.01.01" to "21641.02.01". 
 V.2.0.2 updated on 2023/07/10 - Bug fix: Updated one dictionary code for KE18("5006") from "1319.05" to "1319.08".
 V.2.0.1 updated on 2023/05/31 - Bug fix: Updated one dictionary code for KE18("15125") from "F0022.08" to "F0022.07", KE18(4018) from  "21393.9.05" to "1290.9.15". 
 V.2.0.0 updated on 2023/05/19 - New standardisation of scripts, combining Tagnames for fat and thiamine. 
@@ -529,6 +529,16 @@ The formula to calculate FOLDFE allows to calculate back the fortificant (FOLAC)
 
 There are values between [] they refer to those food items that folate was not calculated by microbiological array, instead other methods as HPLC were used. 
 
+) Alcohol: It was not reported as a variable in the FCT. In the documentation, it is reported as 
+
+>
+"Alcohol: Alcohol is assumed to be zero in all foods except alcoholic beverages. For these foods, the alcohol content is indicated in the food name."
+
+Therefore, we assumed ALCg = 0, and then, for the only three foods with supposed alcohol content, only 3 alcoholic beverages: (12007) Wine, Red (9.4 % alcohol),  (12008) Wine, White, Dry (10.3 % alcohol), and (12009) Wine, White, Sweet (10.2 % alcohol). The alcohol percentage was reported in the food description only in the pdf version on page 136. We used that information to calculate the alcohol concentration (g/100g), by using the equation provided in the Guidelines (ref-INFOODS)
+
+Eq. XX () ALCg = ALC(%)(v/v)*0.789(g/mL)/density(g/mL)
+
+Where 0.789g/mL is the alcohol density, and we need the density of each of the foods that were obtained form the Table of densities (Ref-INFOODS). For item 12007, we used the density of "Wine, table, red" = 0.99g/100mL (line 154), for 12008, we used gravity of "Wine, white, dry or sparkling" = 0.995g/mL (line 185), and, similarly for 12009, "Wine, white, sweet" = 1.015g/mL (line 187). 
 
 KENFCT2 - We have incorporated tagnames as per in the dataset (with no modifications)
 

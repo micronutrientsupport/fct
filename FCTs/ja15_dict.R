@@ -49,7 +49,8 @@ genus <- tribble(
 "6239", "1699.13", "h", 
 "17078", "1699.14", "h", 
 "16033", "1620.01", "h", 
-"10221", "1531.02", "h"
+"10221", "1531.02", "h",
+"11242", "1587.01", "m", 
 )
 
 genus$ID_3 <- as.character(genus$ID_3)
@@ -67,12 +68,21 @@ if(!(is.na(x)))stop("duplicated code")
 genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
 
 #Updating the dictionary compilation -----
-#for further use (to update versions) - first by alphabetic order
-v <- "1.3.0"
+#for further use (to update versions) - first by alphabetic order - superseeded by DK19
+#v <- "1.3.0"
+# genus %>% mutate(fct = "JA15")  %>% 
+#   write.csv(., here::here("metadata",
+#                           paste0("dict_fct_compilation_v.",v, ".csv")), 
+#             row.names = F)
+#
+##Updating the dictionary compilation -----
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
+
 genus %>% mutate(fct = "JA15")  %>% 
-  write.csv(., here::here("metadata",
-                          paste0("dict_fct_compilation_v.",v, ".csv")), 
-            row.names = F)
+  bind_rows(., read.csv(here::here("metadata", file)) %>%
+              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+  write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding food dictionary codes to FCT ----
 

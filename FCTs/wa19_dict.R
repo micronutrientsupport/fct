@@ -71,6 +71,8 @@ wa_genus <- tribble(
   "05_026", "1341.01", "m", 
   "05_002", "1311.01", "h",
   "05_003", "1312.01", "m",
+  "05_048", "1312.02", "m",
+  "05_028", "1312.03", "m",
   "05_010", "1316.02", "h",
   "05_037", "1316.01", "l",
   "05_017", "1317.01", "h",
@@ -333,7 +335,11 @@ wa_genus <- tribble(
  "05_038", "1229.02", "h", 
  "05_015", "1316.04", "m",
  "05_052", "1359.9.09", "h",
- "13_028", "23999.01.01", "h"
+ "13_028", "23999.01.01", "h",
+ "03_001", "1708.01", "h", 
+ "03_024", "1702.02", "h", 
+ "03_058", "1701.05", "h", 
+ "03_059", "1701.04", "h", 
 )
 
 # Checking for dictionary duplicates -----
@@ -389,13 +395,13 @@ subset(wafct, ID_3 == "112.01" )
 subset(wafct, str_detect(ID_3, "01520"))
 
 # Checking food groups
-subset(wafct, grepl("^05", fdc_id, ignore.case = TRUE) &
-         grepl("", food_desc, ignore.case = TRUE), 
+subset(wafct, grepl("^03", fdc_id, ignore.case = TRUE) &
+         grepl("raw", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc,scientific_name,  ID_3)) %>% View()
 
 # Checking in the dict
 dictionary.df %>% filter(ID_3 %in% c("23161.01.04"))
-subset(dictionary.df, ID_2 == "1359.9")
+subset(dictionary.df, ID_2 == "1709.9")
 subset(dictionary.df, ID_1 == "2633")
 subset(dictionary.df, ID_0 == "AP")
 
@@ -403,17 +409,17 @@ distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("oval", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("bambara", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct,  grepl("fruit", food_desc, ignore.case = TRUE) & 
+subset(wafct,  grepl("cow", food_desc, ignore.case = TRUE) & 
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("oval", FoodName_3, ignore.case = TRUE) &
+       grepl("bambara", FoodName_3, ignore.case = TRUE) &
          grepl("", FoodName_3, ignore.case = TRUE))

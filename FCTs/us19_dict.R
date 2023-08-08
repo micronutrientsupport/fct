@@ -155,7 +155,8 @@ genus <- tribble(
   "18019", "F0022.07", "m", 
  "25027", "F1232.34", "h",
  "14315", "23999.01.01", "m",
- "4582", "21641.01.01", "h"
+ "4582", "21641.01.01", "h", 
+ "14305", "24310.01.04", "h", 
   
   )
   
@@ -194,10 +195,7 @@ names(us19)
   
   #Checking dictionary/ fct ids availability 
   subset(us19, fdc_id == "2013", select = c(fdc_id, food_desc, WATERg)) 
-  subset(us19, fdc_id %in% c("3186",
-                             "3190",
-                             "3193",
-                             "3212"),
+  subset(us19, fdc_id %in% c("14305"),
   select = c(fdc_id, food_desc, ID_3)) 
   subset(us19, ID_3 == "23140.05.01") 
   
@@ -214,9 +212,9 @@ names(us19)
          select = c(fdc_id, food_desc, ID_3, WATERg, VITA_RAEmcg, scientific_name))
   
   dictionary.df %>% filter(ID_3%in% c("1654.02"))
-  subset(dictionary.df, ID_2 == "F1232")
+  subset(dictionary.df, ID_2 == "24310.01")
   subset(dictionary.df, ID_1 == "2012")
   subset(dictionary.df, ID_0 == "FV")
-  subset(dictionary.df, grepl("cous", FoodName_3, ignore.case = TRUE))
+  subset(dictionary.df, grepl("beve", FoodName_3, ignore.case = TRUE))
   subset(dictionary.df, grepl("sugar", Description1, ignore.case = TRUE))
   

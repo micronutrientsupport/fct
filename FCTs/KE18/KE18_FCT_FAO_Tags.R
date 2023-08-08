@@ -151,6 +151,15 @@ KE18_Raw_FCT %>%
   arrange(FOLACmcg) %>% #Arranges based on FOLAC
   knitr::kable()#Creates a table
 
+# Adding Alcohol (only 3 alcoholic beverages, from the name in docu (page 136))
+# (12007) Wine, Red (9.4 % alcohol),  (12008) Wine, White, Dry (10.3 % alcohol), 
+# (12009) Wine, White, Sweet (10.2 % alcohol)
+# ALC(%)*0.789(g/mL)/density(g/mL)
+
+KE18_Raw_FCT$ALCg <- 0
+KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12007"] <- (9.4*0.789/0.99)
+KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12008"] <- (10.3*0.789/0.995)
+KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12009"] <- (10.2*0.789/1.015)
 
 
 # Renaming, Checking, and Selecting ----
@@ -202,7 +211,7 @@ KE18_Raw_FCT <- KE18_Raw_FCT %>% rename( #Renames a number of variables - e.g. "
   PROCNTg = "PROTCNTg", 
   NAmg = "NA.mg") %>% #selecting the variables of interest
   dplyr::select(source_fct:PHYTCPPDmg, TRPmg, FASATgstandardized:FATRNgstandardized,
-                F20D5gstandardized, F22D6gstandardized) 
+                F20D5gstandardized, F22D6gstandardized, ALCg) 
 
 
 

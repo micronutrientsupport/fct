@@ -7271,6 +7271,53 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,15] <- taxon_ref
 }
 
+# ├├ bananas (1312) -----
+
+food_desc <-  c("banana, sweet, unripe, fresh, raw", 
+                "banana, yellow flesh, fresh, raw")
+
+scientific_name <- tolower(c(rep("Musa spp.", 2)))
+
+other_name <- c("banana, sweet, green (WA19)", rep(NA, 1))
+
+taxon <- c(NA)
+fex2_new <- c(NA)
+
+# One input
+id2 <- "1312"
+desc1 <-  c("Bananas This subclass includes: - sweet/dessert bananas, Musa sapientum, M. cavendishii, M. nana, i.e. bananas that can be eaten without further preparation This subclass does not include: - plantains, cooking bananas, Musa paradisiaca, cf. 01313")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+taxon_ref <- c(NA)
+
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
+
 ########## Other foods (OT) ##############
 subset(dictionary.df, ID_1 == "2659")
 
@@ -7754,63 +7801,57 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 
 
-# 24310.01 - Beer, European (>6% v/v alcohol)
+## ├├  Beer of barley, malted (24310.01) -----
+
+food_desc <-  c("beer, special (>6% v/v alcohol)",
+                  "beer, stout", 
+                "malt beverage, non-alcohol"
+)
+
+other_name <- c(rep(NA, 1), 
+                "Guiness", "Maltina")
+
+fex2_new <- c(NA)
+
 #Manual inputs:
+# One input
 id2 <- "24310.01"
-desc_new <- "beer, special (>6% v/v alcohol)"
-fex2_new <- NA
-scien_new <- NA
-other_name <- NA
+desc1 <-  c("Beverage that may be alcoholic or non-alcoholic that is made from fermented malted cereals (mainly barley), water and hops. Non-malted cereals may also be used. The FAO definition differs from the main international classifications in that it includes non-alcoholic beer (Unofficial definition)")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+scientific_name <- c(NA)
+taxon <- c(NA)
+taxon_ref <- c(NA)
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
 
-n1 <- dim(dictionary.df)[1]+1
 
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-
-# 24310.01 - Beer, stout
-#Manual inputs:
-id2 <- "24310.01"
-desc_new <- "beer, stout"
-fex2_new <- NA
-scien_new <- NA
-other_name <- NA
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
 
 # 1651 - Pepper, white
 #Manual inputs:
