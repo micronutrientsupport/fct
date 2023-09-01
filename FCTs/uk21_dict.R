@@ -95,8 +95,8 @@ genus <- tribble(
  "17-002", "23620.01", "h",
  "17-734", "23999.01.01", "m", 
  "17-041", "21641.01.01", "h", 
- 
- 
+ "18-350", "21124.01", "h",
+ "11-774", "23140.03.03", "h"
  
  )
 
@@ -152,12 +152,12 @@ dim(uk21)
 ## CHECK: Adding new food dictionary code ----
 
 #Checking dictionary/ fct ids availability 
-subset(uk21, fdc_id == "11-1029", select = c(food_desc, ID_3)) 
+subset(uk21, fdc_id == "18-350", select = c(food_desc, ID_3)) 
 subset(uk21, fdc_id %in% c("12-535", "12-326"), select = c(fdc_id, food_desc, ID_3)) 
 subset(uk21, ID_3 == "23670.01.01") 
 
 dictionary.df %>% filter(ID_3 == "23670.01.01")
-subset(dictionary.df, ID_2 == "23620")
+subset(dictionary.df, ID_2 == "21124")
 subset(dictionary.df, ID_1 == "2782")
 subset(dictionary.df, ID_0 == "PB")
 
@@ -166,7 +166,7 @@ subset(uk21,
       grepl("^17", fdc_id), 
         select = c(fdc_id, food_desc, ID_3, WATERg))
 
-subset(uk21, grepl("cocoa", food_desc, ignore.case = TRUE) &
+subset(uk21, grepl("Weet", food_desc, ignore.case = TRUE) &
        grepl("", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc, ID_3, WATERg))
 

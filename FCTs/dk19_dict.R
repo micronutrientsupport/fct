@@ -16,7 +16,8 @@ names(dictionary.df)
 genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
   "537", "1620.01", "m", 
-  "469", "1587.01", "m"
+  "469", "1587.01", "m", 
+  "732", "21124.01", "l", 
 )
 
 

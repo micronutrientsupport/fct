@@ -345,7 +345,7 @@ subset(kenfct, fdc_id %in% c("4032"),
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
 subset(kenfct, fdc_id == "9007", select = c(food_desc, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "1359.9.04") 
+subset(kenfct, ID_3 == "1319.03") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
 dictionary.df %>% filter(ID_3 %in% c("F0665.01"))
@@ -355,12 +355,12 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2574")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("fish", food_desc, ignore.case = TRUE) &
+subset(kenfct, grepl("sweet", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
-subset(kenfct, str_detect(fdc_id, "^4") &
+subset(kenfct, str_detect(fdc_id, "^5") &
          grepl("raw", food_desc, ignore.case = TRUE),
-       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name)) # %>% View()
+       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))  %>% View()
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 

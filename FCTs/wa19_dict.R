@@ -21,7 +21,7 @@ wa_genus <- tribble(
   "12_001", "24310.01.01", "m",
   "03_057", "1708.01", "h",
   "13_023", "F0623.01", "m",
-  "01_095", "118.03", "h", 
+  "01_017", "118.03", "h", 
   "10_002", "22211.01", "h",
   # "12_024", "24490.02", "h",
   "13_021", "F0666.01", "h", 
@@ -43,6 +43,8 @@ wa_genus <- tribble(
   "01_039",  "114.01", "m",
   "02_049",  "1530.02", "h",
   "02_022",  "1530.01", "h",
+  "02_013",  "1530.08", "h",
+  "02_011",  "1530.09", "h",
   "02_014", "1530.04", "h",
   "03_004", "1706.01", "h",
   "06_027", "142.02", "m",
@@ -340,7 +342,11 @@ wa_genus <- tribble(
  "03_024", "1702.02", "h", 
  "03_058", "1701.05", "h", 
  "03_059", "1701.04", "h", 
-)
+ "05_045", "1319.08", "h",
+ "01_183", "23140.03.03", "h",
+ "03_009", "1356.01", "h", 
+"03_042",  "1356.02", "h"
+ )
 
 # Checking for dictionary duplicates -----
 
@@ -386,30 +392,30 @@ wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("03_004" ,"03_005" ,"03_027", "03_006"), 
-       select = c(fdc_id, food_desc, ID_3, scientific_name))
+subset(wafct, fdc_id %in% c("01_077"), 
+       select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
-subset(wafct, fdc_id == "01_087", select = food_desc) 
-subset(wafct, fdc_id == "07_025", select = c(food_desc, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "112.01" ) 
+subset(wafct, fdc_id == "01_188", select = food_desc) 
+subset(wafct, fdc_id == "03_042", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "1319.03" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
 # Checking food groups
-subset(wafct, grepl("^03", fdc_id, ignore.case = TRUE) &
-         grepl("raw", food_desc, ignore.case = TRUE), 
+subset(wafct, grepl("^05", fdc_id, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE), 
        select = c(fdc_id, food_desc,scientific_name,  ID_3)) %>% View()
 
 # Checking in the dict
-dictionary.df %>% filter(ID_3 %in% c("23161.01.04"))
-subset(dictionary.df, ID_2 == "1709.9")
-subset(dictionary.df, ID_1 == "2633")
+dictionary.df %>% filter(ID_3 %in% c("1530.01"))
+subset(dictionary.df, ID_2 == "24490")
+subset(dictionary.df, ID_1 == "2511")
 subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("bambara", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("locus", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
@@ -421,5 +427,5 @@ subset(wafct, str_detect(scientific_name, "Scomberomorus"),
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("bambara", FoodName_3, ignore.case = TRUE) &
+       grepl("energ", FoodName_3, ignore.case = TRUE) &
          grepl("", FoodName_3, ignore.case = TRUE))
