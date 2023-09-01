@@ -24,20 +24,28 @@ names(fct_dict)
 
 subset(fct_dict, fct_source = "US19", select = c(VITA_RAEmcg))
 
+subset(fct_dict, grepl("1501", food_genus_id) & source_fct == "WA19",
+       select = c(food_genus_id, VITA_RAEmcg, WATERg))
+
 # Getting counrties id 
 unique(fbs$country_id)
 
 # Selecting country of interest
-country <- "MWI"
+country <- "GHA"
 all_variables <- names(fbs)[c(1:5,7)] # And variables of interest
 
 # Getting the country mean supply
-country_fbs <- subset(fbs, country_id %in% country) %>%
+(country_fbs <- subset(fbs, country_id %in% country) %>%
   group_by(across(all_variables)) %>% 
   summarise(mean_supply = round(mean(amount_consumed_in_g), 2)) %>% 
-  arrange(desc(mean_supply))
+  arrange(desc(mean_supply)))
 
 head(country_fbs)
+
+# For GHA
+#country_fbs$food_genus_id[country_fbs$food_genus_id == "21121.01"] <- "21121.04"
+#country_fbs$food_genus_id[country_fbs$food_genus_id == "1501.02"] <- "1501.03"
+
 
 ##Checking dictionary ID matches
 country_fbs %>% 
@@ -45,11 +53,11 @@ country_fbs %>%
   filter(is.na(FoodName_3)) %>% distinct()
 
 # Matching with FCT by priority FCT
-fct1 <- "MW19"
+fct1 <- "WA19"
+#fct1 <- "MW19"
 fct2 <- "KE18"
-fct3 <- "WA19"
-fct4 <- "UK21"
-fct5 <- "US19"
+fct3 <- "UK21"
+fct4 <- "US19"
 
 nutrient <- "VITA_RAEmcg" # Nutrient of interest
 

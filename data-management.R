@@ -6,7 +6,7 @@
 source(here::here("path.R")) # Local copy of your directory path
 source(here::here("MAPS_Dictionary-Protocol.R"))
 
-#Saving dictionary
+# Saving dictionary
 for(i in 1:length(path)) {
   
 saveRDS(dictionary.df, file = paste0(path[i], "/data/dictionary.df.rds"))

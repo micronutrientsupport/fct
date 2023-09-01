@@ -42,10 +42,10 @@ code <- fbs %>% filter(!is.na(food_genus_id)) %>%
   filter(is.na(fdc_id)) %>% .[,1]
 
 subset(dictionary.df, ID_1 == "2680")
-subset(dictionary.df, ID_2 == "2680")
+subset(dictionary.df, ID_2 == "1501")
 subset(dictionary.df, ID_3 %in% code) %>% distinct(ID_1)
 
-subset(MAPS_output, food_genus_id == "21691.07.01")
+subset(dictionary.df, ID_3 == "1501.02")
 
 # Checking countries values in FBS -----
 unique(fbs$country_id)

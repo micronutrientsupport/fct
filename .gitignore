@@ -39,17 +39,26 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-#data and metadata folder
+#data and inter-output folder and files in output folder
 
 data/
 old-scripts/
-output/
-inter-output/
+output/*.csv 
+output/*.xlsx
+output/*.RDS
+output/*.rds
+inter-output/*.csv 
+inter-output/*.xlsx
+inter-output/*.RDS
+inter-output/*.rds
+inter-output/*/
 FCTs/*.csv
 *.xlsx
 *.accdb
 *.laccdb
 SR-LEG_DB/
+metadata/*/
+
 
 #Images and document
 
