@@ -1,7 +1,10 @@
 
 #loading the packages
 
-library(tidyverse)
+#library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(stringr)
 
 ## loading fct data
 
@@ -21,7 +24,7 @@ separate_rows(nga4_fooditem, sep = "(?<=\\d)[[:blank:]]") %>%
   relocate(nga4_foodid, .before = nga4_fooditem)
 
 
-nga4.foodlist <- read.csv(here::here("data", "nga4_foodlist_raw.csv")) %>% 
+nga4.foodlist <- read.csv(here::here("data", "old-files", "nga4_foodlist_raw.csv")) %>% 
   separate_rows(nga4_fooditem, sep = "(?<=\\d)[[:blank:]]") %>% 
   mutate(nga4_foodid = str_extract(nga4_fooditem, "\\d+"),
          nga4_fooditem = str_remove(nga4_fooditem, "\\d+")) %>% 

@@ -35,3 +35,6 @@ for(i in 1:length(path)) {
 write.csv(read.csv(here::here("metadata", file)),
           paste0(path[i], "/data/",file), row.names = F)
 }
+
+#write.csv(dictionary.df, 
+#          here::here("metadata","MAPS_food-dictionary_v3.0.3.csv"), row.names = F)

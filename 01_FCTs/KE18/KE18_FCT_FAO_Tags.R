@@ -223,7 +223,11 @@ KE18_Raw_FCT <- KE18_Raw_FCT %>% rename( #Renames a number of variables - e.g. "
   dplyr::select(source_fct:PHYTCPPDmg, TRPmg, FASATgstandardized:FATRNgstandardized,
                 F20D5gstandardized, F22D6gstandardized, ALCg) 
 
+# This can only be done here, otherwise some of the FAs would have the same name
+names(KE18_Raw_FCT) <- gsub("standardized", "", names(KE18_Raw_FCT))
 
+#Checking the renaming
+names(KE18_Raw_FCT)
 
 # Data Output ----
 

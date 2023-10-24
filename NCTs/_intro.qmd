@@ -19,7 +19,7 @@ For those foods, a weight factor is applied at the consumption level to avoid du
 
 1) food-list: This dataset has the food list reported consumed by the household in each survey (food code, food original name), the food dictionary (ID_3) and, the weight (number of matches per food item, and/or modified weight based on FAO- FBS/SUA or other). 
 
-2) food consumption: This dataset has been prepared from the raw household survey (Consumption module), and it contains the information to identify each hosehold (household id), the food consumed (food code and/or food original name), and the quantity reported (food consumed g). 
+2) food consumption: This dataset has been prepared from the raw household survey (Consumption module), and it contains the information to identify each household (household id), the food consumed (food code and/or food original name), and the quantity reported (food consumed g). 
 
 Those two datasets are merged and the quantity reported consumed by the houehold is re-calculated (standardised amount consumed in g) using the weights, and/or other needed changes, such as food was reported consumed as dried but on the FCTs are only found fresh. 
 
