@@ -6,7 +6,6 @@ library(tidyverse)
 ## loading data
 ihs5 <- read.csv("ihs5-fct_v1.2.csv") %>% select(-X)
 
-
 AHHA <- read.csv(here::here("data", "AHHA-FCT.csv"))
 
 source("dictionary.R")

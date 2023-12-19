@@ -18,13 +18,14 @@
 
 
 
-#0) Loading previous survey matches
+# 0) Loading previous survey matches
 
 source("fct_ess3.R")
 
 #New dataset from 2018-2019.
 
-ess4_food_list <- read.csv(here::here("inter-output", "eth_fct_match_v1.csv")) %>% 
+ess4_food_list <- read.csv(here::here("inter-output",
+                                      "eth_fct_match_v1.csv")) %>% 
    select(1, 2) %>% mutate(
       ref_fooditem = str_replace(item_code, "[:digit:]{2,3}\\.", "")) %>% 
    mutate_at("ref_fooditem", str_squish) %>% select(-item_code)
@@ -109,8 +110,7 @@ ess4_food_list <- ess4_food_list %>% left_join(., ess4_food) %>%
    bind_rows(., ess4_food_st)
 
 
-
-#Assigning 
+# TODO: Updted to do the matching using fct_dict
 
 #3) Food matching
 

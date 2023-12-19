@@ -2,7 +2,7 @@
 # Script that format FCTs into MAPS standard name and structure
 
 # Load libraries
-library(dplyr)
+library(tidyverse)
 source("functions.R")
 
 #Loading the food dictionary
@@ -26,7 +26,7 @@ var.name <- gsub("phyticacid", "phytate", var.name)
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 # Loading the file (dictionary-to-FCTs-matches)
-dict_comp <-read.csv(here::here("metadata", file)) %>% 
+dict_comp <- read.csv(here::here("metadata", file)) %>% 
   rename(source_fct = "fct", 
          fdc_id = "ref_fctcode")
 
@@ -35,16 +35,17 @@ dict_comp %>% count(source_fct)
 #1) Loading all FCDBs into one single database ----
 
 #finding all the cleaned FCTs/FCDBs from the output folder
-list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
+list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
            full.names=TRUE) %>% 
-  map_df(~read_csv(., col_types = cols(.default = "c"), locale = locale(encoding = "Latin1")))  
+  map_df(~read_csv(., col_types = cols(.default = "c"), 
+                   locale = locale(encoding = "Latin1")))  
 
 # Loading all the cleaned FCTs/FCDBs into one single object (data.frame)
-fct_cover <- list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
+fct_cover <- list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
   map_df(~read_csv(., col_types = cols(.default = "c"), locale = locale(encoding = "Latin1"))) 
 
 # checking that we have loaded all the FCT/FCDBs (n=5)
-fct_cover %>% distinct(source_fct) 
+fct_cover %>% count(source_fct) 
 colnames(fct_cover)
 
 fct_cover$fdc_id[fct_cover$source_fct %in% c("JA15", "LS06")] <- gsub("^0", "", fct_cover$fdc_id[fct_cover$source_fct %in% c("JA15", "LS06")])
@@ -183,22 +184,22 @@ dictionary.df %>%
   filter(ID_2 == "F0020") 
 
 # Saving the MAPS_FCTs
-  
-split_fct <- MAPS_output %>% 
-  filter(fct_name %in% c("UK21")) %>% 
-    group_by(fct_name) %>% 
-    group_split()
-  
-#fct_names <- unique(MAPS_output$fct_name)
- fct_names <- c("UK21")
-
-  
-  for(i in 1:length(fct_names)){
-    saveName = paste0("output/MAPS_", fct_names[i], "_v3.0.0.csv")
-    readr::write_excel_csv(split_fct[[i]], file = saveName)
-  }
-  
-  
-
+#   
+# split_fct <- MAPS_output %>% 
+#   filter(fct_name %in% c("UK21")) %>% 
+#     group_by(fct_name) %>% 
+#     group_split()
+#   
+# #fct_names <- unique(MAPS_output$fct_name)
+#  fct_names <- c("UK21")
+# 
+#   
+#   for(i in 1:length(fct_names)){
+#     saveName = paste0("output/MAPS_", fct_names[i], "_v3.0.0.csv")
+#     readr::write_excel_csv(split_fct[[i]], file = saveName)
+#   }
+#   
+#   
+# 
 
 

@@ -11,8 +11,11 @@ dict.df %>% group_by(ID_0, FoodName_0) %>% count() %>% arrange(desc(n))
 #Empty cells 
 unique(subset(dict.df, is.na(ID_0)))
 
+unique(dict.df$FoodName_1)
+
 #Checking categories (ID_1) by ID_0
 id0 <- unique(dict.df$ID_0)
+
 dict.df %>% filter(ID_0 == id0[1]) %>% 
   group_by(ID_1, FoodName_1) %>%  distinct(ID_1, FoodName_1) %>% knitr::kable()
 
