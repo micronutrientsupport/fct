@@ -48,7 +48,7 @@ summary(cars)
  - animal fat [56] --> ken 9001  |Animal fat/ lard 
  - banana - we used white flesh, but could do an average 
  - orange only, no tangerine
- - mango, usesd pale, but maybe an average will be best
+ - mango, used pale, but maybe an average will be best
  - pawpaw == papaya
  - used apple with skin (no colour distinction)
  - tomato puree (canned) == tomato, paste, concentrated.
@@ -87,7 +87,7 @@ We attempted to gain more insights by using "supply" (consumption) data in FBS f
 
  
  - Fresh fish [100], we could do an average of all the possible or to try to identify the reporting unit and use it accordingly. Most of them are reported as small piece or heap. Therefore, we could be mullet and sardines for heaps and catfish for small and medium fresh pieces. We will leave out the mormyrid? for big because there is no "big piece" reported. 
- - Dried fish [103], check back the selection! It might be worth to add clayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013)
+ - Dried fish [103], check back the selection! It might be worth to add crayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013)
  
  - Frozen fish [101] could be mackerel  (see photo aid) - FCT is fillet, so double check EP.
  - For smoked maybe used average of dried and grilled (see photo aid)

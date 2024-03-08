@@ -6,14 +6,24 @@ library(dplyr)
 # Loading data
 #Specify the hces
 hces <- "ihs4"
-food <- readRDS(here::here("inter-output",
-                    paste0("food-cons_", hces, "_v1.0.0.rds")))
+# Getting the most recent version of the food consumption file
+file_name <- sort(list.files(here::here("inter-output"), 
+                paste0("food-cons_", hces)), decreasing = TRUE)[1]
 
+# Getting the most recent version
+food <- readRDS(here::here("inter-output", file_name)) 
+
+# Getting household data
 hh_info <- read.csv(here::here("inter-output", "hces",
-                              paste0(hces,".hh.csv")))[2:8]
+                              paste0(hces,".hh.csv")))
 
-  
-head(hh_info) 
+# Getting roster household data
+rost_info <- read.csv(here::here("inter-output", "hces",
+                               paste0(hces,".roster.csv")))
+head(rost_info) 
+names(rost_info)
+
+hh_info <- hh_info[2:8]
 
 hces_cons <- hh_info %>% 
   left_join(., food %>%
@@ -24,7 +34,7 @@ hces_cons <- hh_info %>%
 
 standard_names <- c("household_id", "latitud", "longitud", "urbanity", 
                     "wealth_quintile", "household_expenditure",
-                    "interview_data",   "original_food_id",
+                    "interview_date",   "original_food_id",
                     "original_food_name",
                      "food_genus_id", "food_genus_confidence", 
                     "amount_consumed_in_g")
