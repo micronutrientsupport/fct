@@ -1,24 +1,29 @@
 
-#loading the packages
+# Loading the packages
 
 #library(tidyverse)
 library(dplyr)
 library(tidyr)
 library(stringr)
 
-## loading fct data
+## Loading fct data
 
-source("dictionary.R")
-source("wafct.R")
-source("kenfct.R")
-source("mafood.R")
-source("fct_usda.R")
+# Loading all the cleaned FCTs/FCDBs into one single object (data.frame)
+fct_cover <- list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
+  purrr::map_df(~readr::read_csv(., col_types = readr::cols(.default = "c"), locale = readr::locale(encoding = "Latin1"))) 
 
-## loading food data
+
+# source("dictionary.R")
+# source("wafct.R")
+# source("kenfct.R")
+# source("mafood.R")
+# source("fct_usda.R")
+
+## Loading food data
 
 fbs <- read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv"))
 
-read.csv(here::here("data", "nga4_foodlist_raw.csv")) %>% 
+read.csv(here::here("data", "old-files",  "nga4_foodlist_raw.csv")) %>% 
 separate_rows(nga4_fooditem, sep = "(?<=\\d)[[:blank:]]") %>% 
   mutate(nga4_foodid = str_extract(nga4_fooditem, "\\d+")) %>% 
   relocate(nga4_foodid, .before = nga4_fooditem)
@@ -30,8 +35,6 @@ nga4.foodlist <- read.csv(here::here("data", "old-files", "nga4_foodlist_raw.csv
          nga4_fooditem = str_remove(nga4_fooditem, "\\d+")) %>% 
   mutate_at("nga4_fooditem", str_squish) %>% 
   relocate(nga4_foodid, .before = nga4_fooditem)
-
-
 
 
 ## add the WAFCT id
@@ -127,12 +130,27 @@ wafct %>% filter(str_detect(fooditem, "grain|flour")) %>%
 #gin [163] - USDA
 
 #check cassava flour fermented?
-wafct %>% 
-  filter(str_detect(fooditem, "Cassava|cassava")) %>% 
-  filter(str_detect(fooditem, "flour")) %>% 
-  select(code, fooditem, WATER, VITA_RAE, FE, ZN, VITB12)
+food1 <- "mill"
+food2 <- "raw"
 
+# wafct 
+fct_dict %>% filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+   filter(!is.na(ID_3)) %>% 
+  select(fdc_id, food_desc, ID_3, WATERg, VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
 
+nga4.matches <- nga4.foodlist 
+
+nga4.matches$ID_3 <- NA
+
+# Sorghum (10)
+nga4.matches[1,]$ID_3 <-  list(c("114.01",  "114.02",  "114.03"))
+
+# Millet (11)
+
+c("01_095",  "01_017")
 
 nga4_wafct_list <- c("01_039", "01_017", "01_037", "01_036", "01_058", "02_036",
                      "02_004", "01_043",
@@ -156,9 +174,13 @@ which(is.na(nga4_wafct_list))
 
 wafct_nga4 <- nga4_wafct_list  %>% cbind(., c(1:length(nga4_wafct_list)))
 
-nga4.foodlist %>% cbind(., nga4_wafct_list %>% as.data.frame() %>%  rename(code = ".") %>% 
-  left_join(., wafct) %>%
- select(code, fooditem, WATER, ENERC1, VITA_RAE, FE, ZN)) %>% 
+nga4.foodlist %>% cbind(., nga4_wafct_list %>% as.data.frame() %>% 
+                       #   rename(code = ".") %>% 
+                          rename(fdc_id = ".") %>% 
+#  left_join(., wafct) %>%
+  left_join(., fct_cover) %>%
+ # select(code, fooditem, WATER, ENERC1, VITA_RAE, FE, ZN)) %>% 
+  select(fdc_id, food_desc, WATERg, ENERCkcal, VITA_RAEmcg, FEmg, ZNmg)) %>% 
   filter(is.na(code)) %>% 
   filter(!str_detect(nga4_fooditem, "Other"))
   
