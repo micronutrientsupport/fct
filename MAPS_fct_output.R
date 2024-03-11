@@ -36,13 +36,13 @@ dict_comp %>% count(source_fct)
 #1) Loading all FCDBs into one single database ----
 
 #finding all the cleaned FCTs/FCDBs from the output folder
-list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
+list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
            full.names=TRUE) %>% 
   map_df(~read_csv(., col_types = cols(.default = "c"), 
                    locale = locale(encoding = "Latin1")))  
 
 # Loading all the cleaned FCTs/FCDBs into one single object (data.frame)
-fct_cover <- list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
+fct_cover <- list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
   map_df(~read_csv(., col_types = cols(.default = "c"), locale = locale(encoding = "Latin1"))) 
 
 # checking that we have loaded all the FCT/FCDBs (n=5)

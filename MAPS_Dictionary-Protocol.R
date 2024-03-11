@@ -410,7 +410,7 @@ dictionary.df$FoodName_3[dictionary.df$ID_3 == "23140.05.01"] <- "barley grain, 
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "114.01"] <- "sorghum grain, average, dried, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "114.01"] <- "sorghum grain, average, dried, raw"
 dictionary.df$FoodName_3[dictionary.df$ID_3 == "1193.04"] <- "fonio grain, white, refined, dried, raw"
-dictionary.df$FoodName_3[dictionary.df$ID_3 == "118.03"] <- "millet grain, pearl, dried, raw"
+dictionary.df$FoodName_3[dictionary.df$ID_3 == "118.03"] <- "pearl millet grain, dried, unrefined, raw"
 
 #Adding other names
 dictionary.df$Description2[dictionary.df$ID_3 == "23161.01.01"] <- "rice grain, white, polished, dried, raw"
@@ -1259,6 +1259,54 @@ fex2_new <- c(NA)
 id2 <- "23140.03"
 desc1 <-  c("Foods prepared by swelling and roasting cereals or cereal products, e.g. corn flakes, puffed rice; cereals o/t maize, in grain form, precooked or otherwise prepared (Unofficial definition)")
 ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+taxon_ref <- c(NA)
+
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+  dictionary.df[n1,14] <- taxon[i]
+  dictionary.df[n1,15] <- taxon_ref
+}
+
+## ├├  millet (118) -----
+
+food_desc <-  c("pearl millet grain, dried, refined, raw")
+
+other_name <- c(NA)
+
+scientific_name <- tolower(c(rep(NA, 1)))
+
+taxon <- c(NA)
+
+fex2_new <- c(NA)
+
+#Manual inputs:
+# One input
+id2 <- "118"
+desc1 <-  c(NA)
+ref1 <-  c(NA)
 taxon_ref <- c(NA)
 
 # Function: 
@@ -3083,13 +3131,16 @@ dictionary.df[n1,14] <- ref2
 
 ## ├├  Pelagic fish, canned (1532) -----
 
-food_desc <-  c("tuna, canned in water, drained", 
-                "tuna, canned in oil, drained")
+food_desc <-  tolower(c("tuna, canned in water, drained", 
+                "tuna, canned in oil, drained", 
+                "Mackerel, jack, canned in oil, drained"))
 
-scientific_name <- c(rep("Thunnus spp.", 2))
+scientific_name <- c(rep("Thunnus spp.", 2), 
+                     "Trachurus symmetricus")
 
 other_name <- c("tuna, tinned in water, drained", 
-                "tuna, tinned in oil, drained")
+                "tuna, tinned in oil, drained",
+                "Mackerel, jack, tinned in oil, drained")
 
 fex2_new <- c(rep(NA, 2))
 
@@ -6511,7 +6562,7 @@ dictionary.df[n1,13] <- scien_new
 
 ## ├├  other vegetables, fresh n.e.c. (1290.9) -----
 
-food_desc <-  c(
+food_desc <-  tolower(c(
   "malabar spinach, leaves, fresh, raw",
   "spider plant, leaves, fresh, raw",
   "black nightshade, leaves, fresh, raw", 
@@ -6528,7 +6579,18 @@ food_desc <-  c(
   "jute mallow, leaves, fresh, raw", 
   "blackjack, leaves, fresh, raw",
   "baobab, leaves, fresh, raw", 
-  "moringa, leaves, fresh, raw")
+  "moringa, leaves, fresh, raw",
+  "Cocoyam, leaves, fresh, raw", 
+  "Eggplant, leaves, fresh, raw",
+  "False sesame, leaves, fresh, raw", 
+  "Hibiscus cannabinus, leaves, fresh, raw",
+  "Sicklepod, leaves, fresh, raw",
+  "Tamarind, leaves, fresh, raw",
+  "Vernonia, leaves, bitter, fresh, raw",
+  "Vernonia, leaves, sweet, fresh, raw", 
+  "Waterleaf, leaves, fresh, raw",
+  "Wild spinach, leaves, fresh, raw"
+  ))
 
 other_name <- c("Vine (African) spinach (KE18)",
                 "cat\\'s whiskers (Luni) (MW19)",
@@ -6541,7 +6603,7 @@ other_info <- c("https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/nd
                 "https://www.healthbenefitstimes.com/blackjack/, (RESEWO, 2013)",
                 rep(NA, 2))
 
-scientific_name <- c("basella alba", "gynandropsis gynandra/cleome gynandra",
+scientific_name <- tolower(c("basella alba", "gynandropsis gynandra/cleome gynandra",
                      "solanum scabrum", "solanum macrocarpon",
                      "colocasia esculenta", "vigna unguiculata",
                     NA,  "apium graveolens", NA, 
@@ -6553,7 +6615,17 @@ scientific_name <- c("basella alba", "gynandropsis gynandra/cleome gynandra",
                     "corchorus spp.", 
                     "bidens pilosa",
                      "adansonia digitata",
-                    "moringa stenopetala")
+                    "moringa stenopetala",
+                    "Xanthosoma sagittifolium", 
+                    "Solanum melongena",
+                    "Ceratotheca sesamoides",
+                    "Hibiscus cannabinus",
+                    "Senna tora/Senna obtusifolia",
+                    "Tamarindus indica",
+                    "Gymnanthemum amygdalinum", 
+                    "Baccharoides calvoana subsp. calvoana", 
+                    "Talinum fruticosum",
+                    "Gnetum africanum"))
 
 fex2_new <- c(rep(NA, 14), "A00NY#F28.A07HS", rep(NA, 2))
 
@@ -8089,36 +8161,51 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 
 
-# 1449.01 - Melon seed, kernel only, dried, raw
-#Manual inputs:
-id2 <- "1449.01"
-desc_new <- "melon seed, dried, raw"
-fex2_new <- NA
-scien_new <- "cucumeropsis spp."
+## ├├  melonseed (1449.01) -----
+
+desc_new <- c("melon seed, dried, raw", 
+              "melon seed  (citrullus spp.), dried, raw")
+              
+
+scien_new <- c("cucumeropsis spp.", "Citrullus spp.")
 ref1 <- NA
 other_name <- NA
 
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
 
-n1 <- dim(dictionary.df)[1]+1
+# Manual inputs:
+id2 <- "1449.01"
+fex2_new <- NA
+ref1 <- NA
+other_name <- NA
 
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
+# Function: 
+for(i in 1:length(desc_new)){
+  
+  id2 <- id2
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- desc_new[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1[i]
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
 
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
+
 
 # 1449.9 - Benniseed, dried, raw 
 #Manual inputs:
@@ -8469,10 +8556,13 @@ desc_new <- c("kola nuts, fresh, raw")
 ## ├├  other nuts (excluding wild edible nuts and groundnuts), in shell, n.e.c. (1379.9) -----
   
   #Manual inputs:
-  food_desc <- c("bitter cola, seeds, dried, raw", 
-                 "bitter cola, seeds, fresh, raw" )
+  food_desc <- tolower(c("bitter cola, seeds, dried, raw", 
+                 "bitter cola, seeds, fresh, raw",
+                 "Dikanut, kernel, dried, raw"))
   
-  scientific_name <- c("Garcinia kola", "Garcinia kola")
+  scientific_name <- tolower(c("Garcinia kola",
+                               "Garcinia kola",
+                               "Irvingia gabonensis"))
   fex2_new <- c(rep(NA,2))
  
    
@@ -8511,7 +8601,8 @@ desc_new <- c("kola nuts, fresh, raw")
 ## ├├ Palm oil (2165) -----
   
   food_desc <- c("palm oil, refined, fortified (GHA, NGA, SLE)", 
-                 "palm oil, refined, fortified (BEN, BFA, CIV, GIN, GNB, LBR, MLI, NER, SEN, TGO)")
+                 "palm oil, refined, fortified (BEN, BFA, CIV, GIN, GNB, LBR, MLI, NER, SEN, TGO)",
+                 "palm oil, red")
   
   scientific_name <- tolower(c("Elaeis guineensis"))
   
@@ -9196,14 +9287,15 @@ for(i in 1:length(food_desc)){
 
 yam <- c("Yam, Chinese yam, \"Ichoimo\", tuberous root, raw",
 "Yam, Chinese yam, \"Nagaimo\", tuberous root, raw",
-"Yam, Chinese yam, \"Yamatoimo\", tuberous root, raw")
+"Yam, Chinese yam, \"Yamatoimo\", tuberous root, raw",
+"Yam, tuber, combined cultivars, raw (Nigeria)")
 
 for(i in 1:length(yam)){
 #Manual inputs:
 id2 <- "1540"
 desc_new <- yam[i]
 fex2_new <- NA
-scien_new <- NA
+scien_new <- "Dioscorea spp."
 taxo <- NA
 ref1 <- NA
 other_name <-NA

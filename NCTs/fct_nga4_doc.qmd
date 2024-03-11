@@ -1,5 +1,5 @@
 ---
-title: "Nigeria XX: food matching notes"
+title: "Nigeria Living Standards Survey (2018/19): food matching notes"
 author: "Segovia D L Revilla, Lucia"
 date: "06/10/2021"
 date: 
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Background
 
+[Nigeria Living Standards Survey 2018/19](https://doi.org/10.48529/8gbe-z155)
 
 
 ```{r }
@@ -34,7 +35,6 @@ knitr::opts_chunk$set(echo = TRUE)
  - bread white, unfortified,  there's one for toasting
  - cake plain, unfortified
  - Buns, poff and donuts[27] - fried dough NA
- - Meat Pie/Sausage Roll [29] need to combine bread/roll (01_045) and meat sausage  (07_063)
  - cassava - white
  - yam - took combined cultivars from Nigeria
  - Gari/Eba - fermented cassava, flour (white) - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256576/
@@ -83,7 +83,13 @@ knitr::opts_chunk$set(echo = TRUE)
 #Juice canned, sweetened - but it can be averaged of different juices
 #Pito - sorghum beer, we could do an average with millet
  
-## Guinea corn
+ 
+
+## Multiple matches
+
+Here we included matches that are one-to-many items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
+ 
+### Guinea corn
 
 According to the Wikipedia the "Guinea corn" is the [sorghum bicolor](https://en.wikipedia.org/wiki/Sorghum_bicolor).
 
@@ -97,71 +103,231 @@ fct_cover %>% filter(source_fct == "WA19") %>%
   filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
   select(fdc_id, food_desc, WATERg, VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
 
-# Sorghum
-c("01_039",  "01_041",  "01_040")
+```
+
+ 
+### Meat Pie/Sausage Roll 
+
+ Meat Pie/Sausage Roll [29] was generated combining bread/roll WA19(01_045) and meat sausage  WA19(07_063), for version (1.0.0). For version (2.0.0), we are using the following food items:
+ 
+```{r}
+
+# Search foods ----
+food1 <- "sausag|meat"
+food2 <- "roll|pie|past"
+food3 <- "pasta|paste|spring"
+
+fct_dict %>%  
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
 
 ```
 
 
-## Maize
-
-Number 20-22 are maize shelled/unshelled and on/off the cob. Those foods may be the same food item in term of composition, however the edible portion (EP) should be according to the part consumed. E.g., for maize unshelled and on the cob, the EP should be <1. 
- 
- FISH:
+### Fish
  
 Fish and seafood can be a major contributor to micronutrient supplies, however micronutrient content varies widely across species. Additionally, fish data is reported at high level of aggregation which does not allow for fish identification.
  
 We attempted to gain more insights by using "supply" (consumption) data in FBS for NGA. We tried to identify whether fishes were coming from the sea (marine) or from the lake (freshwater) because it would have an impact on micronutrient supply (e.g., iodine) and because it would help in narrowing down fish species. However, due to the classification used in FBS, it did not provide enough information for differentiation between marine or fresh water fish (i.e., demersal fish can be both marine and fresh water fishes). 
 
- 
- - Fresh fish [100], we could do an average of all the possible or to try to identify the reporting unit and use it accordingly. Most of them are reported as small piece or heap. Therefore, we could be mullet and sardines for heaps and catfish for small and medium fresh pieces. We will leave out the mormyrid? for big because there is no "big piece" reported. 
- - Dried fish [103], check back the selection! It might be worth to add crayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013)
- 
- - Frozen fish [101] could be mackerel  (see photo aid) - FCT is fillet, so double check EP.
- - For smoked maybe used average of dried and grilled (see photo aid)
- - Snail - I used normal snail because of the name and the image of the photo aid.
- - Maybe it should be an average
- - Seafood [105] - calculate the average
- - Canned fish/seafood [106] - we used mackerel but we could do an average
-
-We have checked the "supply" (consumption) for NGA in FBS to try to identify if fishes are coming from the sea (marine) or from the lake (freshwater) because it would have an impact particularly in iodine. 
-
-We have check the raw fish and seafood nutrient supply. Regarding ZN and FE the only items that are higher (>2mg/100g) are clams, shrimps, sea snails and crab. Only the Mola carplet a small fish w/ viscera, fins (eaten whole) is the one making a difference. Similarly for Vit.A Mola is the fish with highest Vit.A supply in the whole Fish and seafood section. Also, mackerel is supplying high amounts (third place).
-
-
-```{r fish, echo=FALSE}
-
-#Fish compo in wafct 
-
-#Fish compo checks
-
-wafct %>% filter(str_detect(code, "09_")) %>%  
-  ggplot(aes(FE)) + geom_histogram()
-
+```{r}
 #Supply of fish in NGA acc. to FBS for 2014-2018
 
 fbs %>% filter(str_detect(original_name, "fish"),
                country_id == "NGA") %>% group_by(original_name) %>% summarise(mean_consumed = mean(amount_consumed_in_g)) %>% arrange(desc(mean_consumed)) %>% knitr::kable()
 
-#Nutrient supply of raw fish and seafood in WAFCT
+```
 
-wafct %>% filter(str_detect(code, "09_")) %>%
-  filter(str_detect(fooditem, "raw")) %>%
-  select(code, fooditem, ENERC1, ZN, FE, VITA_RAE) %>%
-  pivot_longer(., cols =c(ENERC1, FE, ZN, VITA_RAE),
+
+We have checked the "supply" (consumption) for NGA in FBS to try to identify if fishes are coming from the sea (marine) or from the lake (freshwater) because it would have an impact particularly in iodine. 
+ 
+```{r fish, echo=FALSE}
+
+#Fish compo checks
+fct_dict %>% filter(str_detect(fdc_id, "09_")) %>%  
+  filter(as.numeric(WATERg)>60) %>% 
+  ggplot(aes(as.numeric(FEmg))) + geom_histogram()
+
+  
+```
+
+ 
+We have check the raw fish and seafood nutrient supply. Regarding Zn and Fe the only items that are higher (>2mg/100g) are clams, shrimps, sea snails and crab. Only the Mola carplet a small fish w/ viscera, fins (eaten whole) is the one making a difference. Similarly for Vit.A Mola is the fish with highest Vit.A supply in the whole Fish and seafood section. Also, mackerel is supplying high amounts (third place).
+
+
+
+```{r fish, echo=FALSE}
+
+# Nutrient supply of raw fish and seafood in WAFCT
+
+fct_dict %>% filter(str_detect(fdc_id, "09_")) %>%
+  filter(str_detect(food_desc, "raw")) %>%
+  select(fdc_id, food_desc, ENERCkcal, ZNmg, FEmg, VITA_RAEmcg) %>%
+  pivot_longer(., cols =c(ENERCkcal, FEmg, ZNmg, VITA_RAEmcg),
                names_to = "nutrient") %>% 
-  filter(nutrient != "ENERC1") %>% 
-  ggplot(aes(nutrient, value)) + geom_boxplot() +
-  labs(x = "FCT", y = "(mg/100g-EP-DW) in fish and products")
+  filter(nutrient != "ENERCkcal") %>% 
+  mutate_at("value", as.numeric) %>% 
+  ggplot(aes(value)) + geom_boxplot() +
+  labs(x = "", x = "(mg/100g-EP-DW) in fish and products") +
+  facet_wrap(~nutrient, scales = "free_y") + coord_flip()
 
 
 ```
+ 
+ 
+#### Fresh fish
+
+Fresh fish [100], we could do an average of all the possible or to try to identify the reporting unit and use it accordingly. Most of them are reported as small piece or heap. Therefore, we could be mullet and sardines for heaps and catfish for small and medium fresh pieces. We will leave out the mormyrid? for big because there is no "big piece" reported. 
+
+Finally, we did an average of all the fish reported as raw in the WA19 (see Bradley., 2020, Ene-Obong, 2013), we only removed "Mola carplet" because the Vitamin A (RAE) content was extremely high when compared with the rest of the fish (probably because it is a "whole fish") and because in the report was not mentioned.
+
+```{r}
+
+# Search foods 
+food1 <- ""
+food2 <- "raw"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+ 
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+        filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+#### Frozen fish
+
+Frozen fish [101] could be mackerel (see photo aid) and sardines. In the FCT is fillet, so double check EP.
+
+#### Smoked fish 
+ 
+For Fish - smoked [102], we are using an average of the reported "smoked" fish with ID_3, for the improvement we could maybe used average of dried and grilled (see photo aid), and expand the selection of smoked fish using the Global Fisheries NCT. 
+
+
+```{r}
+
+# Search foods
+
+food1 <- "fish"
+food2 <- "smok"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+      #  filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
+
+
+```
+
+
+#### Dried fish
+
+Dried fish [103], check back the selection! It might be worth to add crayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013). 
+
+ 
+```{r}
+
+# Search foods
+
+food1 <- "fish"
+food2 <- "dri"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+    #   filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
+
+
+```
+
+
+ - Snail - I used normal snail because of the name and the image of the photo aid.
+ - Maybe it should be an average
+ - Seafood [105] - calculate the average
+ - Canned fish/seafood [106] - we used mackerel but we could do an average
+
+
+#### Seafood (lobster, crab, prawns, etc)
+
+The Seafood (lobster, crab, prawns, etc) [105], we did an average of several raw items. We excluded clams due to high Fe content, as it could bias the results. 
+
+### Leaves
+
+Leaves(cocoyam, spinach, etc.) [78], we have used an average of all raw available leaves. However, major differences can be found in individual leaves micronutrients. In addition, differences between seasons, location,  dry/fresh leaves could make a major impact on the micronutrient estimates. For instance, in the study of Ene-Obong et al., (2013) they reported that dried vegetables were consumed more often in the Northern region than in the Southern region. 
+
+The selection of leaves will benefit from a) reviewing and b) geographic disaggreagation. 
+
+```{r}
+
+# Search foods ----
+food1 <- "leav"
+food2 <- "fresh"
+food3 <- "raw"
+# wafct 
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+  #  filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  #  filter(as.numeric(WATERg)>30) %>% 
+  # filter(str_detect(fooditem, "flour")) %>% 
+  filter(is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+
+### Chocolate drinks
+
+Because Ovaltine is fortified, in the first version (v1.0.0), use chocolate powder from KE18(12004) and performed a water conversion using the values from the ovaltine with whole milk WA19(12_015). However, we for the next version (v.2.0.0) and MAPS tool, we decided to use the values of already converted into beverage as follow: 
+
+```{r}
+
+# Search foods ----
+food1 <- "choco|milo"
+food2 <- "drink|beve"
+
+fct_dict %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(as.numeric(WATERg)>30) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  
+```
+
+
+This decision was based on: a) the values will be more accurate, as it takes into account the milk composition, and, b) for the matching in the tool, food items are more consistent and less prone to error than recipe.
 
 ## Modified items
 
 We are including some "calculated food items", here we will include:
 
- - Average values: items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
  - Recipe calculation: items that are calculated as a different portion
  - Cooked items: when an item was reported as cooked but we only could found a raw version. For example, 
 
@@ -175,42 +341,44 @@ However, at the end, we are using the MWI data because, we could not find the it
 
 ```{r Buns, poff and donuts [27] - fried dough, echo=FALSE}
 
-kenfct %>% filter(code %in% c("15125", "15004", "15003")) %>% select(code, fooditem, WATER, ENERC2, VITA_RAE, FE, ZN, FOLFD, FOLDFE)
+fct_dict %>% filter(fdc_id %in% c("15125", "15004", "15003")) %>% select(source_fct, fdc_id, food_desc, WATERg, ENERCkcal, VITA_RAEmcg, FEmg, ZNmg, FOLFDmcg, FOLDFEmcg)
 
 ```
 
-*Gari - yellow*
+### Gari - yellow
 
-The gari - yellow [33], we have considered as Gari(fufu) /Eba - fermented cassava, flour with palm oil (yellow) (see ref: [https://scialert.net/fulltext/?doi=pjn.2009.1512.1516]). We needed to find the amount of oil to calculate the "recipe". We have used an approximation based on the assumption that the cassava paste will be fried in red palm oil. Hence, we have chosen the fat uptake for potatoes from (Bognár, 2002, Table 31: deep fry B) and calculate a conversion factor base on the % of palm oil and cassava gari. Note that it is all based on raw ingredients as we have not accounted for any losses due to cooking (aka we did not apply retention factors). Then, for reference we have checked the food item "fufu of yam" [02_087] in wafct (VITA_RAE == 499), and our final VITA_RAE is lower (conservative estimates), as they have used 60g of red palm oil (for about 1017g total recipe weight) and adjusted for cooking. 
+Gari/Eba - fermented cassava, flour with palm oil (yellow) 
 
-*Leaves*
+The gari - yellow [33], we have considered as Gari(fufu) /Eba - fermented cassava, flour with palm oil (yellow) (see ref: [https://scialert.net/fulltext/?doi=pjn.2009.1512.1516]). 
 
-Leaves(cocoyam, spinach, etc.) [78], we have used an average of all raw available leaves. However, major differences can be found in individual leaves micronutrients. In addition, differences between seasons, location,  dry/fresh leaves could make a major impact on the micronutrient estimates. For instance, in the study of Ene-Obong et al., (2013) they reported that dried vegetables were consumed more often in the Northern region than in the Southern region. 
+We needed to find the amount of oil to calculate the "recipe". We have used an approximation based on the assumption that the cassava paste will be fried in red palm oil. Hence, we have chosen the fat uptake for potatoes from (Bognár, 2002, Table 31: deep fry B) and calculate a conversion factor base on the % of palm oil and cassava gari. 
 
-The selection of leaves will benefit from a) reviewing and b) geographic disaggreagation 
+```{r}
 
-*Chocolate drinks*
+gari.yellow <- c("02_039", "11_004")
+recipe.conv <-  c( 1-(5/105), (5/105)) # 5g of oil for 100g of gari
+
+```
+
+Note that it is all based on raw ingredients as we have not accounted for any losses due to cooking (aka we did not apply retention factors). Then, for reference we have checked the food item "fufu of yam" [02_087] in wafct (VITA_RAE == 499), and our final VITA_RAE is lower (conservative estimates), as they have used 60g of red palm oil (for about 1017g total recipe weight) and adjusted for cooking. 
+
+
+*Goat*
 
 Goat meat, adjust for "whole animal" consumption. 
 
-*Fresh fish*
-
-Fresh fish [100], we did an average of all the fish reported as raw in the WAFCT (see Bradley., 2020, Ene-Obong, 2013), we only removed "Mola carplet" because the VIT_RAE content was extremely high when compared with the rest of the fish (probably because it is a "whole fish") and because in the report was not mentioned. 
-
-*Seafood (lobster, crab, prawns, etc)*
-
-The Seafood (lobster, crab, prawns, etc) [105], we did an average of several raw items. We have not included clams due to high Fe content, as it could bias the results. 
-
-
-*Chocolate drinks*
-
-Because Ovaltine is fortified, we are going to use chocolate powder from KEN FCT and do the water conversion using the values from the ovaltine with whole milk. 
+ 
 
 
 
-##Food items to check
+## Food items to check
+
+### Maize
+
+Number 20-22 are maize shelled/unshelled and on/off the cob. Those foods may be the same food item in term of composition, however the edible portion (EP) should be according to the part consumed. E.g., for maize unshelled and on the cob, the EP should be <1. 
 
 1) Millet - Particularly Fe content, it seems too high - We are using [01_017] but it seems that the other millet, combined varieties has the same value. Use Kenfct instead?
+
 2) Cassava, flour (fermented?) - check Vit. B12 what's going on?
 3) Fish selection, particularly for dried fish
 4) Milk, it seems that it's region specific - double-check with the team but I think for the MN we are interested in, I don't think it's worth the trouble.
@@ -218,7 +386,7 @@ Because Ovaltine is fortified, we are going to use chocolate powder from KEN FCT
 HIGH in FE:
 
 --Dried pepper, FE concentration is very high!! 
---Check infant formula "fotified"
+--Check infant formula "fortified"
 -- Sorghum and millet are quite high, but double check and millet
 
 HIGH in ZN:

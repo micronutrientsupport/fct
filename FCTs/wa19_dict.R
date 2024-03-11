@@ -345,7 +345,36 @@ wa_genus <- tribble(
  "05_045", "1319.08", "h",
  "01_183", "23140.03.03", "h",
  "03_009", "1356.01", "h", 
-"03_042",  "1356.02", "h"
+"03_042",  "1356.02", "h", 
+   "11_004", "2165.04", "h",
+"04_010", "1290.9.06", "h",
+"04_020", "1290.9.05", "h",
+"04_009", "1290.9.19", "h", 
+"04_013", "1290.9.20", "h", 
+"04_036", "1290.9.21", "h", 
+"04_073", "1290.9.22", "h", 
+"04_084", "1290.9.23", "h", 
+"04_019", "1290.9.24", "h", 
+"04_020", "1290.9.05", "h", 
+"04_022", "1290.9.25", "h", 
+"04_079", "1290.9.26", "h", 
+"04_078", "1290.9.27", "h", 
+"04_080", "1290.9.28", "h",
+"01_188", "F0022.03", "h", 
+"01_187", "F0022.09", "h", 
+"01_058",  "23120.03.02", "h", 
+"02_046", "1313.01", "m", 
+"02_036", "1540.01", "h", 
+"02_034", "1540.05", "h", 
+"06_004", "1460.02", "h", 
+"06_035", "1449.01.02", "h",
+"12_019", "2899.01.01", "l",  # we should add tap water.
+"13_015", "1699.02", "m", 
+"13_002", "23520.01", "h",
+"04_076", "1290.01.01", "m",
+"06_008", "1379.9.04", "h",
+"09_109", "1532.04", "h"
+
  )
 
 # Checking for dictionary duplicates -----
@@ -362,19 +391,22 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) 
 wafct.genus %>%  count(ref_fctcode) %>% 
   filter(n>1) 
 
-subset(wafct.genus, ref_fctcode == "01_184")
+subset(wafct.genus, ref_fctcode == "01_017")
+subset(wafct, fdc_id == "01_017")
 
 wafct.genus %>%  count(ID_3) %>% 
   filter(n>1) 
 
 subset(wafct.genus, ID_3 == "118.03")
 
-
+# Fixing duplicated
+wafct.genus$ID_3[wafct.genus$ref_fctcode == "01_095"] <- "118.04"
+wafct.genus$confidence[wafct.genus$ref_fctcode == "01_095"]
 
 #Checking the items of the list above
 
 dictionary.df %>% 
-  filter(ID_3 %in% c("23110.02"))
+  filter(ID_3 %in% c("118.03"))
 
 # Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
@@ -398,7 +430,7 @@ wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("01_077"), 
+subset(wafct, fdc_id %in% c("09_109"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
 subset(wafct, fdc_id == "01_188", select = food_desc) 

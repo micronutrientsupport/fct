@@ -7,11 +7,7 @@ library(tidyr)
 library(stringr)
 
 ## Loading fct data
-
-# Loading all the cleaned FCTs/FCDBs into one single object (data.frame)
-fct_cover <- list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
-  purrr::map_df(~readr::read_csv(., col_types = readr::cols(.default = "c"), locale = readr::locale(encoding = "Latin1"))) 
-
+source("MAPS_fct_load.R")
 
 # source("dictionary.R")
 # source("wafct.R")
@@ -21,7 +17,7 @@ fct_cover <- list.files("01_FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE,
 
 ## Loading food data
 
-fbs <- read.csv(here::here("data", "MAPS_FBS_2014-2018_v1.0.csv"))
+fbs <- read.csv(here::here("data","old-files", "MAPS_FBS_2014-2018_v1.0.csv"))
 
 read.csv(here::here("data", "old-files",  "nga4_foodlist_raw.csv")) %>% 
 separate_rows(nga4_fooditem, sep = "(?<=\\d)[[:blank:]]") %>% 
@@ -36,6 +32,150 @@ nga4.foodlist <- read.csv(here::here("data", "old-files", "nga4_foodlist_raw.csv
   mutate_at("nga4_fooditem", str_squish) %>% 
   relocate(nga4_foodid, .before = nga4_fooditem)
 
+# V.1 matches
+nga.matches <- read.csv(here::here("inter-output", "nct", 
+                                   "nga4-fct-id_v1.0.0.csv")) %>% 
+  rename(fdc_id = "content")
+
+names(nga.matches)
+
+
+nga.matches <- nga.matches %>% 
+  left_join(., fct_dict %>% select(source_fct, fdc_id, food_desc,  ID_3)) 
+
+# Checking missing dict codes
+missing <- subset(nga.matches, is.na(ID_3) & source_fct == "WA19") %>% 
+  pull(fdc_id)
+
+fct_dict %>% filter(fdc_id %in% missing) %>% View()
+
+# Combining the multi matches
+nga.matches <- nga.matches %>% select(nga4_foodid , nga4_fooditem, ID_3) %>% 
+  filter(!is.na(ID_3)) %>% group_by(nga4_foodid , nga4_fooditem) %>% 
+  summarise(across(c(ID_3),
+                   ~paste(.x, collapse = ","))) 
+
+# Key variables of interest
+nut <- c( "WATERg", "ENERCkcal", "VITA_RAEmcg", "FEmg", "ZNmg")
+
+
+# Updating matches to dictionary (v.2.0.0) ----
+
+# Sorghum (10) ----
+n <- which(nga.matches$nga4_foodid == "10")
+nga.matches[n,]$ID_3 <-  c("114.01,114.02,114.03")
+# Millet (11) -----
+n <- which(nga.matches$nga4_foodid == "10")
+nga.matches[n,]$ID_3 <-  c("118.03,118.04")
+# Buns/Pofpof/Donuts (27) -----
+n <- which(nga.matches$nga4_foodid == "27")
+nga.matches[n,]$ID_3 <-  c("F0022.01,F0022.04,F0022.08")
+
+# Meat Pie/Sausage Roll [29]  -----
+# n <- which(nga.matches$nga4_foodid == "29")
+# nga.matches[n,]$ID_3 <-  c("", "")
+
+# Palm oil (50) -----
+n <- which(nga.matches$nga4_foodid == "50")
+nga.matches[n,]$ID_3 <-  c("2165.01")
+# Beef (90) -----
+n <- which(nga.matches$nga4_foodid == "90")
+nga.matches[n,]$ID_3 <-  c("21111.02.03,21111.02.03,21111.02.03,21111.02.03")
+# Mutton (91) -----
+n <- which(nga.matches$nga4_foodid == "91")
+nga.matches[n,]$ID_3 <-  c("21115.01, 21115.02")
+# Pork (92) -----
+n <- which(nga.matches$nga4_foodid == "92")
+nga.matches[n,]$ID_3 <-  c("21113.02.03,21113.02.04,21113.02.04")
+# Goat (93) -----
+n <- which(nga.matches$nga4_foodid == "93")
+nga.matches[n,]$ID_3 <-  c("21116.02,21116.03")
+
+#Smoked fish [102] ------
+n <- which(nga.matches$nga4_foodid == "102")
+nga.matches[n,]$ID_3[1] <-  c("1531.02,1505.04,1505.06,1505.05,1518.01")
+
+# Fish - dried [103]  ------
+# change to average of including Shrimp crayfish? - See below
+n <- which(nga.matches$nga4_foodid == "103")
+nga.matches[n,]$ID_3[1] <-  c("1505.07,1507.01,1505.02,1505.05,1505.00.01")
+
+# Baby milk powder [112]  ------
+# change to an unfortified
+n <- which(nga.matches$nga4_foodid == "112")
+nga.matches[n,]$ID_3 <-  c("23991.01.02")
+
+# Coffee [120]  ------
+n <- which(nga.matches$nga4_foodid == "120")
+nga.matches[n,]$ID_3 <-  c("23991.01.02")
+
+# Gin [163]  ------
+n <- which(nga.matches$nga4_foodid == "163")
+nga.matches[n,]$ID_3 <-  c("2413.01")
+
+# Checking the missing items....
+nga4.foodlist$nga4_foodid <-  as.integer(nga4.foodlist$nga4_foodid)
+anti_join(nga4.foodlist, nga.matches)
+
+## Adding weights -----
+
+# Gari - yellow [33] -----
+nga.matches$wt <- NA
+n <- which(nga.matches$nga4_foodid == "33")
+nga.matches[n,]$wt <-  c( 1-(5/105), (5/105))
+
+
+# Search foods ----
+food1 <- "goat"
+food2 <- "meat"
+food3 <- "raw"
+# wafct 
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+  #  filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+#  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  #  filter(as.numeric(WATERg)>30) %>% 
+  # filter(str_detect(fooditem, "flour")) %>% 
+ # filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  %>%
+  View() 
+
+
+#nga4.matches <- nga4.foodlist 
+
+#nga4.matches$ID_3 <- NA
+nga4.matches$wt <- NA
+
+# Sorghum (10) ----
+nga4.matches[1,]$ID_3 <-  list(c("114.01",  "114.02",  "114.03"))
+
+# Millet (11) -----
+nga4.matches[2,]$ID_3 <-  list(c("118.03",  "118.04"))
+
+# Meat Pie/Sausage Roll [29]  -----
+n <- which(nga4.matches$nga4_foodid == "29")
+nga4.matches[n,]$ID_3 <-  list(c("23170.01.04", "2165.04"))
+
+#Gari - yellow [33] -----
+n <- which(nga4.matches$nga4_foodid == "33")
+nga4.matches[n,]$ID_3 <-  list(c("23170.01.04", "2165.04"))
+nga4.matches[n,]$wt <-  list(c( 1-(5/105), (5/105)))
+
+# Leaves [78]  -----
+n <- which(nga4.matches$nga4_foodid == "78")
+nga4.matches[n,]$ID_3 <-  list(c("1215.02",    "1290.9.17",  "1219.01.01",
+                                 "1290.9.19",  "1290.9.06",  "1290.9.20",  
+                                 "1290.9.21",  "1290.9.22", "1290.9.10",  
+                                 "1290.9.15",  "1699.08",    "1239.01.02", 
+                                 "1214.04",    "1290.9.23",  "1290.9.07",  
+                                 "1215.01", "1290.9.02",  "1290.9.24",  
+                                 "1290.9.05",  "1290.9.25",  "1290.9.26",
+                                 "1290.9.27",  "1290.9.28"))
+ 
+
+### END - OLD SCRIPTS #####
 
 ## add the WAFCT id
 
@@ -59,10 +199,6 @@ wafct %>% filter(str_detect(fooditem, "grain|flour")) %>%
                     "sorghum|millet|rice|maize|yam|cassava|wheat")) %>% 
   select(code, fooditem)
 
-
-
-
-#ken - choco 12004 ---> this need conversion to ovaltine beverage water content (12_015)
 
 #check "native red"
 #Cassava flour, non-fermented!
@@ -128,29 +264,7 @@ wafct %>% filter(str_detect(fooditem, "grain|flour")) %>%
 #Juice canned, sweetened - but it can be averaged of different juices
 #Pito - sorghum beer, we could do an average with millet
 #gin [163] - USDA
-
 #check cassava flour fermented?
-food1 <- "mill"
-food2 <- "raw"
-
-# wafct 
-fct_dict %>% filter(source_fct == "WA19") %>% 
-  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
-  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
- # filter(str_detect(fooditem, "flour")) %>% 
-   filter(!is.na(ID_3)) %>% 
-  select(fdc_id, food_desc, ID_3, WATERg, VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
-
-nga4.matches <- nga4.foodlist 
-
-nga4.matches$ID_3 <- NA
-
-# Sorghum (10)
-nga4.matches[1,]$ID_3 <-  list(c("114.01",  "114.02",  "114.03"))
-
-# Millet (11)
-
-c("01_095",  "01_017")
 
 nga4_wafct_list <- c("01_039", "01_017", "01_037", "01_036", "01_058", "02_036",
                      "02_004", "01_043",
@@ -172,7 +286,23 @@ nga4_wafct_list <- c("01_039", "01_017", "01_037", "01_036", "01_058", "02_036",
 
 which(is.na(nga4_wafct_list))
 
-wafct_nga4 <- nga4_wafct_list  %>% cbind(., c(1:length(nga4_wafct_list)))
+wafct_nga4 <- nga4_wafct_list  %>% 
+  cbind(., nga4.foodlist) # %>% as.data.frame()
+names(wafct_nga4)[1] <- c("fdc_id")
+
+#Buns, poff and donuts [27] - fried dough 
+wafct_nga4$nga4_fooditem[wafct_nga4$nga4_foodid=="27"]
+wafct_nga4$fdc_id[wafct_nga4$nga4_foodid=="27"] <- "MW01_0014"
+
+# Animal fat [56]
+wafct_nga4[56,]
+wafct_nga4$fdc_id[56] <-  "9001"
+##duck [81] - correction
+wafct_nga4[81,]
+wafct_nga4$fdc_id[81] <- "7008"
+#gin [163]
+wafct_nga4[112,]
+wafct_nga4$fdc_i[112] <-  "174815"
 
 nga4.foodlist %>% cbind(., nga4_wafct_list %>% as.data.frame() %>% 
                        #   rename(code = ".") %>% 
@@ -184,10 +314,9 @@ nga4.foodlist %>% cbind(., nga4_wafct_list %>% as.data.frame() %>%
   filter(is.na(code)) %>% 
   filter(!str_detect(nga4_fooditem, "Other"))
   
-nut <- c( "WATER", "ENERC1", "VITA_RAE", "FE", "ZN")
+# nut <- c( "WATER", "ENERC1", "VITA_RAE", "FE", "ZN")
 
 #Buns, poff and donuts [27] - fried dough 
-
 nga4_adj_fct <-  mwi_clean %>% filter(code =="MW01_0014") %>%
   select(code, fooditem, WATER, ENERC1, VITA_RAE, FE, ZN) %>% 
   mutate(nga4_foodid = "27", 
@@ -205,14 +334,13 @@ nga4_adj_fct <- nga4_adj_fct %>% add_row(wafct %>% filter(code %in% meat.pie) %>
   summarise(across(c(fooditem, code), ~paste(.x, collapse = ";")))) %>% 
   mutate(nga4_foodid = "29"))
 
-#Gari - yellow [33] - Gari/Eba - fermented cassava, flour with palm oil (yellow) - 
+# Gari/Eba - fermented cassava, flour with palm oil (yellow) - 
 #Need to find oil % (https://scialert.net/fulltext/?doi=pjn.2009.1512.1516)
 #gari + red palm oil
 #Calculated - fat uptake = 5 for 100g of potato (Bognár, 2002) 
-#Table 31: deep fry B
-#See markdown for more details.
-#02_087 - fufu of yam (VITA_RAE == 499)
-
+# Table 31: deep fry B
+# See markdown for more details.
+# 02_087 - fufu of yam (VITA_RAE == 499)
 gari.yellow <- c("02_039", "11_004")
 
 nga4_adj_fct <- nga4_adj_fct %>% 
@@ -223,12 +351,11 @@ nga4_adj_fct <- nga4_adj_fct %>%
           summarise(across(c(fooditem, code), ~paste(.x, collapse = ";")))) %>% 
   mutate(nga4_foodid = "33"))
 
-
-#animal fat [56]
+# Animal fat [56] 
 
 nga4_adj_fct <- nga4_adj_fct %>% 
   add_row(kenfct %>% filter(code== "9001") %>% 
-  select(code, fooditem, WATER,nut) %>% 
+  select(code, fooditem, WATER, nut) %>% 
     mutate(nga4_foodid = "56"))
 
 #there are 23 different leaves [78]
@@ -318,7 +445,8 @@ nga4_adj_fct <- nga4_adj_fct %>%
                     summarise(across(c(fooditem, code), ~paste(.x, collapse = ";"))))%>% 
             mutate(nga4_foodid = "100"))  #change here
 
-#Frozen fish [101] average between mackerel and sardines. 
+#Frozen fish [101] -----
+# average between mackerel and sardines. 
 
 wafct %>% 
   filter(str_detect(fooditem, "Mackerel|mackerel|Sardine|sardine")) %>%
@@ -338,9 +466,13 @@ nga4_adj_fct <- nga4_adj_fct %>%
 
 
 
-#Smoked fish [102], we need to do average or disaggregate
+#Smoked fish [102] ------
+#we need to do average or disaggregate
 #Maybe using grilled instead of smoked?
 #filter(str_detect(fooditem, "Sardine|Mullet|Catfish"))
+n <- which(nga4.matches$nga4_foodid == "102")
+nga4.matches[n,]$ID_3 <-  list(c("1531.02" ,"1505.04" ,"1505.06", 
+                                 "1505.05" ,"1518.01"))
 
 wafct %>% filter(str_detect(code, "09_")) %>%
   filter(!str_detect(fooditem, "Crab|Shrimp|clams|Mola|snail")) %>% 
@@ -387,7 +519,11 @@ nga4_adj_fct <- nga4_adj_fct %>%
                    comment = "water adjusted to average of water content of Malawi FCT smoked fish"))  
 
 
-#Fish - dried [103], change to average of including Shrimp crayfish?
+# Fish - dried [103]  ------
+# change to average of including Shrimp crayfish? - See below
+n <- which(nga4.matches$nga4_foodid == "103")
+nga4.matches[n,]$ID_3 <-  list(c("1505.07", "1507.01", "1505.02", 
+                                 "1505.05", "1505.00.01"))
 
 read.csv(here::here("data", "bogard-2015_fish-composition_incomplete-dataset.csv")) %>% 
   janitor::clean_names() %>% filter(total_vitamin_a_mcg_rae < 500) %>% 
@@ -513,13 +649,19 @@ nga4_adj_fct <- nga4_adj_fct %>%
           summarise(across(c(fooditem, code), ~paste(.x, collapse = ";")))) %>% 
     mutate(nga4_foodid = "106"))  #change here
 
-#Chocolate drink [121]
+# Chocolate drink [121] ----
+n <- which(nga4.matches$nga4_foodid == "121")
+nga4.matches[n,]$ID_3 <-  list(c("23170.01.04", "2165.04"))
+c("F0666.02" ,"22290.06", "22290.07", "F0666.03" ,"22290.08",
+  "22290.09", "22290.10")
 
-#ken - choco 12004 ---> this need conversion to 
-#ovaltine beverage water content (12_015)
+# ken - choco 12004 ---> this need conversion to 
+# ovaltine beverage water content (12_015)
 
-kenfct %>% filter(code =="12004") %>%
-  select(code, fooditem, nut) %>% 
+# kenfct
+
+fct_dict %>% filter(fdc_id =="12004") %>%
+  select(fdc_id, food_desc, nut) %>% 
   mutate(across(c(ENERC1, VITA_RAE, FE, ZN), ~water.conversion(.x,WATER, ovaltine_water))) %>% 
   mutate(WATER = ovaltine_water) 
 
