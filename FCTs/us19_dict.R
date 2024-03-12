@@ -159,7 +159,8 @@ genus <- tribble(
  "14305", "24310.01.04", "h", 
  "5219", "21124.01", "m", 
  "19034", "112.04", "h", 
-  "14154", "24490.04", "h"
+  "14154", "24490.04", "h",
+ "7088", "F1232.36", "m", 
   )
   
 
@@ -193,9 +194,9 @@ us19 <- us19 %>% mutate_at("fdc_id", as.character) %>%
 dim(us19)
 names(us19)
   
-  ## CHECK: Adding new food dictionary code ----
+## CHECK: Adding new food dictionary code ----
   
-  #Checking dictionary/ fct ids availability 
+# Checking dictionary/ fct ids availability 
   subset(us19, fdc_id == "2013", select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, fdc_id %in% c("14305"),
   select = c(fdc_id, food_desc, ID_3)) 

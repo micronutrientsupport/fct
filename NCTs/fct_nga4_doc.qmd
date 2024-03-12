@@ -17,10 +17,61 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [Nigeria Living Standards Survey 2018/19](https://doi.org/10.48529/8gbe-z155)
 
+v.2.0.0 - Updated 2024/03/12.
+
 
 ```{r }
 
 ```
+
+
+## Multiple matches
+
+Here we included matches that are one-to-many items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
+ 
+### Guinea corn
+
+According to the Wikipedia the "Guinea corn" is the [sorghum bicolor](https://en.wikipedia.org/wiki/Sorghum_bicolor).
+
+```{r}
+
+food1 <- "sorh"
+food2 <- "raw"
+
+fct_cover %>% filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  select(fdc_id, food_desc, WATERg, VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+### Maize (Shelled/Off the cob) (22)
+
+We changed from maize, yellow (v.1.0.0) to maize, white (v.2.0.0). 
+ 
+### Meat Pie/Sausage Roll 
+
+Meat Pie/Sausage Roll [29] was generated combining bread/roll WA19(01_045) and meat sausage  WA19(07_063), for version (1.0.0). For version (2.0.0), we are using the following food items:
+ 
+```{r}
+
+# Search foods ----
+food1 <- "sausag|meat"
+food2 <- "roll|pie|past"
+food3 <- "pasta|paste|spring"
+
+fct_dict %>%  
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+
+
 
 ## List of food items and notes on the selection
 
@@ -84,49 +135,6 @@ knitr::opts_chunk$set(echo = TRUE)
 #Pito - sorghum beer, we could do an average with millet
  
  
-
-## Multiple matches
-
-Here we included matches that are one-to-many items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
- 
-### Guinea corn
-
-According to the Wikipedia the "Guinea corn" is the [sorghum bicolor](https://en.wikipedia.org/wiki/Sorghum_bicolor).
-
-```{r}
-
-food1 <- "sorh"
-food2 <- "raw"
-
-fct_cover %>% filter(source_fct == "WA19") %>% 
-  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
-  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
-  select(fdc_id, food_desc, WATERg, VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
-
-```
-
- 
-### Meat Pie/Sausage Roll 
-
- Meat Pie/Sausage Roll [29] was generated combining bread/roll WA19(01_045) and meat sausage  WA19(07_063), for version (1.0.0). For version (2.0.0), we are using the following food items:
- 
-```{r}
-
-# Search foods ----
-food1 <- "sausag|meat"
-food2 <- "roll|pie|past"
-food3 <- "pasta|paste|spring"
-
-fct_dict %>%  
-  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
-  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
-  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
- # filter(!is.na(ID_3)) %>% 
-  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
-         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
-
-```
-
 
 ### Fish
  

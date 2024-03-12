@@ -4829,6 +4829,51 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,13] <- scientific_name[i]
 }
 
+
+## ├├ hen eggs in shell, fresh (231) -----
+
+food_desc <-  c("egg, chicken, local breed, fresh, raw")
+
+scientific_name <- tolower(c("Gallus gallus domesticus"))
+
+other_name <- c(rep(NA, 4))
+
+fex2_new <- c(rep(NA, 4))
+
+#Fixed
+id2 <- "231"
+desc1 <-  c(NA)
+ref1 <-  c(NA)
+
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1[i]
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
+
 ## ├├ snails, fresh, chilled, frozen, dried, salted or in brine (2920) -----
 # except sea snails 
 
@@ -7732,7 +7777,8 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "burger, hamburger, takeaway",
                  "kebab in pitta bread with salad",
                 "injera, teff grain, cooked",
-                "plantain chips, salted")
+                "plantain chips, salted", 
+                "meat pastry", "sausage roll, homemade")
 
 scientific_name <- c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
                      rep(NA,11))
@@ -7746,7 +7792,7 @@ other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA,
                 rep("recipe from Burkina Faso in WA19", 2), 
                 rep("Banakou né (Burkina Faso) (WA19), Yebbe (Sierra Leone)", 3), 
                 rep(NA, 5), "egg, fried rice", 
-                rep(NA, 6))
+                rep(NA, 6), "sausage roll (UK21), meat pie (JA15)")
 
 fex2_new <- c(rep(NA, 5), "A049A#F02.A06CK$F01.A066J$F27.A049A", 
               "A048Q#F02.A06CG", 
@@ -8657,6 +8703,50 @@ desc_new <- c("kola nuts, fresh, raw")
   
   #Manual inputs:
   id2 <- "21691.14"
+  desc1 <-  c("Obtained from the kernel of the nut of the fruits of the oil palm by pressure in two or three stages at different temperatures. Including oil of babassu kernels (Unofficial definition)")
+  ref1 <-  c(NA)
+  
+  # Function: 
+  for(i in 1:length(food_desc)){
+    
+    id2 <- id2
+    
+    
+    id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+    id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                     str_replace(id3, "[[:alnum:]]{1,3}$",
+                                 formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                         width=2, flag=0)[2]))
+    
+    n1 <- dim(dictionary.df)[1]+1
+    
+    n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+                 which(dictionary.df$ID_3 %in% id3))
+    
+    #New entry - generation:
+    dictionary.df[n1,] <- dictionary.df[n2,]
+    #New entry - population:
+    dictionary.df[n1,7] <- id3_new
+    dictionary.df[n1,8] <- fex2_new[i]
+    dictionary.df[n1,9] <- food_desc[i]
+    dictionary.df[n1,10] <- desc1
+    dictionary.df[n1,11] <- ref1
+    dictionary.df[n1,12] <- other_name[i]
+    dictionary.df[n1,13] <- scientific_name[i]
+  }
+  
+## ├├ butter of karite nuts (21691.03) -----
+  
+  food_desc <- c("shea butter")
+  
+  scientific_name <- tolower(c("Butyrospermum parkii/Vitellaria paradoxa"))
+  
+  other_name <- c("shea nut oil")
+  
+  fex2_new <- c(NA)
+  
+  #Manual inputs:
+  id2 <- "21691.03"
   desc1 <-  c("Obtained from the kernel of the nut of the fruits of the oil palm by pressure in two or three stages at different temperatures. Including oil of babassu kernels (Unofficial definition)")
   ref1 <-  c(NA)
   

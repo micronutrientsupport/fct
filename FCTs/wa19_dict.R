@@ -362,7 +362,7 @@ wa_genus <- tribble(
 "04_080", "1290.9.28", "h",
 "01_188", "F0022.03", "h", 
 "01_187", "F0022.09", "h", 
-"01_058",  "23120.03.02", "h", 
+"01_058", "23120.03.02", "h", 
 "02_046", "1313.01", "m", 
 "02_036", "1540.01", "h", 
 "02_034", "1540.05", "h", 
@@ -373,7 +373,9 @@ wa_genus <- tribble(
 "13_002", "23520.01", "h",
 "04_076", "1290.01.01", "m",
 "06_008", "1379.9.04", "h",
-"09_109", "1532.04", "h"
+"09_109", "1532.04", "h",
+"11_008", "21691.03.01", "h",
+"08_005", "231.03", "h"
 
  )
 
@@ -433,8 +435,8 @@ wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
 subset(wafct, fdc_id %in% c("09_109"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
-subset(wafct, fdc_id == "01_188", select = food_desc) 
-subset(wafct, fdc_id == "03_042", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, fdc_id == "01_006", select = food_desc) 
+subset(wafct, fdc_id == "01_006", select = c(food_desc, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "1319.03" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
