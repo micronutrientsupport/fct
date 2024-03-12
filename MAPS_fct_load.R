@@ -1,5 +1,5 @@
 
-# Script that format FCTs into MAPS standard name and structure
+# Script that loads and add dict codes to FCTs
 
 # Load libraries
 library(tidyverse)
@@ -33,7 +33,7 @@ dict_comp <- read.csv(here::here("metadata", file)) %>%
 
 dict_comp %>% count(source_fct) 
 
-#1) Loading all FCDBs into one single database ----
+# 1) Loading all FCDBs into one single database ----
 
 #finding all the cleaned FCTs/FCDBs from the output folder
 list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
@@ -53,7 +53,8 @@ fct_cover$fdc_id[fct_cover$source_fct %in% c("JA15", "LS06")] <- gsub("^0", "", 
 fct_cover$fdc_id <- str_squish(fct_cover$fdc_id )
 fct_cover$source_fct <- str_squish(fct_cover$source_fct )
 
-# Merging dict codes to fcts codes
+
+# 2)  Merging dict codes to fcts codes ----
 
 fct_cover %>% left_join(., dict_comp) %>% 
   filter(!is.na(ID_3)) %>% count(source_fct)

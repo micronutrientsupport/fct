@@ -1,0 +1,24 @@
+---
+title: "MAPS_fct_QA"
+format: html
+---
+
+## Modifications to the original FCTs
+
+See indiviual FCT changes in the `FCT/fct_cleaning.Rmd` script.
+
+### US19
+
+The values of Se are excluded in the MAPS tool, this is due to spatial variation in Se and given the fact that US soils are high in Se, while most of the African soils are low in Se. Many studies have been published in the importance of spatial variation in Se in crops and in human, and the inaccuracy of using Se values from afar locations for dietary intake estimations. (REF, REF, REF)
+
+## Quality Assurance
+
+### Modifing values by food item & micronutrient
+
+#### Millet 
+
+##### Iron 
+
+According the literature the max. value of Fe in millet would be around 67mg/kg (DM) (@kumarIronZincCrossroad2022). Higher values found in FCT could be due to soil contamination, as reported previously by @mawoumaBioaccessibilityIronZinc2024 and @joyDietaryMineralSupplies2015 among other in Malawi. Furthermore, @mawoumaBioaccessibilityIronZinc2024 found that the bioavailability of the soil Fe contamination was not bioavailable, and hence, by using those values we are likely overestimating the Fe concentration in crops. We have decided to set up a maximum value, by which we are correcting those values that were found higher in FCTs, most of which were found in African datasets which values were higher when compared with millet Fe concentration from other FCTs. 
+
+The values will be set up to a water-adjusted max value and a comment would be added to reflect the changes. 

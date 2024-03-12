@@ -25,13 +25,9 @@ v.2.0.0 - Updated 2024/03/12.
 ```
 
 
-## Multiple matches
-
-Here we included matches that are one-to-many items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
- 
 ### Guinea corn
 
-According to the Wikipedia the "Guinea corn" is the [sorghum bicolor](https://en.wikipedia.org/wiki/Sorghum_bicolor).
+According to the Wikipedia the "Guinea corn" is the [sorghum bicolor](https://en.wikipedia.org/wiki/Sorghum_bicolor). For the version (2.0.0), we are adding a multi-item matching to sorghum.
 
 ```{r}
 
@@ -45,9 +41,43 @@ fct_cover %>% filter(source_fct == "WA19") %>%
 
 ```
 
-### Maize (Shelled/Off the cob) (22)
+### Millet
 
-We changed from maize, yellow (v.1.0.0) to maize, white (v.2.0.0). 
+Millet (11) was changed to multiple matches, to account for whole grain and decorticated. 
+
+### Cassava flour 
+
+Cassava flour [18] was changed to multiple matches as below, to account for the multiple cassava flour preparation used in the country (v.2.0.0). 
+
+
+```{r}
+
+# Search foods 
+food1 <- "cassava"
+food2 <- "flour"
+food3 <- ""
+ 
+fct_dict %>%  filter(source_fct %in% c("WA19")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+    filter(as.numeric(WATERg)<30) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+
+### Maize (Shelled/Off the cob)
+
+Maize (Shelled/Off the cob) (22) was changed from maize, yellow (v.1.0.0) to maize, white (v.2.0.0). 
+ 
+ 
+### Buns/Pofpof/Donuts
+
+Buns/Pofpof/Donuts (27) ("F0022.01,F0022.04,F0022.08")
+ 
  
 ### Meat Pie/Sausage Roll 
 
@@ -70,8 +100,111 @@ fct_dict %>%
 
 ```
 
+## Palm oil (50) -----
+
+Palm oil (50) was changed from palm oil, red in v.1.0.0 to palm oil in v.2.0.0. This assumption needs reviewing, as red palm oil is widespread in the country.
+
+## Meat - multimatches 
+
+Beef (90), Mutton (91), Pork (92), and  Goat (93) were changed from one-to-one matches in v.1.0.0 to one-to-many matches in v.2.0.0.
 
 
+```{r}
+
+# Search foods
+
+food1 <- "Beef"
+food2 <- ""
+food3 <- ""
+
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+      #  filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+#  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, Edible_factor_in_FCT, Edible_factor_in_FCT_2) 
+
+
+```
+
+## Smoked fish 
+
+Smoked fish [102] was changed from the use of grilled fish (v.1.0.0) to using smoked fish from other FCTs (v.2.0.0) with ID_3. For for the improvement we could use the average of smoked/cured and grilled (see photo aid from GENERAL HOUSEHOLD SURVEY – PANEL Wave 3 (2015/16)), and expand the selection of smoked fish using the Global Fisheries NCT. However, further checks in term of composition and representativeness of the data should be carried. 
+
+
+```{r}
+
+# Search foods
+
+food1 <- "fish"
+food2 <- "smok"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+      #  filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
+
+
+```
+
+#### Dried fish
+
+Dried fish [103], check back the selection! We are not performing water-adjustment because it means that it needs to be adjusted in the consumption reported to comply with the tool standards. However, it may be worth checking, for the future, if a converted to dried fish FCT would be useful to add. 
+
+ 
+```{r}
+
+# Search foods
+
+food1 <- "fish"
+food2 <- "dri"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+    #   filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
+
+
+```
+
+
+## Baby milk powder
+
+Baby milk powder [112] was changed from the WA19() formula in the v.1.0.0 to an unfortified formula (v.2.0.0), to keep consistency with the MAPS tool standards. 
+
+## Tea 
+
+Tea [122] was changed from tea, infusion WA19(12_008) (23914.01) in v1.0.0.0 to sachet, tea spoon etc. (23914.02) KE18(12005).
+
+# Chocolate drink 
+ 
+Chocolate drink [121] was finally used as powder, for the version (v.2.0.0). We decided to use the values of chocolate powder without fortification but as powder, following the units reported in the survey, and following what was done with coffee and tea, as it is reported as purchased by the household. 
+
+Note that in it may be possible that Ovaltine is commonly used in the country and that it is fortified. Hence, this should be reviewed and taking it with care.
+
+# Food matching for Nigeria LSS (v.1.0.0)
+
+## Multiple matches
+
+Here we included matches that are one-to-many items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
 
 ## List of food items and notes on the selection
 
@@ -79,10 +212,8 @@ fct_dict %>%
  - check "native red"
  - Cassava flour, non-fermented!
  - Wheat flour, white, unfortified - there are fortified for Nigeria
-
-# - maize on the cob = maize seed fresh
+ - maize on the cob = maize seed fresh
 # - maize yellow whole
-
  - bread white, unfortified,  there's one for toasting
  - cake plain, unfortified
  - Buns, poff and donuts[27] - fried dough NA
@@ -219,61 +350,15 @@ Frozen fish [101] could be mackerel (see photo aid) and sardines. In the FCT is 
 
 #### Smoked fish 
  
-For Fish - smoked [102], we are using an average of the reported "smoked" fish with ID_3, for the improvement we could maybe used average of dried and grilled (see photo aid), and expand the selection of smoked fish using the Global Fisheries NCT. 
-
-
-```{r}
-
-# Search foods
-
-food1 <- "fish"
-food2 <- "smok"
-food3 <- "Crab|Shrimp|clams|Mola|snail"
-
-fct_dict %>%   #filter(source_fct == "WA19") %>% 
-      #  filter(str_detect(fdc_id, "09_")) %>%
-  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
-  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
-  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
-#  filter(as.numeric(WATERg)>30) %>% 
- # filter(str_detect(fooditem, "flour")) %>% 
-  filter(!is.na(ID_3)) %>% 
-  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
-         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
-
-
-```
-
+For Fish - smoked [102], we are using an average of the reported as grilled in WA19 (see photo aid). 
 
 #### Dried fish
 
-Dried fish [103], check back the selection! It might be worth to add crayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013). 
+Dried fish [103], check back the selection! We included fresh fish and water-adjusted the nutrient concentration. It might be worth to add crayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013). 
 
+
+ - Snail - An average of sea and land snail were used, however, in the photo aid the name and the image of is only the land snail. 
  
-```{r}
-
-# Search foods
-
-food1 <- "fish"
-food2 <- "dri"
-food3 <- "Crab|Shrimp|clams|Mola|snail"
-
-fct_dict %>%   #filter(source_fct == "WA19") %>% 
-    #   filter(str_detect(fdc_id, "09_")) %>%
-  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
-  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
-  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
-#  filter(as.numeric(WATERg)>30) %>% 
- # filter(str_detect(fooditem, "flour")) %>% 
-  filter(!is.na(ID_3)) %>% 
-  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
-         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
-
-
-```
-
-
- - Snail - I used normal snail because of the name and the image of the photo aid.
  - Maybe it should be an average
  - Seafood [105] - calculate the average
  - Canned fish/seafood [106] - we used mackerel but we could do an average
@@ -312,7 +397,7 @@ fct_dict %>%   filter(source_fct == "WA19") %>%
 
 ### Chocolate drinks
 
-Because Ovaltine is fortified, in the first version (v1.0.0), use chocolate powder from KE18(12004) and performed a water conversion using the values from the ovaltine with whole milk WA19(12_015). However, we for the next version (v.2.0.0) and MAPS tool, we decided to use the values of already converted into beverage as follow: 
+Because Ovaltine is fortified, in the first version (v1.0.0), use chocolate powder from KE18(12004) and performed a water conversion using the values from the ovaltine with whole milk WA19(12_015). However, we for the next version (v.2.0.0) and MAPS tool, we decided to use the values of chocolate powder without fortification but as powder, following the units reported in the survey, and following what was done with coffee and tea, as it is reported as purchased by the household. 
 
 ```{r}
 
@@ -381,21 +466,88 @@ Goat meat, adjust for "whole animal" consumption.
 
 ## Food items to check
 
-### Maize
+1) Maize
 
 Number 20-22 are maize shelled/unshelled and on/off the cob. Those foods may be the same food item in term of composition, however the edible portion (EP) should be according to the part consumed. E.g., for maize unshelled and on the cob, the EP should be <1. 
 
-1) Millet - Particularly Fe content, it seems too high - We are using [01_017] but it seems that the other millet, combined varieties has the same value. Use Kenfct instead?
+2) Millet
 
-2) Cassava, flour (fermented?) - check Vit. B12 what's going on?
+Millet - Particularly Fe content, it seems too high. We are using WA19(01_017) but it seems that the other millet, combined varieties has a smaller value, hence by combining them we are hopefully reducing the impact of pearl millet. Interestingly, the values of finger millet KE18(1027) are more similar to the Whole grain pearl millet, it could be because the finger millet reported in KE18 is also whole grain, as noted by the high fibre content. 
+
+This values are adjusted to max value in `MAPS_fct_output.R`
+
+```{r}
+
+# Search foods 
+food1 <- "millet"
+food2 <- "raw"
+food3 <- ""
+ 
+fct_dict %>% # filter(source_fct %in% c("WA19" ,"KE18")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  # filter(as.numeric(WATERg)<30) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg, FIBTGg )
+
+
+
+```
+
+3) Cassava, flour (fermented?) 
+
+Vitamin B12 could be a product of the fermentation 
+
+```{r}
+
+# Search foods 
+food1 <- "cassava"
+food2 <- "flour"
+food3 <- ""
+ 
+fct_dict %>%  filter(source_fct %in% c("WA19")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+    filter(as.numeric(WATERg)<30) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+
+
+```
+
 3) Fish selection, particularly for dried fish
+
 4) Milk, it seems that it's region specific - double-check with the team but I think for the MN we are interested in, I don't think it's worth the trouble.
 
-HIGH in FE:
+```{r}
 
---Dried pepper, FE concentration is very high!! 
---Check infant formula "fortified"
--- Sorghum and millet are quite high, but double check and millet
+# Search foods 
+food1 <- "milk"
+food2 <- ""
+food3 <- "yog|butter|Human|kefir|choco|cultu|chee"
+ 
+fct_dict %>%  filter(source_fct %in% c("WA19", "KE18")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+ # filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+     filter(as.numeric(WATERg)>70) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+
+
+```
+
+HIGH in Fe:
+
+- Dried pepper, FE concentration is very high!! 
+- Sorghum and millet are quite high, but double check and millet - DONE
 
 HIGH in ZN:
 
@@ -405,23 +557,9 @@ HIGH in ZN:
 
 HIGH VITA
 
--Red palm oil REALLY through the values
+-Red palm oil REALLY through the values - DONE
 - Margarine = changed to butter. We could do an average using: All margarines from wafct are "fortified"
-
-kenfct %>% filter(code == "9005")  %>% 
-  select(code, fooditem, WATER,nut) %>% 
-  mutate(nga4_foodid = "56"))
-  
 - Dried pepper
 - garri, yellow
 
  
-```{r milk, echo=FALSE}
-
-#Nutrient content of different type of milk in WAFCT
-
-wafct %>% filter(str_detect(fooditem, "Milk"), WATER > 70) %>% 
-  select(code, fooditem, WATER, VITA_RAE, ZN, FE, VITB12)
-
-
-```

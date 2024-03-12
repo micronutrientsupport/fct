@@ -146,7 +146,20 @@ fct_dict %>% #filter(!is.na(ID_3)) %>%
 
  ## MAPS Standardisation: 
 
+## Quality Adjustments (See MAPS_fct_QA.qmd for details)
+# Millet (Fe max. value 67mg/kg) 
+id2 <- "^118"
+max_Value <- 67/10*(100-8.67)/100
 
+fct_dict <- fct_dict %>% 
+  filter(grepl(id2, ID_3, ignore.case = TRUE)) %>% 
+  mutate(comments = ifelse(as.numeric(FEmg)> max_Value, "Fe adjusted", NA), 
+         FEmg = ifelse(as.numeric(FEmg)> max_Value, 67/10*(100-as.numeric(WATERg))/100, FEmg)) %>% 
+#  filter(!is.na(comments)) %>% select(food_desc, FEmg, comments)
+
+# Excluding Se from US19
+fct_dict <-  fct_dict %>% filter(source_fct == "US19") %>% 
+  mutate(SEmcg = NA)
 
 # Rename variables according to MAPS-standards
 

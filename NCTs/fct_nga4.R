@@ -60,6 +60,10 @@ nga.matches1 <- read.csv(here::here("inter-output", "nct",
 #names(nga.matches)
 
 # Assigning fct id matches to dict codes (for MAPS tool) ----
+nga.matches1 %>% 
+  left_join(., fct_dict %>% select(source_fct, fdc_id, food_desc, 
+                                   Edible_factor_in_FCT)) %>% View() 
+
 nga.matches <- nga.matches1 %>% 
   left_join(., fct_dict %>% select(source_fct, fdc_id, food_desc,  ID_3)) 
 
@@ -88,6 +92,9 @@ nga.matches[n,]$ID_3 <-  c("114.01,114.02,114.03")
 ## Millet (11) -----
 n <- which(nga.matches$nga4_foodid == "11")
 nga.matches[n,]$ID_3 <-  c("118.03,118.04")
+## Cassava flour (18) -----
+n <- which(nga.matches$nga4_foodid == "18")
+nga.matches[n,]$ID_3 <-  c("23170.01.01,23170.01.02, 23170.01.05")
 ## Maize (Shelled/Off the cob)(22) -----
 n <- which(nga.matches$nga4_foodid == "22")
 nga.matches[n,]$ID_3 <-  c("112.01")
@@ -123,9 +130,12 @@ nga.matches[n,]$ID_3[1] <-  c("1505.07,1507.01,1505.02,1505.05,1505.00.01")
 # change to an unfortified
 n <- which(nga.matches$nga4_foodid == "112")
 nga.matches[n,]$ID_3 <-  c("23991.01.02")
-## Coffee [120]  ------
-n <- which(nga.matches$nga4_foodid == "120")
-nga.matches[n,]$ID_3 <-  c("23991.01.02")
+## Tea [122]  ------
+n <- which(nga.matches$nga4_foodid == "122")
+nga.matches[n,]$ID_3 <-  c("23914.02")
+# Chocolate drink [121] ----
+n <- which(nga.matches$nga4_foodid  == "121")
+nga.matches[n,]$ID_3 <-  c("F0666.01,F0666.06")
 
 # Checking the missing items.... ----
 nga4.foodlist$nga4_foodid <-  as.integer(nga4.foodlist$nga4_foodid)
@@ -165,20 +175,24 @@ nga.matches <- nga.matches %>%
 n <- which(nga.matches$nga4_foodid == "33")
 nga.matches[n,]$wt <-  c( 1-(5/105), (5/105))
 
+# Saving into csv for sharing
+# write.csv(nga.matches, here::here("inter-output",
+#                                   "MAPS_dict-food-list-lss_v1.0.0.csv"),
+#           row.names = FALSE)
 
 # Search foods ----
-food1 <- "egg,"
-food2 <- "raw"
+food1 <- "choco|oval|mili"
+food2 <- ""
 food3 <- ""
 # wafct 
-fct_dict %>%   filter(source_fct == "WA19") %>% 
+fct_dict %>% #  filter(source_fct == "WA19") %>% 
   #  filter(str_detect(fdc_id, "09_")) %>%
   filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
   filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
  # filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
-  #  filter(as.numeric(WATERg)>30) %>% 
+   filter(as.numeric(WATERg)<30) %>% 
   # filter(str_detect(fooditem, "flour")) %>% 
- # filter(!is.na(ID_3)) %>% 
+  filter(!is.na(ID_3)) %>% 
   select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
          VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  %>%
   View() 
@@ -661,7 +675,8 @@ nga4_adj_fct <- nga4_adj_fct %>%
 n <- which(nga4.matches$nga4_foodid == "121")
 nga4.matches[n,]$ID_3 <-  list(c("23170.01.04", "2165.04"))
 c("F0666.02" ,"22290.06", "22290.07", "F0666.03" ,"22290.08",
-  "22290.09", "22290.10")
+  "22290.09", "22290.10"
+
 
 # ken - choco 12004 ---> this need conversion to 
 # ovaltine beverage water content (12_015)

@@ -9234,6 +9234,7 @@ desc1 <-  c(NA)
 ref1 <-  c(NA)
 scientific_name <- tolower(c("Ipomoea batatas")) 
 
+
 # Function: 
 for(i in 1:length(food_desc)){
   
@@ -9264,68 +9265,55 @@ for(i in 1:length(food_desc)){
 }
 
 
-#Add - 23170.01 -  Cassava, flour, from fermented white cassava (dry fufu)
+## ├├  Cassava, flour (23170.01) -----
+
+food_desc <- c( "cassava, flour, white, fermented, dried, raw", 
+                "cassava, paste, white, fermented, raw",
+                "cassava, grated, white, fermented, toasted, raw",
+                "cassava, flour, white, cooked, fermented, dried, raw")
+
+other_name <- c("dry fufu (WA19)", 
+                "wet fufu (WA19)",
+                "white gari (WA19)",
+                "alibo/elubo/lafun (WA19)")
+
+scientific_name <- tolower(c(rep("manihot esculenta", 3)))
+
+
 #Manual inputs:
 id2 <- "23170.01"
-desc_new <- "cassava, flour, white, fermented, dried, raw"
-fex2_new <- NA
-scien_new <- "manihot esculenta"
-taxo <- NA
-ref1 <- NA
-other_name <- "dry fufu (WA19)"
+desc1 <-  c(NA)
+ref1 <-  c(NA)
+fex2_new <- c(NA)
 
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxo
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-
-#Add - 23170.01 - Cassava, fermented paste from white cassava flour (wet fufu)
-#Manual inputs:
-id2 <- "23170.01"
-desc_new <- "cassava, paste, white, fermented, raw"
-fex2_new <- NA
-scien_new <- "manihot esculenta"
-taxo <- NA
-ref1 <- NA
-other_name <- "wet fufu (WA19)"
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxo
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
 
 
 ## ├├  cassava, fresh (1520.01) -----
@@ -9412,36 +9400,6 @@ dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 }
 
-#Add - 23170.01 - Cassava, grated, from fermented white cassava, toasted without oil 
-#Manual inputs:
-id2 <- "23170.01"
-desc_new <- "white cassava, grated, fermented, toasted"
-fex2_new <- NA
-scien_new <- "manihot esculenta"
-taxo <- NA
-ref1 <- NA
-other_name <- "white gari (WA19)"
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxo
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
 
 # Final Formatting ----
 

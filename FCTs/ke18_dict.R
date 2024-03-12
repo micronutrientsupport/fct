@@ -245,9 +245,14 @@ ken_genus <- tribble(
  "15075", "F1232.30", "m",
  "13025", "1699.13", "h", 
  "13012", "1654.03", "m" ,
+ "6014", "2293.01", "h", 
+ "6023", "2292.01", "m", # fresh as raw
+ "6025", "2291.01", "m",# fresh as raw
+  "8001", "1516.04", "h",
+ "8006", "1503.07", "h",  # Acc. w/ scientific name
+ "8009", "1503.02", "h"
  
- 
-)
+ )
 
 
 ken_genus <- read.csv(here::here("metadata", "kenfct_matches.csv")) %>% 
@@ -358,7 +363,7 @@ distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 subset(kenfct, grepl("sweet", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
-subset(kenfct, str_detect(fdc_id, "^5") &
+subset(kenfct, str_detect(fdc_id, "^8") &
          grepl("raw", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))  %>% View()
 subset(kenfct, str_detect(scientific_name, "triloba"), 
