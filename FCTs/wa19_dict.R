@@ -83,7 +83,7 @@ wa_genus <- tribble(
   "11_024", "2165.02", "h", 
   "11_023", "2165.03", "h", 
   "01_101", "23140.07.01", "m", 
-  "04_011", "1699.08", "m", 
+  "04_011", "1290.9.18", "h", 
   "04_003", "1241.9.02", "h",
   "09_004", "1529.02", "h",
   "02_002", "1520.02.01", "h",
@@ -421,7 +421,7 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 wafct.genus %>% mutate(fct = "WA19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>% 
-          filter(!ref_fctcode %in% c("01_095")) %>%  # Excluding codes that were changed
+          filter(!ref_fctcode %in% c("01_095", "04_011")) %>%  # Excluding codes that were changed
               mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 

@@ -89,7 +89,10 @@ sort(names(fct_dict))
 fct_dict %>% filter(!is.na(ID_3)) %>% 
   select(fdc_id, source_fct) %>% duplicated() %>% which()
 
-fct_dict %>% filter(fdc_id == "01_095")
+fct_dict %>% filter(!is.na(ID_3)) %>% 
+  select(fdc_id, source_fct) %>% .[798,]
+
+ fct_dict %>% filter(fdc_id == "04_011")
 
 ## Standardisation: 
 
@@ -106,7 +109,7 @@ fct_dict <- fct_dict %>%
 
 #Saving for other works
 fct_dict %>% #filter(!is.na(ID_3)) %>% 
-  write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.2.csv"),
+  write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.3.csv"),
             row.names = FALSE)
 
 
@@ -118,14 +121,14 @@ id2 <- "^118"
 max_Value <- 67/10*(100-8.67)/100
 
 fct_dict <- fct_dict %>% 
-  filter(grepl(id2, ID_3, ignore.case = TRUE)) %>% 
-  mutate(comments = ifelse(as.numeric(FEmg)> max_Value, "Fe adjusted", NA), 
-         FEmg = ifelse(as.numeric(FEmg)> max_Value, 67/10*(100-as.numeric(WATERg))/100, FEmg)) %>% 
-#  filter(!is.na(comments)) %>% select(food_desc, FEmg, comments)
+  mutate(comment = ifelse(grepl(id2, ID_3, ignore.case = TRUE) & as.numeric(FEmg)> max_Value, "Fe adjusted", NA), 
+         FEmg = ifelse(grepl(id2, ID_3, ignore.case = TRUE) & as.numeric(FEmg)> max_Value, 67/10*(100-as.numeric(WATERg))/100, FEmg)) 
 
+fct_dict  %>% 
+  filter(!is.na(comment)) %>% select(food_desc, FEmg, comment)
+  
 # Excluding Se from US19
-fct_dict <-  fct_dict %>% filter(source_fct == "US19") %>% 
-  mutate(SEmcg = NA)
+fct_dict$SEmcg[fct_dict$source_fct == "US19"] <- NA
 
 # Rename variables according to MAPS-standards
 
@@ -191,7 +194,7 @@ fct_dict <-  fct_dict %>% filter(source_fct == "US19") %>%
 #1) All foods that have a genus ID has a valid description (in dict.)
   
 MAPS_output %>% filter(!is.na(food_genus_id) & 
-                       is.na(food_genus_description)) 
+                       is.na(food_genus_description)) %>% View()
 
 dictionary.df %>% 
   filter(grepl("bread", FoodName_3) & 
@@ -204,20 +207,20 @@ dictionary.df %>%
 
 # Saving the MAPS_FCTs
 #   
-# split_fct <- MAPS_output %>% 
-#   filter(fct_name %in% c("UK21")) %>% 
-#     group_by(fct_name) %>% 
-#     group_split()
-#   
-# #fct_names <- unique(MAPS_output$fct_name)
+ split_fct <- MAPS_output %>% 
+  # filter(fct_name %in% c("UK21")) %>% 
+     group_by(fct_name) %>% 
+     group_split()
+   
+fct_names <- unique(MAPS_output$fct_name)
 #  fct_names <- c("UK21")
 # 
 #   
-#   for(i in 1:length(fct_names)){
-#     saveName = paste0("output/MAPS_", fct_names[i], "_v3.0.0.csv")
-#     readr::write_excel_csv(split_fct[[i]], file = saveName)
-#   }
-#   
+   for(i in 1:length(fct_names)){
+     saveName = paste0("output/new/MAPS_", fct_names[i], "_v.3.1.0.csv")
+     readr::write_excel_csv(split_fct[[i]], file = saveName)
+   }
+   
 #   
 # 
 

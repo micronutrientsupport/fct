@@ -7100,13 +7100,12 @@ dictionary.df[n1,14] <- ref2
 ## ├├ Pineapples, otherwise prepared or preserved  (21491) -----
 
 #Manual inputs:
-food_desc <- c("pineapple, canned in syrup, whole contents",
-               "fruit cocktail, canned in syrup, whole contents")
+food_desc <- c("pineapple, canned in syrup, whole contents")
 
 other_name <- c(NA)
 
 # Fixed
-id2 <- "F0623"
+id2 <- "21491"
 fex2 <- NA
 scientific_name <- "ananas comosus"
 desc1 <- "Fruit, nuts and peel, including frozen, prepared or preserved, jam, paste, marmalade, pure and cooked fruits, other than those listed separately (Unofficial definition)"
