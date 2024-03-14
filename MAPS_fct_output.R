@@ -207,20 +207,20 @@ dictionary.df %>%
 
 # Saving the MAPS_FCTs
 #   
- split_fct <- MAPS_output %>% 
-  # filter(fct_name %in% c("UK21")) %>% 
-     group_by(fct_name) %>% 
-     group_split()
-   
-fct_names <- unique(MAPS_output$fct_name)
+# split_fct <- MAPS_output %>% 
+#  # filter(fct_name %in% c("UK21")) %>% 
+#     group_by(fct_name) %>% 
+#     group_split()
+#   
+# fct_names <- unique(MAPS_output$fct_name)
 #  fct_names <- c("UK21")
 # 
 #   
-   for(i in 1:length(fct_names)){
-     saveName = paste0("output/new/MAPS_", fct_names[i], "_v.3.1.0.csv")
-     readr::write_excel_csv(split_fct[[i]], file = saveName)
-   }
-   
+#   for(i in 1:length(fct_names)){
+#     saveName = paste0("output/new/MAPS_", fct_names[i], "_v.3.1.0.csv")
+#     readr::write_excel_csv(split_fct[[i]], file = saveName)
+#   }
+#   
 #   
 # 
 

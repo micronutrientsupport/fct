@@ -500,24 +500,11 @@ dictionary.df[n1,12] <- NA
 dictionary.df[n1,13] <- "eleusine coracana"
 
 
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 == "23710.01")
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- "23710.02"
-dictionary.df[n1,8] <- NA
-dictionary.df[n1,9] <- "pasta, macaroni, wheat, dried, raw"
-dictionary.df[n1,10] <- NA
-dictionary.df[n1,11] <- NA
-
 ## ├├ uncooked pasta, not stuffed or otherwise prepared (23710) -----
 
 #Manual inputs:
 food_desc <- c("pasta, macaroni, wheat, dried, raw",
-               "Instant noodles, made from wheat flour, unfortified, without flavouring, unprepared")
+               "instant noodles, made from wheat flour, unfortified, without flavouring, unprepared")
 
 other_name <- c("Indome (WA9)")
 
@@ -5305,30 +5292,6 @@ for(i in 1:length(food_desc)){
   dictionary.df[n1,12] <- other_name[i]
   dictionary.df[n1,13] <- scientific_name
 }
-
-
-#Manual inputs:
-id2 <- "141"
-desc_new <- "soybeans, milk, fresh, raw"
-fex2_new <- NA
-scien_new <- NA
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-paste0( str_extract(id3, 
-                              "[[:alnum:]]{2,5}\\.\\d{1,2}\\.\\d{1}|[[:alnum:]]{2,5}\\.\\d{1}"),
-                  as.numeric(str_extract(id3, "[[:digit:]]$"))+1)
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- which(dictionary.df$ID_3 %in% id3)
-
-dictionary.df[n1,] <- dictionary.df[n2,]
-
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,13] <- scien_new
 
 #Add 1701 lima beans, dried, raw
 #Manual inputs:
