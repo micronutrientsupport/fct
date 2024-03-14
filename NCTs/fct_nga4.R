@@ -106,7 +106,7 @@ n <- which(nga.matches$nga4_foodid == "29")
 nga.matches[n,]$ID_3 <-  c("F1232.35,F1232.36")
 ## Palm oil (50) -----
 n <- which(nga.matches$nga4_foodid == "50")
-nga.matches[n,]$ID_3 <-  c("2165.01")
+nga.matches[n,]$ID_3 <-  c("21691.14.01,21691.14.02,2165.04,2165.01,2165.02")
 ## Beef (90) -----
 n <- which(nga.matches$nga4_foodid == "90")
 nga.matches[n,]$ID_3 <-  c("21111.02.03,21111.02.03,21111.02.03,21111.02.03")
@@ -158,6 +158,34 @@ nga.matches[n,]$ID_3 <-  c("231.03")
 ## Gin [163]  ------
 n <- which(nga.matches$nga4_foodid == "163")
 nga.matches[n,]$ID_3 <-  c("2413.01")
+## Other domestic poultry [82]  ------
+n <- which(nga.matches$nga4_foodid == "82")
+nga.matches[n,]$ID_3 <-  c("21170.01.02,21124.01")
+## Other fruits (specify) [66]  ------
+n <- which(nga.matches$nga4_foodid == "66")
+nga.matches[n,]$ID_3 <-  c("1359.9.08,1359.02.01,1314.02")
+## 	Other grains and flour (specify) [23]  ------
+n <- which(nga.matches$nga4_foodid == "23")
+nga.matches[n,]$ID_3 <-  c("23710.04,23710.01")
+## 	Other meat (excl. poultry) (specify) [96]  ------
+n <- which(nga.matches$nga4_foodid == "96")
+nga.matches[n,]$ID_3 <-  c("21513.01")
+## 	Other milk products (specify) [115]  ------
+n <- which(nga.matches$nga4_foodid == "115")
+nga.matches[n,]$ID_3 <-  c("141.03")
+## 	Other nuts/seeds/pulses [45]  ------
+n <- which(nga.matches$nga4_foodid == "45")
+nga.matches[n,]$ID_3 <-  c("1449.9.02,1708.01,1491.02.01,1356.01,1356.02")
+## 	Other oil and Fat  [53]  ------
+n <- which(nga.matches$nga4_foodid == "53")
+nga.matches[n,]$ID_3 <-  c("34550.01")
+## 	Other vegetables (fresh or canned) [79] ------
+n <- which(nga.matches$nga4_foodid == "79")
+nga.matches[n,]$ID_3 <-  c("1232.01,1251.01,1212.03")
+## 	Other non-alcoholic drinks [155] ------
+n <- which(nga.matches$nga4_foodid == "155")
+nga.matches[n,]$ID_3 <-  c("24490.05")
+
 
 # Checking the changes
 #subset(nga.matches, is.na(ID_3))
@@ -176,25 +204,28 @@ n <- which(nga.matches$nga4_foodid == "33")
 nga.matches[n,]$wt <-  c( 1-(5/105), (5/105))
 
 # Saving into csv for sharing
-# write.csv(nga.matches, here::here("inter-output",
-#                                   "MAPS_dict-food-list-lss_v1.0.0.csv"),
-#           row.names = FALSE)
+ write.csv(nga.matches, here::here("inter-output",
+                                   "MAPS_dict-food-list-lss_v1.0.1.csv"),
+           row.names = FALSE)
 
 # Search foods ----
-food1 <- "choco|oval|mili"
-food2 <- ""
+food1 <- "be|drin|wat"
+food2 <- "mille|sorg"
 food3 <- ""
+scie <- "edulis"
 # wafct 
-fct_dict %>% #  filter(source_fct == "WA19") %>% 
-  #  filter(str_detect(fdc_id, "09_")) %>%
+fct_dict %>% # filter(source_fct %in% c("WA19", "KE18")) %>% 
+  # filter(str_detect(fdc_id, "05_")) %>%
   filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
   filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
  # filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
-   filter(as.numeric(WATERg)<30) %>% 
+ # filter(grepl(scie, scientific_name, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)<50) %>% 
+#   filter(as.numeric(PROCNTg)<8) %>% 
   # filter(str_detect(fooditem, "flour")) %>% 
-  filter(!is.na(ID_3)) %>% 
-  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
-         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  %>%
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg, PROCNTg,
+         VITA_RAEmcg, FATg, FEmg, ZNmg, VITB12mcg)  %>%
   View() 
 
 ### END - OLD SCRIPTS (v1.0.0.0) #####

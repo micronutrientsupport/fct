@@ -376,7 +376,11 @@ wa_genus <- tribble(
 "09_109", "1532.04", "h",
 "11_008", "21691.03.01", "h",
 "08_005", "231.03", "h",
-"02_038", "23170.01.05", "h"
+"02_038", "23170.01.05", "h", 
+"05_006", "1359.02.01", "h",
+"01_077", "23710.04", "h", 
+"04_032", "1232.01", "h", 
+"04_006", "1251.01", "h", 
 
  )
 
@@ -385,7 +389,7 @@ wa_genus <- tribble(
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) %>% 
   filter(!ref_fctcode %in%
            c("01_043", "07_063","10_002", "12_002",
-             "12_012", "13_021", "13_023")) %>% # removing dupli
+             "12_012", "13_021", "13_023", "01_095")) %>% # removing dupli
   select(ref_fctcode, ID_3, fe2_confidence) %>%
   mutate_at("ref_fctcode", as.character) %>% 
   rename(confidence = "fe2_confidence") %>% 
@@ -416,7 +420,8 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 
 wafct.genus %>% mutate(fct = "WA19")  %>% 
-  bind_rows(., read.csv(here::here("metadata", file)) %>%
+  bind_rows(., read.csv(here::here("metadata", file)) %>% 
+          filter(!ref_fctcode %in% c("01_095")) %>%  # Excluding codes that were changed
               mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 

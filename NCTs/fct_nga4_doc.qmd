@@ -100,14 +100,33 @@ fct_dict %>%
 
 ```
 
-## Palm oil (50) -----
+## Palm oil
 
-Palm oil (50) was changed from palm oil, red in v.1.0.0 to palm oil in v.2.0.0. This assumption needs reviewing, as red palm oil is widespread in the country.
+Palm oil (50) was changed from palm oil, red in v.1.0.0 to palm oil in v.2.0.0. This assumption was reviewed, as red palm oil is widespread in the country (DHS, 2018), however the consumption seems not to be equal across regions and SES. In addition, concerns regarding the losses due to distribution, handling, storage, etc can be high. Therefore, we decided to do an average of the available "palm oils" in the WA19.
+
+
+```{r}
+
+# Search foods
+
+food1 <- "palm"
+food2 <- "oil"
+food3 <- "Senegal"
+
+fct_dict %>%   filter(str_detect(fdc_id, "11_")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, Edible_factor_in_FCT, Edible_factor_in_FCT_2) 
+
+
+```
 
 ## Meat - multimatches 
 
 Beef (90), Mutton (91), Pork (92), and  Goat (93) were changed from one-to-one matches in v.1.0.0 to one-to-many matches in v.2.0.0.
-
 
 ```{r}
 
@@ -118,7 +137,6 @@ food2 <- ""
 food3 <- ""
 
 fct_dict %>%   filter(source_fct == "WA19") %>% 
-      #  filter(str_detect(fdc_id, "09_")) %>%
   filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
 #  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
  # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
@@ -199,6 +217,61 @@ Tea [122] was changed from tea, infusion WA19(12_008) (23914.01) in v1.0.0.0 to 
 Chocolate drink [121] was finally used as powder, for the version (v.2.0.0). We decided to use the values of chocolate powder without fortification but as powder, following the units reported in the survey, and following what was done with coffee and tea, as it is reported as purchased by the household. 
 
 Note that in it may be possible that Ovaltine is commonly used in the country and that it is fortified. Hence, this should be reviewed and taking it with care.
+
+## Missing food matches
+
+### Others
+
+**TODO**: Info about the other
+
+Other alcoholic beverages (164) - Pito (162) (recode)
+Other domestic poultry (82) - Guinea fowl (821) & turkey (822)
+
+#### Other fruits
+
+Other fruits (specify) (66)
+
+(UDARA, AGBALUMO) (661) - According to the alternative names of ["african cherry"]( https://www.africanfoodies.com/african-cherry/) WA19(05_053), (1359.9.08)
+
+(CASHEW APPLE) (662) - Apparently they do it the "fruit" of the cashew nut seed (https://theconversation.com/how-nigeria-can-turn-its-huge-cashew-waste-into-valuable-citric-acid-185320). WA19 (05_006) (1359.02.01)
+
+(Cherry) (663) - Assuming as above 
+
+(AFRICAN PEAR) (664) - Called Ube [(*Dacryodes edulis*)](https://en.wikipedia.org/wiki/Dacryodes_edulis) is not available. 
+
+(DATE PALM) (665) - We are using the "fresh" one (1314.02)
+
+#### Other cereals
+
+Other cereals (23) - Indome noodels (not prepared) (23710.04) & spaghetti (23710.01)  
+
+#### Other meat
+Other meat (excl. poultry) (specify) (96) - mostly identifed as (POMO, SKIN MEAT) (961).
+
+We decided to use the value of JA15(11063) "Beef, imported beef, chuck, fat, raw" as it seemed to be the closest match in term of composition to the NG18(179) - "cow skin, raw" which we did not used because a) it is not included in MAPS tool, and b) it has numerous missing values. 
+
+Other milk products (specify) (115) - Soy milk (1153) 
+
+Other non-alcoholic drinks (155) 
+
+(ZOBO) (1551) - it is a hibiscus drink (https://allnigerianfoods.com/zobo-drink/).  We used sweetened flavoured water (US19(14604))
+
+KUNU (1552) - Not available, we could use WA19(01_102)
+
+#### Other nuts/seeds/pulses 
+
+Other nuts/seeds/pulses (45) 
+
+(BEENISEED) (452)
+(BAMBARA NUT) (453)
+(BANGA - PALM NUT) (454) - Not available
+(PALM KERNEL NUT) (455)
+(LOCUS BEAN) (456) - We are adding both locus bean and the fermented version ("DAWADAWA") [(soumbala)](https://en.wikipedia.org/wiki/Sumbala).
+
+Other oil and Fat (53) - Vegetable oils (Turkey, OK, etc.) (532) - We are assuming unfortified.
+
+Other vegetables (fresh or canned) (79) - Cucumber (791), Leaves (792) - Recoded to 78, Carrot (794), Cabbage (796)
+
 
 # Food matching for Nigeria LSS (v.1.0.0)
 
