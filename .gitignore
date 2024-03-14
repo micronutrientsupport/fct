@@ -42,6 +42,7 @@ vignettes/*.pdf
 #data and inter-output folder and files in output folder
 
 data/
+output/
 old-scripts/
 output/*.csv 
 output/*.xlsx
