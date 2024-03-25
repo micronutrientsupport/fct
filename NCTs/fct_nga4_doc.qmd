@@ -1,15 +1,19 @@
 ---
 title: "Nigeria Living Standards Survey (2018/19): food matching notes"
-author: "Segovia D L Revilla, Lucia"
+author: "Segovia De La Revilla, Lucia"
 date: "06/10/2021"
-date: 
-  last-modified 
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-
 knitr::opts_chunk$set(echo = TRUE)
+
+# Loading the packages
+library(dplyr) # Data wrangling 
+library(tidyr) # Data manupulation 
+library(stringr) # Strings and character manipulation
+library(ggridges) # Visualisation (ridges)
+library(ggplot2) # Visualisation (main)
 
 ```
 
@@ -121,6 +125,27 @@ fct_dict %>%   filter(str_detect(fdc_id, "11_")) %>%
   select(source_fct, fdc_id, food_desc, ID_3, WATERg,
          VITA_RAEmcg, FEmg, ZNmg, Edible_factor_in_FCT, Edible_factor_in_FCT_2) 
 
+
+```
+
+### Leaves
+
+Leaves(cocoyam, spinach, etc.) [78], we have updated the codes to include all raw available leaves found in WA19. See primary matches above for more information on the selection. 
+
+```{r}
+
+# Search foods ----
+food1 <- "leav"
+food2 <- "fresh"
+food3 <- "raw"
+
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
 
 ```
 
@@ -384,8 +409,9 @@ fct_dict %>% filter(str_detect(fdc_id, "09_")) %>%
   filter(nutrient != "ENERCkcal") %>% 
   mutate_at("value", as.numeric) %>% 
   ggplot(aes(value)) + geom_boxplot() +
-  labs(x = "", x = "(mg/100g-EP-DW) in fish and products") +
-  facet_wrap(~nutrient, scales = "free_y") + coord_flip()
+  labs(x = "nutrient per 100g-EP-FW", y = "") + # This flips w/ coord_flip()
+  facet_wrap(~nutrient, scales = "free_y") +  # This doesn't flip (manually changed)
+  coord_flip()
 
 
 ```
@@ -453,19 +479,25 @@ The selection of leaves will benefit from a) reviewing and b) geographic disaggr
 food1 <- "leav"
 food2 <- "fresh"
 food3 <- "raw"
-# wafct 
+
 fct_dict %>%   filter(source_fct == "WA19") %>% 
-  #  filter(str_detect(fdc_id, "09_")) %>%
   filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
   filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
   filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
-  #  filter(as.numeric(WATERg)>30) %>% 
-  # filter(str_detect(fooditem, "flour")) %>% 
-  filter(is.na(ID_3)) %>% 
+  filter(!is.na(ID_3)) %>% 
   select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
-         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  %>%
+  mutate_at(c("FEmg", "ZNmg", "VITA_RAEmcg"), as.numeric) %>% 
+  mutate(VITA_RAEmg = VITA_RAEmcg/1000) %>% 
+  pivot_longer(., cols =c(FEmg, ZNmg, VITA_RAEmg),
+               names_to = "nutrient") %>% 
+  mutate_at("value", as.numeric) %>% 
+  ggplot(aes(value, nutrient, fill = stat(x))) +
+  geom_density_ridges_gradient() 
 
 ```
+
+Note that in this figure, the Vitamin A (RAE) units are changed to fit the other two nutrients. This makes the one Vitamin A outlier fits in the well shaped distribution. 
 
 
 ### Chocolate drinks

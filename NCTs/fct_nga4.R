@@ -30,6 +30,8 @@ source("MAPS_fct_load.R")
 # source("mafood.R")
 # source("fct_usda.R")
 
+# Household survey name
+hces <-  "lss" 
 # Key variables of interest
 nut <- c( "WATERg", "ENERCkcal", "VITA_RAEmcg", "FEmg", "ZNmg")
 
@@ -107,6 +109,9 @@ nga.matches[n,]$ID_3 <-  c("F1232.35,F1232.36")
 ## Palm oil (50) -----
 n <- which(nga.matches$nga4_foodid == "50")
 nga.matches[n,]$ID_3 <-  c("21691.14.01,21691.14.02,2165.04,2165.01,2165.02")
+## Leaves (cocoyam, spinach, etc.) (78) -----
+n <- which(nga.matches$nga4_foodid == "78")
+nga.matches[n,]$ID_3 <-  c("1215.02,1290.9.17,1219.01.01,1290.9.19,1290.9.06,1290.9.20,1290.9.21,1290.9.22,1290.9.10,1290.9.15,1290.9.18,1239.01.02,1214.04,1290.9.23,1290.9.07,1215.01,1290.9.02,1290.9.24,1290.9.05,1290.9.25,1290.9.26,1290.9.27,1290.9.28")
 ## Beef (90) -----
 n <- which(nga.matches$nga4_foodid == "90")
 nga.matches[n,]$ID_3 <-  c("21111.02.03,21111.02.03,21111.02.03,21111.02.03")
@@ -204,9 +209,30 @@ n <- which(nga.matches$nga4_foodid == "33")
 nga.matches[n,]$wt <-  c( 1-(5/105), (5/105))
 
 # Saving into csv for sharing
- write.csv(nga.matches, here::here("inter-output",
-                                   "MAPS_dict-food-list-lss_v1.0.1.csv"),
+# write.csv(nga.matches, here::here("inter-output",
+#                                   "MAPS_dict-food-list-lss_v1.0.2.csv"),
+#           row.names = FALSE)
+ 
+
+# Saving the food consumption and food matches ----
+# Checking version
+ current_food <- read.csv(here::here("inter-output", 
+               sort(list.files(here::here("inter-output"), 
+              paste0("MAPS_dict-food-list-", hces)), decreasing = TRUE)[1])) 
+ 
+ 
+ if(sum(nga.matches != current_food, na.rm = TRUE)>0){
+   stop("Difference in food list file, need new version")
+   
+ } else {
+   
+   write.csv(nga.matches,
+           here::here("inter-output",
+                      paste0("MAPS_dict-food-list-", hces, "_v1.0.2.csv")), 
            row.names = FALSE)
+   
+ }
+ 
 
 # Search foods ----
 food1 <- "be|drin|wat"
