@@ -927,12 +927,12 @@ The seasoning mix: US19(2074, 2075, 2076) have high number of missing values, an
 
 ###### MAPS Food dictionary 
 
-- **23999.01.01**: We are using ovaltine fortified for US19(14315) because the values seemed in line with the ovaltine fortied reported in WA19(13_028).
-
+- **23999.01.01**: We are using ovaltine fortified for US19(14315) because the values seemed in line with the ovaltine fortified reported in WA19(13_028).
  - **F0623.08**: We used the item US19(9100) (heavy syrup) from the four options available because the water content was the closest match to the water content in our "reference value" WA19(05_034).
 - **F0623.07**: We used the item US19(9271) (extra heavy syrup) from the options available because the water content was the closest match to the reference food KE18(5029).
 - **F1232.31**: We selected item US19(21108) from the options available because the water content was the closest match to the reference food UK21(19-544).
 - **2920.01**: We opted to match US19(90560) to this dictionary code because the water content was the same as the "snail" in WA19(07_083), which has the same dictionary code.
+- **23120.03.03**: We opted for US19(20020) instead of US19(20016) because the protein content was more similar to other maize yellow items in the SSA FCTs.
 
  
 

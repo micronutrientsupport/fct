@@ -29,7 +29,6 @@ mwi_genus <- tribble(
 "MW01_0050" ,  "1510.01", "h",
 "MW01_0058" ,  "23161.01.01", "m",
 "MW01_0060" ,  "114.01", "h",
-"MW01_0063" ,  "1530.02", "h",
 "MW01_0065" ,  "1530.01", "h",
 "MW01_0066" ,  "1530.04", "h",
 "MW02_0004" ,  "1701.03", "h",
@@ -70,11 +69,11 @@ mwi_genus <- tribble(
 "MW05_0019" ,  "1317.01", "h",
 "MW05_0021" ,  "1318.01", "h",
 "MW06_0001" ,  "21700.02.01", "h",
-"MW08_0007" ,  "1802.02", "h",   # Changed to the "sugar cane juice" due to NVs are the same as the juice
+"MW08_0007" ,  "1802.02", "l",   # Changed to the "sugar cane juice" due to NVs are the same as the juice
 "MW08_0008" ,  "2899.01.01", "h",
 "MW01_0031", "F1232.05", "l", 
 "MW03_0027", "1505.03", "m", 
-"MW04_0016", "1290.9.15", "m",   #same specie different sub.specie
+"MW04_0016", "1290.9.15", "m",   # same specie different sub.specie
 "MW04_0021", "1290.9.10", "h", 
 "MW04_0012", "1290.9.16", "h", 
 "MW03_0031", "1505.02", "m",

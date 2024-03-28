@@ -162,6 +162,7 @@ genus <- tribble(
   "14154", "24490.04", "h",
  "7088", "F1232.36", "m", 
  "14604", "24490.05", "h", 
+ "20020", "23120.03.03", "h", # Select this instead of 20016 (see docu)
   )
   
 
@@ -199,9 +200,11 @@ names(us19)
   
 # Checking dictionary/ fct ids availability 
   subset(us19, fdc_id == "2013", select = c(fdc_id, food_desc, WATERg)) 
-  subset(us19, fdc_id %in% c("14305"),
-  select = c(fdc_id, food_desc, ID_3)) 
+  subset(us19, fdc_id %in% c("20020", "20016"),
+  select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, ID_3 == "23140.05.01") 
+  
+  subset(us19, fdc_id %in% c("20020", "20016")) %>% View()
   
   subset(us19, grepl("pigeon", food_desc, ignore.case = TRUE) & !is.na(VITA_RAEmcg) &
            grepl("", food_desc, ignore.case = TRUE) &
