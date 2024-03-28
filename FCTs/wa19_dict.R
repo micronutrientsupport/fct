@@ -140,9 +140,9 @@ wa_genus <- tribble(
   "11_015", "22241.02.01", "h", 
   "09_055", "1553.01", "l", 
   "09_006", "1514.01", "h", 
-  # "09_018", "1501.02", "m",  #dupli - it used the fillet (as described)
-  "09_003",  "1527.01", "l", #need to check w/ specie
-  "09_037", "1532.01", "l", #need specify in oil
+  # "09_018", "1501.02", "m",  # dupli - it used the fillet (as described)
+  "09_003",  "1527.01", "l", # need to check w/ specie
+  "09_037", "1532.01", "l",  # need specify in oil
   "06_029", "1491.02.01", "l", 
   "01_163", "23120.01.03", "m", 
   "04_002", "21393.9.01", "h",

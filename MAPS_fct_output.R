@@ -37,10 +37,10 @@ dict_comp %>% count(source_fct)
 #1) Loading all FCDBs into one single database ----
 
 #finding all the cleaned FCTs/FCDBs from the output folder
-list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
-           full.names=TRUE) %>% 
-  map_df(~read_csv(., col_types = cols(.default = "c"), 
-                   locale = locale(encoding = "Latin1")))  
+# list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, #so it is not taking the fcts in the folder
+#            full.names=TRUE) %>% 
+#   map_df(~read_csv(., col_types = cols(.default = "c"), 
+#                    locale = locale(encoding = "Latin1")))  
 
 # Loading all the cleaned FCTs/FCDBs into one single object (data.frame)
 fct_cover <- list.files("FCTs/", pattern = "*_FCT_FAO_Tags", recursive=FALSE, full.names=TRUE) %>% 
@@ -77,7 +77,11 @@ desc3 <-  "green"
 subset(dictionary.df, grepl(desc1, FoodName_3, ignore.case = TRUE) &
          grepl(desc2, FoodName_3, ignore.case = TRUE))
 
+subset(fct_dict, grepl(desc1, food_desc, ignore.case = TRUE) &
+         grepl(desc2, food_desc, ignore.case = TRUE))
+
 subset(dictionary.df, grepl("23914", ID_3))
+subset(fct_dict, grepl("23914", ID_3)) %>% View()
 
 sort(names(fct_dict))
 
@@ -108,9 +112,9 @@ fct_dict <- fct_dict %>%
   VITB6mg_std_creator()  # Standardisation of VITB6mg
 
 #Saving for other works
-fct_dict %>% #filter(!is.na(ID_3)) %>% 
-  write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.3.csv"),
-            row.names = FALSE)
+# fct_dict %>% #filter(!is.na(ID_3)) %>% 
+#   write.csv(., here::here("inter-output", "FCTs_dict_compiled_v1.0.3.csv"),
+#             row.names = FALSE)
 
 
  ## MAPS Standardisation: 
