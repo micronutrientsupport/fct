@@ -206,7 +206,7 @@ names(us19)
   
   subset(us19, fdc_id %in% c("20020", "20016")) %>% View()
   
-  subset(us19, grepl("pigeon", food_desc, ignore.case = TRUE) & !is.na(VITA_RAEmcg) &
+  subset(us19, grepl("infant|formu", food_desc, ignore.case = TRUE) & !is.na(VITA_RAEmcg) &
            grepl("", food_desc, ignore.case = TRUE) &
            !grepl("", food_desc, ignore.case = TRUE), select = 1:2)
   

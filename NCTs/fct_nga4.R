@@ -114,13 +114,13 @@ n <- which(nga.matches$nga4_foodid == "78")
 nga.matches[n,]$ID_3 <-  c("1215.02,1290.9.17,1219.01.01,1290.9.19,1290.9.06,1290.9.20,1290.9.21,1290.9.22,1290.9.10,1290.9.15,1290.9.18,1239.01.02,1214.04,1290.9.23,1290.9.07,1215.01,1290.9.02,1290.9.24,1290.9.05,1290.9.25,1290.9.26,1290.9.27,1290.9.28")
 ## Beef (90) -----
 n <- which(nga.matches$nga4_foodid == "90")
-nga.matches[n,]$ID_3 <-  c("21111.02.03,21111.02.03,21111.02.03,21111.02.03")
+nga.matches[n,]$ID_3 <-  c("21111.02.01,21111.02.02,21111.02.03")
 ## Mutton (91) -----
 n <- which(nga.matches$nga4_foodid == "91")
-nga.matches[n,]$ID_3 <-  c("21115.01, 21115.02")
+nga.matches[n,]$ID_3 <-  c("21115.01,21115.02")
 ## Pork (92) -----
 n <- which(nga.matches$nga4_foodid == "92")
-nga.matches[n,]$ID_3 <-  c("21113.02.03,21113.02.04,21113.02.04")
+nga.matches[n,]$ID_3 <-  c("21113.02.03,21113.02.04,21113.02.01")
 ## Goat (93) -----
 n <- which(nga.matches$nga4_foodid == "93")
 nga.matches[n,]$ID_3 <-  c("21116.02,21116.03")
@@ -134,7 +134,7 @@ nga.matches[n,]$ID_3[1] <-  c("1505.07,1507.01,1505.02,1505.05,1505.00.01")
 ## Baby milk powder [112]  ------
 # change to an unfortified
 n <- which(nga.matches$nga4_foodid == "112")
-nga.matches[n,]$ID_3 <-  c("23991.01.02")
+nga.matches[n,]$ID_3 <-  c("23991.01.03,23991.01.04")
 ## Tea [122]  ------
 n <- which(nga.matches$nga4_foodid == "122")
 nga.matches[n,]$ID_3 <-  c("23914.02")
@@ -200,6 +200,7 @@ nga.matches[n,]$ID_3 <-  c("24490.05")
 # Mutli-matches 
 nga.matches <- nga.matches %>% 
   separate_longer_delim(ID_3, delim = ",") %>% 
+  mutate_at("ID_3", str_squish) %>% 
   group_by(nga4_foodid, nga4_fooditem, nga4_foodgroup) %>% 
   mutate(wt = 1/n()) %>% ungroup()
 
@@ -228,7 +229,7 @@ nga.matches[n,]$wt <-  c( 1-(5/105), (5/105))
    
    write.csv(nga.matches,
            here::here("inter-output",
-                      paste0("MAPS_dict-food-list-", hces, "_v1.0.2.csv")), 
+                      paste0("MAPS_dict-food-list-", hces, "_v1.0.3.csv")), 
            row.names = FALSE)
    
  }

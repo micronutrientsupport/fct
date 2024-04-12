@@ -158,7 +158,7 @@ Beef (90), Mutton (91), Pork (92), and  Goat (93) were changed from one-to-one m
 # Search foods
 
 food1 <- "Beef"
-food2 <- ""
+food2 <- "raw"
 food3 <- ""
 
 fct_dict %>%   filter(source_fct == "WA19") %>% 
@@ -231,7 +231,7 @@ fct_dict %>%   #filter(source_fct == "WA19") %>%
 
 ## Baby milk powder
 
-Baby milk powder [112] was changed from the WA19() formula in the v.1.0.0 to an unfortified formula (v.2.0.0), to keep consistency with the MAPS tool standards. 
+Baby milk powder [112] was changed from the WA19() formula in the v.1.0.0 to an unfortified formula (v.2.0.0), to keep consistency with the MAPS tool standards. In (v.2.0.1) we changed back to the WA19("10_012","10_012") as they would be a representation of the baby milk available in the area. Note: double-check with country experts (T.E).  
 
 ## Tea 
 

@@ -389,7 +389,7 @@ wa_genus <- tribble(
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) %>% 
   filter(!ref_fctcode %in%
            c("01_043", "07_063","10_002", "12_002",
-             "12_012", "13_021", "13_023", "01_095")) %>% # removing dupli
+             "12_012", "13_021", "13_023")) %>% # removing dupli
   select(ref_fctcode, ID_3, fe2_confidence) %>%
   mutate_at("ref_fctcode", as.character) %>% 
   rename(confidence = "fe2_confidence") %>% 
@@ -405,10 +405,13 @@ wafct.genus %>%  count(ID_3) %>%
   filter(n>1) 
 
 subset(wafct.genus, ID_3 == "118.03")
+#subset(wafct.genus, ID_3 == "118.04")
 
 # Fixing duplicated
 wafct.genus$ID_3[wafct.genus$ref_fctcode == "01_095"] <- "118.04"
 wafct.genus$confidence[wafct.genus$ref_fctcode == "01_095"]
+
+subset(wafct.genus, ID_3 == "118.04")
 
 #Checking the items of the list above
 
@@ -436,7 +439,7 @@ wafct.genus %>% filter(ref_fctcode == "01_184")
 wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 
 #Checking code availability 
-wafct %>% filter(fdc_id %in% c("02_041")) ## %>% View()
+wafct %>% filter(fdc_id %in% c("10_012", "10_011")) ## %>% View()
 
 subset(wafct, fdc_id %in% c("09_109"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
@@ -475,3 +478,4 @@ subset(wafct, str_detect(scientific_name, "Scomberomorus"),
 subset(dictionary.df,
        grepl("energ", FoodName_3, ignore.case = TRUE) &
          grepl("", FoodName_3, ignore.case = TRUE))
+
