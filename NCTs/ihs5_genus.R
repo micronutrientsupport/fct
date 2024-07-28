@@ -224,5 +224,5 @@ x <- ihs5 %>% select(-starts_with("ihs5")) %>% distinct() %>%
    relocate(c(FoodName_3, ref_fctcode, ref_fctitem), .after = food_genus_id) %>% 
    arrange(food_genus_id) %>% select(1:4)
 
-
+dictionary.df %>% filter(ID_3 %in% c("23170.02.01", "23170.02.02"))
  

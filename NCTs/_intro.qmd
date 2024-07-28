@@ -15,7 +15,7 @@ This is quite important, as it is more frequent to do the opposite, i.e., as the
 
 There are some foods of which the matches are done one to many, for example, beef is matches to i) beef, lean, raw, ii) beef, moderate fat, raw, and, iii) beef, high fat, raw.
 
-For those foods, a weight factor is applied at the consumption level to avoid duplicating values. To do that, we have generated two datasets.
+For those foods, a weight factor is applied at the consumption level to avoid duplicating values. To do that, we have generated two data sets.
 
 1) food list: This dataset has the food list reported consumed by the household in each survey (food code, food original name), the food dictionary (ID_3) and, the weight (number of matches per food item, and/or modified weight based on FAO- FBS/SUA or other). 
 
@@ -23,5 +23,11 @@ For those foods, a weight factor is applied at the consumption level to avoid du
 
 Those two datasets are merged and the quantity reported consumed by the household is re-calculated (standardised amount consumed in g) using the weights, and/or other needed changes, such as food was reported consumed as dried but on the FCTs are only found fresh. 
 
+# Special adjustment in food matching for QuickMAPS
 
+# Need to change food name for recoded items, and generate a new consumption variable with the adjusted values. 
+
+We are updating the workflow, so the it allows for taking the survey data (from the MAPS tool or from a user), check the food matches and then merge and adapt the consumption data according to the matches. 
+
+Including, allocation (re-calculation) of the consumed food by multiple items (i.e., weighting factors), edible portion, water content (i.e., reported dried but matched to fresh), etc.
 

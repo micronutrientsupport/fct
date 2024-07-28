@@ -381,6 +381,7 @@ wa_genus <- tribble(
 "01_077", "23710.04", "h", 
 "04_032", "1232.01", "h", 
 "04_006", "1251.01", "h", 
+"01_063", "23120.05.01", "m"
 
  )
 
@@ -441,11 +442,11 @@ wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 #Checking code availability 
 wafct %>% filter(fdc_id %in% c("10_012", "10_011")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("09_109"), 
+subset(wafct, fdc_id %in% c("06_038"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
 subset(wafct, fdc_id == "01_006", select = food_desc) 
-subset(wafct, fdc_id == "01_006", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, fdc_id == "04_098", select = c(food_desc, ID_3, scientific_name)) 
 subset(wafct, ID_3 == "1319.03" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
@@ -469,13 +470,17 @@ subset(wafct, grepl("locus", food_desc, ignore.case = TRUE) &
        ,
        select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct,  grepl("cow", food_desc, ignore.case = TRUE) & 
-         grepl("", food_desc, ignore.case = TRUE),
+subset(wafct,  grepl("millet", food_desc, ignore.case = TRUE) & 
+         grepl("flour", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("energ", FoodName_3, ignore.case = TRUE) &
+       grepl("pumpkin", FoodName_3, ignore.case = TRUE) &
          grepl("", FoodName_3, ignore.case = TRUE))
+
+subset(dictionary.df,
+       grepl("seed", FoodName_2, ignore.case = TRUE) &
+         grepl("", FoodName_2, ignore.case = TRUE))
 

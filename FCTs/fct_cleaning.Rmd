@@ -459,6 +459,24 @@ summary(MAFOODS$SOP)
 ```
 
 
+## Crop composition data 
+
+Updated 2024-07-28
+
+Malawi crop composition data
+
+Trying to get the water content of some of the missing values.
+
+```{r}
+
+ mwi_mn %>% filter(is.na(water)) 
+
+```
+
+
+**Mucuna**: We used the velvet bean dried water content. 
+
+
 ### 3) Kenya FCT
 
 **Version log**

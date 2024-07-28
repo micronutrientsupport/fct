@@ -163,7 +163,7 @@ genus <- tribble(
  "7088", "F1232.36", "m", 
  "14604", "24490.05", "h", 
  "20020", "23120.03.03", "h", # Select this instead of 20016 (see docu)
-  )
+ "16157", "23170.03.01", "h" )
   
 
 (dupli <- genus %>%  count(ref_fctcode) %>% 
@@ -199,7 +199,7 @@ names(us19)
 ## CHECK: Adding new food dictionary code ----
   
 # Checking dictionary/ fct ids availability 
-  subset(us19, fdc_id == "2013", select = c(fdc_id, food_desc, WATERg)) 
+  subset(us19, fdc_id == "16157", select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, fdc_id %in% c("20020", "20016"),
   select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, ID_3 == "23140.05.01") 

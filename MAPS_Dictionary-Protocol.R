@@ -168,6 +168,8 @@ dictionary.df <-  dictionary.df %>% mutate(ID_2 = case_when(
   TRUE ~ ID_2
 ))
 
+# Removing duplicated food (blackjack)
+dictionary.df <- subset(dictionary.df, ID_3 != "1214.06")
 
 #New codes coming from FBS and FBSH
 
@@ -300,9 +302,9 @@ dictionary.df <- dictionary.df %>%
     FoodName_2 =  "flour of roots and tubers nes",
     ID_3 = "23170.02.01",
     FE2_3 = "",
-    FoodName_3 = "bread, ensete pulp, fermented, raw", 
-    Description1 = "kocho: bread-like fermented food made from chopped and grated ensete pulp", 
-    Desc1.ref = "https://en.wikipedia.org/wiki/Kocho_(food)") %>% 
+    FoodName_3 = "ensete pulp, fermented, raw", 
+    Description1 = "Kocho is the bulk of the fermented starch obtained from the mixture of the decorticated (scraped) leaf sheaths and the grated corm (underground stem base)", 
+    Desc1.ref = "doi:10.1016/j.jfca.2008.05.001") %>% 
   add_row(
     ID_0 = "RT",
     FoodName_0 = "Roots and Tubers", 
@@ -312,8 +314,9 @@ dictionary.df <- dictionary.df %>%
     FoodName_2 =  "flour of roots and tubers nes",
     ID_3 = "23170.02.02",
     FE2_3 = "",
-    FoodName_3 = "ensete, flour, raw", 
-    Description1 = "bula") # %>% 
+    FoodName_3 = "ensete, flour, fermented, raw", 
+    Description1 = "Bulla is the small amount of water-insoluble starchy product that may be separated from Kocho during processing by squeezing and decanting the liquid.", 
+    Desc1.ref = "doi:10.1016/j.jfca.2008.05.001") # %>% 
  # add_row(
  #   ID_0 = "CE",
  #   FoodName_0 = "Cereals", 
@@ -6722,7 +6725,7 @@ scientific_name <- tolower(c("basella alba", "gynandropsis gynandra/cleome gynan
                     "Talinum fruticosum",
                     "Gnetum africanum"))
 
-fex2_new <- c(rep(NA, 14), "A00NY#F28.A07HS", rep(NA, 2))
+fex2_new <- c(rep(NA, 15), "A00NY#F28.A07HS", rep(NA, 2))
 
 # One input
 id2 <- "1290.9"
@@ -7877,10 +7880,12 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                  "kebab in pitta bread with salad",
                 "injera, teff grain, cooked",
                 "plantain chips, salted", 
-                "meat pastry", "sausage roll, homemade")
+                "meat pastry", 
+                "sausage roll, homemade", 
+                "ensete porridge")
 
-scientific_name <- c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
-                     rep(NA,11))
+scientific_name <- tolower(c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
+                     rep(NA,11), "Ensete ventricosum"))
 
 other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA, 
                 "beef seasoning cube", "chicken seasoning cube", 
@@ -7891,7 +7896,8 @@ other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA,
                 rep("recipe from Burkina Faso in WA19", 2), 
                 rep("Banakou né (Burkina Faso) (WA19), Yebbe (Sierra Leone)", 3), 
                 rep(NA, 5), "egg, fried rice", 
-                rep(NA, 6), "sausage roll (UK21), meat pie (JA15)")
+                rep(NA, 6), "sausage roll (UK21), meat pie (JA15)",
+                "Bula (ETH4)")
 
 fex2_new <- c(rep(NA, 5), "A049A#F02.A06CK$F01.A066J$F27.A049A", 
               "A048Q#F02.A06CG", 

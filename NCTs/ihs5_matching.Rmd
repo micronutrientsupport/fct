@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 Updated: 2023-05-31
 
 # IHS 4
@@ -21,20 +22,14 @@ The document contains information on the food matching for Malawi household surv
 
 # Updating food matches to be performed within the MAPS tool.
 
-Some food needed a better match, for instance, beef was matched to "with bones" however, the edible portion used was 1. Hence, we matched it to the three fat perc. w/o bones. 
+Some food needed a better match, for instance, beef was matched to "with bones" however, the edible portion used was 1. Hence, we change it to a one-to-many match using beef with three fat content and w/o bones. 
 
 beef, lean, with bones, fresh, raw (21111.01.01) --> Added beef w/o bones, including ground raw. c("21111.02.03", "21184.01.02", "21111.02.01", "21111.02.02")
 
-# Need to change food name for recoded items, and generate a new consumption variable with the adjusted values. 
-
-We are updating the workflow, so the it allows for taking the survey data (from the MAPS tool or from a user), check the food matches and then merge and adapt the consumption data according to the matches. 
-
-Including, allocation (re-calculation) of the consumed food by multiple items (i.e., weighting factors), edible portion, water content (i.e., reported dried but matched to fresh), etc. 
 
 # Food items with better matches
 
 106 - Rice: We changed from multiple (imported & local, white) to only  rice grain, local, white, dried, raw (23161.02.01), because it is the only reported in FAO SUA (2015-2017).
-
 
 # Food items reported in the IHS4 without any matches
 

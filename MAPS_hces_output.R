@@ -5,7 +5,8 @@ library(dplyr)
 
 # Loading data
 #Specify the hces
-hces <- "ihs4"
+#hces <- "ihs4"
+hces <- "ess4"
 # Getting the most recent version of the food consumption file
 file_name <- sort(list.files(here::here("inter-output"), 
                 paste0("food-cons_", hces)), decreasing = TRUE)[1]

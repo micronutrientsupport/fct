@@ -2,7 +2,7 @@
 ################################################################################
 #                                                                              #
 #                                                                              #
-#      Script for matching NLSS food list with food composition data        # 
+#      Script for matching NLSS food list with food composition data           # 
 #                                                                              #
 #                                                                              #
 #  Data source citation: "Nigeria National Bureau of Statistics. Living        #
@@ -46,12 +46,12 @@ fbs <- read.csv(here::here("data","old-files", "MAPS_FBS_2014-2018_v1.0.csv"))
 #   relocate(nga4_foodid, .before = nga4_fooditem)
 
 # Loading the food item list
-nga4.foodlist <- read.csv(here::here("data", "old-files", "nga4_foodlist_raw.csv")) %>% 
-  separate_rows(nga4_fooditem, sep = "(?<=\\d)[[:blank:]]") %>% 
-  mutate(nga4_foodid = str_extract(nga4_fooditem, "\\d+"),
-         nga4_fooditem = str_remove(nga4_fooditem, "\\d+")) %>% 
-  mutate_at("nga4_fooditem", str_squish) %>% 
-  relocate(nga4_foodid, .before = nga4_fooditem)
+# nga4.foodlist <- read.csv(here::here("data", "old-files", "nga4_foodlist_raw.csv")) %>% 
+#   separate_rows(nga4_fooditem, sep = "(?<=\\d)[[:blank:]]") %>% 
+#   mutate(nga4_foodid = str_extract(nga4_fooditem, "\\d+"),
+#          nga4_fooditem = str_remove(nga4_fooditem, "\\d+")) %>% 
+#   mutate_at("nga4_fooditem", str_squish) %>% 
+#  relocate(nga4_foodid, .before = nga4_fooditem)
 
 #head(nga4.foodlist)
 
@@ -59,7 +59,7 @@ nga4.foodlist <- read.csv(here::here("data", "old-files", "nga4_foodlist_raw.csv
 nga.matches1 <- read.csv(here::here("inter-output", "nct", 
                                    "nga4-fct-id_v1.0.0.csv")) %>% 
                                 rename(fdc_id = "content") # renaming fct id variable
-#names(nga.matches)
+# names(nga.matches)
 
 # Assigning fct id matches to dict codes (for MAPS tool) ----
 nga.matches1 %>% 
@@ -255,7 +255,7 @@ fct_dict %>% # filter(source_fct %in% c("WA19", "KE18")) %>%
          VITA_RAEmcg, FATg, FEmg, ZNmg, VITB12mcg)  %>%
   View() 
 
-### END - OLD SCRIPTS (v1.0.0.0) #####
+### END - OLD SCRIPTS (v1.0.0) #####
 
 ## add the WAFCT id
 

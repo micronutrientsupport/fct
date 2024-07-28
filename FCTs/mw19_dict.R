@@ -87,7 +87,12 @@ mwi_genus <- tribble(
 "MW04_0015", "1290.9.07", "h", 
 "MW03_0022", "1501.09", "h", 
 "MW05_0015", "1349.2.01", "m", 
-"MW03_0020", "1505.01", "m"
+"MW03_0020", "1505.01", "m",
+"MW04_0011", "1215.02", "h",
+"MW04_0014", "1219.01.01", "h",
+"MW04_0007", "1233.01", "h", 
+"MW05_0013", "1359.9.01", "h",
+"MW04_0032", "1242.01", "h"
 
 )
 
@@ -145,8 +150,8 @@ mwfct %>% filter(fdc_id %in% c("6017",
                                 "6005",
                                 "6006")) %>% .[, c(3:4)]
 
-subset(mwfct, fdc_id %in% c("13033"), 
-       select = c(fdc_id, food_desc, ID_3, scientific_name))
+subset(mwfct, fdc_id %in% c("MW02_0018"), 
+       select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
 subset(mwfct, fdc_id == "MW03_0027", select = c(food_desc, ID_3, scientific_name)) 
 subset(mwfct, ID_3 == "1359.9.04") 
@@ -168,8 +173,8 @@ subset(mwfct, str_detect(fdc_id, "^4") &
 subset(mwfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
-subset(dictionary.df, grepl("term", FoodName_3, ignore.case = T) &
-         grepl("", FoodName_3, ignore.case = T))
+subset(dictionary.df, grepl("dried", FoodName_3, ignore.case = T) &
+         grepl("leav", FoodName_3, ignore.case = T))
 
 subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
