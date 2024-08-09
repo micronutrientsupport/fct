@@ -425,8 +425,10 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 wafct.genus %>% mutate(fct = "WA19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>% 
-          filter(!ref_fctcode %in% c("01_095", "04_011")) %>%  # Excluding codes that were changed
-              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+         # filter(!ref_fctcode %in% c("01_095", "04_011")) %>%  # Excluding codes that were changed
+              mutate_at(c("ref_fctcode", "ID_3"), as.character) %>%
+           #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+           filter(fct != "WA19"))  %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding dictionary code

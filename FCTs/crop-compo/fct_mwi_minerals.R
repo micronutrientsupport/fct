@@ -142,7 +142,7 @@ mwi_mn <-  mwi_mn %>% mutate(
   water_ref = c('MW04_0011',
                 '03_001', #WAFCT
                 'MW05_0004', 
-                'median all leaves in MAFOODS', 
+                'MW04_0002;MW04_0010;MW04_0013;MW04_0014;MW04_0015;MW04_0016;MW04_0017;MW04_0018;MW04_0021;MW04_0033;MW04_0011;MW04_0012;MW04_0019;MW04_0020', 
                 'MW02_0004', #bean, seed
                 'MW04_0012', 
                 'MW04_0010', #amaranth 
@@ -150,7 +150,7 @@ mwi_mn <-  mwi_mn %>% mutate(
                 'MW04_0003', #not dried 
                 'MW04_0014', 
                 'MW01_0011', 
-                'median all leaves in MAFOODS', 
+                'MW04_0002;MW04_0010;MW04_0013;MW04_0014;MW04_0015;MW04_0016;MW04_0017;MW04_0018;MW04_0021;MW04_0033;MW04_0011;MW04_0012;MW04_0019;MW04_0020', 
                 'MW02_0004', #common bean, seed (13)
                 '04_010', #cowpea leaves WAFCT
                 '04_098', #cowpea leaves (not dried) boiled
@@ -175,7 +175,7 @@ mwi_mn <-  mwi_mn %>% mutate(
                 'missing data', #moringa pod
                 'missing data', #moringa seed
                 'WA19(03_059)', #mucuna = velvet (dried)
-                'median all mushroom raw in MAFOODS',
+                'MW04_0027', # Mushroom
                 'median mustard leave in LSOFCT',
                 'missing data', #Ntumwa
                 'MW04_0030',
@@ -206,20 +206,22 @@ mwi_mn <-  mwi_mn %>% mutate(
 # Added this to the foodnotes bc the water conversion is going to use 
 # the bean, dried.
 mwi_mn$foodnotes[mwi_mn$food_desc == "Mucuna"] <- "dried"
+mwi_mn$water[mwi_mn$water_ref == "MW04_0027"] <-  91.6 
 
 # Calculation of averaged water values used above
 
 # 1) median all leaves in MAFOODS
 
-
 fct_dict %>%  
   dplyr::filter(source_fct == 'MW19') %>% 
   dplyr::filter(grepl("leave", food_desc, 
                       ignore.case = TRUE))  %>%
-  summarise(median(as.numeric(WATERg), na.rm = TRUE))
+  summarise(median(as.numeric(WATERg), na.rm = TRUE), 
+            fdc_id = paste0(fdc_id, collapse = ";")) %>% 
+  pull(fdc_id)
 
 
-#2) median all mushroom raw in MAFOODS
+# 2) median all mushroom raw in MAFOODS (depri)
 
 fct_dict %>%  
   dplyr::filter(source_fct == 'MW19') %>% 
@@ -302,11 +304,19 @@ mwi_mn %>% rename(
   CUmg  = "cu_mg_100g", 
   ZNmg  = "zn_mg_100g", 
   SEmcg = "se_mcg_100g",
-  comments = "water_ref"
+ # comments = "water_ref"
 ) %>% 
-  mutate(source_fct = "Joy et al, 2015") %>% 
-  write.csv(., here::here("FCTs", "crop-compo_FCT_FAO_Tags.csv"))
+  mutate(source_fct = "Joy et al, 2015", 
+         fdc_id = paste0("EJ15_",row.names(mwi_mn)), 
+         comments = paste0("water ref. (", water_ref, "); samples (n=", n_sample, ")")) %>% 
+  relocate(SEmcg, .after = "ZNmg") %>% 
+  relocate(WATERg, .before = "CAmg") %>% 
+  relocate(fdc_id, .before = "food_desc") %>% # select(comments)
+  write.csv(., here::here("FCTs", "crop-compo_FCT_FAO_Tags.csv"), 
+            row.names = FALSE)
 
+#clean environment
+rm(list = ls())
 
 # Selecting only variables of interest in MAFOODS (minerals, water, names and ref)
 #

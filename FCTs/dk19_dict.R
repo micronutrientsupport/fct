@@ -35,12 +35,15 @@ if(!(is.na(x)))stop("duplicated code")
 genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
 
 #Updating the dictionary compilation -----
-#for further use (to update versions) - first by alphabetic order
- v <- "1.4.0"
- genus %>% mutate(fct = "DK19")  %>% 
-   write.csv(., here::here("metadata",
-                           paste0("dict_fct_compilation_v.",v, ".csv")), 
-             row.names = F)
+file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
+             decreasing = T)[1]
+
+ genus %>% mutate(fct = "DK19") %>% 
+   bind_rows(., read.csv(here::here("metadata", file)) %>%
+               mutate_at(c("ref_fctcode", "ID_3"), as.character) %>% 
+               #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+               filter(fct != "DK19"))  %>% 
+   write.csv(., here::here("metadata", file), row.names = F)
 
 #Updating the dictionary compilation -----
 #file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),

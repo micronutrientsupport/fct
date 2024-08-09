@@ -12,6 +12,8 @@ Worksheet-list:
 
 Food-composition-data_worksheet: STable7
 
+DOI: https://doi.org/10.1016/j.scitotenv.2014.10.038 
+
 Metadata_info: 
 
 Metdata_name: 
@@ -20,11 +22,11 @@ Metadata_authors:
 
 Metadata_type: 
 
-Downloaded-from: https://doi.org/10.1016/j.scitotenv.2014.10.038 
+Downloaded-from: Journal Website: Science of The Total Environment
 
-Link: https://doi.org/10.1016/j.scitotenv.2014.10.038 
+Link: https://ars.els-cdn.com/content/image/1-s2.0-S0048969714014764-mmc1.xlsx
 
-Licence: 
+Licence: Open access (CC-BY)
 
 Download_date: 
 
