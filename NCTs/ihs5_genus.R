@@ -106,10 +106,10 @@ ihs5$food_genus_id[ihs5$ihs5_foodid == "836" & ihs5$food_genus_id == "F0022.06"]
 
 # Changing 812 Yeast, baking powder, bicarbonate of soda to the correct code
 # And removing yeast from the matches (it's was the same item (duplication))
-ihs5$food_genus_id[ihs5$ihs5_foodid == "812"] <- "F1232.09"
-ihs5 <- subset(ihs5, FoodName_3 != "yeast, baking")
-# Fixing hot sauce code
-ihs5$food_genus_id[ihs5$ihs5_foodid == "814"] <- "F1232.08"
+# ihs5$food_genus_id[ihs5$ihs5_foodid == "812"] <- "F1232.09"
+# ihs5 <- subset(ihs5, FoodName_3 != "yeast, baking")
+# Fixing hot sauce code - wrong!
+#ihs5$food_genus_id[ihs5$ihs5_foodid == "814"] <- "F1232.08"
 
 #Changing values of meal eaten out & meat vendor
 subset(ihs5, ihs5_foodid %in% c("829", "825"))

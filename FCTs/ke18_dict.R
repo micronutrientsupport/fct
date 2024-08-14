@@ -250,7 +250,8 @@ ken_genus <- tribble(
  "6025", "2291.01", "m",# fresh as raw
   "8001", "1516.04", "h",
  "8006", "1503.07", "h",  # Acc. w/ scientific name
- "8009", "1503.02", "h"
+ "8009", "1503.02", "h", 
+ "15070", "F1061.01", "h", 
  
  )
 
@@ -348,14 +349,14 @@ kenfct %>% filter(fdc_id %in% c("6017",
                               "6005",
                               "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, fdc_id %in% c("4032"), 
+subset(kenfct, fdc_id %in% c("13002"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
 subset(kenfct, fdc_id == "9007", select = c(food_desc, ID_3, scientific_name)) 
 subset(kenfct, ID_3 == "1319.03") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("F0665.01"))
+dictionary.df %>% filter(ID_3 %in% c("21121.04"))
 subset(dictionary.df, ID_2 == "21641.02")
 subset(dictionary.df, ID_2 %in% c("1379.02"
 ))
@@ -380,3 +381,4 @@ subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
 kenfct %>% filter(!is.na(ID_3)) %>% count()
 
 ken_genus %>% anti_join(kenfct, by = "ID_3")
+

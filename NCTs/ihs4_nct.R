@@ -1,9 +1,14 @@
 
-
+# Loading library
+library(dplyr)
 
 #Loading the food dictionary
 if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
+
+## Loading the FC library
+source(here::here("MAPS_fct_load.R"))
+
 
 # Getting the most up-to-date file
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
@@ -17,14 +22,142 @@ dict_comp <- read.csv(here::here("metadata", file)) %>%
 
 food_list <- readRDS(here::here("inter-output", 
               sort(list.files(here::here("inter-output"), 
-             "food-list_ihs4"), decreasing = TRUE)[1])) 
+             "food-list_ihs4"), decreasing = TRUE)[1])) %>% 
+  #Removing food name as it is wrong in many cases
+  select(-food_name) %>% #adding the correct FoodName_3
+    left_join(., dictionary.df[, c("ID_3", "FoodName_3")])
 
 names(food_list)
 
+# Checking excluded in IHS5 script (ihs5_genus.R)
+# Here's the changes that were made however no serious issue
+# or good reason seemed recoded (beside data needs)
+# Not changing them back
+food_list %>% 
+filter(ID_3 %in% # Citrus and orange sweet potato from boiled version
+        c("1530.06", "1321.02", "1322.02", "1324.02", 
+          # Changed green and roasted maize to boiled 
+          "1290.01.01", "1290.01.02" , "1290.01.03",
+          # Yeast and baking powders 
+              "F1232.07", "F1232.06",
+        ))  %>% 
+  View()
+
+food_list %>% 
+  filter(ID_3 %in%  # Three traditional drinks used the same code ()
+           c( "24310.02.01",
+              # Wrongly coded Nkate
+              "F0022.06" ,
+              # Changing food consumed at restaurant
+              "F1061.01","F1232.05"
+              ))  %>% View()
+
+# Checking code
+food_list %>% 
+  filter(code %in% c("816", "832" , "836", "106", "510") &
+           ID_3 %in% c("F0666.01", "1530.07", "F0022.06",
+                                "23161.01.01", "21119.01.01"))
+
+
+food_list %>% 
+  filter(ID_3 %in%  # Three traditional drinks used the same code ()
+           c( 
+             "23161.01.01" ))  
+
+dictionary.df %>% 
+  filter(ID_3 %in%  
+           c("1322.01")) 
+
+fct_dict %>% 
+  filter(ID_3 %in%  
+           c("F1232.06"))  %>%
+  select(source_fct, ID_3,  food_desc,  CAmg, SEmcg, VITA_RAEmcg, VITB12mcg) %>% 
+  View()
+
+good.matches %>% left_join(., fct_dict, by =c("food_genus_id" = "ID_3", 
+                                               "ref_fctcode" = "fdc_id")) %>% View()
+  
+  fct_dict %>% 
+    filter(grepl("banana", food_desc, ignore.case = TRUE) &
+    grepl("maize", food_desc, ignore.case = TRUE) &
+             source_fct %in% c("MW19", "KE18", "WA19"))  %>%
+    select(source_fct, ID_3,  fdc_id,food_desc,  CAmg, SEmcg, VITA_RAEmcg, VITB12mcg) %>% 
+  View()
+
+# Fixing ID_3 ----
+# groundnuts (to dry and shelled) - Corrections should be done at Edible Portion
+food_list$ID_3[food_list$code %in% c("311", "313")] <-  "142.01" 
+food_list$ID_3[food_list$code %in% c("505")] <-  "21116.03" 
+food_list$ID_3[food_list$ID_3 %in% c("21170.01.01")] <-  "21170.01.03" 
+food_list$ID_3[food_list$ID_3 %in% c("1501.11")] <-  "1501.10" 
+food_list$ID_3[food_list$ID_3 %in% c("1501.05")] <-  "1503.03" 
+food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
+#Fixing samosa vs banana cake id typo issue (see MAPS_Dictionary-Protocol update v2.5)
+food_list$ID_3[food_list$ID_3 == "F0022.06" & food_list$code == "836" ] <- "F0022.07"
+#Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
+#TODO: Generate a recipe c(F1061.01,F1232.05 )
+food_list$ID_3[food_list$code == "829"] <- "F1061.01,F1232.05"
+
+## Separating one-to-many matches
+food_list <- food_list %>% separate_rows(ID_3)
+# Excluding item (dupli)
+food_list <- food_list[!food_list$ID_3 %in% c("21184.01.02", "21119.01.01"), ]
+
+# Checking
+food_list[food_list$code %in% c("311", "313"), ] %>% View()
+
 food_list %>% select(code, item, ID_3) %>% distinct() %>% 
-  left_join(., dictionary.df) %>% select(1:3, FoodName_3) %>% 
+  left_join(., dictionary.df) %>% select(1:3, FoodName_3, FoodName_1) %>% 
    filter(is.na(FoodName_3))
 
 food_list %>% select(code, item, ID_3) %>% distinct() %>% 
   left_join(., dict_comp) %>% select(1:3, fdc_id) %>% 
   filter(is.na(fdc_id))
+
+# food_list %>% select(code, item, ID_3) %>% distinct() %>% 
+#   left_join(., dictionary.df) %>% select(1:3, FoodName_3, FoodName_1) %>% 
+#   write.csv(., here::here("inter-output", "ihs4_dictionary_foodgroup1.csv" ), 
+#             row.names = FALSE)
+
+
+fct <- food_list %>% left_join(., fct_dict %>%
+                filter(source_fct == "Joy et al, 2015" & !is.na(SEmcg))) %>% 
+  filter(!is.na(source_fct))
+
+fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
+  left_join(., fct_dict %>%
+                          filter(source_fct == "MW19" & !is.na(SEmcg))) %>%
+   filter(!is.na(source_fct)) %>% 
+  bind_rows(., fct)
+
+fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
+  left_join(., fct_dict %>%
+              filter(source_fct == "KE18" & !is.na(SEmcg))) %>%
+  filter(!is.na(source_fct)) %>% 
+  bind_rows(., fct)
+
+#fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
+#  left_join(., fct_dict %>%
+#              filter(source_fct == "UK21" & !is.na(SEmcg))) %>%
+#  filter(!is.na(source_fct)) %>% 
+#  bind_rows(., fct)
+
+## Provisional matches for IHS4
+
+fct %>% 
+  select(code, item, source_fct, ID_3,  fdc_id,food_desc, WATERg, ENERCkcal, 
+         SEmcg) %>% 
+  write.csv(here::here("inter-output", "nct", 
+                       "ihs4-partial-nct_v1.0.0.csv"), row.names = FALSE)
+
+
+food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% View()
+  left_join(., dict_comp %>%
+              filter(source_fct == "KE18")) %>%
+  filter(is.na(source_fct)) %>% View()
+
+# Getting the loaded data 
+
+fct %>% left_join(., fct_dict, by =c("ID_3", "fdc_id", "source_fct")) %>% 
+  select(code, item, ID_3, fdc_id, source_fct, WATERg, ENERCkcal, SEmcg) %>% 
+  filter(is.na(SEmcg)) %>% View()

@@ -293,10 +293,14 @@ write.csv(., here::here('data',
                               'mineral-composition_2024-07-28.csv'))
 
 
+
+
+
+
 # Generating a standardised version
 names(mwi_mn)
 
-mwi_mn %>% rename(
+mwi_mn <- mwi_mn %>% rename(
   WATERg = "water", 
   CAmg = "ca_mg_100g",
   MGmg  = "mg_mg_100g",
@@ -311,7 +315,39 @@ mwi_mn %>% rename(
          comments = paste0("water ref. (", water_ref, "); samples (n=", n_sample, ")")) %>% 
   relocate(SEmcg, .after = "ZNmg") %>% 
   relocate(WATERg, .before = "CAmg") %>% 
-  relocate(fdc_id, .before = "food_desc") %>% # select(comments)
+  relocate(fdc_id, .before = "food_desc") 
+
+# Adding missing mineral (Se from grain maize) ----
+## Extracting ratio ----
+
+## Maize to flour ration (Supl.Table6, Joy et al., 2015)
+ratio <- readxl::read_excel(here::here("FCTs", "crop-compo",
+                                       "40795_2015_36_MOESM1_ESM.xlsx"), 
+                            sheet = 6, skip = 2)
+head(ratio)
+
+# Only need column 1 (element) and column 7 ratio
+ratio <- ratio %>% select(c(1, 7)) %>%
+  filter(!is.na(Element)) %>% 
+  rename(ratio_refine="Mean ratio refined flour:whole grain") %>% 
+  mutate(crop = "maize")
+
+head(ratio)
+
+refined <- mwi_mn$SEmcg[mwi_mn$fdc_id == "EJ15_27" & !is.na(mwi_mn$SEmcg)]*ratio$ratio_refine[ratio$Element == "Se"]
+bran <- mwi_mn$SEmcg[mwi_mn$fdc_id == "EJ15_27" & !is.na(mwi_mn$SEmcg)]*(1-ratio$ratio_refine[ratio$Element == "Se"])
+
+mwi_mn[nrow(mwi_mn)+1, ] <- NA
+mwi_mn[nrow(mwi_mn), c("fdc_id")] <- c("EJ15_62")
+mwi_mn[nrow(mwi_mn), "SEmcg"] <-  refined
+mwi_mn[nrow(mwi_mn)+1, ] <- NA
+mwi_mn[nrow(mwi_mn), c("fdc_id") ] <- "EJ15_63"
+mwi_mn[nrow(mwi_mn), "SEmcg" ] <-  bran
+
+#  mwi_mn[, nrow(mwi_mn)+1] <- mwi_mn[mwi_mn$fdc_id == "EJ15_27", ]
+
+
+mwi_mn %>% # select(comments)
   write.csv(., here::here("FCTs", "crop-compo_FCT_FAO_Tags.csv"), 
             row.names = FALSE)
 

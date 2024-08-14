@@ -27,6 +27,9 @@ genus <- tribble(
   "EJ15_36", "1701.04", "h", 
   "EJ15_37", "1270.01", "m", 
   "EJ15_41", "1239.01.02", "h", 
+  "EJ15_13", "1701.02", "h", 
+  "EJ15_62", "23120.03.01", "l", 
+  "EJ15_63", "39120.04.01", "l"
   
 )
 
@@ -34,6 +37,8 @@ genus <- tribble(
 genus <- crop %>% left_join(., dict_comp[, c("ref_fctcode", "ID_3", "confidence")],
                    by = c("water_ref" = "ref_fctcode")) %>% 
   filter(!is.na(ID_3)) %>%   rename(ref_fctcode = "fdc_id") %>% 
+  # Excluding some foods w/ wrong ID_3
+  filter(!ref_fctcode %in% c( "EJ15_13")) %>% 
   select(c("ref_fctcode", "ID_3", "confidence")) %>% 
   bind_rows(genus) %>% distinct() %>% arrange(desc(ref_fctcode))
 
@@ -46,7 +51,7 @@ genus <- crop %>% left_join(., dict_comp[, c("ref_fctcode", "ID_3", "confidence"
 
 #Updating the dictionary compilation -----
 #for further use (to update versions) - first by alphabetic order
-v <- "1.4.1"
+v <- "1.4.2" # Changed the rice Genus in Malawi
 
 genus %>% mutate(fct = "Joy et al, 2015")  %>% 
   write.csv(., here::here("metadata",
@@ -64,3 +69,5 @@ genus %>% mutate(fct = "Joy et al, 2015")  %>%
 
 subset(dictionary.df, grepl("pump", FoodName_3, ignore.case = T) &
          grepl("", FoodName_3, ignore.case = T))
+
+

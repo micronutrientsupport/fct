@@ -402,6 +402,10 @@ dictionary.df <- dictionary.df %>%
     FE2_3 = "",
     FoodName_3 = "hops, dried, raw") 
 
+## Removing -----------
+dictionary.df <- subset(dictionary.df, !ID_3 %in% 
+                          c("1215.03", "F0623.03"))
+
 ### Cereals (CE) ----
 
 #Fixing ID_1 codes 
@@ -6687,14 +6691,15 @@ food_desc <-  tolower(c(
   "Vernonia, leaves, bitter, fresh, raw",
   "Vernonia, leaves, sweet, fresh, raw", 
   "Waterleaf, leaves, fresh, raw",
-  "Wild spinach, leaves, fresh, raw"
+  "Wild spinach, leaves, fresh, raw",
+  "roselle, leaves, fresh, raw"
   ))
 
 other_name <- c("Vine (African) spinach (KE18)",
                 "cat\\'s whiskers (Luni) (MW19)",
   rep(NA, 12), 
   "bush okra, leaves, dried raw (WA19), Leaves, jews mallow, raw, Corchorus trilocularis, (Denje)",
-  rep(NA, 3))
+  rep(NA, 3), "Chidede (MW19)")
 
 other_info <- c("https://www.fondazioneslowfood.com/en/ark-of-taste-slow-food/nderema/#:~:text=Nderema%2C%20also%20known%20as%20vine,green%20or%20brownish%2Dpurple%20stems.", 
                 rep(NA, 14),
@@ -6723,9 +6728,10 @@ scientific_name <- tolower(c("basella alba", "gynandropsis gynandra/cleome gynan
                     "Gymnanthemum amygdalinum", 
                     "Baccharoides calvoana subsp. calvoana", 
                     "Talinum fruticosum",
-                    "Gnetum africanum"))
+                    "Gnetum africanum", 
+                    "hibiscus sabdariffa"))
 
-fex2_new <- c(rep(NA, 15), "A00NY#F28.A07HS", rep(NA, 2))
+fex2_new <- c(rep(NA, 15), "A00NY#F28.A07HS", rep(NA, 2), "A00MF#F28.A07HS")
 
 # One input
 id2 <- "1290.9"
@@ -7882,7 +7888,8 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "plantain chips, salted", 
                 "meat pastry", 
                 "sausage roll, homemade", 
-                "ensete porridge")
+                "ensete porridge", 
+                "banana, fritter")
 
 scientific_name <- tolower(c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
                      rep(NA,11), "Ensete ventricosum"))
