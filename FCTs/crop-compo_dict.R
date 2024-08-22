@@ -28,11 +28,14 @@ genus <- tribble(
   "EJ15_37", "1270.01", "m", 
   "EJ15_41", "1239.01.02", "h", 
   "EJ15_13", "1701.02", "h", 
-  "EJ15_62", "23120.03.01", "l", 
-  "EJ15_63", "39120.04.01", "l"
+  "EJ15_63", "23120.03.02", "l", 
+  "EJ15_64", "39120.04.01", "l"
   
 )
 
+# 23120.03.01 = mgaiwa (unrefined)
+# 23120.03.02 = woyera (refined)
+# 39120.04.01 = madeya (bran)
 
 genus <- crop %>% left_join(., dict_comp[, c("ref_fctcode", "ID_3", "confidence")],
                    by = c("water_ref" = "ref_fctcode")) %>% 
@@ -64,6 +67,12 @@ genus %>% mutate(fct = "Joy et al, 2015")  %>%
 #               filter(fct != "Joy et al, 2015")) %>% distinct() %>% 
 #   write.csv(., here::here("metadata", file), row.names = F)
 
+
+## Checking value in crop compo 
+
+crop <- crop %>% 
+  left_join(., genus, by = c("fdc_id" = "ref_fctcode")) %>% 
+  relocate(ID_3, .after = food_desc) %>% View()
 
 # Finding the codes in dict
 

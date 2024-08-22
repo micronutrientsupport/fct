@@ -9,7 +9,6 @@ if(sum(ls() == "dictionary.df") == 0) {
 ## Loading the FC library
 source(here::here("MAPS_fct_load.R"))
 
-
 # Getting the most up-to-date file
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
@@ -92,6 +91,7 @@ food_list$ID_3[food_list$ID_3 %in% c("21170.01.01")] <-  "21170.01.03"
 food_list$ID_3[food_list$ID_3 %in% c("1501.11")] <-  "1501.10" 
 food_list$ID_3[food_list$ID_3 %in% c("1501.05")] <-  "1503.03" 
 food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
+food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
 #Fixing samosa vs banana cake id typo issue (see MAPS_Dictionary-Protocol update v2.5)
 food_list$ID_3[food_list$ID_3 == "F0022.06" & food_list$code == "836" ] <- "F0022.07"
 #Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
@@ -112,29 +112,51 @@ food_list %>% select(code, item, ID_3) %>% distinct() %>%
 
 food_list %>% select(code, item, ID_3) %>% distinct() %>% 
   left_join(., dict_comp) %>% select(1:3, fdc_id) %>% 
-  filter(is.na(fdc_id))
+  filter(is.na(fdc_id)) %>% View()
+
+
+fct_dict %>% filter(grepl("Tea", food_desc, ignore.case = FALSE)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg)
 
 # food_list %>% select(code, item, ID_3) %>% distinct() %>% 
 #   left_join(., dictionary.df) %>% select(1:3, FoodName_3, FoodName_1) %>% 
 #   write.csv(., here::here("inter-output", "ihs4_dictionary_foodgroup1.csv" ), 
 #             row.names = FALSE)
 
+# fct1 <- "Joy et al, 2015"
+fct1 <- "MW19"
+fct2 <- "KE18"
+fct3 <- "UK21"
+fct4 <- "US19"
 
 fct <- food_list %>% left_join(., fct_dict %>%
-                filter(source_fct == "Joy et al, 2015" & !is.na(SEmcg))) %>% 
+                filter(source_fct %in% fct1 & !is.na(SEmcg))) %>% 
   filter(!is.na(source_fct))
 
 fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
   left_join(., fct_dict %>%
-                          filter(source_fct == "MW19" & !is.na(SEmcg))) %>%
+                          filter(source_fct %in% fct2 & !is.na(SEmcg))) %>%
    filter(!is.na(source_fct)) %>% 
   bind_rows(., fct)
 
 fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
   left_join(., fct_dict %>%
-              filter(source_fct == "KE18" & !is.na(SEmcg))) %>%
+              filter(source_fct %in% fct3 & !is.na(SEmcg))) %>%
   filter(!is.na(source_fct)) %>% 
   bind_rows(., fct)
+
+fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
+  left_join(., fct_dict %>%
+              filter(source_fct %in% fct4 & !is.na(SEmcg))) %>%
+  filter(!is.na(source_fct)) %>% 
+  bind_rows(., fct)
+
+food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
+  left_join(., fct_dict %>%
+              filter(#source_fct %in% fct4 &
+                !is.na(SEmcg))) %>%
+  filter(!is.na(source_fct)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg)
 
 #fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
 #  left_join(., fct_dict %>%
@@ -148,7 +170,8 @@ fct %>%
   select(code, item, source_fct, ID_3,  fdc_id,food_desc, WATERg, ENERCkcal, 
          SEmcg) %>% 
   write.csv(here::here("inter-output", "nct", 
-                       "ihs4-partial-nct_v1.0.0.csv"), row.names = FALSE)
+                       "ihs4-partial-mw19-ke18-uk21-us19_nct_v1.0.0.csv"),
+            row.names = FALSE)
 
 
 food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% View()

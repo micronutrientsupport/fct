@@ -134,7 +134,7 @@ fct_ihs5 <- fct_ihs5 %>% mutate_at("ihs5_foodid", as.character) %>%
          from (MW01_0063*retention factor KENFCT - Starchy root or potato,
          boiled)")) 
 
-#Changed VITA_RAE of white bolied sweet potato to match raw white sweet potato
+# Changed VITA_RAE of white boiled sweet potato to match raw white sweet potato
 #Difference in water is <10% there is no need to water adjust 
 #2.213000*(100-76.00/100-77.28)
 
@@ -178,3 +178,12 @@ read.csv(here::here("output", "fct_ihs5_v2.0.csv")) %>%
 
 read.csv(here::here("output", "fct_ihs5_v2.0.csv")) %>% 
   filter(ihs5_foodid == "412")
+
+nct <- read.csv(here::here("output", "fct_ihs5_v2.2.csv")) 
+
+names(nct)
+
+nct %>% select(ihs5_foodid,  ref_fctcode) %>% 
+  separate_rows( ref_fctcode,sep =";|,") %>%  
+  mutate(ref_fctcode = str_squish(ref_fctcode)) %>% 
+  left_join(., dict_comp, by = c("ref_fctcode" = "fdc_id") )  %>% View()

@@ -101,7 +101,8 @@ mwi_genus <- tribble(
 "MW03_0009", "21183.03", "h",
 "MW01_0035", "39120.04.01", "h", 
 "MW01_0004", "F0020.01", "h", 
-"MW01_0003", "F0020.02", "h"
+"MW01_0003", "F0020.02", "h", 
+"MW05_0006", "1319.08", "h"
 
 )
 
@@ -160,7 +161,7 @@ dim(mwfct)
 mwfct %>% filter(fdc_id %in% c("MW05_0005"
                                 )) %>% .[, c(3:4)]
 
-subset(mwfct, fdc_id %in% c("MW01_0058"), 
+subset(mwfct, fdc_id %in% c("MW01_0036"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
 subset(mwfct, fdc_id == "MW01_0041", select = c(food_desc, ID_3, scientific_name)) 
@@ -174,7 +175,7 @@ subset(dictionary.df, ID_2 %in% c("1379.02"
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(mwfct, grepl("wheat", food_desc, ignore.case = TRUE) &
+subset(mwfct, grepl("medl", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(mwfct, str_detect(fdc_id, "^4") &
@@ -183,12 +184,16 @@ subset(mwfct, str_detect(fdc_id, "^4") &
 subset(mwfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
-subset(dictionary.df, grepl("pump", FoodName_3, ignore.case = T) &
+subset(dictionary.df, grepl("maize", FoodName_3, ignore.case = T) &
          grepl("", FoodName_3, ignore.case = T))
 
-subset(dictionary.df, grepl("pump", scientific_name, ignore.case = T) &
+subset(dictionary.df, grepl("Annona", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
 
 mwfct %>% filter(!is.na(ID_3)) %>% count()
 
 mwi_genus %>% anti_join(mwfct, by = "ID_3")
+
+subset(fct_cover, grepl("medl", food_desc, ignore.case = T) &
+         grepl("", food_desc, ignore.case = T)) %>% 
+  select(source_fct, fdc_id, food_desc)

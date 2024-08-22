@@ -46,6 +46,22 @@ data.df <- readxl::read_excel(here::here('FCTs', "crop-compo",
 # Getting other FCTs for the water content
 source(here::here("MAPS_fct_load.R"))
 
+# Adding missing mineral (Se from grain maize) ----
+## Extracting ratio ----
+
+## Maize to flour ration (Supl.Table6, Joy et al., 2015)
+ratio <- readxl::read_excel(here::here("FCTs", "crop-compo",
+                                       "40795_2015_36_MOESM1_ESM.xlsx"), 
+                            sheet = 6, skip = 2)
+head(ratio)
+
+# Only need column 1 (element) and column 7 ratio
+ratio <- ratio %>% select(c(1, 7)) %>%
+  filter(!is.na(Element)) %>% 
+  rename(ratio_refine="Mean ratio refined flour:whole grain") %>% 
+  mutate(crop = "maize")
+
+head(ratio)
 
 # Re-name variables
 # All varibales are in mg/Kg DW
@@ -59,7 +75,7 @@ mwi_mn <- data.df %>% rename(food_desc = '...1',
                                 fe_median = '...27', 
                                 mg_median = '...36',
                                 se_median = '...45',
-                                zn_median = '...54')
+                                zn_median = '...54') 
 
 
 # Filtering items with combined data and more than 1 sample for representativeness purposes
@@ -72,7 +88,11 @@ mwi_mn <-  mwi_mn %>%
 
 mn <- c('ca', 'cu', 'fe', 'mg', 'se', 'zn')
 
-mwi_mn <-  mwi_mn %>% mutate_at(vars(starts_with(mn)), as.numeric)
+mwi_mn <-  mwi_mn %>%
+  mutate_at(vars(starts_with(mn)), as.numeric)  %>% 
+  mutate(source_fct = "Joy et al, 2015", 
+         fdc_id = paste0("EJ15_",row.names(mwi_mn)))
+
 
 #Adding water values for conversion and reference
 
@@ -208,6 +228,54 @@ mwi_mn <-  mwi_mn %>% mutate(
 mwi_mn$foodnotes[mwi_mn$food_desc == "Mucuna"] <- "dried"
 mwi_mn$water[mwi_mn$water_ref == "MW04_0027"] <-  91.6 
 
+# Adding water to tea leaves
+mwi_mn$water[mwi_mn$fdc_id == "EJ15_59"] <- 9.30
+mwi_mn$water_ref[mwi_mn$fdc_id == "EJ15_59"] <- "DK19(537)"  
+
+# Finding water content
+fct_dict %>% 
+  filter(grepl("tea |tea,", food_desc, ignore.case = TRUE), 
+         grepl("leav", food_desc, ignore.case = TRUE)) %>% 
+  select(source_fct, fdc_id, food_desc, WATERg)
+
+
+mwi_mn$comments <- NA
+#Adding refined flour
+mwi_mn[nrow(mwi_mn)+1, ] <- mwi_mn[mwi_mn$water_ref == "MW01_0037", ] 
+mwi_mn[nrow(mwi_mn), c("foodnotes")] <- "Flour, refined (mgaiwa)"
+mwi_mn[nrow(mwi_mn), c("water_ref")] <- "MW01_0019"
+mwi_mn[nrow(mwi_mn), c("water")] <- 12.3
+mwi_mn[nrow(mwi_mn), c("comments")] <- "Values calculated from Maize Grain (EJ)"
+
+#Adding  bran flour 
+mwi_mn[nrow(mwi_mn)+1, ] <- mwi_mn[mwi_mn$water_ref == "MW01_0037", ] 
+mwi_mn[nrow(mwi_mn), c("foodnotes")] <- "Flour, bran (madeya)"
+mwi_mn[nrow(mwi_mn), c("water_ref")] <- "MW01_0020"
+mwi_mn[nrow(mwi_mn), c("water")] <- 10
+mwi_mn[nrow(mwi_mn), c("comments")] <- "Values calculated from Maize Grain (EJ) and 1-ratio"
+
+
+# Changed ratio of Fe to 1 bc can't be higher than 1
+ratio$ratio_refine[ratio$Element== "Fe"] <- 1
+ratio <- subset(ratio, Element != "I") # Removed I bc not reported
+
+for(i in 1:nrow(ratio)){
+variable <- paste0(tolower(ratio$Element[i]), "_median")
+
+value <- mwi_mn[nrow(mwi_mn),  c(variable)]*(1-ratio$ratio_refine[i])
+
+mwi_mn[nrow(mwi_mn),  c(variable)] <- value
+
+}
+
+#Adding green maize
+mwi_mn[nrow(mwi_mn)+1, ] <- mwi_mn[mwi_mn$water_ref == "MW01_0037", ] 
+mwi_mn[nrow(mwi_mn), c("foodnotes")] <- "green"
+mwi_mn[nrow(mwi_mn), c("water_ref")] <- "MW01_0040"
+mwi_mn[nrow(mwi_mn), c("water")] <- 68
+mwi_mn[nrow(mwi_mn), c("comments")] <- "Values calculated from Maize Grain (EJ)"
+
+
 # Calculation of averaged water values used above
 
 # 1) median all leaves in MAFOODS
@@ -247,6 +315,9 @@ fct_dict %>%
   dplyr::filter(grepl("mucuna|vet", food_desc, 
                       ignore.case = TRUE)) %>% 
   select(fdc_id, food_desc, scientific_name, WATERg)
+
+# Adding woyera
+
 
 ## Standardising units ----
 
@@ -310,42 +381,31 @@ mwi_mn <- mwi_mn %>% rename(
   SEmcg = "se_mcg_100g",
  # comments = "water_ref"
 ) %>% 
-  mutate(source_fct = "Joy et al, 2015", 
-         fdc_id = paste0("EJ15_",row.names(mwi_mn)), 
+  mutate(
+    # source_fct = "Joy et al, 2015", 
+    #   fdc_id = paste0("EJ15_",row.names(mwi_mn)), 
          comments = paste0("water ref. (", water_ref, "); samples (n=", n_sample, ")")) %>% 
   relocate(SEmcg, .after = "ZNmg") %>% 
   relocate(WATERg, .before = "CAmg") %>% 
   relocate(fdc_id, .before = "food_desc") 
 
-# Adding missing mineral (Se from grain maize) ----
-## Extracting ratio ----
 
-## Maize to flour ration (Supl.Table6, Joy et al., 2015)
-ratio <- readxl::read_excel(here::here("FCTs", "crop-compo",
-                                       "40795_2015_36_MOESM1_ESM.xlsx"), 
-                            sheet = 6, skip = 2)
-head(ratio)
 
-# Only need column 1 (element) and column 7 ratio
-ratio <- ratio %>% select(c(1, 7)) %>%
-  filter(!is.na(Element)) %>% 
-  rename(ratio_refine="Mean ratio refined flour:whole grain") %>% 
-  mutate(crop = "maize")
 
-head(ratio)
-
-refined <- mwi_mn$SEmcg[mwi_mn$fdc_id == "EJ15_27" & !is.na(mwi_mn$SEmcg)]*ratio$ratio_refine[ratio$Element == "Se"]
-bran <- mwi_mn$SEmcg[mwi_mn$fdc_id == "EJ15_27" & !is.na(mwi_mn$SEmcg)]*(1-ratio$ratio_refine[ratio$Element == "Se"])
-
-mwi_mn[nrow(mwi_mn)+1, ] <- NA
-mwi_mn[nrow(mwi_mn), c("fdc_id")] <- c("EJ15_62")
-mwi_mn[nrow(mwi_mn), "SEmcg"] <-  refined
-mwi_mn[nrow(mwi_mn)+1, ] <- NA
-mwi_mn[nrow(mwi_mn), c("fdc_id") ] <- "EJ15_63"
-mwi_mn[nrow(mwi_mn), "SEmcg" ] <-  bran
 
 #  mwi_mn[, nrow(mwi_mn)+1] <- mwi_mn[mwi_mn$fdc_id == "EJ15_27", ]
-
+#Adding refined flour & bran flour
+# refined <- mwi_mn$SEmcg[mwi_mn$fdc_id == "EJ15_27" & !is.na(mwi_mn$SEmcg)]*ratio$ratio_refine[ratio$Element == "Se"]
+# bran <- mwi_mn$SEmcg[mwi_mn$fdc_id == "EJ15_27" & !is.na(mwi_mn$SEmcg)]*(1-ratio$ratio_refine[ratio$Element == "Se"])
+# 
+# mwi_mn[nrow(mwi_mn)+1, ] <- NA
+# mwi_mn[nrow(mwi_mn), c("fdc_id")] <- paste0("EJ15_", nrow(mwi_mn)+1)
+# mwi_mn[nrow(mwi_mn), c("food_desc")] <- c("Maize, Grain, Flour, refined")
+# mwi_mn[nrow(mwi_mn), "SEmcg"] <-  refined
+# mwi_mn[nrow(mwi_mn)+1, ] <- NA
+# mwi_mn[nrow(mwi_mn), c("fdc_id") ] <- paste0("EJ15_", nrow(mwi_mn)+1)
+# mwi_mn[nrow(mwi_mn), "SEmcg" ] <-  bran
+# 
 
 mwi_mn %>% # select(comments)
   write.csv(., here::here("FCTs", "crop-compo_FCT_FAO_Tags.csv"), 

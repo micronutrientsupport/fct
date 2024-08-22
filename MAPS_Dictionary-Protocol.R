@@ -5670,12 +5670,12 @@ food_desc <-  c("jackfruit, fresh, raw",
 
 other_name <- c(rep(NA, 2), "malabar plum", 
                 "jambolan, black plum, zambarau (KE18), malabar plum (used for s. cumini and s.jambos)", 
-               NA, "star fruit (WA19, SL18)", NA,  "sweet sop (SL18), sweet apple (WA19)")
+               NA, "star fruit (WA19, SL18)", NA,  "sweet sop (SL18), sweet apple (WA19), mpoza (MW19)")
 
 scientific_name <- c("artocarpus heterophyllus", "passiflora edulis",
                      "syzygium jambos", "syzygium cumini", "annona spp.",
                      "averrhoa carambola", "artocarpus altilis",
-                     "annona squamosa")
+                     "annona squamosa/senegalensis")
 
 taxo <- c(rep(NA, 4), "5468B", "545XT", rep(NA, 4))
 
