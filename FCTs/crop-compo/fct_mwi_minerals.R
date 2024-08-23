@@ -94,8 +94,10 @@ mwi_mn <-  mwi_mn %>%
          fdc_id = paste0("EJ15_",row.names(mwi_mn)))
 
 
-#Adding water values for conversion and reference
+# ToDO: Amending codes
+#Se.df$water_ref[Se.df$water_ref == "04_110"] <- "04_004"
 
+#Adding water values for conversion and reference
 mwi_mn <-  mwi_mn %>% mutate(
   water = c(87.8, 
             9,
@@ -228,6 +230,7 @@ mwi_mn <-  mwi_mn %>% mutate(
 mwi_mn$foodnotes[mwi_mn$food_desc == "Mucuna"] <- "dried"
 mwi_mn$water[mwi_mn$water_ref == "MW04_0027"] <-  91.6 
 
+
 # Adding water to tea leaves
 mwi_mn$water[mwi_mn$fdc_id == "EJ15_59"] <- 9.30
 mwi_mn$water_ref[mwi_mn$fdc_id == "EJ15_59"] <- "DK19(537)"  
@@ -237,7 +240,6 @@ fct_dict %>%
   filter(grepl("tea |tea,", food_desc, ignore.case = TRUE), 
          grepl("leav", food_desc, ignore.case = TRUE)) %>% 
   select(source_fct, fdc_id, food_desc, WATERg)
-
 
 mwi_mn$comments <- NA
 #Adding refined flour
@@ -321,17 +323,16 @@ fct_dict %>%
 
 ## Standardising units ----
 
-#Create a function to convert from dry (mg/Kg) to wet weight (mg/100g)
+#Create a function to convert from dry (mg/Kg == mcg/g) to wet weight (mcg/100g)
 #x = dry weight in mg/Kg
 #y = water g/100g 
 #mn = nutrient in mg/100g wet weight
-
+# As per FAO/ INFOODS Guidelines for Converting Units, Denominators 
+# and Expressions Version 1.0, page 12
 
 dry_wet <- function(x, y){
   
-  mn <- x/10
-  
-  mn <- mn * (100 - y)/100
+  mn <- mn * (100 - y)
   
   mn
   
@@ -350,12 +351,12 @@ mwi_mn <-  mwi_mn %>%
     ~stringr::str_replace_all(., 'median', 'mg_100g')) %>% 
    # Selecting the variables needed
   select(food_desc, foodtissue, foodnotes, n_sample, 
-         contains('mg_100g'), water, water_ref)  %>% 
-   mutate(se_mcg_100g = se_mg_100g*1000, 
-          food_desc = ifelse(!is.na(foodnotes), 
-                  paste0(food_desc, ", ",  foodtissue, ", ", foodnotes ),
-                  paste0(food_desc, ", ",  foodtissue))) %>% 
-   select(-c(se_mg_100g, foodtissue, foodnotes)) 
+         contains('mcg_100g'), water, water_ref)  %>% 
+  # ToDo: Change units of other Minerals
+   mutate(
+          foodnotes = ifelse(is.na(foodnotes), "raw", tolower(foodnotes)), 
+          food_desc = paste(fooditem, tolower(foodtissue), foodnotes, sep = ",")) %>% 
+   select(-c( foodtissue, foodnotes)) 
  
  
 mwi_mn %>% 
