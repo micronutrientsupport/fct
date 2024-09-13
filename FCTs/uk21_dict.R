@@ -7,7 +7,7 @@ uk21 <- read.csv(here::here("FCTs", "UK21_FCT_FAO_Tags.csv"))
 if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
 #Loading functions
-source(here::here("functions.R"))
+#source(here::here("functions.R"))
 
 
 names(uk21)
@@ -99,8 +99,7 @@ genus <- tribble(
  "11-774", "23140.03.03", "h",
  "19-468", "F1232.35", "m", 
  "19-643", "F1232.36", "h", 
- "14-060", "1359.02.01", "h", 
- ""
+ "14-060", "1359.02.01", "h"
  
  )
 

@@ -105,8 +105,14 @@ ken %>% rbind(., wa) %>%
   
   
   
+# Checking dict codes for offals
+  
+fbs %>% 
+ filter(grepl("offal", original_name, ignore.case = TRUE)) %>% 
+  distinct(food_genus_id, original_name)
 
-
+dictionary.df %>% 
+  filter(ID_3 %in% c("21151.02"))
 
 ## Checking SUA data -----
   
@@ -118,3 +124,44 @@ ken %>% rbind(., wa) %>%
   sua %>% left_join(., fct_dict, by = "ID_3") %>% 
     filter(!is.na(WATERg)) %>% distinct(Item)
   
+  sua %>% 
+    filter(grepl("offal", FoodName_1, ignore.case = TRUE)) %>% 
+    distinct(FoodName_1, ID_1,  ID_3, Item)
+  
+  sua %>% 
+    filter(grepl("offal", FoodName_1, ignore.case = TRUE)) %>% 
+    group_by(FoodName_1, ID_3, Item) %>% 
+    summarise(offal = median(Value, na.rm = TRUE)) %>% 
+    View()
+  
+## Food dictionary checks
+  
+  dictionary.df %>% 
+    filter(grepl("offal", FoodName_1, ignore.case = TRUE)) %>% 
+    distinct(FoodName_1, ID_2, FoodName_2, ID_3, FoodName_3 ) %>% 
+    distinct()
+
+ fct_dict %>% 
+    filter(
+      grepl("offal|tonge|liver|brain|heart|kidney|lunges|intestine|tail|tripe", food_desc, ignore.case = TRUE), 
+      grepl("pig|pork", food_desc, ignore.case = TRUE),
+      !grepl("retail", food_desc, ignore.case = TRUE),
+      grepl("raw", food_desc, ignore.case = TRUE),
+      ) %>% 
+    distinct(source_fct, fdc_id, food_desc , ID_3, VITA_RAEmcg) %>% 
+   View()
+ 
+ 
+ dictionary.df %>% 
+   filter(grepl("groundnut", FoodName_1, ignore.case = TRUE)) %>% 
+   distinct(FoodName_1, ID_2, FoodName_2, ID_3, FoodName_3)
+ 
+ 
+ fct_dict %>% filter(ID_3 == "2165.01") %>% 
+   select(food_desc, VITA_RAEmcg)
+ 
+ fct_dict %>% 
+   filter(
+     grepl("palm",  food_desc, ignore.case = TRUE)) %>% 
+   select(source_fct, fdc_id, food_desc , ID_3, VITA_RAEmcg) %>% View()
+ 

@@ -3,22 +3,128 @@ title: "MAPS_fct_QA"
 format: html
 ---
 
-## Modifications to the original FCTs
+## Preps
+```{r}
 
-See indiviual FCT changes in the `FCT/fct_cleaning.Rmd` script.
+source(here::here("MAPS_fct_load.R"))
+
+```
+
+
+## Modifications to the original FCTs 
+
+When modifications to the original FCT file were part of the **standardisation** process as defined in (REF) the were performed in the individual FCT R scripts and are described in the `FCT/fct_cleaning.Rmd` protocol.
+
+Here, we described decisions, changes and modifications that were performed as part of the harmonisation process specifically for the MAPS tool. For this some specific and unique decision were made due to:
+    a) the nature and systematic food matching which is performed *automatically* in the back-end of the tool, and which is described elsewhere (REF). 
+    b) the relatively complexity of one-fit-all nature of the above mentioned food matching. 
+
+Hence, these changes aimed to serve and be representative, to the extent possible, for all nations in Africa, excluding Northern African countries. Most of these decisions were made in consensus with other MAPS team members, in-country partners and experts in food composition, dietary assessment and/or nutrition-related modelling. 
 
 ### US19
 
-The values of Se are excluded in the MAPS tool, this is due to spatial variation in Se and given the fact that US soils are high in Se, while most of the African soils are low in Se. Many studies have been published in the importance of spatial variation in Se in crops and in human, and the inaccuracy of using Se values from afar locations for dietary intake estimations. (REF, REF, REF)
+The values of Se are excluded in the MAPS tool, this is due to spatial variation in Se and given the fact that US soils are high in Se, while most of the African soils are low in Se. Many studies have been published regarding the importance of spatial variation in Se in crops and its impact on Se status, and the inaccuracy of using Se values from afar locations for use in the estimation of dietary Se intakes (REF, REF, REF).
 
 ## Quality Assurance
 
 ### Modifing values by food item & micronutrient
 
-#### Millet 
+Whenever a value would be modified for a particular food component in a food item, a comment would be added to ensure that this is captured and end-user could identify/trace back the changes performed. 
 
-##### Iron 
+#### Iron in millet 
 
 According the literature the max. value of Fe in millet would be around 67mg/kg (DM) (@kumarIronZincCrossroad2022). Higher values found in FCT could be due to soil contamination, as reported previously by @mawoumaBioaccessibilityIronZinc2024 and @joyDietaryMineralSupplies2015 among other in Malawi. Furthermore, @mawoumaBioaccessibilityIronZinc2024 found that the bioavailability of the soil Fe contamination was not bioavailable, and hence, by using those values we are likely overestimating the Fe concentration in crops. We have decided to set up a maximum value, by which we are correcting those values that were found higher in FCTs, most of which were found in African datasets which values were higher when compared with millet Fe concentration from other FCTs. 
 
 The values will be set up to a water-adjusted max value and a comment would be added to reflect the changes. 
+
+#### Calcium in salt
+
+The value for WA19 is quite high compared with the rest of the values, however from the information on the WA19 documentation it is not reported as "concerning" or limited quality value. It is based on 7 data points with a high SD (100). Hence, it would be a bias decision to change the number, hence we are "silencing" (excluding the food item) from the MAPS until we have a solution.
+
+```{r}
+
+var <- "CAmg"
+
+fct_dict %>% filter(grepl("Salt", food_desc, ignore.case = FALSE) , 
+                    !is.na(!!sym(var))) %>% 
+  select(source_fct, fdc_id, food_desc, var, nutrient_data_source)  %>% View()
+
+```
+
+#### Ca in tea leaves & coffee 
+
+Only for Tea leaves, we are turning into zero, for MAPS tool because is 4x greater than the other coffee/tea dried version. To discuss for the coffee. Althought, the values in al FCT are consistent.
+
+```{r}
+
+var <- "CAmg"
+
+fct_dict %>% filter(
+  grepl("Tea|Coffe", food_desc, ignore.case = FALSE), 
+  !grepl("milk|latte|whitener", food_desc, ignore.case = TRUE), 
+                    !is.na(!!sym(var)) & as.numeric(WATERg) <60) %>% 
+  select(source_fct, fdc_id, food_desc, WATERg, var, nutrient_data_source)  %>% View()
+
+```
+
+
+####  Vitamin B12 in fermented cassava
+
+Based on Olanbiwoninu et al. (2023), the presence of vitamin B12 in fermented plant-based products is rare and it is likely that the fermentation subproducts are corrinoids instead of cobalamin. Hence, due to the high consumption of this fermented products, and the unlikeliness that it is actually the active form, we are assuming that B12 is zero. 
+
+Furthermore, the techniques currently used to determine B12 are unable to differenciate between cobalamin and corrinoids. 
+
+
+```{r}
+
+var <- "VITB12mcg"
+
+fct_dict %>% filter(grepl("Cassava", food_desc, ignore.case = FALSE) , 
+                    !is.na(!!sym(var)) & !!sym(var)>0.01) %>% 
+  select(source_fct, fdc_id, food_desc, var, nutrient_data_source)  %>% View()
+
+```
+
+
+
+#### Vitamin A in tea leaves & coffee 
+
+No values were found, only for tea with milk in KE18.
+
+```{r}
+
+var <- "VITA_RAEmcg"
+
+fct_dict %>% filter(
+  grepl("Tea|Coffe", food_desc, ignore.case = FALSE), 
+  !grepl("milk|latte|whitener", food_desc, ignore.case = TRUE), 
+                    !is.na(!!sym(var)) & as.numeric(WATERg) >60) %>% 
+  select(source_fct, fdc_id, food_desc, WATERg, var, nutrient_data_source) %>% View()
+
+```
+
+#### Vitamin A in red palm oil
+
+After discussion with Katie, she provided the following rationale and references to reduce the quantity reported as per 50%. 
+
+>
+Also based on input from in-country experts, we’ve assumed that all of the “palm oil” food item is unrefined red palm oil. Here is what we’ve assumed about the retention of vitamin A in unrefined red palm oil (this assumption is published in a paper modeling Cameroon data but is the same assumption we’ve applied to other countries): “Given that retention factors for red palm oil are ∼50% (though with variability depending on cooking duration and temperature)(REF-37) and the variation in use during and after cooking, for both the ECAM3 and 24HR data, we conservatively assumed the average retention rate of VA in unrefined palm oil was 50%.”
+>
+
+
+```{r}
+
+var <- "VITA_RAEmcg"
+
+fct_dict %>% filter(
+  grepl("palm", food_desc, ignore.case = TRUE), 
+  grepl("red", food_desc, ignore.case = TRUE), 
+                    !is.na(!!sym(var)) &  as.numeric(WATERg) <20
+ ) %>% 
+  select(source_fct, fdc_id, food_desc, WATERg, var, nutrient_data_source) %>% View()
+
+```
+
+## References
+
+37. Dongmo, D., F. Fabien, N.N. Annie, et al. 2014. Effect of heating and of short exposure to sunlight on carotenoids content of crude palm oil. J. Food Process. Technol. 5: 1000314. https://www.walshmedicalmedia.com/open-access/effect-of-heating-and-of-short-exposure-to-sunlight-on-carotenoids-content-of-crude-palm-oil-2157-7110.1000314.pdf 

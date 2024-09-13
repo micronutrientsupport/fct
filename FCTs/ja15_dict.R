@@ -8,7 +8,7 @@ ja15 <- read.csv(here::here("FCTs", "JA15_FCT_FAO_Tags.csv"))
 if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
 #Loading functions
-source(here::here("functions.R"))
+#source(here::here("functions.R"))
 
 
 names(ja15)
@@ -53,7 +53,11 @@ genus <- tribble(
 "11242", "1587.01", "m", 
 "11210", "21124.01", "l", 
 "15081", "F1232.35", "m", 
-"11063", "21513.01", "h"
+"11063", "21513.01", "h", 
+"11164", "21153.05", "h", 
+"11165", "21153.04", "h", 
+"11166", "21153.01", "h", 
+"11167",  "21153.03", "h"
 )
 
 genus$ID_3 <- as.character(genus$ID_3)

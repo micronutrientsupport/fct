@@ -4,7 +4,7 @@
 # Load libraries
 library(tidyverse)
 library(viridis)
-source("functions.R")
+#source("functions.R")
 
 #Loading the food dictionary
 if(sum(ls() == "dictionary.df") == 0) {

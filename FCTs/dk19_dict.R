@@ -7,7 +7,7 @@ dk19 <- read.csv(here::here("FCTs", "DK19_FCT_FAO_Tags.csv"))
 if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
 #Loading functions
-source(here::here("functions.R"))
+#source(here::here("functions.R"))
 
 
 names(dk19)

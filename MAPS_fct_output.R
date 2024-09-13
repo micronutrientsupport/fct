@@ -5,6 +5,9 @@ rm(list = ls())
 # Load libraries
 library(tidyverse)
 library(viridis)
+#install.packages("devtools")
+#devtools::install_github("TomCodd/NutritionTools")
+library(NutritionTools)
 source("functions.R")
 
 #Loading the food dictionary
@@ -134,8 +137,60 @@ fct_dict  %>%
 # Excluding Se from US19
 fct_dict$SEmcg[fct_dict$source_fct == "US19"] <- NA
 
-# Rename variables according to MAPS-standards
+# Reducing Vitamin A in Red palm oil (reduced 50%)
+food <- c("9010", "11_004")
+fct <- c("KE18", "WA19")
+text1 <- "VITA_RAEmcg & VITAmcg were adjusted down 50%"
 
+#VITA_RAEmcg
+value <- as.numeric(fct_dict$VITA_RAEmcg[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food])*0.5
+fct_dict$VITA_RAEmcg[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food] <- value
+#VITAmcg
+value <- as.numeric(fct_dict$VITAmcg[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food])*0.5
+fct_dict$VITAmcg[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food] <- value
+
+comme <- fct_dict$comments[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food]
+
+if(!sum(is.na(comme))==0){
+fct_dict$comments[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food] <- text1
+
+}else{ 
+  fct_dict$comments[fct_dict$source_fct %in% fct & fct_dict$fdc_id %in% food] <- gsub("NA", "", paste0(comme, ";", text1))
+}
+
+# Assuming zero for b12 in fermented cassava products
+food <- c("02_041", "02_038", "02_040", "02_039")
+text1 <- "VITB12mcg assumed zero"
+
+fct_dict$VITB12mcg[fct_dict$fdc_id %in% food] <- 0
+
+comme <- fct_dict$comments[fct_dict$fdc_id %in% food]
+
+if(!sum(is.na(comme))==0){
+  fct_dict$comments[fct_dict$fdc_id %in% food] <- text1
+  
+}else{ 
+  fct_dict$comments[fct_dict$fdc_id %in% food] <- gsub("NA", "", paste0(comme, ";", text1))
+}
+
+
+# Assuming zero for Ca in tea leaves
+food <- ("537")
+text1 <- "CAmg assumed zero"
+
+fct_dict$CAmg[fct_dict$fdc_id %in% food] <- 0
+
+comme <- fct_dict$comments[fct_dict$fdc_id %in% food]
+
+if(!sum(is.na(comme))==0){
+  fct_dict$comments[fct_dict$fdc_id %in% food] <- text1
+  
+}else{ 
+  fct_dict$comments[fct_dict$fdc_id %in% food] <- gsub("NA", "", paste0(comme, ";", text1))
+}
+
+
+# Rename variables according to MAPS-standards
   MAPS_output  <- fct_dict %>% 
   left_join(.,dictionary.df %>% 
               select(ID_3, FoodName_3, 
@@ -210,22 +265,22 @@ dictionary.df %>%
   filter(ID_2 == "F0020") 
 
 # Saving the MAPS_FCTs
-#   
-# split_fct <- MAPS_output %>% 
-#  # filter(fct_name %in% c("UK21")) %>% 
-#     group_by(fct_name) %>% 
-#     group_split()
-#   
-# fct_names <- unique(MAPS_output$fct_name)
+   
+ split_fct <- MAPS_output %>% 
+  # filter(fct_name %in% c("UK21")) %>% 
+     group_by(fct_name) %>% 
+     group_split()
+   
+ fct_names <- unique(MAPS_output$fct_name)
 #  fct_names <- c("UK21")
-# 
-#   
-#   for(i in 1:length(fct_names)){
-#     saveName = paste0("output/new/MAPS_", fct_names[i], "_v.3.1.0.csv")
-#     readr::write_excel_csv(split_fct[[i]], file = saveName)
-#   }
-#   
-#   
-# 
+ 
+   
+   for(i in 1:length(fct_names)){
+     saveName = paste0("output/new/MAPS_", fct_names[i], "_v.3.1.1.csv")
+     readr::write_excel_csv(split_fct[[i]], file = saveName)
+   }
+   
+   
+ 
 
 

@@ -1,7 +1,7 @@
 
 # Loading libraries
 library(tidyverse)
-library(fuzzyjoin)
+#library(fuzzyjoin)
 
 
 ####================== LOADING DATASET =============================####
@@ -3762,75 +3762,9 @@ dictionary.df[n1,11] <- ref1
 dictionary.df[n1,12] <- other_name
 dictionary.df[n1,13] <- scien_new
 
-# 21155 - Lamb liver, raw
-#Manual inputs:
-id2 <- "21155"
-desc_new <- "lamb liver, fresh, raw"
-fex2_new <- NA
-taxon <- NA
-ref1 <-  NA
-scien_new <- "ovis aries"
-other_name <- NA
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxon
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-
-# 21155 - Lamb brain, raw
-#Manual inputs:
-id2 <- "21155"
-desc_new <- "lamb brain, fresh, raw"
-fex2_new <- NA
-taxon <- NA
-ref1 <-  NA
-scien_new <- "ovis aries"
-other_name <- NA
-
-#Auto inputs:
-id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
-id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
-                 str_replace(id3, "[[:alnum:]]{1,3}$",
-                             formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
-                                     width=2, flag=0)[2]))
-
-n1 <- dim(dictionary.df)[1]+1
-
-n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
-             which(dictionary.df$ID_3 %in% id3))
-
-#New entry - generation:
-dictionary.df[n1,] <- dictionary.df[n2,]
-#New entry - population:
-dictionary.df[n1,7] <- id3_new
-dictionary.df[n1,8] <- fex2_new
-dictionary.df[n1,9] <- desc_new
-dictionary.df[n1,10] <- taxon
-dictionary.df[n1,11] <- ref1
-dictionary.df[n1,12] <- other_name
-dictionary.df[n1,13] <- scien_new
-
 # 21151 -  Beef kidney, raw
 #Manual inputs:
-id2 <- "21155"
+id2 <- "21151"
 desc_new <- "beef kidney, fresh, raw"
 fex2_new <- NA
 taxon <- NA
@@ -3863,7 +3797,7 @@ dictionary.df[n1,13] <- scien_new
 
 # 21151 -  Beef tripe, raw
 #Manual inputs:
-id2 <- "21155"
+id2 <- "21151"
 desc_new <- "beef tripe, fresh, raw"
 fex2_new <- NA
 taxon <- NA
@@ -5147,6 +5081,104 @@ fex2_new <- c(rep(NA, 1))
 
 #Fixed
 id2 <- "21513"
+desc1 <-  c("")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1[i]
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
+
+## ├├  edible offal of sheep, fresh, chilled or frozen (21155) -----
+
+food_desc <-  c( 
+                "lamb liver, fresh, raw",
+                "lamb brain, fresh, raw",
+                "lamb kidney, fresh, raw", 
+                "lamb heart, fresh, raw")
+
+scientific_name <- tolower(c("ovis aries"))
+
+other_name <- c(NA)
+
+fex2_new <- c(rep(NA, 4))
+
+#Fixed
+id2 <- "21155"
+desc1 <-  c("")
+ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
+
+# Function: 
+for(i in 1:length(food_desc)){
+  
+  id2 <- id2
+  
+  
+  id3 <- tail(sort(dictionary.df$ID_3[dictionary.df$ID_2 == id2]), n=1)
+  id3_new <-ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
+                   str_replace(id3, "[[:alnum:]]{1,3}$",
+                               formatC(seq(from = str_extract(id3, "[[:digit:]]{1,3}$"), 99),
+                                       width=2, flag=0)[2]))
+  
+  n1 <- dim(dictionary.df)[1]+1
+  
+  n2 <- ifelse(is.na(id3)|id3 == "", which(dictionary.df$ID_2 %in% id2),
+               which(dictionary.df$ID_3 %in% id3))
+  
+  #New entry - generation:
+  dictionary.df[n1,] <- dictionary.df[n2,]
+  #New entry - population:
+  dictionary.df[n1,7] <- id3_new
+  dictionary.df[n1,8] <- fex2_new[i]
+  dictionary.df[n1,9] <- food_desc[i]
+  dictionary.df[n1,10] <- desc1
+  dictionary.df[n1,11] <- ref1[i]
+  dictionary.df[n1,12] <- other_name[i]
+  dictionary.df[n1,13] <- scientific_name[i]
+}
+
+
+## ├├ edible offal of pigs, fresh, chilled or frozen (21153) -----
+
+food_desc <-  c( 
+  "pig liver, fresh, raw",
+  "pig brain, fresh, raw",
+  "pig kidney, fresh, raw", 
+  "pig heart, fresh, raw",
+  "pig tongue, fresh, raw")
+
+scientific_name <- tolower(c("sus scrofa domesticus"))
+
+other_name <- c(NA)
+
+fex2_new <- c(rep(NA, length(food_desc)))
+
+#Fixed
+id2 <- "21153"
 desc1 <-  c("")
 ref1 <-  c("https://www.fao.org/faostat/en/#data/SCL")
 
