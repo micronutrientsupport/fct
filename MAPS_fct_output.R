@@ -271,12 +271,13 @@ dictionary.df %>%
      group_by(fct_name) %>% 
      group_split()
    
- fct_names <- unique(MAPS_output$fct_name)
+# fct_names <- unique(MAPS_output$fct_name)
 #  fct_names <- c("UK21")
  
    
-   for(i in 1:length(fct_names)){
-     saveName = paste0("output/new/MAPS_", fct_names[i], "_v.3.1.1.csv")
+   for(i in 1:length(split_fct)){
+     fct_names <- unique(split_fct[[i]][["fct_name"]])
+     saveName = paste0("output/new/MAPS_", fct_names, "_v.3.1.1.csv")
      readr::write_excel_csv(split_fct[[i]], file = saveName)
    }
    
