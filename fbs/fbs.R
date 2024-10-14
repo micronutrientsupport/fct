@@ -149,6 +149,11 @@ fbs$food_genus_id[fbs$food_genus_id == "21116.01"] <-  "21116.03"
 
 
 # Changing offals to disaggregation of the different parts & animals ----
+
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+
 # Load SUA data ----
 sua <- read.csv(here::here("inter-output", "MAPS_SUA_v1.0.0.csv"))
 names(sua)
@@ -202,4 +207,6 @@ offal %>% left_join(., cc, by = c("Area" = "NAME_FAO")) %>%
 offal <- offal %>% 
   left_join(., cc %>% select(NAME_FAO, ISO3), by = c("Area" = "NAME_FAO"))
 
+# Saving the offals file
+#saveRDS(offal, here::here("inter-output", "SUA_FBS_ID_3_offals_v1.0.0.RDS"))
   
