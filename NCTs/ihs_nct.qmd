@@ -98,6 +98,16 @@ Sun Dried fish (Small Variety):  1505.03 -  barb, silver, dried, raw (New code)
 Fresh fish (Small Variety):  1501.06 -  barb, silver, fresh, raw - recode (1501.11)
   
 [313] - Groundnut fresh (unshelled): 142.03 - peanuts, fresh, unshelled, raw. No information on fresh peanuts, hence we need to adjust the quantity from fresh consumption to dry E.g., 100g of fresh weight will be 100*(100-50)/(100-10), and matched to dry peanuts. This is important to not over-estimate the nutrient content from the food consumption.
+
+```{r}
+# Checking the values of groundnuts in MW19
+
+fct_dict %>% filter(fdc_id %in% c("MW02_0015", "MW02_0014")) %>% 
+                      dplyr::select(fdc_id, food_desc, WATERg, SEmcg)
+
+
+```
+
   
 Freezes (flavoured ice):  23670.01.02 - flavoured ice - recoded ("22270.06")
   

@@ -7921,10 +7921,11 @@ food_desc <-  c("mayonnaise", "soup", "potash", "chilli sauce", "maize porridge"
                 "meat pastry", 
                 "sausage roll, homemade", 
                 "ensete porridge", 
-                "banana, fritter")
+                "banana, fritter", 
+                "steamed maize & banana snack", "African cake")
 
 scientific_name <- tolower(c(rep(NA,16), "zea mays", rep(NA, 7), "triticum durum",
-                     rep(NA,11), "Ensete ventricosum"))
+                     rep(NA,11), "Ensete ventricosum", NA))
 
 other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA, 
                 "beef seasoning cube", "chicken seasoning cube", 
@@ -7934,13 +7935,14 @@ other_name <- c(rep(NA,7), "bicarbonate of soda", NA, NA,
                 "ogi (WA19), pap (Sierra Leone)", 
                 rep("recipe from Burkina Faso in WA19", 2), 
                 rep("Banakou né (Burkina Faso) (WA19), Yebbe (Sierra Leone)", 3), 
-                rep(NA, 5), "egg, fried rice", 
+                rep(NA, 7), "egg, fried rice", 
                 rep(NA, 6), "sausage roll (UK21), meat pie (JA15)",
-                "Bula (ETH4)")
+                "Bula (ETH4)", "Nkate/mkate (MW19, IHS)", 
+                "Banana cake/Chigumu/Zikondamoyo (MW19, IHS)")
 
 fex2_new <- c(rep(NA, 5), "A049A#F02.A06CK$F01.A066J$F27.A049A", 
               "A048Q#F02.A06CG", 
-              rep(NA, 30))
+              rep(NA, 32))
 
 # Fixed input
 id2 <- "F1232"

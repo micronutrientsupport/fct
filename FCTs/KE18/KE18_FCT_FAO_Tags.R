@@ -17,12 +17,11 @@ library(visdat)
 # Only need to do it the first time to obtain the raw files!
 
 #f <- "http://www.nutritionhealth.or.ke/wp-content/uploads/Downloads/Kenya%20Food%20Composition%20Tables%20Excel%20files%202018.xlsx"
-
 #download.file(f, 
 #             destfile = here::here("FCTs", 'KE18', "MOH-KENFCT_2018.xlsx"),
 #             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
 #            mode="wb")
-#
+
 
 # Data Import ----
 
@@ -170,7 +169,6 @@ KE18_Raw_FCT$ALCg <- 0
 KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12007"] <- (9.4*0.789/0.99)
 KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12008"] <- (10.3*0.789/0.995)
 KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12009"] <- (10.2*0.789/1.015)
-
 
 # Renaming, Checking, and Selecting ----
 

@@ -106,6 +106,9 @@ mwi_genus <- tribble(
 "MW03_0068", "F0022.06", "m", 
 "MW03_0003", "21155.03", "h", 
 "MW03_0004", "21151.02", "h",
+"MW01_0061", "F1232.39", "h",
+"MW01_0001", "F1232.40", "h",
+
 
 )
 
@@ -197,6 +200,6 @@ mwfct %>% filter(!is.na(ID_3)) %>% count()
 
 mwi_genus %>% anti_join(mwfct, by = "ID_3")
 
-subset(fct_cover, grepl("medl", food_desc, ignore.case = T) &
-         grepl("", food_desc, ignore.case = T)) %>% 
-  select(source_fct, fdc_id, food_desc)
+# subset(fct_cover, grepl("medl", food_desc, ignore.case = T) &
+#          grepl("", food_desc, ignore.case = T)) %>% 
+#   select(source_fct, fdc_id, food_desc)

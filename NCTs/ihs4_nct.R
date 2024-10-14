@@ -10,6 +10,11 @@ if(sum(ls() == "dictionary.df") == 0) {
 ## Loading the FC library
 source(here::here("MAPS_fct_load.R"))
 
+# Getting IHS food list
+#ihsfood <- readRDS(here::here("NCTs", "food-list_ihs4_v2.1.0.rds")) %>% 
+#  dplyr::select(1:3)
+
+
 # Getting the most up-to-date file
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
@@ -18,7 +23,7 @@ dict_comp <- read.csv(here::here("metadata", file)) %>%
   rename(source_fct = "fct", 
          fdc_id = "ref_fctcode")
 
-
+dict_comp %>% count(source_fct)
 
 food_list <- readRDS(here::here("inter-output", 
               sort(list.files(here::here("inter-output"), 
@@ -86,22 +91,37 @@ fct_dict %>%
     select(source_fct, ID_3,  fdc_id,food_desc,  CAmg, SEmcg, VITA_RAEmcg, VITB12mcg) %>% 
   View()
 
+# From latest from MAPS tool matches ----------
+food_list <-   read.csv(here::here("output", 
+ sort(list.files(here::here("output"), 
+                                      "MAPS_ihs4"), decreasing = TRUE)[1])) %>% 
+    dplyr::select("original_food_id", "original_food_name", 
+                  "food_genus_id") %>% distinct() %>% 
+    rename(ID_3 = "food_genus_id", 
+           code = "original_food_id", 
+           item = "original_food_name")
+  
+  
 # Fixing ID_3 ----
 # groundnuts (to dry and shelled) - Corrections should be done at Edible Portion
-food_list$ID_3[food_list$code %in% c("311", "313")] <-  "142.01" 
+food_list$ID_3[food_list$code %in% c("311", "312")] <-  "142.01" 
+food_list$ID_3[food_list$code %in% c("313")] <-  "142.05" # Changing to boiled for the water content
 food_list$ID_3[food_list$code %in% c("505")] <-  "21116.03" 
 food_list$ID_3[food_list$ID_3 %in% c("21170.01.01")] <-  "21170.01.03" 
 food_list$ID_3[food_list$ID_3 %in% c("1501.11")] <-  "1501.10" 
 food_list$ID_3[food_list$ID_3 %in% c("1501.05")] <-  "1503.03" 
 food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
-food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
-#Fixing samosa vs banana cake id typo issue (see MAPS_Dictionary-Protocol update v2.5)
-food_list$ID_3[food_list$ID_3 == "F0022.06" & food_list$code == "836" ] <- "F0022.07"
+food_list$ID_3[food_list$code %in% c("802")] <- "1802.02" # Sugar cane to juice
+food_list$ID_3[food_list$ID_3 %in% c("1234.01")] <- "1234.02" # Tomato to red-ripe
+
 #Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
 #TODO: Generate a recipe c(F1061.01,F1232.05 )
 food_list$ID_3[food_list$code == "829"] <- "F1061.01,F1232.05"
 # Chicken at vendor (assumed cooked)
 food_list$ID_3[food_list$code == "824"] <- "F1061.02,F1061.01"
+# Better matches for the nkate and zikondamoyo
+food_list$ID_3[food_list$code == "836"] <- "F0022.07,F1232.39,F1232.40,F1232.38"
+
 
 ## Separating one-to-many matches
 food_list <- food_list %>% separate_rows(ID_3)
@@ -123,9 +143,10 @@ food_list %>% select(code, item, ID_3) %>% distinct() %>%
 food_list <- food_list %>% select(code, item, ID_3) %>% distinct() %>% 
   left_join(., dictionary.df) %>% select(1:3, FoodName_3, FoodName_1) 
 
-fct_dict %>% filter(grepl("pork|beef|goat|mutt|pig ", food_desc, ignore.case = TRUE) &
-                      !grepl("raw|egg|milk", food_desc, ignore.case = TRUE) &
-                      source_fct %in% c("MW19", "KE18")) %>% 
+fct_dict %>% filter(grepl("sweet", food_desc, ignore.case = TRUE) &
+                      grepl("potato", food_desc, ignore.case = TRUE) #&
+                   #   source_fct %in% c("MW19", "KE18")
+                     ) %>% 
   select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg) %>% View()
 
 # food_list %>% select(code, item, ID_3) %>% distinct() %>% 
@@ -133,6 +154,10 @@ fct_dict %>% filter(grepl("pork|beef|goat|mutt|pig ", food_desc, ignore.case = T
 #   write.csv(., here::here("inter-output", "ihs4_dictionary_foodgroup1.csv" ), 
 #             row.names = FALSE)
 
+fct_dict %>% filter(ID_3 == "142.01")
+
+
+  
 # Getting the NCT for IHS4 -----
 
 # This matches are tailored to Se, but it can be done for any other MN
@@ -142,7 +167,6 @@ mn <- "SEmcg"
 # fct1 <- "Joy et al, 2015"
 fct1 <- "MW19"
 fct2 <- "KE18"
-fct3 <- "IN"
 fct3 <- "UK21"
 fct4 <- "US19"
 
@@ -150,7 +174,7 @@ fct <- food_list %>% left_join(., fct_dict %>%
                 filter(source_fct %in% fct1 & !is.na(!!sym(mn)))) %>% 
   filter(!is.na(source_fct))
 
-fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
+fct <- food_list %>% dplyr::filter(!ID_3 %in% unique(fct$ID_3)) %>% 
   left_join(., fct_dict %>%
                           filter(source_fct %in% fct2 & !is.na(!!sym(mn)))) %>%
    filter(!is.na(source_fct)) %>% 
@@ -168,12 +192,20 @@ fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>%
   filter(!is.na(source_fct)) %>% 
   bind_rows(., fct)
 
+food_list %>% filter(!code %in% unique(fct$code)) %>%
+  distinct() %>% View()
+
 food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
   left_join(., fct_dict %>%
               filter(#source_fct %in% fct4 &
                 !is.na(!!sym(mn)))) %>%
   filter(!is.na(source_fct)) %>% 
-  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg)
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg) %>% View()
+
+fct_dict %>% 
+  filter(grepl("Cowpea", food_desc, ignore.case = FALSE)) %>% 
+    # filter(ID_3 == "1316.01") %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg) %>% View()
 
 #fct <- food_list %>% filter(!ID_3 %in% unique(fct$ID_3)) %>% 
 #  left_join(., fct_dict %>%
@@ -237,6 +269,8 @@ nct <-   read.csv(here::here("output", "fct_ihs5_v2.2.csv")) %>%
   
 head(nct)
 sum(duplicated(nct$code))
+
+
 
 # Combining dataset to complete IHS4 NCT (for Se)
 fct$code <- as.character(fct$code)

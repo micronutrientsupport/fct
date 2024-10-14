@@ -69,7 +69,7 @@ mwi_water <- mwfct %>% dplyr::filter(nutrient_data_source == "10") %>%
 
 
 EJ <- read.csv(here::here('data',
-                          'mineral-composition_2020-11-06.csv')) %>% 
+                          'mineral-composition_2024-10-14.csv')) %>% 
   select(-contains('median'))
 
 

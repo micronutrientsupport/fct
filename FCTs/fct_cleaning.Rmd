@@ -417,47 +417,11 @@ We have coded the confidence on the labels following the criteria:
 
 ```{r MAFOODS tagname}
 
-##View FCT structure
-#Creating a variable for the names of the data-set 
-# it is composed by 2 columns on the FCT_QA dataset
-#Column 6 == Year
-#Column 2 == Short_name
-#Just need to input the number of the row (1-13)
 
-x <- 2
-
-
-readxl::read_excel(here::here( 'data', 
-                              paste(paste(FCT_QA[x,6],
-                                          FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), sheet = 1) %>% head()
-
-
-MAFOODS <- readxl::read_excel(here::here( 'data', 
-                                         paste(paste(FCT_QA[x,6],
-                                                     FCT_QA[x,2], sep = '_'), 'xlsx', sep = '.')), 
-                              sheet = 1) %>% mutate(FCT = 'MAFOODS') %>% glimpse()
-
-#Renaming variables with tagnames and converting numeric variables into numeric
-
-FCT_tag <- c('code', 'ref', 'fooditem', 'foodgroup', 'WATER', 'ENERC1', 'ENERC2', 'NT',
-             'PROTCNT', 'FAT', 'FASAT', 'FAMS', 'FAPU', 'CHOLE', 'CHOCSM', 'CHOAVLDF',
-             'SUGAR', 'SUGAD', 'FIBC', 'STARCH', 'ASH', 'CA', 'FE', 'MG', 'P', 'K', 'NA',
-             'ZN', 'CU', 'MN', 'ID', 'SE', 'VITA_RAE', 'VITA', 'THIA', 'RIBF', 'NIA', 'VITB6', 'FOL', 
-             'VITB12', 'PANTAC', 'BIOT', 'VITC', 'VITD', 'VITE' ,'PHYT', 'FCT')
-
-
-MAFOODS <- MAFOODS %>% rename_all( ~ FCT_tag) %>% mutate_at(vars(5:46), funs(as.numeric)) 
-
-#Calculating SOP - Removing ALC and changing FIBTG for FIBC
-
-MAFOODS <- MAFOODS %>%
-  mutate(SOP = reduce(select(.,
-                             'WATER', 'PROTCNT' ,'FAT', 'CHOAVLDF','FIBC',  'ASH'), `+`))
-
-summary(MAFOODS$SOP)
 
 ```
 
+2. Adding "african cake" as banana cake: https://cookpad.com/uk/recipes/13097874-truly-african-banana-cake-chigumu
 
 ## Crop composition data 
 

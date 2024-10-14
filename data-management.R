@@ -3,7 +3,7 @@
 
 
 #Loading path - untracked file w/ personal WD
-source(here::here("path.R")) # Local copy of your directory path
+#source(here::here("path.R")) # Local copy of your directory path
 source(here::here("MAPS_Dictionary-Protocol.R"))
 
 # Saving dictionary
@@ -30,6 +30,9 @@ eval(parse(text = paste0("source('FCTs/", fcts, "')")))
 #Saving dictionary-to-FCTs-matches
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
+
+# Checking the file
+read.csv(here::here("metadata", file)) %>% count(fct)
 
 for(i in 1:length(path)) {
 write.csv(read.csv(here::here("metadata", file)),

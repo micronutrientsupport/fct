@@ -326,43 +326,48 @@ fct_dict %>%
 #Create a function to convert from dry (mg/Kg == mcg/g) to wet weight (mcg/100g)
 #x = dry weight in mg/Kg
 #y = water g/100g 
-#mn = nutrient in mg/100g wet weight
+#mn = nutrient in mcg/100g wet weight
 # As per FAO/ INFOODS Guidelines for Converting Units, Denominators 
 # and Expressions Version 1.0, page 12
 
 dry_wet <- function(x, y){
   
-  mn <- mn * (100 - y)
+  mn <- as.numeric(x) * (100 - y)
   
-  mn
+  return(mn)
   
 }
 
 # Converting the min from dry to wet weight
 
-mwi_mn <-  mwi_mn %>%
+mwi <-  mwi_mn %>%
   # Transforming into numeric
   mutate_at(vars(matches('_median')), as.numeric) %>% 
    # Transforming to wet weight using the water content in 100g
-  mutate(across(matches('_median'),
+  mutate(across(ends_with('_median'),
                    ~dry_wet(.x, mwi_mn$water))) %>%
    # Renaming to to reflect the WW in 100g
   rename_at(vars(matches('_median')),
-    ~stringr::str_replace_all(., 'median', 'mg_100g')) %>% 
+    ~stringr::str_replace_all(., 'median', 'mcg_100g')) %>% 
+  # Changing units
+  mutate(across(grep("ca|mg|fe|cu|zn", names(.),  value =TRUE), ~.x/1000)) %>% 
+  # Renaming to to reflect the new units in 100g
+  rename_at(vars(grep("ca|mg|fe|cu|zn", names(.),  value =TRUE)),
+            ~stringr::str_replace_all(., 'mcg', 'mg')) %>% 
    # Selecting the variables needed
-  select(food_desc, foodtissue, foodnotes, n_sample, 
-         contains('mcg_100g'), water, water_ref)  %>% 
+  select(fdc_id, food_desc, foodtissue, foodnotes, n_sample, 
+         contains('_100g'), water, water_ref, source_fct)  %>% 
   # ToDo: Change units of other Minerals
    mutate(
           foodnotes = ifelse(is.na(foodnotes), "raw", tolower(foodnotes)), 
-          food_desc = paste(fooditem, tolower(foodtissue), foodnotes, sep = ",")) %>% 
+          food_item = paste(food_desc, tolower(foodtissue), foodnotes, sep = ",")) %>% 
    select(-c( foodtissue, foodnotes)) 
  
- 
-mwi_mn %>% 
-   right_join(., mwi_mn %>% rename(food = "food_desc")) %>% 
+mwi %>% 
+   right_join(., mwi_mn %>% 
+                filter(soiltype == 'Combined', n_sample != "1") ) %>% 
 write.csv(., here::here('data',
-                              'mineral-composition_2024-07-28.csv'))
+                              'mineral-composition_2024-10-14.csv'))
 
 
 
@@ -370,9 +375,9 @@ write.csv(., here::here('data',
 
 
 # Generating a standardised version
-names(mwi_mn)
+names(mwi)
 
-mwi_mn <- mwi_mn %>% rename(
+mwi <- mwi %>% rename(
   WATERg = "water", 
   CAmg = "ca_mg_100g",
   MGmg  = "mg_mg_100g",
@@ -408,7 +413,7 @@ mwi_mn <- mwi_mn %>% rename(
 # mwi_mn[nrow(mwi_mn), "SEmcg" ] <-  bran
 # 
 
-mwi_mn %>% # select(comments)
+mwi %>% # select(comments)
   write.csv(., here::here("FCTs", "crop-compo_FCT_FAO_Tags.csv"), 
             row.names = FALSE)
 

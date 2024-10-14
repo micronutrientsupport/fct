@@ -256,3 +256,28 @@ y <- total_nct  %>%
               filter(str_detect(ID_3, "\\b"))) 
 
 y %>% filter(is.na(WATERg))
+
+
+# Load data (household - food matches)
+
+food <- read.csv(here::here("output", 
+               sort(list.files(here::here("output"), 
+                                           "MAPS_ihs4"), decreasing = TRUE)[1])) %>% 
+  dplyr::select("original_food_id", "original_food_name", 
+                "food_genus_id", "food_genus_confidence") %>% distinct() %>% 
+  rename(ID_3 = "food_genus_id")
+
+ihsfood %>% left_join(., food, by =c ("code"= "original_food_id", 
+                                      "item" = "original_food_name")) %>% 
+    #filter(is.na(ID_3))
+  View()
+
+mn <- "SEmcg"
+
+food %>% left_join(., fct_dict %>%
+                     filter(#source_fct %in% fct4 &
+                       !is.na(!!sym(mn)))) %>%
+  filter(!is.na(source_fct)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg) %>% 
+ # filter(is.na(!!sym(mn)))
+count(source_fct)
