@@ -1,17 +1,17 @@
 
 
 ################################################################################
-#  
-#
-#      Script for matching ESS3 food list with food composition data
-#
-#
-# Data source citation: "Central Statistical Agency of Ethiopia. Ethiopia 
-#  Socioeconomic Survey,Wave 3 (ESS3) 2015-2016. Public Use Dataset. 
-#  Ref: ETH_2015_ESS_v02_M. 
-#  Downloaded from https://microdata.worldbank.org/index.php/catalog/2783
-#  on 21/12/2021"
-#
+#                                                                              #
+#                                                                              #
+#      Script for matching ESS3 food list with food composition data           # 
+#                                                                              #
+#                                                                              #
+#  Data source citation: "Central Statistical Agency of Ethiopia. Ethiopia     #
+#  Socioeconomic Survey, Wave 3 (ESS3) 2015-2016. Public Use Dataset.          #
+#  Ref: ETH_2015_ESS_v02_M.                                                    #
+#  Downloaded from https://microdata.worldbank.org/index.php/catalog/2783      #
+#  on 21/12/2021"                                                              #
+#                                                                              #
 ################################################################################
 
 
@@ -70,7 +70,7 @@ fuzzy_output <- stringdist_join(foodlist, dict_testsample, #This selects the two
   group_by(fooditem.x) %>% #output formatting - this makes it so that the output is organised by the fooditem.x, (x being the first list item at the start of the tool, Kenfct)
   slice_min(order_by = dist, n = 5) #This means only the closest 5 matches are listed per food item on the FCT
 
-#Checking the accuracy of the matches by distance
+# Checking the accuracy of the matches by distance
 
 fuzzy_output %>%
   arrange(dist) %>%  knitr::kable()
@@ -163,7 +163,7 @@ ess3_food_st <- tribble(
 
 #Assigning 
 
-#3) Food matching
+# 3) Food matching
 
 #KENFCT, 2018
 source("kenfct.R")

@@ -1,5 +1,5 @@
 ---
-title: "Food matching: ESS3 food list with food composition data"
+title: "Food matching: ESS3 & ESS4 food list with food composition data"
 author: "Segovia D L Revilla, Lucia"
 date: "21/12/2021"
 output: html_document
@@ -55,6 +55,34 @@ For this food matching we used as primary FCT the FOA/INFOODS Western Africa Foo
 
 
 ```{r food-matching, echo=FALSE}
+
+nct <- read.csv(here::here("output", "ess4-fct.csv"))
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+### 3) UPDATE: Food matching
+
+
+**Mismatch btween dict code and fct library - need update**
+
+original_food_id | original_food_name.x   |     ID_3       
+210              Processed pulses (Shiro)       23170.03.01 701              Goat & mutton meat             21116.01    106              Millet                         118.01      106              Millet                         118.01      201              Horsebeans                     1702.01     301              Niger Seed                     1449.9.01   207              Vetch                          1702.01     603              Bula                           23170.02.02 602              Kocho                          23170.02.01
+904              Other purchased prepared foods 21116.01  
+
+From the missing values in the fct library, mostly are due to changes and/or updates in the dictionary codes. There are, however, some items that are not identified in the fct, for instance, shiro, that was matched to chickpeas flour in the US19 is not identified with its respective dictionary code. 
+
+**To-DO:** Update dictionary codes for certain items in the library. 
+
+
+```{r}
+# Updating the codes
+
+
+
+```
+
+### Qocho & Bulla 
+
+Food made from ensete
+(https://ethiopianfood.wordpress.com/2011/06/10/catching-up-with-qocho/)

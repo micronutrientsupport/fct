@@ -3,10 +3,10 @@
 
 
 #Loading path - untracked file w/ personal WD
-source(here::here("path.R")) # Local copy of your directory path
+#source(here::here("path.R")) # Local copy of your directory path
 source(here::here("MAPS_Dictionary-Protocol.R"))
 
-#Saving dictionary
+# Saving dictionary
 for(i in 1:length(path)) {
   
 saveRDS(dictionary.df, file = paste0(path[i], "/data/dictionary.df.rds"))
@@ -23,7 +23,7 @@ saveRDS(dictionary.df, file = paste0(path[i], "/data/dictionary.df.rds"))
 
 fcts <- list.files(here::here("FCTs") , "*_dict.R")
 
-source(here::here("FCTs", fcts[2]))
+#source(here::here("FCTs", fcts[2]))
 
 eval(parse(text = paste0("source('FCTs/", fcts, "')")))
   
@@ -31,7 +31,13 @@ eval(parse(text = paste0("source('FCTs/", fcts, "')")))
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 
+# Checking the file
+read.csv(here::here("metadata", file)) %>% count(fct)
+
 for(i in 1:length(path)) {
 write.csv(read.csv(here::here("metadata", file)),
           paste0(path[i], "/data/",file), row.names = F)
 }
+
+#write.csv(dictionary.df, 
+#          here::here("metadata","MAPS_food-dictionary_v3.0.3.csv"), row.names = F)

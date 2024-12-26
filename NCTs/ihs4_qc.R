@@ -7,9 +7,7 @@ library(dplyr)
 dat <- read.csv(here::here("inter-output", "hces", "ihs4.cons.csv"))[,2:4]
 food_list <- readRDS(here::here("inter-output", 
                       sort(list.files(here::here("inter-output"), 
-                            "MAPS_food-list_ihs4"), decreasing = TRUE)[1])) 
-
-
+                            "food-list_ihs4"), decreasing = TRUE)[1])) 
 
 # Checking the data
 names(dat)
@@ -35,8 +33,19 @@ food <- dat %>%
 
   food %>% filter(g_consumed>0 & (is.na(ID_3) |is.na(food_genus_confidence))) %>% 
     distinct(item_code)
+
+# Updates on the dict code matching (2024/03/25)
+
+#Sugar cane to sugar juice
+food$ID_3[food$ID_3 == "1802.01"] <- "1802.02"
+#Infant cereals to infant food, cereal, mixed
+food$ID_3[food$ID_3 == "23991.01.01"] <- "23991.01.07"
+#Goat meat average to goat meat moderate fat (as per Malawi FCT)
+food$ID_3[food$ID_3 == "21116.01"] <- "21116.03"
+# Orange sweet potato roasted - changed to boiled, drained
+food$ID_3[food$ID_3 == "1530.07"] <- "1530.06"
   
-#New variable for the changed consumption
+# New variable for the changed consumption
 food$amount_consumed_std_in_g <- food$g_consumed*food$wt
 
 ##Checking if there are wrong values, i.e., values with multiple matches
@@ -74,3 +83,24 @@ food$ID_3[food$ID_3 == "142.03"] <- "142.01"
 food$amount_consumed_std_in_g[food$ID_3 == "1505.01" & !is.na(food$amount_consumed_std_in_g)] <- food$amount_consumed_std_in_g[food$ID_3 == "1505.01" & !is.na(food$amount_consumed_std_in_g)]*(100-21)/(100-78)
 food$ID_3[food$ID_3 == "1505.01"] <- "1503.07"
 
+
+
+# Saving the food consumption and food matches
+# Checking version
+
+hces <-  "ihs4"
+current_food <- readRDS(here::here("inter-output", 
+                sort(list.files(here::here("inter-output"), 
+                paste0("food-cons_", hces)), decreasing = TRUE)[1])) 
+
+
+if(sum(food != current_food, na.rm = TRUE)>0){
+  stop("Difference in food list file, need new version")
+  
+} else {
+  
+  saveRDS(food,
+          here::here("inter-output",
+                     paste0("food-cons_", hces, "_v1.0.1.rds")))
+  
+}

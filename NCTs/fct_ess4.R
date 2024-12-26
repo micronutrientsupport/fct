@@ -18,13 +18,14 @@
 
 
 
-#0) Loading previous survey matches
+# 0) Loading previous survey matches
 
 source("fct_ess3.R")
 
 #New dataset from 2018-2019.
 
-ess4_food_list <- read.csv(here::here("inter-output", "eth_fct_match_v1.csv")) %>% 
+ess4_food_list <- read.csv(here::here("inter-output",
+                                      "eth_fct_match_v1.csv")) %>% 
    select(1, 2) %>% mutate(
       ref_fooditem = str_replace(item_code, "[:digit:]{2,3}\\.", "")) %>% 
    mutate_at("ref_fooditem", str_squish) %>% select(-item_code)
@@ -109,8 +110,7 @@ ess4_food_list <- ess4_food_list %>% left_join(., ess4_food) %>%
    bind_rows(., ess4_food_st)
 
 
-
-#Assigning 
+# TODO: Updted to do the matching using fct_dict
 
 #3) Food matching
 
@@ -275,4 +275,156 @@ ess4_fct$vitamina_in_rae_in_mcg <- as.numeric(ess4_fct$vitamina_in_rae_in_mcg)
 
 hist(ess4_fct$vitamina_in_rae_in_mcg)
 
-ess4_fct %>% write.csv(here::here("output", "ess4-fct.csv"), row.names = F)
+#ess4_fct %>% write.csv(here::here("output", "ess4-fct.csv"), row.names = F)
+
+
+## UPDATE matches (26/06/2024) -----
+# 610	Other tuber or stem (SPECIFY)/jinjibl  1657.01  	13021
+
+# Loading ess4 NCT (v1.0.0)
+nct <- read.csv(here::here("output", "ess4-fct.csv"))
+# Converting variable into character
+nct$ref_foodid <- as.character(nct$ref_foodid)
+
+# Loading the dictionary & fct library
+source(here::here("MAPS_Dictionary-Protocol.R"))
+source(here::here("MAPS_fct_load.R"))
+
+# Loading ess4 cleaned
+data.df <- read.csv(here::here( "data", "hces", 
+                                "food-cons_ess4_v1.0.0.2.csv"))
+names(data.df)
+
+# Converting variable into character
+data.df$original_food_id <- as.character(data.df$original_food_id)
+
+#cassa
+dictionary.df %>% filter(ID_3 == "1699.03")
+dictionary.df %>% filter(ID_2 == "23170.02") %>% View()
+dictionary.df %>% filter(grepl("inje", FoodName_3)# &
+                          # grepl("pulses", FoodName_1, ignore.case = TRUE)
+                        )
+fct_cover %>% filter( 
+  #source_fct == "KE18" , 
+#  grepl("ense", scientific_name, ignore.case = TRUE)
+  grepl("beet", food_desc, ignore.case = TRUE) #&
+ # grepl("VEGETABLE", food_group, ignore.case = TRUE)
+  ) %>%  View()
+
+fct_dict %>% filter(!is.na(ID_3)) %>% 
+  filter(
+  #  grepl("niger", food_desc, ignore.case = TRUE)
+    grepl("vicia", scientific_name, ignore.case = TRUE)) %>% 
+  select(fdc_id, source_fct, food_desc, ID_3) %>% View()
+
+data.df %>% distinct(original_food_id, original_food_name) %>% 
+  left_join(., nct, by = c("original_food_id" = "ref_foodid")) %>% 
+  filter(is.na(ID_3))
+
+food_list <-  data.df %>% distinct(original_food_id, original_food_name) %>% 
+  left_join(., nct, by = c("original_food_id" = "ref_foodid")) %>% 
+  distinct(original_food_id, original_food_name.x, ID_3)
+
+# Final review w/ S.M. matches:
+
+# NEW:
+# 210	Processed pulses (Shiro)  23170.03.01
+# 713	Other condiments/yeshro kimemoch	1699.03	13028 KE18
+# 904	Other purchased prepared food/Buna	23912.02.01	12003	Coffee, instant, dry powder or granules
+# 904	Other purchased prepared food/Tbis	21116.03	7016	Goat, medium fat, raw
+# 904	Other purchased prepared food/Beer	24310.01.01 168746	beer, regular
+
+# Adding missing dict. codes
+food_list$ID_3[food_list$original_food_id == "210"] <- "23170.03.01"
+food_list$ID_3[food_list$original_food_id == "713"] <- "1699.03"
+food_list$ID_3[food_list$original_food_id == "904"] <- "23912.02.01,21116.03,24310.01.01"
+
+# Mismatch btween dict code and dictionary entry - need update
+# 407 Moringa/Shiferaw/Halloka 1699.08    
+# 901 Injera (purchased)       23140.08.01 --> F1232.33
+# 606 Cassava                  01520.01.01
+
+# Updated codes
+food_list$ID_3[food_list$original_food_id == "407"] <- "1290.9.18"
+food_list$ID_3[food_list$original_food_id == "901"] <- "F1232.33"
+food_list$ID_3[food_list$original_food_id == "606"] <- "1520.01.01"
+food_list$ID_3[food_list$original_food_id == "503"] <- "1316.04,1316.05"
+food_list$ID_3[food_list$original_food_id == "609"] <- "1801.01"
+
+# Mismatch btween dict code and fct library - need update (see docu for more info)
+# Updated codes
+food_list$ID_3[food_list$original_food_id == "701"] <- "21116.02,21116.03,21115.01,21115.02"
+food_list$ID_3[food_list$original_food_id == "106"] <- "118.02,118.03"
+food_list$ID_3[food_list$original_food_id == "201"] <- "1702.02"
+food_list$ID_3[food_list$original_food_id == "207"] <- "1702.02"
+
+
+food_list %>% filter(is.na(ID_3))
+
+# Separte multi-matches and check 
+food_list <- food_list %>% separate_rows(ID_3) 
+
+## a) dictionary codes
+food_list %>% filter(!is.na(ID_3)) %>% 
+          left_join(., dictionary.df) %>% 
+  filter(is.na(FoodName_3)) %>% select(original_food_id, original_food_name.x, ID_3)
+
+## b) data availability
+
+ food_list %>% filter(!is.na(ID_3)) %>% 
+  left_join(., fct_dict) %>% 
+  filter(is.na(fdc_id)) %>% 
+  select(original_food_id, original_food_name.x, ID_3) %>% 
+   View()
+
+## c) fixing missing values
+
+ food_list <-  food_list %>% 
+   add_count(original_food_id) %>% 
+   mutate(
+     wt = 1/n, 
+     confidence = "m") %>% 
+   select(original_food_id, original_food_name.x, ID_3, confidence, wt)  
+
+ # Changes in the confidence 
+food_list$confidence[food_list$original_food_id == "210"] <- "l"
+food_list$confidence[food_list$original_food_id == "904"] <- "l"
+food_list$confidence[food_list$original_food_id == "704"] <- "l"
+
+food_list$confidence[food_list$original_food_id == "208"] <- "h"
+food_list$confidence[food_list$original_food_id == "502"] <- "h"
+food_list$confidence[food_list$original_food_id == "608"] <- "h"
+food_list$confidence[food_list$original_food_id == "302"] <- "h"
+food_list$confidence[food_list$original_food_id == "202"] <- "h"
+food_list$confidence[food_list$original_food_id == "303"] <- "h"
+food_list$confidence[food_list$original_food_id == "406"] <- "h"
+food_list$confidence[food_list$original_food_id == "601"] <- "h"
+ 
+food_list %>%  left_join(., dictionary.df %>% select(ID_3, FoodName_3) %>%
+                           filter(!is.na(ID_3))) %>% 
+   arrange(wt)  %>% View()
+ 
+## HCES standard names
+
+standard_names <- c("household_id", "latitud", "longitud", "urbanity", 
+                    "wealth_quintile", "household_expenditure",
+                    "interview_date",   "original_food_id",
+                    "original_food_name",
+                    "food_genus_id", "food_genus_confidence", 
+                    "amount_consumed_in_g")
+
+# Getting final MAPS output
+hces_cons <-  data.df %>% left_join(., food_list %>% 
+                         dplyr::rename( food_genus_id = "ID_3",
+                                        food_genus_confidence = "confidence"), 
+                       relationship = "many-to-many") %>% 
+   # Adjusting the consumption to the weight (multi-matched items)
+   mutate(amount_consumed_in_g = amount_consumed_in_g*wt) %>% 
+   select(all_of(standard_names)) 
+ 
+file_name <- paste0("MAPS_", hces, "_food-cons_")
+
+write.csv(hces_cons,
+          here::here("output",
+                     paste0(file_name, "v1.0.2.csv")), 
+          row.names = FALSE)

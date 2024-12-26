@@ -161,7 +161,7 @@ Output_table <- Output_table %>%
     PROCNTg = "Protein, calculated from  reference nitrogen_g", 
     CHOCDFg ="Carbohydrate, total, calculated by difference_g",
     FATg = "Lipid_g",
-    Edible_info = "NANA"
+    Edible_info = NA
   )
 
 

@@ -2,7 +2,7 @@
 #Script that loads all functions
 
 #Fuzzy matcher
-source(here::here("functions", "Fuzzy_Matcher.R"))
+#source(here::here("functions", "Fuzzy_Matcher.R"))
 #Food component calculators
 source(here::here("functions", "summary_table_functions.R"))
 #Energy calculators

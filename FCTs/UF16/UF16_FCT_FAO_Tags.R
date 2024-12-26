@@ -1,4 +1,25 @@
+
+################################################################################
+#                                                                              #
+#                           FAO/INFOODS                                        #
+#        Global food composition database for fish and shellfish               #
+#                           (uFish, 2016)                                      #
+#                                                                              #
+#                                                                              #
+################################################################################
+
+
 library(tidyverse)
+
+# 0) Accessing the data (for source of the data see README) - Uncomment!
+# Only need to do it the first time to obtain the raw files!
+# 
+# f <- "https://www.fao.org/fileadmin/templates/food_composition/documents/uFiSh1.0.xlsx"
+# 
+# download.file(f, destfile = here::here("FCTs", 'UF16', "uFiSh1.0.xlsx"),
+#             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+#             mode="wb")
+# 
 
 
 

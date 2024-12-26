@@ -20,16 +20,17 @@
 
 #1) fct used Tang et al., (2021)
 
-fct_ihs4 <- read.csv(here::here("data", "food-match-mwi_v04.1.csv")) %>% 
+fct_ihs4 <- read.csv(here::here("data", "old-files",  "food-match-mwi_v04.1.csv")) %>% 
   select(-c(X, ref_code, ref_fct, ref.x, ref.x.x, ref, comments))
 
 #2) Malawian FCT (2019) 
 
-source("mafood.R")
+#source("mafood.R")
+source(here::here("FCTs", "mw19_dict.R"))
 
 #List of unique fooditems in ihs5
 
-ihs5_foodlist <- read.csv("ihs5-fct_v1.2.csv") %>% 
+ihs5_foodlist <- read.csv(here::here("inter-output","ihs5-fct_v1.2.csv")) %>% 
   select(-c(X ,food_genus_id)) %>% distinct() %>% .[, c(1,2)]
 
 
@@ -80,18 +81,21 @@ fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid == "103") %>%
 
 
 #Adding 835 - popcorn
-
+fct_dict %>% filter(
+  grepl("popcorn", food_desc, ignore.case = "TRUE"), 
+  !grepl("chicken|industrial", food_desc, ignore.case = "TRUE")) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3,  WATERg, SEmcg)
 
 
 #Changing 412 to MW02_0003
 
 fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != "412") %>% 
-  bind_rows(., mwi_clean %>% filter(code == "MW02_0003") %>% 
+  bind_rows(., mwfct %>% filter(fdc_id == "MW02_0003") %>% 
               mutate(ihs5_foodid = "412",
                      ihs5_fooditem = "Tinned vegetables",
-                     ref_source = "MAFOODS") %>% 
-              rename(ref_fctcode = "code",
-                     ref_fctitem = "fooditem"))  %>% 
+                     ref_source = "MW19") %>% 
+              rename(ref_fctcode = "fdc_id",
+                     ref_fctitem = "food_desc"))  %>% 
   select(ihs5_foodid:ZN) 
 
 #Changing 829 to combo meal
@@ -103,18 +107,18 @@ item_name <- fct_ihs5 %>% filter(ihs5_foodid == "829") %>% pull(ihs5_fooditem)
 
 fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != "829") %>% 
   bind_rows(., 
-            mwi_clean %>% filter(code %in% meal_vendor) %>% 
+            mwfct %>% filter(fdc_id %in% meal_vendor) %>% 
               mutate(ihs5_foodid = "829") %>% 
               group_by(ihs5_foodid) %>% 
               summarise_if(is.numeric, mean, na.rm =T) %>% 
-              left_join(., mwi_clean %>% filter(code %in% meal_vendor) %>% 
+              left_join(., mwfct %>% filter(fdc_id %in% meal_vendor) %>% 
                           mutate(ihs5_foodid = "829") %>% 
                           group_by(ihs5_foodid) %>% 
                           summarise_if(is.character, ~paste(., collapse = ", ")) %>% 
-                          rename(ref_fctcode = "code",
-                                 ref_fctitem = "fooditem")) %>% 
+                          rename(ref_fctcode = "fdc_id",
+                                 ref_fctitem = "food_desc")) %>% 
               mutate(ihs5_fooditem = item_name,
-                     ref_source = "MAFOODS" )) %>% 
+                     ref_source = "MW19" )) %>% 
   select(ihs5_foodid:ZN)  
 
 #Fixing OFSP and WFSP
@@ -149,26 +153,26 @@ fct_ihs5 <- fct_ihs5 %>% mutate_at("ihs5_foodid", as.character) %>%
 
 #Adding the infant formula compo #708
 
-formula_id <-  mwi_clean %>% filter(str_detect(code, "MW07"), 
-                                    str_detect(fooditem, ("powder")), 
-                                    !str_detect(fooditem, "follow-up")) %>% pull(code)
+formula_id <-  mwfct %>% filter(str_detect(fdc_id, "MW07"), 
+                                    str_detect(food_desc, ("powder")), 
+                                    !str_detect(food_desc, "follow-up")) %>% pull(code)
 
 fct_ihs5 <- fct_ihs5 %>% filter(ihs5_foodid != "708") %>% 
   bind_rows(., 
-            mwi_clean %>% filter(code %in% formula_id) %>% 
+            mwfct %>% filter(fdc_id %in% formula_id) %>% 
               mutate(ihs5_foodid = "708") %>% 
               group_by(ihs5_foodid) %>% 
               summarise_if(is.numeric, mean, na.rm = T) %>% 
-              left_join(., mwi_clean %>% filter(code %in% formula_id) %>% 
+              left_join(., mwfct %>% filter(fdc_id %in% formula_id) %>% 
                           mutate(ihs5_foodid = "708") %>% 
                           group_by(ihs5_foodid) %>% 
                           summarise_if(is.character, ~paste(., collapse = ", ")) %>% 
-                          rename(ref_fctcode = "code",
-                                 ref_fctitem = "fooditem")) %>% 
+                          rename(ref_fctcode = "fdc_id",
+                                 ref_fctitem = "food_desc")) %>% 
               mutate(ihs5_fooditem = "Infant feeding formula (for bottle)",
-                     ref_source = "MAFOODS" , 
+                     ref_source = "MW19" , 
                      comment = "We are assuming that VITA is coming
-                                   from as retinol and VITA = VITA_RAE" )) %>% 
+                                   from as retinol and VITA = VITA_RAE")) %>% 
   select(ihs5_foodid:comment)  
 
 fct_ihs5$VITA_RAE[fct_ihs5$ihs5_foodid == "708"] <- 640.10

@@ -12,9 +12,20 @@
 
 library(tidyverse)
 
+# 0) Accessing the data (for source of the data see README) - Uncomment!
+# Only need to do it the first time to obtain the raw files!
+# 
+# f <- "https://www.fao.org/fileadmin/user_upload/faoweb/2020/WAFCT_2019.xlsx"
+# 
+# download.file(f, 
+#             destfile = here::here("FCTs", 'WA19', "WAFCT_2019.xlsx"),
+#             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+#             mode="wb")
+# 
+
 # Data Import ----
 
-wafct <- readxl::read_excel(here::here("FCTs", 'WA19', 'INFOODS-WAFCT_2019.xlsx'), sheet = 5) %>%  #Reads the excel document and assigns the relevant sheet to an R data frame
+wafct <- readxl::read_excel(here::here("FCTs", 'WA19', 'WAFCT_2019.xlsx'), sheet = 5) %>%  #Reads the excel document and assigns the relevant sheet to an R data frame
   mutate(source_fct = 'WA19')  #Creates the source_fct column and fills it with "WA19_FCT"
 
 

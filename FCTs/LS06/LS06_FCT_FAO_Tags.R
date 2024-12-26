@@ -12,6 +12,19 @@ library(tidyverse)
 # Loading functions
 source("functions.R")
 
+
+# 0) Accessing the data (for source of the data see README) - Uncomment!
+# Only need to do it the first time to obtain the raw files!
+# 
+# f <- "https://www.fao.org/fileadmin/templates/food_composition/documents/LesFCT_final_copyrevised1.xlsm"
+# 
+# download.file(f, destfile = here::here("FCTs", 'LS06', "LesFCT_final_copyrevised1.xlsx"),
+#            method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+#             mode="wb")
+# 
+
+
+
 # Data Import ----
 
 readxl::read_excel(here::here("FCTs", 'LS06', 'LesFCT_final_copyrevised1.xlsx'), 

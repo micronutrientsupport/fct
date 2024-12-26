@@ -21,7 +21,7 @@ wa_genus <- tribble(
   "12_001", "24310.01.01", "m",
   "03_057", "1708.01", "h",
   "13_023", "F0623.01", "m",
-  "01_095", "118.03", "h", 
+  "01_017", "118.03", "h", 
   "10_002", "22211.01", "h",
   # "12_024", "24490.02", "h",
   "13_021", "F0666.01", "h", 
@@ -43,20 +43,25 @@ wa_genus <- tribble(
   "01_039",  "114.01", "m",
   "02_049",  "1530.02", "h",
   "02_022",  "1530.01", "h",
+  "02_013",  "1530.08", "h",
+  "02_011",  "1530.09", "h",
   "02_014", "1530.04", "h",
   "03_004", "1706.01", "h",
   "06_027", "142.02", "m",
   "03_032", "1707.01", "h",
   "03_008", "141.01", "h",
   "07_003", "21121.03", "m",
-  "07_030", "21121.01", "m",
+  "07_030", "21121.04", "h",
+  "07_036", "21121.05", "h",
+  "07_033", "21121.06", "h",
   "08_002", "231.02", "h",
   "08_001", "231.01", "h",
   "14_001", "1533.01", "l",
   "09_043", "1501.03", "h",
-  "07_046", "21116.01", "m",
+  "07_046", "21116.03", "m",
   "10_029", "2211.01", "h",
   "07_072", "21115.01", "m",
+  "07_004", "21115.02", "h",
   "07_006", "21113.02.01", "m",
   "07_007", "21114.01", "h",
   "04_005", "1212.03", "h",
@@ -68,13 +73,17 @@ wa_genus <- tribble(
   "05_026", "1341.01", "m", 
   "05_002", "1311.01", "h",
   "05_003", "1312.01", "m",
+  "05_048", "1312.02", "m",
+  "05_028", "1312.03", "m",
   "05_010", "1316.02", "h",
   "05_037", "1316.01", "l",
   "05_017", "1317.01", "h",
   "05_018", "1318.01", "h", 
-  "11_007", "2165.01", "l", 
-  "01_101",  "23140.07.01", "m", 
-  "04_011", "1699.08", "m", 
+  "11_007", "2165.01", "m", 
+  "11_024", "2165.02", "h", 
+  "11_023", "2165.03", "h", 
+  "01_101", "23140.07.01", "m", 
+  "04_011", "1290.9.18", "h", 
   "04_003", "1241.9.02", "h",
   "09_004", "1529.02", "h",
   "02_002", "1520.02.01", "h",
@@ -97,13 +106,25 @@ wa_genus <- tribble(
   "06_002", "1460.01", "h",
   "06_015", "1444.01", "m", 
   "11_009", "2161.01", "m", 
+  "11_027", "2161.02", "h", 
+  "11_028", "2161.03", "h", 
   "11_003", "2162.01", "m", 
+  "11_021", "2162.02", "h", 
+  "11_022", "2162.03", "h", 
   "11_016", "21631.01.01", "m", 
+  "11_035", "21631.01.02", "h", 
+  "11_034", "21631.01.03", "h", 
   "11_012", "21691.14.01", "m", 
+  "11_026", "21691.14.02", "m", 
+  "11_025", "21691.14.03", "m", 
   "11_002", "2166.01", "m", 
+  "11_018", "2166.02", "h", 
+  "11_017", "2166.03", "h", 
   "11_014", "2167.01", "m", 
   "11_013", "21691.02.01", "m", 
   "11_010", "34550.01", "m", 
+  "11_031", "34550.02", "h", 
+  "11_030", "34550.03", "h", 
   "05_016", "1323.01", "h", 
   "05_014", "1322.01", "h", 
   "05_035", "1321.02", "l",
@@ -119,11 +140,11 @@ wa_genus <- tribble(
   "11_015", "22241.02.01", "h", 
   "09_055", "1553.01", "l", 
   "09_006", "1514.01", "h", 
-  # "09_018", "1501.02", "m",  #dupli - it used the fillet (as described)
-  "09_003",  "1527.01", "l", #need to check w/ specie
-  "09_037", "1532.01", "l", #need specify in oil
+  # "09_018", "1501.02", "m",  # dupli - it used the fillet (as described)
+  "09_003",  "1527.01", "l", # need to check w/ specie
+  "09_037", "1532.01", "l",  # need specify in oil
   "06_029", "1491.02.01", "l", 
-  "01_163", "23120.01.02", "l", 
+  "01_163", "23120.01.03", "m", 
   "04_002", "21393.9.01", "h",
   "04_081", "21393.9.02", "h",
   "04_031", "21393.9.03", "h",
@@ -147,12 +168,12 @@ wa_genus <- tribble(
   "07_044", "21170.92.04", "h",
   "13_008", "F1232.11", "h", 
   "03_154", "F1232.15", "h", 
-  "04_0162", "1290.9.12", "h",
+ # "04_0162", "1290.9.12", "h", # No idea of this
   "05_011", "1359.9.03", "h",
   "10_016",  "22221.01.01", "h", 
   "01_034", "23162.03", "h", 
   "01_065", "23162.04", "h", 
-  "01_067", "23161.01.04", "h",
+  "01_067", "23161.02.04", "h",
   "01_036", "23161.01.01", "l",
   "01_045" , "F0022.09", "h", 
   #"01_187",  "F0020.07", "l", # This is cake not sweet bread (can use value from KE18)
@@ -160,10 +181,10 @@ wa_genus <- tribble(
   "04_012",  "1233.01", "h" ,
   "04_074",  "1290.9.09", "h",
   "03_005" , "1706.03", "h",
-  "03_027",  "1706.03", "h",
-  "03_006",  "1706.03", "h",
-  "02_041",  "23170.01.02", "h", 
-  "02_040",  "23170.01.03", "h",
+  "03_027",  "1706.04", "h",
+  "03_006",  "1706.05", "h",
+  "02_041",  "23170.01.03", "h", 
+  "02_040",  "23170.01.02", "h",
   "07_014",  "21111.02.03", "m",
   "07_002", "21111.02.02", "m", 
   "02_084",  "1313.03", "h", 
@@ -185,7 +206,7 @@ wa_genus <- tribble(
   "04_008", "1219.01.01", "h", 
   "05_012", "1359.9.01", "h", 
   "05_004", "1359.9.02", "h",
-  "04_001", "21393.9.01", "h",
+  "04_001", "1290.9.17", "h",
   "12_009", "23912.02.02", "m", 
   "13_017", "F1232.06", "h", 
   "14_033", "F1232.18", "h", 
@@ -260,16 +281,116 @@ wa_genus <- tribble(
   "07_081", "21170.92.09", "h", 
   "09_051", "1501.11", "h", 
   "08_003", "F1061.02", "m", 
-  "04_072", "1290.9.07", "h"
+  "04_072", "1290.9.07", "h", 
+  "01_184", "1199.9.01", "h", 
+ "04_057", "1215.01", "h", 
+ "04_059", "1290.9.02", "h", 
+ "04_065", "21399.02.01", "l", 
+ "05_041", "1359.9.06", "h", 
+ "07_069", "21116.02", "h", 
+ "07_070", "21170.01.02", "h", 
+ "10_014", "22110.02.01", "h", 
+ "10_022", "22290.04", "h", 
+ "12_006", "2413.02", "h" ,
+ "03_034", "141.04", "h", 
+ "03_026", "1706.06", "h",
+ "03_025", "1702.03", "h",
+ "05_005", "1319.07", "h",
+ "05_034", "F0623.06", "h", 
+ "05_053", "1359.9.08", "h", 
+ "06_033", "1379.9.02", "h", 
+ "06_032", "1379.9.03", "h", 
+ "09_054", "1562.02", "h", 
+ "13_026", "1699.12", "h", 
+ "04_045", "1699.13", "h", 
+ "09_056", "1562.05", "h", 
+ "07_083", "2920.01", "h", 
+ "09_048", "1516.04", "h", 
+ "09_021", "1503.09", "h", 
+ "09_026", "1503.10", "h",
+ "09_059", "1553.03", "h", 
+ "02_072", "1530.06", "h", 
+ "06_016", "1499.01.01", "m", 
+ "02_057", "1313.02", "l", # plenty of varieties -double check
+ "09_081", "1507.12", "h", 
+ "09_020", "1507.15", "h",
+ "09_077", "1507.16", "h", 
+ "01_087", "23110.03", "h", 
+ "07_064", "21117.01.01", "h", 
+ "10_005", "22230.01.01", "h", 
+ "10_010", "22120.03", "h", 
+ "05_047", "1341.02", "h",
+ "05_046", "1341.03", "h",
+ "01_006",  "112.02", "h", 
+ "11_005", "2168.01", "m", 
+ "11_020", "2168.02", "h", 
+ "11_019", "2168.03", "h",
+ "07_005", "21113.02.03", "h", 
+ "07_071", "21113.02.04", "h", 
+ "07_025", "F1172.03", "h",
+ "07_079", "21170.92.03", "m",
+ "07_074", "21170.92.10", "m",
+ "07_076", "21170.92.11", "h",
+ "07_075", "21183.04", "h", 
+ "05_022", "1221.01", "h", 
+ "05_039", "1229.01", "h", 
+ "05_038", "1229.02", "h", 
+ "05_015", "1316.04", "m",
+ "05_052", "1359.9.09", "h",
+ "13_028", "23999.01.01", "h",
+ "03_001", "1708.01", "h", 
+ "03_024", "1702.02", "h", 
+ "03_058", "1701.05", "h", 
+ "03_059", "1701.04", "h", 
+ "05_045", "1319.08", "h",
+ "01_183", "23140.03.03", "h",
+ "03_009", "1356.01", "h", 
+"03_042",  "1356.02", "h", 
+   "11_004", "2165.04", "h",
+"04_010", "1290.9.06", "h",
+"04_020", "1290.9.05", "h",
+"04_009", "1290.9.19", "h", 
+"04_013", "1290.9.20", "h", 
+"04_036", "1290.9.21", "h", 
+"04_073", "1290.9.22", "h", 
+"04_084", "1290.9.23", "h", 
+"04_019", "1290.9.24", "h", 
+"04_020", "1290.9.05", "h", 
+"04_022", "1290.9.25", "h", 
+"04_079", "1290.9.26", "h", 
+"04_078", "1290.9.27", "h", 
+"04_080", "1290.9.28", "h",
+"01_188", "F0022.03", "h", 
+"01_187", "F0022.09", "h", 
+"01_058", "23120.03.02", "h", 
+"02_046", "1313.01", "m", 
+"02_036", "1540.01", "h", 
+"02_034", "1540.05", "h", 
+"06_004", "1460.02", "h", 
+"06_035", "1449.01.02", "h",
+"12_019", "2899.01.01", "l",  # we should add tap water.
+#"13_015", "1699.02", "m",  # Excluded due to high Ca conc.
+"13_002", "23520.01", "h",
+"04_076", "1290.01.01", "m",
+"06_008", "1379.9.04", "h",
+"09_109", "1532.04", "h",
+"11_008", "21691.03.01", "h",
+"08_005", "231.03", "h",
+"02_038", "23170.01.05", "h", 
+"05_006", "1359.02.01", "h",
+"01_077", "23710.03", "h", 
+"04_032", "1232.01", "h", 
+"04_006", "1251.01", "h", 
+"01_063", "23120.05.01", "m"
 
-  )
+ )
 
 # Checking for dictionary duplicates -----
 
 wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) %>% 
   filter(!ref_fctcode %in%
            c("01_043", "07_063","10_002", "12_002",
-             "12_012", "13_021", "13_023")) %>% #removing dupli
+             "12_012", "13_021", "13_023")) %>% # removing dupli
   select(ref_fctcode, ID_3, fe2_confidence) %>%
   mutate_at("ref_fctcode", as.character) %>% 
   rename(confidence = "fe2_confidence") %>% 
@@ -278,21 +399,36 @@ wafct.genus <- read.csv(here::here('metadata', 'MAPS_WAFCT_standard-list.csv')) 
 wafct.genus %>%  count(ref_fctcode) %>% 
   filter(n>1) 
 
-subset(wafct.genus, ref_fctcode == "09_018")
+subset(wafct.genus, ref_fctcode == "01_017")
+subset(wafct, fdc_id == "01_017")
 
+wafct.genus %>%  count(ID_3) %>% 
+  filter(n>1) 
+
+subset(wafct.genus, ID_3 == "118.03")
+#subset(wafct.genus, ID_3 == "118.04")
+
+# Fixing duplicated
+wafct.genus$ID_3[wafct.genus$ref_fctcode == "01_095"] <- "118.04"
+wafct.genus$confidence[wafct.genus$ref_fctcode == "01_095"]
+
+subset(wafct.genus, ID_3 == "118.04")
 
 #Checking the items of the list above
 
 dictionary.df %>% 
-  filter(ID_3 %in% c("2899.01.01"))
+  filter(ID_3 %in% c("118.03"))
 
-#Updating the dictionary compilation -----
+# Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 
 wafct.genus %>% mutate(fct = "WA19")  %>% 
-  bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+  bind_rows(., read.csv(here::here("metadata", file)) %>% 
+         # filter(!ref_fctcode %in% c("01_095", "04_011")) %>%  # Excluding codes that were changed
+              mutate_at(c("ref_fctcode", "ID_3"), as.character) %>%
+           #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+           filter(fct != "WA19"))  %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding dictionary code
@@ -302,40 +438,51 @@ wafct <- wafct %>%
 
 # Checking dictionary codes
 wafct.genus %>% filter(ID_3 == "")
-wafct.genus %>% filter(ref_fctcode == "05_011")
-wafct %>% filter(fdc_id == "02_021") %>% glimpse()
+wafct.genus %>% filter(ref_fctcode == "01_184")
+wafct %>% filter(fdc_id == "01_184") %>% glimpse()
 
 #Checking code availability 
-wafct %>% filter(fdc_id %in% c("12_012", "12_013")) %>% View()
+wafct %>% filter(fdc_id %in% c("10_012", "10_011")) ## %>% View()
 
-subset(wafct, fdc_id %in% c("09_024", "09_025", "09_069" ), 
-       select = c(fdc_id, food_desc, ID_3, scientific_name))
+subset(wafct, fdc_id %in% c("06_038"), 
+       select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
-subset(wafct, fdc_id == "01_099", select = food_desc) 
-subset(wafct, fdc_id == "09_001", select = c(food_desc, ID_3, scientific_name)) 
-subset(wafct, ID_3 == "1290.9.12") 
+subset(wafct, fdc_id == "01_006", select = food_desc) 
+subset(wafct, fdc_id == "04_098", select = c(food_desc, ID_3, scientific_name)) 
+subset(wafct, ID_3 == "1319.03" ) 
 subset(wafct, str_detect(ID_3, "01520"))
 
-dictionary.df %>% filter(ID_3 %in% c("1529.03", "1527.03"))
-subset(dictionary.df, ID_2 == "2735")
-subset(dictionary.df, ID_1 == "2735")
+# Checking food groups
+subset(wafct, grepl("^05", fdc_id, ignore.case = TRUE) &
+         grepl("", food_desc, ignore.case = TRUE), 
+       select = c(fdc_id, food_desc,scientific_name,  ID_3)) %>% View()
+
+# Checking in the dict
+dictionary.df %>% filter(ID_3 %in% c("1530.01"))
+subset(dictionary.df, ID_2 == "24490")
+subset(dictionary.df, ID_1 == "2511")
 subset(dictionary.df, ID_0 == "AP")
 
 distinct(subset(dictionary.df,
                 ID_1 == "2605", select = FoodName_2))
 
 
-subset(wafct, grepl("cream", food_desc, ignore.case = TRUE) &
+subset(wafct, grepl("locus", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE) 
        ,
-       select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
+       select = c(fdc_id, food_desc, scientific_name, WATERg, ENERCkcal, VITA_RAEmcg, ID_3))
 
-subset(wafct, str_detect(food_desc, "trout|Trout") & 
-         grepl("", food_desc, ignore.case = TRUE),
+subset(wafct,  grepl("millet", food_desc, ignore.case = TRUE) & 
+         grepl("flour", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, ID_3, Edible_factor_in_FCT, scientific_name))
 subset(wafct, str_detect(scientific_name, "Scomberomorus"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
 subset(dictionary.df,
-       grepl("tur", FoodName_2, ignore.case = TRUE) &
+       grepl("pumpkin", FoodName_3, ignore.case = TRUE) &
+         grepl("", FoodName_3, ignore.case = TRUE))
+
+subset(dictionary.df,
+       grepl("seed", FoodName_2, ignore.case = TRUE) &
          grepl("", FoodName_2, ignore.case = TRUE))
+

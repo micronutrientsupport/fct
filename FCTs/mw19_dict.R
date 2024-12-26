@@ -7,7 +7,7 @@ if(sum(ls() == "dictionary.df") == 0) {
   source(here::here("MAPS_Dictionary-Protocol.R"))}
 
 #Checking dictionary codes
-dictionary.df %>% filter(ID_3 == "1520.01.03")
+dictionary.df %>% filter(ID_3 == "23670.01.05")
 
 #Adding GENuS code
 
@@ -27,9 +27,8 @@ mwi_genus <- tribble(
 "MW01_0041" ,  "F0022.02", "h",
 "MW01_0048" ,  "1313.01", "h",
 "MW01_0050" ,  "1510.01", "h",
-"MW01_0058" ,  "23161.01.01", "m",
+"MW01_0058" ,  "23161.02.01", "h", # In Malawi they produce rice. 
 "MW01_0060" ,  "114.01", "h",
-"MW01_0063" ,  "1530.02", "h",
 "MW01_0065" ,  "1530.01", "h",
 "MW01_0066" ,  "1530.04", "h",
 "MW02_0004" ,  "1701.03", "h",
@@ -47,11 +46,11 @@ mwi_genus <- tribble(
 "MW03_0015" ,  "231.01", "h",
 "MW03_0019" ,  "1533.01", "h",
 "MW03_0030" ,  "1501.03", "h",
-"MW03_0052" ,  "21116.01", "h",
+"MW03_0052" ,  "21116.03", "h",
 "MW03_0059" ,  "2211.01", "h",
 "MW03_0063" ,  "21115.01", "h",
 "MW03_0064" ,  "21113.02.01", "h",
-"MW03_0065" ,  "21170.01.03", "h",
+"MW03_0065" ,  "21170.01.03", "l", # only breast (low fat)
 "MW03_0067" ,  "21114.01", "h",
 "MW04_0003" ,  "1212.02", "h",
 "MW04_0004" ,  "1212.01", "h",
@@ -60,7 +59,7 @@ mwi_genus <- tribble(
 "MW04_0025" ,  "1270.01", "h",
 "MW04_0030" ,  "1239.01.01", "h",
 "MW04_0031" ,  "1253.02.01", "h",
-"MW04_0034" ,  "1235.01", "h",
+# "MW04_0034" ,  "1235.01", "h", it's boiled
 "MW04_0036" ,  "1234.01", "h",
 "MW05_0001" ,  "1341.01", "h",
 "MW05_0002" ,  "1311.01", "h",
@@ -70,15 +69,15 @@ mwi_genus <- tribble(
 "MW05_0019" ,  "1317.01", "h",
 "MW05_0021" ,  "1318.01", "h",
 "MW06_0001" ,  "21700.02.01", "h",
-"MW08_0007" ,  "1802.02", "h",   # Changed to the "sugar cane juice" due to NVs are the same as the juice
+"MW08_0007" ,  "1802.02", "l",   # Changed to the "sugar cane juice" due to NVs are the same as the juice
 "MW08_0008" ,  "2899.01.01", "h",
 "MW01_0031", "F1232.05", "l", 
 "MW03_0027", "1505.03", "m", 
-"MW04_0016", "1290.9.15", "m",   #same specie different sub.specie
-"MW04_0021", "1290.9.10", "h", 
+"MW04_0016", "1290.9.15", "m",   # same specie different sub.specie
+"MW04_0021", "1290.9.29", "h", 
 "MW04_0012", "1290.9.16", "h", 
 "MW03_0031", "1505.02", "m",
-"MW01_0002", "F0623.03", "h", 
+"MW01_0002", "F1232.38", "h", 
 "MW03_0042", "1505.06", "l", 
 "MW03_0023", "1505.04", "l", 
 "MW03_0047", "1505.05", "l",
@@ -87,9 +86,34 @@ mwi_genus <- tribble(
 "MW03_0021", "1507.14", "h",
 "MW04_0015", "1290.9.07", "h", 
 "MW03_0022", "1501.09", "h", 
+"MW05_0015", "1349.2.01", "m", 
+"MW03_0020", "1505.01", "m",
+"MW04_0011", "1215.02", "h",
+"MW04_0014", "1219.01.01", "h",
+"MW04_0007", "1233.01", "h", 
+"MW05_0013", "1359.9.01", "h",
+"MW04_0032", "1242.01", "h", 
+"MW01_0024", "23110.02", "l" , 
+"MW05_0014", "1322.01", "h", 
+"MW05_0018", "1323.01", "h", 
+"MW05_0005" , "1359.9.02", "h", 
+"MW05_0012", "21431.01", "h",
+"MW03_0009", "21183.03", "h",
+"MW01_0035", "39120.04.01", "h", 
+"MW01_0004", "F0020.01", "h", 
+"MW01_0003", "F0020.02", "h", 
+"MW05_0006", "1319.08", "h", 
+"MW03_0068", "F0022.06", "m", 
+"MW03_0003", "21155.03", "h", 
+"MW03_0004", "21151.02", "h",
+"MW01_0061", "F1232.39", "h",
+"MW01_0001", "F1232.40", "h",
+
+
 )
 
-
+# Note that there were some foods that were from South Africa and/or USDA that
+# we excluded from the recoding (so they are not to be used in MAPS)
 (dupli <- mwi_genus %>%  count(ref_fctcode) %>% 
     filter(n>1) %>% pull(ref_fctcode))
 
@@ -106,7 +130,9 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 mwi_genus %>% mutate(fct = "MW19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character) %>% 
+              #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+              filter(fct != "MW19")) %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 mwi_genus <-  mwi_genus %>% left_join(., dictionary.df)
@@ -138,26 +164,24 @@ dim(mwfct)
 
 # Checking dictionary/ fct ids availability ----
 
-mwfct %>% filter(fdc_id %in% c("6017",
-                                "6018",
-                                "6005",
-                                "6006")) %>% .[, c(3:4)]
+mwfct %>% filter(fdc_id %in% c("MW05_0005"
+                                )) %>% .[, c(3:4)]
 
-subset(mwfct, fdc_id %in% c("13033"), 
-       select = c(fdc_id, food_desc, ID_3, scientific_name))
+subset(mwfct, fdc_id %in% c("MW01_0036"), 
+       select = c(fdc_id, food_desc, ID_3, scientific_name, WATERg))
 
-subset(mwfct, fdc_id == "MW03_0027", select = c(food_desc, ID_3, scientific_name)) 
-subset(mwfct, ID_3 == "1359.9.04") 
+subset(mwfct, fdc_id == "MW01_0041", select = c(food_desc, ID_3, scientific_name)) 
+subset(mwfct, ID_3 == "23161.01.01") 
 subset(mwfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("1359.9.04"))
+dictionary.df %>% filter(ID_3 %in% c("F0022.04"))
 subset(dictionary.df, ID_2 == "F1232")
 subset(dictionary.df, ID_2 %in% c("1379.02"
 ))
 subset(dictionary.df, ID_1 == "2533")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(mwfct, grepl("cat", food_desc, ignore.case = TRUE) &
+subset(mwfct, grepl("medl", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
 subset(mwfct, str_detect(fdc_id, "^4") &
@@ -166,12 +190,16 @@ subset(mwfct, str_detect(fdc_id, "^4") &
 subset(mwfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
-subset(dictionary.df, grepl("bean", FoodName_3, ignore.case = T) &
-         grepl("canned", FoodName_3, ignore.case = T))
+subset(dictionary.df, grepl("maize", FoodName_3, ignore.case = T) &
+         grepl("", FoodName_3, ignore.case = T))
 
-subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
+subset(dictionary.df, grepl("Annona", scientific_name, ignore.case = T) &
          grepl("", FoodName_2, ignore.case = T))
 
 mwfct %>% filter(!is.na(ID_3)) %>% count()
 
 mwi_genus %>% anti_join(mwfct, by = "ID_3")
+
+# subset(fct_cover, grepl("medl", food_desc, ignore.case = T) &
+#          grepl("", food_desc, ignore.case = T)) %>% 
+#   select(source_fct, fdc_id, food_desc)

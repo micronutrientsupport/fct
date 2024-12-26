@@ -1,40 +1,175 @@
----
-title: "IHS Food Matching"
-author: "Segovia De La Revilla, Lucia"
-date: "20/09/2021"
-output: html_document
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# Nutrient Conversion Table for Malawi Integrated Household Survey
+
+```{r}
+# Environment preps ----
+
+# Loading library
+library(dplyr)
+library(NutritionTools)
+
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+
+# Data 
+# This is the original food list matched to the correct dictionary ids desc.
+food_list <- readRDS(here::here("inter-output", 
+              sort(list.files(here::here("inter-output"), 
+             "food-list_ihs4"), decreasing = TRUE)[1])) %>% 
+  #Removing food name as it is wrong in many cases
+  select(-food_name) %>% #adding the correct FoodName_3
+    left_join(., dictionary.df[, c("ID_3", "FoodName_3")])
+
+names(food_list)
+
 ```
-Updated: 2023-05-31
 
-# IHS 4
+
+
+The scripts described here can be used for generating a Nutrient Conversion Table (NCT) to be use with the Malawi Integrated Household Survey (IHS) round 4 (2016-2017), and round 5 (2019-2020) with slight modifications. 
+
+This protocol serves as documentation of the food matches that are performed in the back-end of the MAPS tool{LINK}. 
+
+Last Updated: 2024-08-12
+
+## Note 
+
+The original matches were performed to the dictionary (more info here), because there are foods that are not available in any FCT, the "MAPS-version" substituted non-available foods (eg. unshelled groundnuts) to available (shelled groundnuts). Then modifications on the Edible Portion (EP) or others are applied.
+
+
 **Change log**
+V.3.0.0 - updated on  2024-12-26: Fixed items that had wrong matches, permanently.
 V.2.0.0 - updated on  2023-05-31: Fixed items without matches on any of the FCTs used in MAPS tool, changed to better matches in the FCTs.
+
 
 # Introduction
 
 The document contains information on the food matching for Malawi household surveys, including IHS4 () and IHS5 ().
 
 
+The step one is matching the food list to the dictionary. 
+The step two is matching the dictionary to the MAPS FCT library and check for missing values in foods, and then in nutrients. 
+Step three, change the dictionary matches for the MAPS NCT to dictionary codes available in FCT. 
+
 # Updating food matches to be performed within the MAPS tool.
 
-Some food needed a better match, for instance, beef was matched to "with bones" however, the edible portion used was 1. Hence, we matched it to the three fat perc. w/o bones. 
+ - Checking excluded in IHS5 script (ihs5_genus.R)
+ - Here's the changes that were made however no serious issue or good reason seemed recoded (beside data needs)
+ - Not changing them back.
+
+
+```{r}
+
+# Checking excluded in IHS5 script (ihs5_genus.R)
+food_list %>% 
+filter(ID_3 %in% # Citrus and orange sweet potato from boiled version
+        c("1530.06", "1321.02", "1322.02", "1324.02", 
+          # Changed green and roasted maize to boiled 
+          "1290.01.01", "1290.01.02" , "1290.01.03",
+          # Yeast and baking powders 
+              "F1232.07", "F1232.06"
+        ))  %>% View()
+
+```
+
+NOTE: Ca values in baking powder ("F1232.07") are high, specially **extremely** although plausible in US19(18369)
+
+
+```{r}
+
+# Checking yeast and baking powder compo values
+fct_dict %>% 
+  filter(ID_3 %in%  
+           c( "F1232.07", "F1232.06"))  %>%
+  select(source_fct, ID_3, fdc_id,  food_desc,  CAmg, SEmcg, VITA_RAEmcg, VITB12mcg)
+  View()
+
+```
+
+Some food needed a better match, for instance, beef was matched to "with bones" however, the edible portion used was 1. Hence, we change it to a one-to-many match using beef with three fat content and w/o bones. 
 
 beef, lean, with bones, fresh, raw (21111.01.01) --> Added beef w/o bones, including ground raw. c("21111.02.03", "21184.01.02", "21111.02.01", "21111.02.02")
 
-# Need to change food name for recoded items, and generate a new consumption variable with the adjusted values. 
 
-We are updating the workflow, so the it allows for taking the survey data (from the MAPS tool or from a user), check the food matches and then merge and adapt the consumption data according to the matches. 
+```{r}
 
-Including, allocation (re-calculation) of the consumed food by multiple items (i.e., weighting factors), edible portion, water content (i.e., reported dried but matched to fresh), etc. 
+food_list %>% 
+  filter(ID_3 %in%  # Three traditional drinks used the same code ()
+           c( "24310.02.01",
+              # Wrongly coded Nkate
+              "F0022.06" ,
+              # Changing food consumed at restaurant
+              "F1061.01","F1232.05"
+              ))  %>% View()
+
+```
+
+
+Here we are fixing some of the issues with the dictionary codes
+
+
+```{r}
+
+#Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
+#TODO: Generate a recipe c(F1061.01,F1232.05 )
+food_list$ID_3[food_list$code == "829"] <- "F1061.01,F1232.05"
+# Chicken at vendor (assumed cooked)
+food_list$ID_3[food_list$code == "824"] <- "F1061.02,F1061.01"
+# Better matches for the nkate and zikondamoyo
+food_list$ID_3[food_list$code == "836"] <- "F0022.07,F1232.39,F1232.40,F1232.38"
+
+```
+
+
+```{r}
+
+food_list %>% 
+  filter(ID_3 %in%  # Three traditional drinks used the same code ()
+           c( 
+             "24310.02.01" ))  
+```
+
+
+
+```{r}
+
+# Checking code
+food_list %>% 
+  filter(code %in% c("816", "832" , "836", "106", "510") &
+           ID_3 %in% c("F0666.01", "1530.07", "F0022.06",
+                                "23161.01.01", "21119.01.01"))
+
+
+```
+
+
+
+
+
+
+# Dictionary to FCT: Food items with matches in FCTs
+
+
+
+
+
+```{r}
 
 # Food items with better matches
+# groundnuts (to dry and shelled) - Corrections should be done at Edible Portion
+food_list$ID_3[food_list$code %in% c("311", "313")] <-  "142.01" 
+food_list$ID_3[food_list$code %in% c("505")] <-  "21116.03" 
+food_list$ID_3[food_list$ID_3 %in% c("21170.01.01")] <-  "21170.01.03" 
+food_list$ID_3[food_list$ID_3 %in% c("1501.11")] <-  "1501.10" 
+food_list$ID_3[food_list$ID_3 %in% c("1501.05")] <-  "1503.03" 
+food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
 
-106 - Rice: We changed from multiple (imported & local, white) to only  rice grain, local, white, dried, raw (23161.02.01), because it is the only reported in FAO SUA (2015-2017).
 
+```
+
+
+106 - Rice: We changed from multiple (imported & local, white) to only rice grain, local, white, dried, raw (23161.02.01), because it is the only reported in FAO SUA (2015-2017).
 
 # Food items reported in the IHS4 without any matches
 
@@ -50,7 +185,17 @@ Sun Dried fish (Small Variety):  1505.03 -  barb, silver, dried, raw (New code)
   
 Fresh fish (Small Variety):  1501.06 -  barb, silver, fresh, raw - recode (1501.11)
   
-Groundnut fresh (unshelled): 142.03 - peanuts, fresh, unshelled, raw. No information on fresh peanuts, hence we need to adjust the quantity from fresh consumption to dry E.g., 100g of fresh weight will be 100*(100-50)/(100-10), and matched to dry peanuts. This is important to not over-estimate the nutrient content from the food consumption.
+[313] - Groundnut fresh (unshelled): 142.03 - peanuts, fresh, unshelled, raw. No information on fresh peanuts, hence we need to adjust the quantity from fresh consumption to dry E.g., 100g of fresh weight will be 100*(100-50)/(100-10), and matched to dry peanuts. This is important to not over-estimate the nutrient content from the food consumption.
+
+```{r}
+# Checking the values of groundnuts in MW19
+
+fct_dict %>% filter(fdc_id %in% c("MW02_0015", "MW02_0014")) %>% 
+                      dplyr::select(fdc_id, food_desc, WATERg, SEmcg)
+
+
+```
+
   
 Freezes (flavoured ice):  23670.01.02 - flavoured ice - recoded ("22270.06")
   
@@ -140,7 +285,48 @@ cassava root, roasted (1520.01.05) - Not completed bc multi-matched
 
 ## Checking Iron values (FEmg) & Zinc (ZNmg)
 
-Small animal ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ rabbit, mice, etc.: (21119.01.01) rat meat, fresh, raw - Not completed bc multi-matched
+Small animal ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ rabbit, mice, etc.: (21119.01.01) rat meat, fresh, raw - Not completed bc multi-matched.
+
+## Checking Se values (SEmcg)
+
+
+```{r}
+
+food_list$ID_3[food_list$code %in% c("313")] <-  "142.01" # Changing to dry
+# Changing to whole grain (applying extration rates)
+food_list$ID_3[food_list$code %in% c("102")] <-  "23120.03.01" 
+# Boiled sweet potato - using only one bc no difference in Se compo
+food_list$ID_3[food_list$code %in% c("831")] <-  "1520.01.01" 
+food_list$ID_3[food_list$code %in% c("832")] <-  "1520.01.01" 
+
+```
+
+
+Changing dictionary codes, this is useful when more than one food item in the food list was matched to the same foods, for example, for fish.
+
+```{r}
+
+# Changing to small dried (barb) to cyprianid (barb)
+food_list$ID_3[food_list$ID_3 %in% c("1505.03")] <-  "1505.07" 
+#Infant cereals to infant food, cereal, mixed
+food_list$ID_3[food_list$ID_3 == "23991.01.01"] <- "23991.01.07"
+
+```
+
+```{r}
+food_list %>% filter(!code %in% unique(fct$code)) %>%
+  distinct() 
+
+
+fct_cover %>% filter(grepl("ground", food_desc, ignore.case = TRUE), 
+  SEmcg>1.9 & SEmcg <3) %>% View()
+
+fct_cover %>% filter(grepl("ground", food_desc, ignore.case = TRUE), 
+  as.numeric(WATERg)>50) %>% View()
+```
+
+
+
 
 #EDIBLE: SUGAR CANE
 Sugar Cane: (1802.01) sugar canes - recode (1802.02) cane sugar juice. We need to adjust the quantity consumed to account for the difference in the edible portion. 
@@ -174,8 +360,7 @@ Below are the comments to be solved:
  7) 204 - OFSP
  8) 203 - WFSP
  
-Changed value of VITA_RAE of (831) white boiled sweet potato to match raw white sweet potato adjusted w/ retention factor. We did not do a water adjustment because the water content difference in water was <10%, hence according to FAO/ INFOODS Guidelines there is no need to water adjust 
-[2.213000*(100-76.00/100-77.28)]
+Changed value of VITA_RAE of (831) white boiled sweet potato to match raw white sweet potato adjusted w/ retention factor. We did not do a water adjustment because the water content difference in water was <10%, hence according to FAO/ INFOODS Guidelines there is no need to water adjust (`r round(2.213000*(100-76.00/100-77.28), 2)`)
  
 Make a note to fix all recipes in MAFOODS.
 
@@ -207,16 +392,16 @@ Keep
 - 1359.9.01 = MW05_0013
 - 1359.9.02 = MW05_0005
 - 1501.02 = 91010          
-- 1501.05 = 8010           
+- 1501.05 = 8010   --> Recoded        
 - 1505.01 = MW03_0020
 - 1505.02 = MW03_0031
 - 1505.04 = MW03_0023
 - 1505.05 = MW03_0047
 * 1699.04 = NA
-- 1699.05 = 13002
+- 1699.05 = 13002 --> Excluded (extreme Ca values See KE18 docu)
 * 21111.01.02 = NA
 * 21116.02 = NA
-- 21121.04 = 15073
+- 21121.04 = 15073 --> recoded
 - 21170.92.02 = MW03_0069  (??)
 - 21170.92.03 = MW03_0009
 - 21397.01.01 = 4025
@@ -224,7 +409,7 @@ Keep
 - 2161.01 = 11_009
 - 2162.01 = 11_003
 - 21631.01.01 = 9013
-- 22251.01.01 = 6005
+- 22251.01.01 = 6005 --> recoded
 - 23140.03.01 = 1009
 * 23140.03.02 = NA
 - 23991.01.01 == All??
@@ -233,35 +418,46 @@ Keep
 - F0020.01 = MW01_0004
 - F0020.02 = MW01_0003
 * F0022.06 = NA
-- F0623.03 = MW01_0061
 - F0666.01 == REMOVE ??
 
 
+## Fixing items
 
-food_genus_id - ref_fctcode that should be removed:
 
-01520.01.03 - MW01_0010 # roasted vs boiled cassava
-1235.01 - MW04_0034 # raw vs boiled pumpkin ??
-1290.01.01 - MW01_0040 #raw vs boiled green maize ?? 
-1290.01.02 - MW01_0040 #roasted vs boiled green maize ??
-142.03 - MW02_0015 #fresh vs boiled peanuts ??
-142.04 - 8006 # wrong name 
+### Done - Reviewed and changed
+
+1520.01.03 - MW01_0010 # roasted vs boiled cassava
+1235.01 - MW04_0034 # raw vs boiled pumpkin 
+1290.01.01 - MW01_0040 #raw vs boiled green maize
+1290.01.02 - MW01_0040 #roasted vs boiled green maize 
+142.03 - MW02_0015 #fresh vs boiled peanuts 
 1501.04 - MW03_0030 # tilapia vs catfish
+21119.01.01 - MW03_0067 #rat/mice vs rabbit
+21121.02 - MW03_0011 # chicken meat vs minced chicken meat
+21170.01.01 - MW03_0065 #pigeon vs quail 
+21170.01.02 - MW03_0065 #guinea fowl vs quail
+23161.01.01 - MW01_0058 #imported vs local rice 
+F0022.01 - MW01_0041 #buns vs scones
+F0623.03 = MW01_0061  #This item is Steamed maize & banana snack, (Mkate) while the proposed is a banana fritter which is not the same, different food item in MW19
+
+
+
+#### To be checked:
+
+
+142.04 - 8006 # wrong name 
+
 1530.07 - 5010 #white vs orange flesh sweet potato
 1532.01 - 07_063 #sardines tinned vs meat tinned
 1699.06 - 13031 #tabasco vs tomato ketchup *has different genus
-21119.01.01 - MW03_0067 #rat/mice vs rabbit
-21121.02 - MW03_0011 # chicken meat vs minced chicken meat
-21170.01.01 - MW03_0065 #pigeon vs quail ??
-21170.01.02 - MW03_0065 #guinea fowl vs quail ??
 23110.01 - 01_043 #unrefined vs refined wheat flour
-23161.01.01 - MW01_0058 #imported vs local rice
+
 23670.01.01 - 13_021 #chocolate vs candies
 23670.01.02 - 12_012 #flavoured ice - carbonated drink  ??
 2413.01 - 22007 #gin vs wine
 24230.03.03 - 12_002 #sorghum and maize beer vs maize beer ??
 24310.04.01 - 140001 #sorghum beer vs beer
-F0022.01 - MW01_0041 #buns vs scones
+
 F0623.02 - 13_023 #jelly vs jam
 
 
@@ -276,7 +472,7 @@ Items that food item in the fct_ihs5 doesn't match to the genus code
 
 Items that doesn't match and/or are redundant
 - 21119.01.01 - MAFOODS - MW03_0067 - rabbit meat --> should be mice, otherwise remove.
-- 23161.01.01 - Rice, imported. 
+ 
 - F1232.08 - Baking soda --> Substitution of baking powder (and yeast)
 
 #### List of non-available items in WA19 compared w/ mwi_genus

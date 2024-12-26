@@ -349,4 +349,15 @@ FCT %>% ggplot(aes(FCT, ZN)) + geom_boxplot() + facet_wrap(vars(foodgroup))
 
 
 
+## 
+dictionary.df <- read.csv(here::here("output", "MAPS_Dictionary_v3.0.1.csv"))
+ke18 <- read.csv(here::here("output", "MAPS_KE18_v2.0.1.csv"))
+names(dictionary.df)
+
+subset(dictionary.df, food_genus_id == "1290.9.15")
+subset(ke18, food_genus_id == "1290.9.15")
+subset(fct_dict, ID_3 == "1290.9.15")[, c(2, 4)]
+
+subset()
+
 
