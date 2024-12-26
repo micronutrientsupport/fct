@@ -1,0 +1,5 @@
+**Version log**
+
+V.1.7 updated on 2021/10/25 - Removed duplicated items introduced by biblioID merging and removing the dictionary code for baking powder. 
+V.1.6 updated on 2021/10/12 - Changed phytic acid to phytate.
+V.1.5 updated on 2021/10/11 - Added new food dictionary codes, and amended some existing codes to match the current food dictionary entries. 

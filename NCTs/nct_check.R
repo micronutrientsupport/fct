@@ -225,7 +225,7 @@ food_list <- food_list %>% add_count(code) %>%
 
 current_food_list <- readRDS(here::here("inter-output", 
                                 sort(list.files(here::here("inter-output"), 
-                                "MAPS_food-list_ihs4"), decreasing = TRUE)[1])) 
+                                "food-list_ihs4"), decreasing = TRUE)[1])) 
 
 
 if(sum(food_list != current_food_list, na.rm = TRUE)>0){
@@ -234,7 +234,7 @@ if(sum(food_list != current_food_list, na.rm = TRUE)>0){
 } else {
   
 saveRDS(food_list,
-        here::here("inter-output",  "MAPS_food-list_ihs4_v2.1.0.rds"))
+        here::here("inter-output",  "food-list_ihs4_v2.1.0.rds"))
 
 }
   
@@ -256,3 +256,28 @@ y <- total_nct  %>%
               filter(str_detect(ID_3, "\\b"))) 
 
 y %>% filter(is.na(WATERg))
+
+
+# Load data (household - food matches)
+
+food <- read.csv(here::here("output", 
+               sort(list.files(here::here("output"), 
+                                           "MAPS_ihs4"), decreasing = TRUE)[1])) %>% 
+  dplyr::select("original_food_id", "original_food_name", 
+                "food_genus_id", "food_genus_confidence") %>% distinct() %>% 
+  rename(ID_3 = "food_genus_id")
+
+ihsfood %>% left_join(., food, by =c ("code"= "original_food_id", 
+                                      "item" = "original_food_name")) %>% 
+    #filter(is.na(ID_3))
+  View()
+
+mn <- "SEmcg"
+
+food %>% left_join(., fct_dict %>%
+                     filter(#source_fct %in% fct4 &
+                       !is.na(!!sym(mn)))) %>%
+  filter(!is.na(source_fct)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg, SEmcg) %>% 
+ # filter(is.na(!!sym(mn)))
+count(source_fct)

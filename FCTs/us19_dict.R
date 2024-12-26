@@ -93,8 +93,11 @@ genus <- tribble(
   "20004", "115.01", "h", 
   "19400", "F0623.06", "h", 
   "16090", "142.04", "h",
-  "3184", "23991.01.05", "h", 
-  "3216", "23991.01.06", "h", 
+  "3186", "23991.01.07", "h", 
+  "3190", "23991.01.08", "h", 
+  "3193", "23991.01.11", "h", 
+  "3212", "23991.01.09", "h", 
+  "42285", "23991.01.10", "h", 
   "16138", "F1232.26", "m",
   "10109", "21521.01", "m", 
   "19107", "23670.01.03", "h", 
@@ -107,21 +110,94 @@ genus <- tribble(
   "14037",  "2413.01", "m", 
   "24593", "1522.02", "h",
   "80200", "1587.01", "h",
-  "3682", "23991.01.01", "m",
   "9218", "1324.02", "h", 
   "17174", "21119.01.01", "l", 
   "5160", "21170.01.01", "m",
   "19300", "23670.01.05", "h",
   "11109", "1212.01", "h", 
-  "19807", "112.03", "m")
+ # "19807", "112.03", "m",  # Silencing this item because it has multiple missing values
+  "11088", "1243.01", "h", 
+  "16074", "1701.05", "m" , 
+  "12151", "1375.01", "h", 
+  "12131", "1379.9.01", "h", 
+  "11291", "1253.01.01", "h", 
+  "11112", "1212.05", "h", 
+  "11587", "1290.9.08", "h", 
+  "11457", "1215.01", "h", 
+  "11505", "1290.9.02", "h", 
+  "11165", "1654.01", "h", 
+  "11264", "21397.01.01", "h", 
+  "43217", "21399.02.01", "m", 
+  "9174", "1349.2.01", "h", 
+  "9316", "1354.01", "h", 
+  "9190", "1359.9.05", "h", 
+  "9286", "1359.9.06", "h", 
+  "5139", "21122.01", "h", 
+  "5152", "21170.01.02", "h", 
+  "5157", "21170.01.03", "h", 
+  "1012", "22251.01.01", "m", 
+  "1015", "22251.01.03", "h",
+  "16063", "1706.06", "h", 
+  "16053", "1702.03", "h",
+  "36602", "F1232.30", "l", 
+  "9059", "1319.07", "h", 
+  "9351", "23670.02.01", "h", 
+  "9100", "F0623.06", "h",
+  "9271", "21491.01", "h",
+  "21108", "F1232.31", "h", 
+  "15164", "1562.03", "m", 
+ # "35028", "1562.04", "m", # removed bc it has many missing values
+  "11297", "1699.13", "h", 
+  "2029", "1699.14", "h", 
+  "2012", "1654.02", "h",
+  "2013", "1654.03", "h", 
+  "90560", "2920.01", "h", 
+  "18019", "F0022.07", "m", 
+ "25027", "F1232.34", "h",
+ "14315", "23999.01.01", "m",
+ "4582", "21641.01.01", "h", 
+ "14305", "24310.01.04", "h", 
+ "5219", "21124.01", "m", 
+ "19034", "112.04", "h", 
+  "14154", "24490.04", "h",
+ "7088", "F1232.36", "m", 
+ "14604", "24490.05", "h", 
+ "20020", "23120.03.03", "h", # Select this instead of 20016 (see docu)
+ "16157", "23170.03.01", "h" ,
+ "17185", "21155.02", "h", 
+ "17191", "21155.04", "h", 
+ "17195", "21155.03", "h",
+ "17199", "21155.01", "h", 
+ "10096", "21153.02", "h",
+ "10103", "21153.04", "h",
+ "10106", "21153.03","h", 
+ "10110", "21153.01", "h", 
+ "169910", "1316.01", "h"
+ 
+ )
   
+
+(dupli <- genus %>%  count(ref_fctcode) %>% 
+    filter(n>1) %>% pull(ref_fctcode))
+
+##Find a way to stop it running if dupli == TRUE
+x <- if(length(dupli) == 0){NA}else{length(dupli)} 
+#x <- if(sum(duplicated(ken_genus$ref_fctcode)) == 0){NA}else{sum(duplicated(ken_genus$ref_fctcode))} 
+
+if(!(is.na(x)))stop("duplicated code")
+
+genus %>% filter(ref_fctcode %in% dupli) %>% arrange(desc(ref_fctcode))
+
+
 #Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 
 genus %>% mutate(fct = "US19")  %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character) %>%
+              #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+              filter(fct != "US19"))  %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 #Adding food dictionary codes to FCT ----
@@ -133,25 +209,32 @@ us19 <- us19 %>% mutate_at("fdc_id", as.character) %>%
 dim(us19)
 names(us19)
   
-  ## CHECK: Adding new food dictionary code ----
+## CHECK: Adding new food dictionary code ----
   
-  #Checking dictionary/ fct ids availability 
-  subset(us19, fdc_id == "9218", select = c(fdc_id, food_desc, WATERg)) 
-  subset(us19, fdc_id %in% c("19400"),
-  select = c(fdc_id, food_desc, ID_3)) 
+# Checking dictionary/ fct ids availability 
+  subset(us19, fdc_id == "16157", select = c(fdc_id, food_desc, WATERg)) 
+  subset(us19, fdc_id %in% c("20020", "20016"),
+  select = c(fdc_id, food_desc, WATERg)) 
   subset(us19, ID_3 == "23140.05.01") 
   
-  subset(us19, grepl("cream", food_desc, ignore.case = TRUE) &
+  subset(us19, fdc_id %in% c("20020", "20016")) %>% View()
+  
+  subset(us19, grepl("infant|formu", food_desc, ignore.case = TRUE) & !is.na(VITA_RAEmcg) &
+           grepl("", food_desc, ignore.case = TRUE) &
+           !grepl("", food_desc, ignore.case = TRUE), select = 1:2)
+  
+  
+  subset(us19, grepl("pigeon", food_desc, ignore.case = TRUE) &
            grepl("", food_desc, ignore.case = TRUE) 
            #!grepl("with", food_desc, ignore.case = TRUE) &
   
          , 
-         select = c(fdc_id, food_desc, ID_3, WATERg, scientific_name))
+         select = c(fdc_id, food_desc, ID_3, WATERg, VITA_RAEmcg, scientific_name))
   
-  dictionary.df %>% filter(ID_3%in% c("F1232.23" ))
-  subset(dictionary.df, ID_2 == "F1232")
-  subset(dictionary.df, ID_1 == "2513")
+  dictionary.df %>% filter(ID_3%in% c("1654.02"))
+  subset(dictionary.df, ID_2 == "1319")
+  subset(dictionary.df, ID_1 == "2514")
   subset(dictionary.df, ID_0 == "FV")
-  subset(dictionary.df, grepl("cous", FoodName_3, ignore.case = TRUE))
+  subset(dictionary.df, grepl("popcorn", FoodName_3, ignore.case = TRUE))
   subset(dictionary.df, grepl("sugar", Description1, ignore.case = TRUE))
   

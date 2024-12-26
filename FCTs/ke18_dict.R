@@ -12,12 +12,12 @@ ken_genus <- tribble(
   ~ref_fctcode,   ~ID_3, ~confidence,
   "1004",   "F0022.03",    "m",
   "6001",   "22241.01.01", "h",
-  "12004",  "F0665.01",    "m", 
+  "12004",  "F0666.06",    "h", 
   "12003",  "23912.02.01", "m", 
   "4016",   "1232.01"  ,   "m",
   "11001",  "2910.01"  ,   "h",
   "10010",  "1379.9.01" ,  "l", 
-  # "13027",  "1699.02"   ,  "m", #salt, ionized 
+   "13027",  "1699.02"   ,  "m", #salt, ionized (I is not reported)
   "15026",  "F0022.05"  ,  "h",
   "1031",   "23710.01"  ,  "m", 
   "13028",  "1699.03"   ,  "h",
@@ -62,7 +62,7 @@ ken_genus <- tribble(
   "6007", "22120.02", "h",
   "13011", "1654.01", "h", 
   "7020", "21113.02.01", "h", #assumed w/o bones bc EP = 1
-  "15125", "F0022.07", "h", 
+  "15125", "F0022.08", "h", 
   "13015", "1699.10", "h", 
   "4013", "1290.9.04", "h", 
   "1005", "F0020.02", "m", 
@@ -118,7 +118,7 @@ ken_genus <- tribble(
   "3005", "1701.05", "h", 
   "10008", "1372.01", "l", 
   "10002", "1460.01", "h", 
-  "9007", "21641.01.01", "m",
+  "9007", "21641.02.01", "m",
   "5002", "1341.02", "h",
   "5007", "1314.01", "h", 
   "5008", "1314.02", "h", 
@@ -181,13 +181,13 @@ ken_genus <- tribble(
   "1037", "114.02", "h", 
   "1011", "F0022.01", "m", 
   "4023", "1270.01", "h", 
-  "7017", "21170.01.02", "h", 
+  "7017", "21170.01.02", "l", #meat and skin 
   "10012", "21495.02.01", "h", 
   "8004", "1501.10", "h",
   "8022", "1507.05", "h",
   "1006", "F0020.07", "h",
   "1060", "23161.02.03", "h", 
-  "5029", "21491.01", "m", 
+  "5029", "21491.01", "h", 
   "10007", "21422.01", "h", 
   "10011", "1375.01", "m", # Check EP (as in this fct is shelled)
   "6015", "22222.02.01", "h", 
@@ -210,7 +210,7 @@ ken_genus <- tribble(
   "1033", "23161.02.02", "h",
   "1003", "F0022.15", "h",
   "5001", "1341.03", "h",   
-  "5006", "1319.05", "m", 
+  "5006", "1319.08", "m", 
   "5009", "1359.9.04", "h",
   "5011", "1316.02", "m",
   "5021", "1359.9.05", "h",
@@ -239,11 +239,24 @@ ken_genus <- tribble(
   "1063", "F1232.28", "h",
   "3007", "F1232.29", "h",
  "14003", "21183.02", "h", 
- "15073", "F1061.02", "m"
-)
+ "15073", "F1061.02", "m",
+ "3071", "141.04", "h", 
+ "3023", "1702.03", "h", 
+ "15075", "F1232.30", "m",
+ "13025", "1699.13", "h", 
+ "13012", "1654.03", "m" ,
+ "6014", "2293.01", "h", 
+ "6023", "2292.01", "m", # fresh as raw
+ "6025", "2291.01", "m",# fresh as raw
+  "8001", "1516.04", "h",
+ "8006", "1503.07", "h",  # Acc. w/ scientific name
+ "8009", "1503.02", "h", 
+ "15070", "F1061.01", "h", 
+ 
+ )
 
 
-ken_genus <- read.csv(here::here("inter-output", "kenfct_matches.csv")) %>% 
+ken_genus <- read.csv(here::here("metadata", "kenfct_matches.csv")) %>% 
   filter(!FCT.code %in% c("7009", "10010")) %>% #removing chicken - wrong code (21121.02) and macadamia wrong confidence
   select(FCT.code, MAPS.ID.code, Confidence) %>% 
   mutate(confidence = case_when(
@@ -300,13 +313,15 @@ ken_genus$confidence[ken_genus$ref_fctcode == "1039"]  <- "h"
 ken_genus$ID_3[ken_genus$ref_fctcode == "2007"]  <- "1520.01.01"
 
 
-#Updating the dictionary compilation -----
+# Updating the dictionary compilation -----
 file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
              decreasing = T)[1]
 
 ken_genus %>% mutate(fct = "KE18") %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-            mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+            mutate_at(c("ref_fctcode", "ID_3"), as.character) %>% 
+            #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+            filter(fct != "KE18"))  %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 # Checking dictionary/ fct ids availability ----
@@ -334,26 +349,26 @@ kenfct %>% filter(fdc_id %in% c("6017",
                               "6005",
                               "6006")) %>% .[, c(3:4)]
 
-subset(kenfct, fdc_id %in% c("13033"), 
+subset(kenfct, fdc_id %in% c("13002"), 
        select = c(fdc_id, food_desc, ID_3, scientific_name))
 
-subset(kenfct, fdc_id == "9218", select = c(food_desc, ID_3, scientific_name)) 
-subset(kenfct, ID_3 == "1359.9.04") 
+subset(kenfct, fdc_id == "9007", select = c(food_desc, ID_3, scientific_name)) 
+subset(kenfct, ID_3 == "1319.03") 
 subset(kenfct, str_detect(ID_3, "01520")) 
 
-dictionary.df %>% filter(ID_3 %in% c("1359.9.04"))
-subset(dictionary.df, ID_2 == "F1232")
+dictionary.df %>% filter(ID_3 %in% c("21121.04"))
+subset(dictionary.df, ID_2 == "21641.02")
 subset(dictionary.df, ID_2 %in% c("1379.02"
 ))
-subset(dictionary.df, ID_1 == "2533")
+subset(dictionary.df, ID_1 == "2574")
 distinct(subset(dictionary.df, ID_0 == "CE"), select = FoodName_1)
 
-subset(kenfct, grepl("mallow", food_desc, ignore.case = TRUE) &
+subset(kenfct, grepl("sweet", food_desc, ignore.case = TRUE) &
          grepl("", food_desc, ignore.case = TRUE),
        select = c(fdc_id, food_desc, scientific_name, WATERg, ID_3))
-subset(kenfct, str_detect(fdc_id, "^4") &
+subset(kenfct, str_detect(fdc_id, "^8") &
          grepl("raw", food_desc, ignore.case = TRUE),
-       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name)) %>% View()
+       select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))  %>% View()
 subset(kenfct, str_detect(scientific_name, "triloba"), 
        select = c(fdc_id, food_desc, ID_3, food_group, scientific_name))
 
@@ -366,3 +381,4 @@ subset(dictionary.df, grepl("cabba", scientific_name, ignore.case = T) &
 kenfct %>% filter(!is.na(ID_3)) %>% count()
 
 ken_genus %>% anti_join(kenfct, by = "ID_3")
+

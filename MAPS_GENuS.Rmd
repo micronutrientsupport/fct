@@ -30,7 +30,22 @@ A list of datasets that uses/ are connected by the Genus code:
 **Food Names 2**
 
 [Elaborate this]
-We realized that there are two group ids (ID_2) that are identical. Those ids were derived from SUA for crops and livestock and from FAO-Fishstat for fish and seafood. Thus, this conflict arouse. As a solution, we are going to add a line of code that changes the id values for fish. - FIXED
+We realized that there are two group ids (ID_2) that are identical. Those ID_2 were derived from SUA for crops and livestock and from FAO-Fishstat for fish and seafood. Thus, this conflict arouse. 
+
+```{r}
+
+#checking the items with duplicated ID_2
+dictionary.df %>% filter(ID_2 %in% c("1510", "1530")) %>% distinct(FoodName_2, ID_2)
+
+```
+
+As a solution, we are changing the ID_2 for fish by adding an extra zero at the end of the number:
+
+```{r}
+#checking that the new proposed ids
+dictionary.df %>% filter(ID_2 %in% c("15100", "15300"))
+```
+
 
 ## Data sources
 
@@ -172,6 +187,20 @@ ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
 
 #### Food groups and categories
 
+##### Corrections
+
+Some food groups (FoodName_1, ID_1) were missclassified (FoodName_0/ ID_0).
+
+```{r}
+#checking what items with wrong ID_0
+
+dictionary.df %>% filter(ID_1 %in% c("2561", "2571", "2572", "2579"))
+
+```
+
+Hence, we needed to change the food groups "oils and products" & "seed and products" into its corresponding `FoodName_0` and `ID_0`: "Other products", "OT". 
+
+
 ##### Issues
 
 ) Food categories (ID_1) that may be missclassified: 2775|aquatic plants are currently under "Fruits and Vegetables". However, according to FAOSTAT, they are under "Aquatic foods" and/or "Animal product". An option for the future would be to listed under "OT", or to generate a new food category for fisheries and aquatic products. 
@@ -196,17 +225,30 @@ ifelse(is.na(id3)|id3 == "", paste0(id2, ".01"),
 
 # Food description
 
-Fortification is often misreported in the food item name and description, for instance, in kenfct the item "Chapati, white" (15019) used fortified flour, although it is not mentioned in the item name. We can check this by looking ant the recipes and by checking the VITA_RAE content (in comparison with "Chapati, brown (15020). Hence, for "wheat flour and products" we would need to generate a different entry for fortified and unfortified entries, and allocating the dictionary code that applies. Ensure that we double-check the quantities of the fortifiable nutrients. Also, it could be cases that it is due to other ingredientes and not because a fortification. For example, if using ghee or other dairy products, vit. A (RAE) would be higher that if only using plant-based products. 
+- **23999.01.01**: For "ovaltine" we are using malt extract. 
+https://www.wcoomd.org/-/media/wco/public/global/pdf/topics/nomenclature/instruments-and-tools/hs-nomenclature-2022/2022/0419_2022e.pdf?la=en
 
+https://en.wikipedia.org/wiki/Ovaltine
 
-ISSUE with Dictionary --> SUA and Fish share the same code!!
+- **21435.01.01**: For "apple juice, sweetened", we used qualitative information into the FoodEx2 code, using "with added sugar" to specify that it was sweetened. We did not specify the sweetened agent because it was unknown. 
 
- ID_0  FoodName_0        ID_1 FoodName_1                  ID_2  FoodName_2                  
-  <chr> <chr>            <dbl> <chr>                       <chr> <chr>                       
-1 RT    Roots and Tubers  2531 potatoes and products       1510  potatoes                    
-2 RT    Roots and Tubers  2533 sweet potatoes and products 1530  sweet potatoes              
-3 AP    Animal Products   2782 fish, liver oil             1510  freshwater fish, liver oil  
-4 AP    Animal Products   2763 pelagic fish                1530  pelagic fish, frozen, fillet
+-**23170.02.01**: Kocho was reported in the ESS3 (Ethiopia HCES), which according to the [Wikipedia](https://en.wikipedia.org/wiki/Kocho_(food)), it is a bread-like fermented food made from chopped and grated ensete pulp. 
+
+#the sweetened used. 
+
+##### Corrections
+
+-**injira**: (Recode:"23140.08.01" to "F1232.33"). We changed the ID_3 and food groups as it should be in line with the codes used for "nsima", other porridge and other "ready-to-eat" foods. 
+
+-**moringa**: (Recode: "" to "1290.9.XX"). We changed from "stimulant" to other vegeatble, leaves. As it is often used as a green leafy vegetable.
+
+- **rice**: ("23161.02.01" vs "23161.01.01"). There is a distinction between rice "local" and "imported". For food matching, we will use local rice whenever possible (default rice white == "23161.02.01").
+
+##### Issues
+
+- **Canned beans**: We assigned canned beans to ... However, this was a tricky decision as they are not dried and they are preserved, acc. to FAO. We could place them under other vegetables, as they are considered as such by, for example the Five-a-day campaign in the UK and additionally we are adding them to be matched to tinned vegetables, in ihs5.
+
+- **Fortification**: It is often misreported in the food item name and description, for instance, in kenfct the item "Chapati, white" (15019) used fortified flour, although it is not mentioned in the item name. We can check this by looking ant the recipes and by checking the VITA_RAE content (in comparison with "Chapati, brown (15020). Hence, for "wheat flour and products" we would need to generate a different entry for fortified and unfortified entries, and allocating the dictionary code that applies. Ensure that we double-check the quantities of the fortifiable nutrients. Also, it could be cases that it is due to other ingredients and not because a fortification. For example, if using ghee or other dairy products, vit. A (RAE) would be higher that if only using plant-based products. 
 
 
 # To do things:
@@ -232,8 +274,10 @@ For some instances, dictionary values were not available and/or compiled (there 
 ##Any "whole fat would be under raw milk
 
 # Change log
-2023/04/25
+2023/07/11: Recode injera ID_3 from "23140.08.01" to "". See Section XX.
+2023/06/16 - fix: mandazi was missing (F0022.08).
 
+2023/04/25
 -changes "rice grain, local, red" from 23161.01 to 23161.02.
 
 
@@ -244,3 +288,6 @@ For some instances, dictionary values were not available and/or compiled (there 
 2023/02/15: 
 - Changed "Vegetable fat" from ID_2 (F1243) to ID_2 (34550) because the former was referring to animal fats, while the latter refers to any modified oils, and can include animal and/or vegetable, as per the description: "animal or vegetable fats and oils and their fractions, chemically modified, except those hydrogenated, inter-esterified, re-esterified or elaidinized; inedible mixtures or preparations of animal or vegetable fats or oils."
   
+Data corrections for dictionary.df, dict.comp and TZ_data . Seems like there were some spelling mistakes that lead to broken matches.
+
+We could drop some of the NA rows. E.g,: dictionary.df <- dictionary.df %>% drop_na(ID_0) # not needed, but maybe a good idea - quite a few all NA rows?

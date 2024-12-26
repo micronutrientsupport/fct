@@ -1,0 +1,670 @@
+---
+title: "Nigeria Living Standards Survey (2018/19): food matching notes"
+author: "Segovia De La Revilla, Lucia"
+date: "06/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Loading the packages
+library(dplyr) # Data wrangling 
+library(tidyr) # Data manupulation 
+library(stringr) # Strings and character manipulation
+library(ggridges) # Visualisation (ridges)
+library(ggplot2) # Visualisation (main)
+
+```
+
+# Background
+
+[Nigeria Living Standards Survey 2018/19](https://doi.org/10.48529/8gbe-z155)
+
+v.2.0.0 - Updated 2024/03/12.
+
+
+```{r }
+
+```
+
+
+### Guinea corn
+
+According to the Wikipedia the "Guinea corn" is the [sorghum bicolor](https://en.wikipedia.org/wiki/Sorghum_bicolor). For the version (2.0.0), we are adding a multi-item matching to sorghum.
+
+```{r}
+
+food1 <- "sorh"
+food2 <- "raw"
+
+fct_cover %>% filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  select(fdc_id, food_desc, WATERg, VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+### Millet
+
+Millet (11) was changed to multiple matches, to account for whole grain and decorticated. 
+
+### Cassava flour 
+
+Cassava flour [18] was changed to multiple matches as below, to account for the multiple cassava flour preparation used in the country (v.2.0.0). 
+
+
+```{r}
+
+# Search foods 
+food1 <- "cassava"
+food2 <- "flour"
+food3 <- ""
+ 
+fct_dict %>%  filter(source_fct %in% c("WA19")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+    filter(as.numeric(WATERg)<30) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+
+### Maize (Shelled/Off the cob)
+
+Maize (Shelled/Off the cob) (22) was changed from maize, yellow (v.1.0.0) to maize, white (v.2.0.0). 
+ 
+ 
+### Buns/Pofpof/Donuts
+
+Buns/Pofpof/Donuts (27) ("F0022.01,F0022.04,F0022.08")
+ 
+ 
+### Meat Pie/Sausage Roll 
+
+Meat Pie/Sausage Roll [29] was generated combining bread/roll WA19(01_045) and meat sausage  WA19(07_063), for version (1.0.0). For version (2.0.0), we are using the following food items:
+ 
+```{r}
+
+# Search foods ----
+food1 <- "sausag|meat"
+food2 <- "roll|pie|past"
+food3 <- "pasta|paste|spring"
+
+fct_dict %>%  
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+## Palm oil
+
+Palm oil (50) was changed from palm oil, red in v.1.0.0 to palm oil in v.2.0.0. This assumption was reviewed, as red palm oil is widespread in the country (DHS, 2018), however the consumption seems not to be equal across regions and SES. In addition, concerns regarding the losses due to distribution, handling, storage, etc can be high. Therefore, we decided to do an average of the available "palm oils" in the WA19.
+
+
+```{r}
+
+# Search foods
+
+food1 <- "palm"
+food2 <- "oil"
+food3 <- "Senegal"
+
+fct_dict %>%   filter(str_detect(fdc_id, "11_")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, Edible_factor_in_FCT, Edible_factor_in_FCT_2) 
+
+
+```
+
+### Leaves
+
+Leaves(cocoyam, spinach, etc.) [78], we have updated the codes to include all raw available leaves found in WA19. See primary matches above for more information on the selection. 
+
+```{r}
+
+# Search foods ----
+food1 <- "leav"
+food2 <- "fresh"
+food3 <- "raw"
+
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+## Meat - multimatches 
+
+Beef (90), Mutton (91), Pork (92), and  Goat (93) were changed from one-to-one matches in v.1.0.0 to one-to-many matches in v.2.0.0.
+
+```{r}
+
+# Search foods
+
+food1 <- "Beef"
+food2 <- "raw"
+food3 <- ""
+
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+#  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, Edible_factor_in_FCT, Edible_factor_in_FCT_2) 
+
+
+```
+
+## Smoked fish 
+
+Smoked fish [102] was changed from the use of grilled fish (v.1.0.0) to using smoked fish from other FCTs (v.2.0.0) with ID_3. For for the improvement we could use the average of smoked/cured and grilled (see photo aid from GENERAL HOUSEHOLD SURVEY – PANEL Wave 3 (2015/16)), and expand the selection of smoked fish using the Global Fisheries NCT. However, further checks in term of composition and representativeness of the data should be carried. 
+
+
+```{r}
+
+# Search foods
+
+food1 <- "fish"
+food2 <- "smok"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+      #  filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
+
+
+```
+
+#### Dried fish
+
+Dried fish [103], check back the selection! We are not performing water-adjustment because it means that it needs to be adjusted in the consumption reported to comply with the tool standards. However, it may be worth checking, for the future, if a converted to dried fish FCT would be useful to add. 
+
+ 
+```{r}
+
+# Search foods
+
+food1 <- "fish"
+food2 <- "dri"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+    #   filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg) 
+
+
+```
+
+
+## Baby milk powder
+
+Baby milk powder [112] was changed from the WA19() formula in the v.1.0.0 to an unfortified formula (v.2.0.0), to keep consistency with the MAPS tool standards. In (v.2.0.1) we changed back to the WA19("10_012","10_012") as they would be a representation of the baby milk available in the area. Note: double-check with country experts (T.E).  
+
+## Tea 
+
+Tea [122] was changed from tea, infusion WA19(12_008) (23914.01) in v1.0.0.0 to sachet, tea spoon etc. (23914.02) KE18(12005).
+
+# Chocolate drink 
+ 
+Chocolate drink [121] was finally used as powder, for the version (v.2.0.0). We decided to use the values of chocolate powder without fortification but as powder, following the units reported in the survey, and following what was done with coffee and tea, as it is reported as purchased by the household. 
+
+Note that in it may be possible that Ovaltine is commonly used in the country and that it is fortified. Hence, this should be reviewed and taking it with care.
+
+## Missing food matches
+
+### Others
+
+**TODO**: Info about the other
+
+Other alcoholic beverages (164) - Pito (162) (recode)
+Other domestic poultry (82) - Guinea fowl (821) & turkey (822)
+
+#### Other fruits
+
+Other fruits (specify) (66)
+
+(UDARA, AGBALUMO) (661) - According to the alternative names of ["african cherry"]( https://www.africanfoodies.com/african-cherry/) WA19(05_053), (1359.9.08)
+
+(CASHEW APPLE) (662) - Apparently they do it the "fruit" of the cashew nut seed (https://theconversation.com/how-nigeria-can-turn-its-huge-cashew-waste-into-valuable-citric-acid-185320). WA19 (05_006) (1359.02.01)
+
+(Cherry) (663) - Assuming as above 
+
+(AFRICAN PEAR) (664) - Called Ube [(*Dacryodes edulis*)](https://en.wikipedia.org/wiki/Dacryodes_edulis) is not available. 
+
+(DATE PALM) (665) - We are using the "fresh" one (1314.02)
+
+#### Other cereals
+
+Other cereals (23) - Indome noodels (not prepared) (23710.04) & spaghetti (23710.01)  
+
+#### Other meat
+Other meat (excl. poultry) (specify) (96) - mostly identifed as (POMO, SKIN MEAT) (961).
+
+We decided to use the value of JA15(11063) "Beef, imported beef, chuck, fat, raw" as it seemed to be the closest match in term of composition to the NG18(179) - "cow skin, raw" which we did not used because a) it is not included in MAPS tool, and b) it has numerous missing values. 
+
+Other milk products (specify) (115) - Soy milk (1153) 
+
+Other non-alcoholic drinks (155) 
+
+(ZOBO) (1551) - it is a hibiscus drink (https://allnigerianfoods.com/zobo-drink/).  We used sweetened flavoured water (US19(14604))
+
+KUNU (1552) - Not available, we could use WA19(01_102)
+
+#### Other nuts/seeds/pulses 
+
+Other nuts/seeds/pulses (45) 
+
+(BEENISEED) (452)
+(BAMBARA NUT) (453)
+(BANGA - PALM NUT) (454) - Not available
+(PALM KERNEL NUT) (455)
+(LOCUS BEAN) (456) - We are adding both locus bean and the fermented version ("DAWADAWA") [(soumbala)](https://en.wikipedia.org/wiki/Sumbala).
+
+Other oil and Fat (53) - Vegetable oils (Turkey, OK, etc.) (532) - We are assuming unfortified.
+
+Other vegetables (fresh or canned) (79) - Cucumber (791), Leaves (792) - Recoded to 78, Carrot (794), Cabbage (796)
+
+
+# Food matching for Nigeria LSS (v.1.0.0)
+
+## Multiple matches
+
+Here we included matches that are one-to-many items that were calculated as mean value for more than one item, for example for meat pie or fresh leafy vegetables. The items averaged will be included. 
+
+## List of food items and notes on the selection
+
+ - Used "pearl millet", rice - local (white, raw), rice - import (white, polished) 
+ - check "native red"
+ - Cassava flour, non-fermented!
+ - Wheat flour, white, unfortified - there are fortified for Nigeria
+ - maize on the cob = maize seed fresh
+# - maize yellow whole
+ - bread white, unfortified,  there's one for toasting
+ - cake plain, unfortified
+ - Buns, poff and donuts[27] - fried dough NA
+ - cassava - white
+ - yam - took combined cultivars from Nigeria
+ - Gari/Eba - fermented cassava, flour (white) - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4256576/
+ - Gari/Eba - fermented cassava, flour with palm oil (yellow) - Need to find oil % (https://scialert.net/fulltext/?doi=pjn.2009.1512.1516)
+ - cocoyam, white
+ - plantain - choose ivory flesh unripe but we could do an average of multiples
+ - sweet potato, pale - we could do multiple
+ - brown bean = cowpea, brown
+ - groundnuts are = for shelled and unshelled
+ - coconut - used fresh, immature but not sure  (https://www.agriculturenigeria.com/manuals/production/crop-production/general-crops/coconut-cultivation-etc/#Harvest
+ https://coconuthandbook.tetrapak.com/chapter/harvesting-and-post-harvest-management)
+ - cola nut used fresh
+ - palm oil - red, but we can change to half/half
+ - margarine for Nigera - It's fortified (vitA, VitD)!! We can change
+ - animal fat [56] --> ken 9001  |Animal fat/ lard 
+ - banana - we used white flesh, but could do an average 
+ - orange only, no tangerine
+ - mango, used pale, but maybe an average will be best
+ - pawpaw == papaya
+ - used apple with skin (no colour distinction)
+ - tomato puree (canned) == tomato, paste, concentrated.
+ - leaves need a bit of thoughts... [78] --> see below
+ - chicken, an average of different cuts, raw [80] (excluding liver and gibllets)
+ - other domestic poultry [82] - used guinea fowl
+ - duck [81] --> ken - duck 7008 
+ - agricultural egg == "egg"
+ - local egg == local breed egg
+ - beef, Lamb/mutton, pork, goat, moderately fat
+ - Game meat [94] is dried and salted, should double check w/ consumption!
+ #Snail - I used normal snail because of the name and the image of the photo aid.
+#Maybe it should be an average
+#Seafood [105] - calculate the average
+#Canned fish/seafood [106] - we used mackerel but we could do an average
+#Baby milk powder, we picked 3months, but we could do an average
+#Double-check because it's fortified.
+#Milk tinned unsweetened == evaporated milk
+#Coffee [120] - powder
+#Chocolate drinks [121] - Ovaltine? - 
+ - Malt drink [152] --> we are using carbonated drink, we check with "174863 - Malt beverage, includes non-alcoholic beer" and it is actually very similar compo. 
+#Sugar - used unfortified but there is one fortified for Nigeria (Vit.A)
+#Unground Ogbono [142] == 06_008 - Dikanut (Ene-Obong et al., 2013)
+#Ground Ogbono [143] == 06_008 - Dikanut - Not powder 
+#Pepper - not powder
+#Melon seed (e- for all 2 [145, 146, 147] = Egusi
+#Water - only tap (used for bottle and sachet)
+#Juice canned, sweetened - but it can be averaged of different juices
+#Pito - sorghum beer, we could do an average with millet
+ 
+ 
+
+### Fish
+ 
+Fish and seafood can be a major contributor to micronutrient supplies, however micronutrient content varies widely across species. Additionally, fish data is reported at high level of aggregation which does not allow for fish identification.
+ 
+We attempted to gain more insights by using "supply" (consumption) data in FBS for NGA. We tried to identify whether fishes were coming from the sea (marine) or from the lake (freshwater) because it would have an impact on micronutrient supply (e.g., iodine) and because it would help in narrowing down fish species. However, due to the classification used in FBS, it did not provide enough information for differentiation between marine or fresh water fish (i.e., demersal fish can be both marine and fresh water fishes). 
+
+```{r}
+#Supply of fish in NGA acc. to FBS for 2014-2018
+
+fbs %>% filter(str_detect(original_name, "fish"),
+               country_id == "NGA") %>% group_by(original_name) %>% summarise(mean_consumed = mean(amount_consumed_in_g)) %>% arrange(desc(mean_consumed)) %>% knitr::kable()
+
+```
+
+
+We have checked the "supply" (consumption) for NGA in FBS to try to identify if fishes are coming from the sea (marine) or from the lake (freshwater) because it would have an impact particularly in iodine. 
+ 
+```{r fish, echo=FALSE}
+
+#Fish compo checks
+fct_dict %>% filter(str_detect(fdc_id, "09_")) %>%  
+  filter(as.numeric(WATERg)>60) %>% 
+  ggplot(aes(as.numeric(FEmg))) + geom_histogram()
+
+  
+```
+
+ 
+We have check the raw fish and seafood nutrient supply. Regarding Zn and Fe the only items that are higher (>2mg/100g) are clams, shrimps, sea snails and crab. Only the Mola carplet a small fish w/ viscera, fins (eaten whole) is the one making a difference. Similarly for Vit.A Mola is the fish with highest Vit.A supply in the whole Fish and seafood section. Also, mackerel is supplying high amounts (third place).
+
+
+
+```{r fish, echo=FALSE}
+
+# Nutrient supply of raw fish and seafood in WAFCT
+
+fct_dict %>% filter(str_detect(fdc_id, "09_")) %>%
+  filter(str_detect(food_desc, "raw")) %>%
+  select(fdc_id, food_desc, ENERCkcal, ZNmg, FEmg, VITA_RAEmcg) %>%
+  pivot_longer(., cols =c(ENERCkcal, FEmg, ZNmg, VITA_RAEmcg),
+               names_to = "nutrient") %>% 
+  filter(nutrient != "ENERCkcal") %>% 
+  mutate_at("value", as.numeric) %>% 
+  ggplot(aes(value)) + geom_boxplot() +
+  labs(x = "nutrient per 100g-EP-FW", y = "") + # This flips w/ coord_flip()
+  facet_wrap(~nutrient, scales = "free_y") +  # This doesn't flip (manually changed)
+  coord_flip()
+
+
+```
+ 
+ 
+#### Fresh fish
+
+Fresh fish [100], we could do an average of all the possible or to try to identify the reporting unit and use it accordingly. Most of them are reported as small piece or heap. Therefore, we could be mullet and sardines for heaps and catfish for small and medium fresh pieces. We will leave out the mormyrid? for big because there is no "big piece" reported. 
+
+Finally, we did an average of all the fish reported as raw in the WA19 (see Bradley., 2020, Ene-Obong, 2013), we only removed "Mola carplet" because the Vitamin A (RAE) content was extremely high when compared with the rest of the fish (probably because it is a "whole fish") and because in the report was not mentioned.
+
+```{r}
+
+# Search foods 
+food1 <- ""
+food2 <- "raw"
+food3 <- "Crab|Shrimp|clams|Mola|snail"
+ 
+fct_dict %>%   #filter(source_fct == "WA19") %>% 
+        filter(str_detect(fdc_id, "09_")) %>%
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+#  filter(as.numeric(WATERg)>30) %>% 
+ # filter(str_detect(fooditem, "flour")) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+```
+
+#### Frozen fish
+
+Frozen fish [101] could be mackerel (see photo aid) and sardines. In the FCT is fillet, so double check EP.
+
+#### Smoked fish 
+ 
+For Fish - smoked [102], we are using an average of the reported as grilled in WA19 (see photo aid). 
+
+#### Dried fish
+
+Dried fish [103], check back the selection! We included fresh fish and water-adjusted the nutrient concentration. It might be worth to add crayfish, although it is not fish but shrimps, but it is highly consumed particularly in the Northern region of the country (Ene-Obong et al., 2013). 
+
+
+ - Snail - An average of sea and land snail were used, however, in the photo aid the name and the image of is only the land snail. 
+ 
+ - Maybe it should be an average
+ - Seafood [105] - calculate the average
+ - Canned fish/seafood [106] - we used mackerel but we could do an average
+
+
+#### Seafood (lobster, crab, prawns, etc)
+
+The Seafood (lobster, crab, prawns, etc) [105], we did an average of several raw items. We excluded clams due to high Fe content, as it could bias the results. 
+
+### Leaves
+
+Leaves(cocoyam, spinach, etc.) [78], we have used an average of all raw available leaves. However, major differences can be found in individual leaves micronutrients. In addition, differences between seasons, location,  dry/fresh leaves could make a major impact on the micronutrient estimates. For instance, in the study of Ene-Obong et al., (2013) they reported that dried vegetables were consumed more often in the Northern region than in the Southern region. 
+
+The selection of leaves will benefit from a) reviewing and b) geographic disaggreagation. 
+
+```{r}
+
+# Search foods ----
+food1 <- "leav"
+food2 <- "fresh"
+food3 <- "raw"
+
+fct_dict %>%   filter(source_fct == "WA19") %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, scientific_name, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  %>%
+  mutate_at(c("FEmg", "ZNmg", "VITA_RAEmcg"), as.numeric) %>% 
+  mutate(VITA_RAEmg = VITA_RAEmcg/1000) %>% 
+  pivot_longer(., cols =c(FEmg, ZNmg, VITA_RAEmg),
+               names_to = "nutrient") %>% 
+  mutate_at("value", as.numeric) %>% 
+  ggplot(aes(value, nutrient, fill = stat(x))) +
+  geom_density_ridges_gradient() 
+
+```
+
+Note that in this figure, the Vitamin A (RAE) units are changed to fit the other two nutrients. This makes the one Vitamin A outlier fits in the well shaped distribution. 
+
+
+### Chocolate drinks
+
+Because Ovaltine is fortified, in the first version (v1.0.0), use chocolate powder from KE18(12004) and performed a water conversion using the values from the ovaltine with whole milk WA19(12_015). However, we for the next version (v.2.0.0) and MAPS tool, we decided to use the values of chocolate powder without fortification but as powder, following the units reported in the survey, and following what was done with coffee and tea, as it is reported as purchased by the household. 
+
+```{r}
+
+# Search foods ----
+food1 <- "choco|milo"
+food2 <- "drink|beve"
+
+fct_dict %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+  filter(as.numeric(WATERg)>30) %>% 
+  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)  
+```
+
+
+This decision was based on: a) the values will be more accurate, as it takes into account the milk composition, and, b) for the matching in the tool, food items are more consistent and less prone to error than recipe.
+
+## Modified items
+
+We are including some "calculated food items", here we will include:
+
+ - Recipe calculation: items that are calculated as a different portion
+ - Cooked items: when an item was reported as cooked but we only could found a raw version. For example, 
+
+
+*Buns, poff and donuts [27] - fried dough*
+
+We are using an average of two items from KENFCT: Kaimati (fried dumpling), they seemed similar to the "poff" according to KEN Recipe book, and basic mandazi as the donuts. We are using that mandazi instead of the one from the Malawi because in KEN recipe it accounts for oil, while in MWI is not. 
+
+However, at the end, we are using the MWI data because, we could not find the items that were used to calculate the recipes, and we believe that they are using fortified wheat flour, since according to the information provided in the KEN FCT, the composite dishes (Kaimati and Mandazi) are fortified in folic acid. 
+
+
+```{r Buns, poff and donuts [27] - fried dough, echo=FALSE}
+
+fct_dict %>% filter(fdc_id %in% c("15125", "15004", "15003")) %>% select(source_fct, fdc_id, food_desc, WATERg, ENERCkcal, VITA_RAEmcg, FEmg, ZNmg, FOLFDmcg, FOLDFEmcg)
+
+```
+
+### Gari - yellow
+
+Gari/Eba - fermented cassava, flour with palm oil (yellow) 
+
+The gari - yellow [33], we have considered as Gari(fufu) /Eba - fermented cassava, flour with palm oil (yellow) (see ref: [https://scialert.net/fulltext/?doi=pjn.2009.1512.1516]). 
+
+We needed to find the amount of oil to calculate the "recipe". We have used an approximation based on the assumption that the cassava paste will be fried in red palm oil. Hence, we have chosen the fat uptake for potatoes from (Bognár, 2002, Table 31: deep fry B) and calculate a conversion factor base on the % of palm oil and cassava gari. 
+
+```{r}
+
+gari.yellow <- c("02_039", "11_004")
+recipe.conv <-  c( 1-(5/105), (5/105)) # 5g of oil for 100g of gari
+
+```
+
+Note that it is all based on raw ingredients as we have not accounted for any losses due to cooking (aka we did not apply retention factors). Then, for reference we have checked the food item "fufu of yam" [02_087] in wafct (VITA_RAE == 499), and our final VITA_RAE is lower (conservative estimates), as they have used 60g of red palm oil (for about 1017g total recipe weight) and adjusted for cooking. 
+
+
+*Goat*
+
+Goat meat, adjust for "whole animal" consumption. 
+
+ 
+
+
+
+## Food items to check
+
+1) Maize
+
+Number 20-22 are maize shelled/unshelled and on/off the cob. Those foods may be the same food item in term of composition, however the edible portion (EP) should be according to the part consumed. E.g., for maize unshelled and on the cob, the EP should be <1. 
+
+2) Millet
+
+Millet - Particularly Fe content, it seems too high. We are using WA19(01_017) but it seems that the other millet, combined varieties has a smaller value, hence by combining them we are hopefully reducing the impact of pearl millet. Interestingly, the values of finger millet KE18(1027) are more similar to the Whole grain pearl millet, it could be because the finger millet reported in KE18 is also whole grain, as noted by the high fibre content. 
+
+This values are adjusted to max value in `MAPS_fct_output.R`
+
+```{r}
+
+# Search foods 
+food1 <- "millet"
+food2 <- "raw"
+food3 <- ""
+ 
+fct_dict %>% # filter(source_fct %in% c("WA19" ,"KE18")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+  # filter(as.numeric(WATERg)<30) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg, FIBTGg )
+
+
+
+```
+
+3) Cassava, flour (fermented?) 
+
+Vitamin B12 could be a product of the fermentation 
+
+```{r}
+
+# Search foods 
+food1 <- "cassava"
+food2 <- "flour"
+food3 <- ""
+ 
+fct_dict %>%  filter(source_fct %in% c("WA19")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+  filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ # filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+    filter(as.numeric(WATERg)<30) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+
+
+```
+
+3) Fish selection, particularly for dried fish
+
+4) Milk, it seems that it's region specific - double-check with the team but I think for the MN we are interested in, I don't think it's worth the trouble.
+
+```{r}
+
+# Search foods 
+food1 <- "milk"
+food2 <- ""
+food3 <- "yog|butter|Human|kefir|choco|cultu|chee"
+ 
+fct_dict %>%  filter(source_fct %in% c("WA19", "KE18")) %>% 
+  filter(grepl(food1, food_desc, ignore.case = TRUE)) %>% 
+ # filter(grepl(food2, food_desc, ignore.case = TRUE)) %>% 
+ filter(!grepl(food3, food_desc, ignore.case = TRUE)) %>% 
+     filter(as.numeric(WATERg)>70) %>% 
+#  filter(!is.na(ID_3)) %>% 
+  select(source_fct, fdc_id, food_desc, ID_3, WATERg,
+         VITA_RAEmcg, FEmg, ZNmg, VITB12mcg)
+
+
+
+```
+
+HIGH in Fe:
+
+- Dried pepper, FE concentration is very high!! 
+- Sorghum and millet are quite high, but double check and millet - DONE
+
+HIGH in ZN:
+
+-- Dried okra
+-- Cassava root
+-- Game meat
+
+HIGH VITA
+
+-Red palm oil REALLY through the values - DONE
+- Margarine = changed to butter. We could do an average using: All margarines from wafct are "fortified"
+- Dried pepper
+- garri, yellow
+
+ 

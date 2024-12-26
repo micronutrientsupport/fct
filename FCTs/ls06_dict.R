@@ -14,7 +14,8 @@ lso_genus <- tribble(
   "30014",  "22290.01",    "l",
  # "140001", "24310.01.01",  "h", we are removing this item bc this FCT doesn't provide info on alc. 
  "50057", "1290.01.02", "m",
- "11021", "112.03", "m")                                    # hence alc. beverages shouldn't be included. 
+ "11021", "112.03", "m", 
+ "80059", "1354.01", "h", )                                    # hence alc. beverages shouldn't be included. 
 
 lso_genus$ID_3 <- as.character(lso_genus$ID_3)
 
@@ -40,7 +41,9 @@ file <- sort(list.files(here::here("metadata") , "dict_fct_compilation_v\\."),
 
 lso_genus %>% mutate(fct = "LS06") %>% 
   bind_rows(., read.csv(here::here("metadata", file)) %>%
-              mutate_at(c("ref_fctcode", "ID_3"), as.character)) %>% distinct() %>% 
+              mutate_at(c("ref_fctcode", "ID_3"), as.character) %>% 
+              #Excluding the fct so we re-paste the new matches (avoid dupli and old codes)
+              filter(fct != "LS06"))  %>% 
   write.csv(., here::here("metadata", file), row.names = F)
 
 # Checking dictionary/ fct ids availability ----

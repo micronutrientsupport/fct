@@ -1,4 +1,9 @@
 
+# Script that format dictionary into MAPS standard name and structure
+rm(list = ls())
+# Loading libraries
+library(dplyr)
+
 # Loading the dictionary
 dict.df <- readRDS(file = here::here("inter-output", "dictionary.df.rds"))
 
@@ -8,9 +13,12 @@ dict.df %>% group_by(ID_0, FoodName_0) %>% count() %>% arrange(desc(n))
 #Empty cells 
 unique(subset(dict.df, is.na(ID_0)))
 
+unique(dict.df$FoodName_1)
+
 #Checking categories (ID_1) by ID_0
 id0 <- unique(dict.df$ID_0)
-dict.df %>% filter(ID_0 == id0[1]) %>% 
+
+dict.df %>% filter(ID_0 == id0[4]) %>% 
   group_by(ID_1, FoodName_1) %>%  distinct(ID_1, FoodName_1) %>% knitr::kable()
 
 subset(dict.df, ID_1 == "2562")
@@ -24,7 +32,7 @@ dict.df %>%
   group_by(ID_1, FoodName_1, ID_2, FoodName_2) %>%  distinct(ID_2, FoodName_2) %>% count() %>% 
   arrange(desc(n))
 
-subset(dict.df, ID_2 == "23110")
+subset(dict.df, ID_2 == "21183")
 
 #Checking categories (ID_3) by ID_2
 dict.df %>% 
@@ -34,12 +42,15 @@ dict.df %>%
 #ID_3 & FoodName_3 must be unique
 sum(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
 sum(duplicated(dict.df$FoodName_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
-x <- which(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
-
+#x <- which(duplicated(dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
+x <- which(duplicated(dict.df$FoodName_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""]))
 n1 <- dict.df$ID_3[!is.na(dict.df$ID_3) & dict.df$ID_3 != ""][x]
 
 subset(dict.df, ID_3 %in% n1)
-subset(dict.df, ID_3 == "23161.01.01")
+
+# This needs to be excluded:
+subset(dict.df, ID_3 == "F0623.02")
+dict.df <- dict.df %>% filter(ID_3 != "F0623.02")
 
 #Run this to over-write any new upgrades in adding new food dictionary codes
 #in dictionary folder
@@ -69,7 +80,7 @@ current_version <- str_extract(sort(list.files(here::here("output"), "MAPS_Dicti
                  decreasing = TRUE)[1],
             "(?<=v)[:graph:]{2,}(?=\\.)") 
 
-version <- "3.0.2"
+version <- "3.1.0"
 
 if(current_version < version){
 
@@ -83,7 +94,7 @@ dict.df  %>% filter(str_detect(ID_3, "\\b")) %>%
     food_genus_id = "ID_3",
     food_genus_name = "FoodName_3") %>% 
   write.csv(here::here('output',
-                       paste0("MAPS_Dictionary_v", version, ".csv")), 
+                       paste0("MAPS_Dictionary_v.", version, ".csv")), 
             row.names = F) 
 }else{
   stop("incorrect version")

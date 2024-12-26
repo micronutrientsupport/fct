@@ -8,10 +8,19 @@
 #                                                                              #
 ################################################################################
 
-# 0) DOWNLOADING KENYA FCT FROM HUMAN NUTRION AND DIETETICS UNIT, MOH, KENYA
+# Library loading 
 
 library(tidyverse)
 library(visdat)
+
+# 0) Accessing the data (for source of the data see README) - Uncomment!
+# Only need to do it the first time to obtain the raw files!
+
+#f <- "http://www.nutritionhealth.or.ke/wp-content/uploads/Downloads/Kenya%20Food%20Composition%20Tables%20Excel%20files%202018.xlsx"
+#download.file(f, 
+#             destfile = here::here("FCTs", 'KE18', "MOH-KENFCT_2018.xlsx"),
+#             method="wininet", #use "curl" for OS X / Linux, "wininet" for Windows
+#            mode="wb")
 
 
 # Data Import ----
@@ -151,7 +160,15 @@ KE18_Raw_FCT %>%
   arrange(FOLACmcg) %>% #Arranges based on FOLAC
   knitr::kable()#Creates a table
 
+# Adding Alcohol (only 3 alcoholic beverages, from the name in docu (page 136))
+# (12007) Wine, Red (9.4 % alcohol),  (12008) Wine, White, Dry (10.3 % alcohol), 
+# (12009) Wine, White, Sweet (10.2 % alcohol)
+# ALC(%)*0.789(g/mL)/density(g/mL)
 
+KE18_Raw_FCT$ALCg <- 0
+KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12007"] <- (9.4*0.789/0.99)
+KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12008"] <- (10.3*0.789/0.995)
+KE18_Raw_FCT$ALCg[KE18_Raw_FCT$code == "12009"] <- (10.2*0.789/1.015)
 
 # Renaming, Checking, and Selecting ----
 
@@ -202,9 +219,13 @@ KE18_Raw_FCT <- KE18_Raw_FCT %>% rename( #Renames a number of variables - e.g. "
   PROCNTg = "PROTCNTg", 
   NAmg = "NA.mg") %>% #selecting the variables of interest
   dplyr::select(source_fct:PHYTCPPDmg, TRPmg, FASATgstandardized:FATRNgstandardized,
-                F20D5gstandardized, F22D6gstandardized) 
+                F20D5gstandardized, F22D6gstandardized, ALCg) 
 
+# This can only be done here, otherwise some of the FAs would have the same name
+names(KE18_Raw_FCT) <- gsub("standardized", "", names(KE18_Raw_FCT))
 
+#Checking the renaming
+names(KE18_Raw_FCT)
 
 # Data Output ----
 

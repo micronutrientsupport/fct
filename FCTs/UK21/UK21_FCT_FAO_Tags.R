@@ -80,7 +80,7 @@ uk21_colnames <- c("fdc_id", #Creates a list of column names following thew FAO 
                    "NTg", 
                    "PROCNTg",
                    "FAT_g",
-                   "CHOAVLg",
+                   "CHOAVLMg",
                    "ENERCkcal", 
                    "ENERCkJ", 
                    "STARCHMg", 
@@ -193,6 +193,32 @@ Output_table[Output_table == "N"] <- NA # Sets all N values, defined as "where a
 
 Output_table[,c(9:288)] <- apply(Output_table[,c(9:288)], 2, TraceToZero)
 
+# Conversion: Measurement units -----
+
+# Checking missing values for alcoholic bev. on density
+Output_table %>% dplyr::filter(grepl("^Q", food_group, ignore.case = TRUE) &
+                                 is.na(specific_gravity))
+
+# Getting the list of foods ids
+list_foods <- Output_table %>% dplyr::filter(grepl("^Q", food_group, ignore.case = TRUE) &
+                                               is.na(specific_gravity)) %>% pull(fdc_id)
+
+# Loading the missing values fixed
+source(here::here("UK21", "uk21_missing-values.R"))
+
+# Checking missing values for alcoholic bev. on density
+Output_table %>% dplyr::filter(grepl("^Q", food_group, ignore.case = TRUE) &
+                                 is.na(specific_gravity))
+
+# CHOALVMg to CHOAVLg (See UK21 docu - page 16)
+# ALCg_100mL to ALCg (See INFOODS Guidelines - page 12)
+
+Output_table <- Output_table %>% 
+  mutate(CHOAVLg = as.numeric(CHOAVLMg)/1.05, 
+         ALCg = as.numeric(ALCg_100mL)/as.numeric(specific_gravity))
+
+
+## Saving output
 
 write.csv(Output_table, file = here::here("FCTs", "UK21_FCT_FAO_Tags.csv"),
           row.names = FALSE) #Saves the newly-created data table to the Output folder
