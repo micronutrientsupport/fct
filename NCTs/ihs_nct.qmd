@@ -1,6 +1,31 @@
 
 # Nutrient Conversion Table for Malawi Integrated Household Survey
 
+```{r}
+# Environment preps ----
+
+# Loading library
+library(dplyr)
+library(NutritionTools)
+
+#Loading the food dictionary
+if(sum(ls() == "dictionary.df") == 0) {
+  source(here::here("MAPS_Dictionary-Protocol.R"))}
+
+# Data 
+# This is the original food list matched to the correct dictionary ids desc.
+food_list <- readRDS(here::here("inter-output", 
+              sort(list.files(here::here("inter-output"), 
+             "food-list_ihs4"), decreasing = TRUE)[1])) %>% 
+  #Removing food name as it is wrong in many cases
+  select(-food_name) %>% #adding the correct FoodName_3
+    left_join(., dictionary.df[, c("ID_3", "FoodName_3")])
+
+names(food_list)
+
+```
+
+
 
 The scripts described here can be used for generating a Nutrient Conversion Table (NCT) to be use with the Malawi Integrated Household Survey (IHS) round 4 (2016-2017), and round 5 (2019-2020) with slight modifications. 
 
@@ -8,8 +33,13 @@ This protocol serves as documentation of the food matches that are performed in 
 
 Last Updated: 2024-08-12
 
+## Note 
+
+The original matches were performed to the dictionary (more info here), because there are foods that are not available in any FCT, the "MAPS-version" substituted non-available foods (eg. unshelled groundnuts) to available (shelled groundnuts). Then modifications on the Edible Portion (EP) or others are applied.
+
 
 **Change log**
+V.3.0.0 - updated on  2024-12-26: Fixed items that had wrong matches, permanently.
 V.2.0.0 - updated on  2023-05-31: Fixed items without matches on any of the FCTs used in MAPS tool, changed to better matches in the FCTs.
 
 
@@ -17,6 +47,10 @@ V.2.0.0 - updated on  2023-05-31: Fixed items without matches on any of the FCTs
 
 The document contains information on the food matching for Malawi household surveys, including IHS4 () and IHS5 ().
 
+
+The step one is matching the food list to the dictionary. 
+The step two is matching the dictionary to the MAPS FCT library and check for missing values in foods, and then in nutrients. 
+Step three, change the dictionary matches for the MAPS NCT to dictionary codes available in FCT. 
 
 # Updating food matches to be performed within the MAPS tool.
 
@@ -34,7 +68,7 @@ filter(ID_3 %in% # Citrus and orange sweet potato from boiled version
           # Changed green and roasted maize to boiled 
           "1290.01.01", "1290.01.02" , "1290.01.03",
           # Yeast and baking powders 
-              "F1232.07", "F1232.06",
+              "F1232.07", "F1232.06"
         ))  %>% View()
 
 ```
@@ -58,7 +92,66 @@ Some food needed a better match, for instance, beef was matched to "with bones" 
 beef, lean, with bones, fresh, raw (21111.01.01) --> Added beef w/o bones, including ground raw. c("21111.02.03", "21184.01.02", "21111.02.01", "21111.02.02")
 
 
-# Food items with better matches
+```{r}
+
+food_list %>% 
+  filter(ID_3 %in%  # Three traditional drinks used the same code ()
+           c( "24310.02.01",
+              # Wrongly coded Nkate
+              "F0022.06" ,
+              # Changing food consumed at restaurant
+              "F1061.01","F1232.05"
+              ))  %>% View()
+
+```
+
+
+Here we are fixing some of the issues with the dictionary codes
+
+
+```{r}
+
+#Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
+#TODO: Generate a recipe c(F1061.01,F1232.05 )
+food_list$ID_3[food_list$code == "829"] <- "F1061.01,F1232.05"
+# Chicken at vendor (assumed cooked)
+food_list$ID_3[food_list$code == "824"] <- "F1061.02,F1061.01"
+# Better matches for the nkate and zikondamoyo
+food_list$ID_3[food_list$code == "836"] <- "F0022.07,F1232.39,F1232.40,F1232.38"
+
+```
+
+
+```{r}
+
+food_list %>% 
+  filter(ID_3 %in%  # Three traditional drinks used the same code ()
+           c( 
+             "24310.02.01" ))  
+```
+
+
+
+```{r}
+
+# Checking code
+food_list %>% 
+  filter(code %in% c("816", "832" , "836", "106", "510") &
+           ID_3 %in% c("F0666.01", "1530.07", "F0022.06",
+                                "23161.01.01", "21119.01.01"))
+
+
+```
+
+
+
+
+
+
+# Dictionary to FCT: Food items with matches in FCTs
+
+
+
 
 
 ```{r}
@@ -71,11 +164,6 @@ food_list$ID_3[food_list$ID_3 %in% c("21170.01.01")] <-  "21170.01.03"
 food_list$ID_3[food_list$ID_3 %in% c("1501.11")] <-  "1501.10" 
 food_list$ID_3[food_list$ID_3 %in% c("1501.05")] <-  "1503.03" 
 food_list$ID_3[food_list$ID_3 %in% c("21121.02")] <-  "21121.03" 
-#Fixing samosa vs banana cake id typo issue (see MAPS_Dictionary-Protocol update v2.5)
-food_list$ID_3[food_list$ID_3 == "F0022.06" & food_list$code == "836" ] <- "F0022.07"
-#Meal eaten at restaurant (vendor) c(21116.02, 21121.04) -->  F1061.01 
-#TODO: Generate a recipe c(F1061.01,F1232.05 )
-food_list$ID_3[food_list$code == "829"] <- "F1061.01,F1232.05" 
 
 
 ```
@@ -197,7 +285,48 @@ cassava root, roasted (1520.01.05) - Not completed bc multi-matched
 
 ## Checking Iron values (FEmg) & Zinc (ZNmg)
 
-Small animal ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ rabbit, mice, etc.: (21119.01.01) rat meat, fresh, raw - Not completed bc multi-matched
+Small animal ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½ rabbit, mice, etc.: (21119.01.01) rat meat, fresh, raw - Not completed bc multi-matched.
+
+## Checking Se values (SEmcg)
+
+
+```{r}
+
+food_list$ID_3[food_list$code %in% c("313")] <-  "142.01" # Changing to dry
+# Changing to whole grain (applying extration rates)
+food_list$ID_3[food_list$code %in% c("102")] <-  "23120.03.01" 
+# Boiled sweet potato - using only one bc no difference in Se compo
+food_list$ID_3[food_list$code %in% c("831")] <-  "1520.01.01" 
+food_list$ID_3[food_list$code %in% c("832")] <-  "1520.01.01" 
+
+```
+
+
+Changing dictionary codes, this is useful when more than one food item in the food list was matched to the same foods, for example, for fish.
+
+```{r}
+
+# Changing to small dried (barb) to cyprianid (barb)
+food_list$ID_3[food_list$ID_3 %in% c("1505.03")] <-  "1505.07" 
+#Infant cereals to infant food, cereal, mixed
+food_list$ID_3[food_list$ID_3 == "23991.01.01"] <- "23991.01.07"
+
+```
+
+```{r}
+food_list %>% filter(!code %in% unique(fct$code)) %>%
+  distinct() 
+
+
+fct_cover %>% filter(grepl("ground", food_desc, ignore.case = TRUE), 
+  SEmcg>1.9 & SEmcg <3) %>% View()
+
+fct_cover %>% filter(grepl("ground", food_desc, ignore.case = TRUE), 
+  as.numeric(WATERg)>50) %>% View()
+```
+
+
+
 
 #EDIBLE: SUGAR CANE
 Sugar Cane: (1802.01) sugar canes - recode (1802.02) cane sugar juice. We need to adjust the quantity consumed to account for the difference in the edible portion. 
